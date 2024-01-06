@@ -1,9 +1,6 @@
 package com.objects.marketbridge.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +18,9 @@ public class Product extends BaseEntity{
     @Column(name = "product_id")
     private Long id;
 
-    // TODO
-    private Long categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category categoryId;
 
     private boolean isOwn; // 로켓 true , 오픈 마켓 false
 
@@ -37,7 +35,7 @@ public class Product extends BaseEntity{
     private Integer discountRate;
 
     @Builder
-    private Product(Long categoryId, boolean isOwn, String name, Integer price, boolean isSubs, String thumbImg, Integer discountRate) {
+    private Product(Category categoryId, boolean isOwn, String name, Integer price, boolean isSubs, String thumbImg, Integer discountRate) {
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
