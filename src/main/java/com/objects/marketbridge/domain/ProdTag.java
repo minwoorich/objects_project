@@ -1,9 +1,6 @@
 package com.objects.marketbridge.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,15 +13,19 @@ public class ProdTag extends BaseEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "tag_id")
+    @Column(name = "prod_tag_id")
     private Long id;
-    // TODO
-    private Long tagId;
-    // TODO
-    private Long productId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tag_id")
+    private Tag tagId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product productId;
 
     @Builder
-    private ProdTag(Long tagId, Long productId) {
+    private ProdTag(Tag tagId, Product productId) {
         this.tagId = tagId;
         this.productId = productId;
     }

@@ -16,8 +16,11 @@ public class Warehouse extends BaseEntity {
     @Column(name = "warehouse_id")
     private Long id;
 
-    // TODO
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private Seller sellerId;
+
+    private String name;
 
     private String alias;
 
@@ -25,10 +28,10 @@ public class Warehouse extends BaseEntity {
     private AddressValue addressValue;
 
     @Builder
-    private Warehouse(Long userId, String alias, AddressValue addressValue) {
-        this.userId = userId;
+    public Warehouse(Seller sellerId, String name, String alias, AddressValue addressValue) {
+        this.sellerId = sellerId;
+        this.name = name;
         this.alias = alias;
         this.addressValue = addressValue;
     }
-
 }
