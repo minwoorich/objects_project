@@ -24,12 +24,15 @@ public class ProdOrderDetail extends BaseEntity{
     @JoinColumn(name = "product_id")
     private Product productId;
 
+    private String statusCode;
+
     private Long price;
 
     @Builder
-    private ProdOrderDetail(ProdOrder orderId, Product productId, Long price) {
+    private ProdOrderDetail(ProdOrder orderId, Product productId, String statusCode, Long price) {
         this.orderId = orderId;
         this.productId = productId;
+        this.statusCode = statusCode;
         this.price = price;
     }
 }

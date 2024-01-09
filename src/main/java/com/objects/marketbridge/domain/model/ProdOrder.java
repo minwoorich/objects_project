@@ -26,8 +26,6 @@ public class ProdOrder extends BaseEntity {
     @JoinColumn(name = "address_id")
     private Address addressId;
 
-    private String statusCode; // 00, DELIVERED, CANCEL, RETURN, EXCHANGE
-
     private Long totalPrice;
 
     private Integer pointRate; // 적립율
@@ -37,10 +35,9 @@ public class ProdOrder extends BaseEntity {
     private LocalDateTime deliveredDate;
 
     @Builder
-    private ProdOrder(User userId, Address addressId, String statusCode, Long totalPrice, Integer pointRate, Integer savedPoint, LocalDateTime deliveredDate) {
+    private ProdOrder(User userId, Address addressId, Long totalPrice, Integer pointRate, Integer savedPoint, LocalDateTime deliveredDate) {
         this.userId = userId;
         this.addressId = addressId;
-        this.statusCode = statusCode;
         this.totalPrice = totalPrice;
         this.pointRate = pointRate;
         this.savedPoint = savedPoint;
