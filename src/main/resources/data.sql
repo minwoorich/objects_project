@@ -1,3 +1,4 @@
+/*
 insert into status_code(type, code, name)
 values (ORDER_INIT, "주문생성", "OR00"),
        (ORDER_RECEIVED, "주문접수", "OR01"),
@@ -33,3 +34,4 @@ values (ORDER_INIT, "주문생성", "OR00"),
        (CUSTOMER_FAULT, "고객과실", "CS08");
 
 
+*/
