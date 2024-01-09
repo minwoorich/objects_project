@@ -20,11 +20,11 @@ public class ProdOrder extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
-    private Address addressId;
+    private Address address;
 
     private Long totalPrice;
 
@@ -35,9 +35,9 @@ public class ProdOrder extends BaseEntity {
     private LocalDateTime deliveredDate;
 
     @Builder
-    private ProdOrder(User userId, Address addressId, Long totalPrice, Integer pointRate, Integer savedPoint, LocalDateTime deliveredDate) {
-        this.userId = userId;
-        this.addressId = addressId;
+    private ProdOrder(User user, Address address, Long totalPrice, Integer pointRate, Integer savedPoint, LocalDateTime deliveredDate) {
+        this.user = user;
+        this.address = address;
         this.totalPrice = totalPrice;
         this.pointRate = pointRate;
         this.savedPoint = savedPoint;
