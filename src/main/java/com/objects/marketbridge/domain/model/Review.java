@@ -1,9 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,18 +16,23 @@ public class Review extends BaseEntity {
     @Column(name = "review_id")
     private Long id;
 
-    // TODO
-    private Long orderId;
-    // TODO
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User userId;
+
+    //private Long orderId; orderid 제거
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product productId;
 
     private String content;
     // 별점
     private Integer rating; //1-5
 
     @Builder
-    private Review(Long orderId, Long productId, String content, Integer rating) {
-        this.orderId = orderId;
+    private Review(User userId, Product productId, String content, Integer rating) {
+        this.userId = userId;
         this.productId = productId;
         this.content = content;
         this.rating = rating;

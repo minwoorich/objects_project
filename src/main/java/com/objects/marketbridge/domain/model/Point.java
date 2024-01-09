@@ -1,9 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,10 +15,12 @@ public class Point extends BaseEntity {
     @GeneratedValue
     @Column(name = "point_id")
     private Long id;
-    // TODO
-    private Long userId;
-    // TODO
-    private Long orderId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User userId;
+
+//    private Long orderId;
 
     private Integer inPoint;
 
@@ -31,10 +30,10 @@ public class Point extends BaseEntity {
 
     private String comments;
 
-    @Builder
-    private Point(Long userId, Long orderId, Integer inPoint, Integer outPoint, Integer balance, String comments) {
+
+    @Builder //order_id 제거
+    private Point(User userId, Integer inPoint, Integer outPoint, Integer balance, String comments) {
         this.userId = userId;
-        this.orderId = orderId;
         this.inPoint = inPoint;
         this.outPoint = outPoint;
         this.balance = balance;

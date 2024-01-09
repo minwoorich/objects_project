@@ -16,12 +16,18 @@ public class HelpDesk extends BaseEntity {
     @Column(name = "help_desk_id")
     private Long id;
 
-    // TODO
-    private Long orderId;
-    // TODO
-    private Long userId;
-    // TODO
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prod_order_id")
+    private ProdOrder prodOrderId;
+    //private Long orderId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product productId;
 
     @Enumerated(EnumType.STRING)
     private ContentType contentType;
@@ -29,8 +35,8 @@ public class HelpDesk extends BaseEntity {
     private String content;
 
     @Builder
-    private HelpDesk(Long orderId, Long userId, Long productId, ContentType contentType, String content) {
-        this.orderId = orderId;
+    private HelpDesk(ProdOrder prodOrderId, User userId, Product productId, ContentType contentType, String content) {
+        this.prodOrderId = prodOrderId;
         this.userId = userId;
         this.productId = productId;
         this.contentType = contentType;

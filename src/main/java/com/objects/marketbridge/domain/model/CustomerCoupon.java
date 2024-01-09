@@ -1,9 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,16 +19,20 @@ public class CustomerCoupon extends BaseEntity {
     private Long id;
 
     // TODO
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User userId;
     // TODO
-    private Long couponId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "couponId")
+    private Coupon couponId;
 
     private boolean isUsed;
 
     private LocalDateTime usedDate;
 
     @Builder
-    private CustomerCoupon(Long userId, Long couponId, boolean isUsed, LocalDateTime usedDate) {
+    private CustomerCoupon(User userId, Coupon couponId, boolean isUsed, LocalDateTime usedDate) {
         this.userId = userId;
         this.couponId = couponId;
         this.isUsed = isUsed;
