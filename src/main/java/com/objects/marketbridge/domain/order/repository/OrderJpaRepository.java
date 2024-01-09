@@ -9,5 +9,4 @@ public interface OrderJpaRepository extends JpaRepository<ProdOrder, Long> {
     Optional<ProdOrder> findById(Long id);
     ProdOrder getById(Long id);
 
-    Optional<ProdOrder> findByOrderNo();
 }
