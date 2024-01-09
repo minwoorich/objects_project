@@ -16,11 +16,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void checkDuplicate(String email){
+    public void checkDuplicateEmail(String email){
 
-        User useremail = userRepository.findByEmail(email).orElse(null);
+        User userEmail = userRepository.findByEmail(email).orElse(null);
 
-        if (useremail != null) {
+        if (userEmail != null) {
             // null이 아니면 이미 가입된 email
             // 이미 등록된 아이디라는 문구 출력
             //....

@@ -1,5 +1,5 @@
 package com.objects.marketbridge.domain.user.repository;
 
-public interface UserRepository extends UserJpaRepository,UserCustomRepository{
+public interface UserRepository extends UserJpaRepository, UserRepositoryCustom {
 
 }
