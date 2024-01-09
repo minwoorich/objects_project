@@ -30,6 +30,8 @@ public class ProdOrderDetail extends BaseEntity{
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
+    private Integer used_coupon;
+
     private Integer quantity;
 
     private Integer price;
@@ -45,10 +47,11 @@ public class ProdOrderDetail extends BaseEntity{
     private LocalDateTime cancelledAt;
 
     @Builder
-    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, Integer quantity, Integer price, String statusCode, LocalDateTime deliveredDate, Integer usedPoint, String reason, LocalDateTime cancelledAt) {
+    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, Integer used_coupon, Integer quantity, Integer price, String statusCode, LocalDateTime deliveredDate, Integer usedPoint, String reason, LocalDateTime cancelledAt) {
         this.prodOrder = prodOrder;
         this.product = product;
         this.coupon = coupon;
+        this.used_coupon = used_coupon;
         this.quantity = quantity;
         this.price = price;
         this.statusCode = statusCode;
@@ -56,5 +59,13 @@ public class ProdOrderDetail extends BaseEntity{
         this.usedPoint = usedPoint;
         this.reason = reason;
         this.cancelledAt = cancelledAt;
+    }
+
+    public void setOrder(ProdOrder prodOrder) {
+        this.prodOrder = prodOrder;
+    }
+
+    public void changeStatusCode(String statusCode) {
+        this.statusCode = statusCode;
     }
 }
