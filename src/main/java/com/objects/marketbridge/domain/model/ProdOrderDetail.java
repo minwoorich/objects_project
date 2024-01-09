@@ -18,20 +18,20 @@ public class ProdOrderDetail extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prod_order_id")
-    private ProdOrder orderId;
+    private ProdOrder prodOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product productId;
+    private Product product;
 
     private String statusCode;
 
     private Long price;
 
     @Builder
-    private ProdOrderDetail(ProdOrder orderId, Product productId, String statusCode, Long price) {
-        this.orderId = orderId;
-        this.productId = productId;
+    private ProdOrderDetail(ProdOrder prodOrder, Product product, String statusCode, Long price) {
+        this.prodOrder = prodOrder;
+        this.product = product;
         this.statusCode = statusCode;
         this.price = price;
     }
