@@ -1,9 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,13 +16,15 @@ public class SocialCredential extends BaseEntity {
     @GeneratedValue
     @Column(name = "social_credential_id")
     private Long id;
-    // TODO
-    private Long userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User userId;
 
     private String tokenId;
 
     @Builder
-    private SocialCredential(Long userId, String tokenId) {
+    private SocialCredential(User userId, String tokenId) {
         this.userId = userId;
         this.tokenId = tokenId;
     }

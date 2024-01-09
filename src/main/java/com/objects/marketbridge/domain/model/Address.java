@@ -16,8 +16,9 @@ public class Address extends BaseEntity{
     @Column(name = "address_id")
     private Long id;
 
-    // TODO
-    private Long userId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User userId;
 
     @Embedded
     private AddressValue addressValue;
@@ -25,7 +26,7 @@ public class Address extends BaseEntity{
     private boolean idDefault;
 
     @Builder
-    private Address(Long userId, AddressValue addressValue, boolean idDefault) {
+    private Address(User userId, AddressValue addressValue, boolean idDefault) {
         this.userId = userId;
         this.addressValue = addressValue;
         this.idDefault = idDefault;

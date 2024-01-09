@@ -17,12 +17,15 @@ public class Qna extends BaseEntity {
     @Column(name = "board_id")
     private Long id;
 
-    // TODO
-//    @AttributeOverride()  : 중복 클래스 적용
-    private Long userCustomerId; //userId
-    // TODO
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User userId; //userId
+
     // @AttributeOverride()
-    private Long userSellerId; //userId
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private Seller sellerId; //userId
 
     @Enumerated(EnumType.STRING)
     private ContentType boardType;
@@ -30,9 +33,9 @@ public class Qna extends BaseEntity {
     private String content;
 
     @Builder
-    private Qna(Long userCustomerId, Long userSellerId, ContentType boardType, String content) {
-        this.userCustomerId = userCustomerId;
-        this.userSellerId = userSellerId;
+    private Qna(User userId, Seller sellerId, ContentType boardType, String content) {
+        this.userId = userId;
+        this.sellerId = sellerId;
         this.boardType = boardType;
         this.content = content;
     }

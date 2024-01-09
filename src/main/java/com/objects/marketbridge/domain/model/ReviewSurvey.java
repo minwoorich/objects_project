@@ -1,9 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,14 +16,23 @@ public class ReviewSurvey extends BaseEntity {
     @Column(name = "review_survey_id")
     private Long id;
 
-    // TODO
-    private Long reviewId;
-    // TODO
-    private Long surveyCategoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id")
+    private Review reviewId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_survey_category_id")
+    private ReviewSurveyCategory reviewSurveyCategoryId;
+
+    // 추가
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "survey_content_id")
+    private SurveyContent surveyContentId;
 
     @Builder
-    private ReviewSurvey(Long reviewId, Long surveyCategoryId) {
+    private ReviewSurvey(Review reviewId, ReviewSurveyCategory reviewSurveyCategoryId ,SurveyContent surveyContentId) {
         this.reviewId = reviewId;
-        this.surveyCategoryId = surveyCategoryId;
+        this.reviewSurveyCategoryId = reviewSurveyCategoryId;
+        this.surveyContentId = surveyContentId;
     }
 }
