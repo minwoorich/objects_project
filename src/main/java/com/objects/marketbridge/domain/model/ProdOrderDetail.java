@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -60,5 +59,13 @@ public class ProdOrderDetail extends BaseEntity{
         this.usedPoint = usedPoint;
         this.reason = reason;
         this.cancelledAt = cancelledAt;
+    }
+
+    public void setOrder(ProdOrder order) {
+        this.order = order;
+    }
+
+    public void changeStatusCode(String statusCode) {
+        this.statusCode = statusCode;
     }
 }
