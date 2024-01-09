@@ -20,7 +20,7 @@ public class ProdOrderDetail extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prod_order_id")
-    private ProdOrder order;
+    private ProdOrder prodOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -47,8 +47,8 @@ public class ProdOrderDetail extends BaseEntity{
     private LocalDateTime cancelledAt;
 
     @Builder
-    private ProdOrderDetail(ProdOrder order, Product product, Coupon coupon, Integer used_coupon, Integer quantity, Integer price, String statusCode, LocalDateTime deliveredDate, Integer usedPoint, String reason, LocalDateTime cancelledAt) {
-        this.order = order;
+    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, Integer used_coupon, Integer quantity, Integer price, String statusCode, LocalDateTime deliveredDate, Integer usedPoint, String reason, LocalDateTime cancelledAt) {
+        this.prodOrder = prodOrder;
         this.product = product;
         this.coupon = coupon;
         this.used_coupon = used_coupon;
@@ -61,8 +61,8 @@ public class ProdOrderDetail extends BaseEntity{
         this.cancelledAt = cancelledAt;
     }
 
-    public void setOrder(ProdOrder order) {
-        this.order = order;
+    public void setOrder(ProdOrder prodOrder) {
+        this.prodOrder = prodOrder;
     }
 
     public void changeStatusCode(String statusCode) {
