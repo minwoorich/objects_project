@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface OrderDetailJpaRepository extends JpaRepository<ProdOrderDetail, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("update ProdOrderDetail pod set pod.statusCode = :type where pod.prodOrder.id = :orderId")
     int changeAllType(@Param("orderId") Long orderId, @Param("type") String type);
 
+    @Modifying(clearAutomatically = true)
+    @Query("update ProdOrderDetail pod set pod.reason = :reason where pod.prodOrder.id = :orderId")
+    void addReason(@Param("orderId") Long orderId, @Param("reason") String reason);
 }
