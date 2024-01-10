@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domain.user.service;
 
 import com.objects.marketbridge.domain.model.User;
+import com.objects.marketbridge.domain.user.dto.CreateUser;
 import com.objects.marketbridge.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
+
         this.userRepository = userRepository;
     }
 
@@ -30,6 +32,10 @@ public class UserService {
             // 정상적인 가입이 가능하다
             // ....
         }
+    }
 
+    public void saveUser(CreateUser createUser){
+        User user = User.fromDto(createUser);
+        userRepository.save(user);
     }
 }
