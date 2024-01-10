@@ -11,4 +11,6 @@ public interface OrderDetailRepository  {
     List<ProdOrderDetail> saveAll(List<ProdOrderDetail> orderDetail1);
 
     void addReason(Long orderId, String reason);
+
+    void save(ProdOrderDetail prodOrderDetail);
 }
