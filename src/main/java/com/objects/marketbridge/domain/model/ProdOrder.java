@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
+import com.objects.marketbridge.domain.order.dto.OrderCreate;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -38,8 +39,8 @@ public class ProdOrder extends BaseEntity {
 
     private LocalDateTime deliveredDate;
 
-    @OneToMany(mappedBy = "prodOrder")
-    private List<ProdOrderDetail> orderDetails = new ArrayList<>();
+    @OneToMany(mappedBy = "prodOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
 
     @Builder
     private ProdOrder(Member member, Address address, String statusCode, Long totalPrice, Integer pointRate, Integer savedPoint, LocalDateTime deliveredDate, List<ProdOrderDetail> orderDetails) {
@@ -50,16 +51,11 @@ public class ProdOrder extends BaseEntity {
         this.pointRate = pointRate;
         this.savedPoint = savedPoint;
         this.deliveredDate = deliveredDate;
-        this.orderDetails = orderDetails;
     }
 
-    public List<ProdOrderDetail> getOrderDetails() {
-        return orderDetails;
-    }
-
-    public void addOrderDetail(ProdOrderDetail orderDetail) {
-        orderDetails.add(orderDetail);
-        orderDetail.setOrder(this);
+    public void addOrderDetail(ProdOrderDetail prodOrderDetails) {
+        this.prodOrderDetails.add(prodOrderDetails);
+        prodOrderDetails.setOrder(this);
     }
 
 
