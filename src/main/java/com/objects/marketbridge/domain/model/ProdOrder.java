@@ -1,6 +1,5 @@
 package com.objects.marketbridge.domain.model;
 
-import com.objects.marketbridge.domain.order.dto.OrderCreate;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -57,11 +56,4 @@ public class ProdOrder extends BaseEntity {
         this.prodOrderDetails.add(prodOrderDetails);
         prodOrderDetails.setOrder(this);
     }
-
-
-
-//    public OrderCreate to() {
-//        return OrderCreate.builder()
-//                .
-//    }
 }
