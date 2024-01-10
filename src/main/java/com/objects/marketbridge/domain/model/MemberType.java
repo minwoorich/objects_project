@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum UserType {
+public enum MemberType {
     CUSTOMER("고객"),
     SELLER("판매자"),
     ADMIN("관리자");
