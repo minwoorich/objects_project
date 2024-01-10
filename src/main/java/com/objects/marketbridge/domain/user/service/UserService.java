@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.user.service;
 
-import com.objects.marketbridge.domain.model.User;
+import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class UserService {
 
     public void checkDuplicate(String email){
 
-        User useremail = userRepository.findByEmail(email).orElse(null);
+        Member useremail = userRepository.findByEmail(email).orElse(null);
 
         if (useremail != null) {
             // null이 아니면 이미 가입된 email

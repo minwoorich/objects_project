@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class ProdOrderDetail extends BaseEntity{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "prod_order_detail_id")
     private Long id;
 

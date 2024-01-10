@@ -13,19 +13,19 @@ import lombok.NoArgsConstructor;
 public class SocialCredential extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "social_credential_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User userId;
+    @JoinColumn(name = "member_id")
+    private Member memberId;
 
     private String tokenId;
 
     @Builder
-    private SocialCredential(User userId, String tokenId) {
-        this.userId = userId;
+    private SocialCredential(Member memberId, String tokenId) {
+        this.memberId = memberId;
         this.tokenId = tokenId;
     }
 }
