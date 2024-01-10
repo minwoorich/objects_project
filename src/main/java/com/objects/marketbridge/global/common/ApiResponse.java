@@ -1,5 +1,6 @@
 package com.objects.marketbridge.global.common;
 
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -11,7 +12,8 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
-    public ApiResponse(HttpStatus status, String message, T data) {
+    @Builder
+    private ApiResponse(HttpStatus status, String message, T data) {
         this.code = status.value();
         this.status = status;
         this.message = message;
