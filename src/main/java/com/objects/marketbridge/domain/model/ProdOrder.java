@@ -52,10 +52,6 @@ public class ProdOrder extends BaseEntity {
         this.deliveredDate = deliveredDate;
     }
 
-    public List<ProdOrderDetail> getOrderDetails() {
-        return prodOrderDetails;
-    }
-
     public void addOrderDetail(ProdOrderDetail prodOrderDetails) {
         this.prodOrderDetails.add(prodOrderDetails);
         prodOrderDetails.setOrder(this);
