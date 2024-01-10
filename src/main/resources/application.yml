@@ -20,7 +20,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    defer-datasource-initialization: true # (2.5~) Hibernate 초기화 이후 data.sql 실행
+    defer-datasource-initialization: true # (2.5~) Hibernate 초기화 이후 data-mysql.sql 실행
+    # 이게 없으면 data-mysql.sql 스크립트가 수행 안 되고 에러 발생합니당.
 
   h2:
     console:
