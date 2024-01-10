@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.order;
+package com.objects.marketbridge.global;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
