@@ -13,19 +13,19 @@ import lombok.NoArgsConstructor;
 public class Qna extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User userId; //userId
+    @JoinColumn(name = "member_id")
+    private Member memberId; //memberId
 
     // @AttributeOverride()
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
-    private Seller sellerId; //userId
+    private Seller sellerId; //memberId
 
     @Enumerated(EnumType.STRING)
     private ContentType boardType;
@@ -33,8 +33,8 @@ public class Qna extends BaseEntity {
     private String content;
 
     @Builder
-    private Qna(User userId, Seller sellerId, ContentType boardType, String content) {
-        this.userId = userId;
+    private Qna(Member memberId, Seller sellerId, ContentType boardType, String content) {
+        this.memberId = memberId;
         this.sellerId = sellerId;
         this.boardType = boardType;
         this.content = content;

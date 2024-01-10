@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
+import com.objects.marketbridge.domain.order.dto.OrderCreate;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,13 +17,13 @@ import java.util.List;
 public class ProdOrder extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "prod_order_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
@@ -42,8 +43,8 @@ public class ProdOrder extends BaseEntity {
     private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
 
     @Builder
-    private ProdOrder(User user, Address address, String statusCode, Long totalPrice, Integer pointRate, Integer savedPoint, LocalDateTime deliveredDate) {
-        this.user = user;
+    private ProdOrder(Member member, Address address, String statusCode, Long totalPrice, Integer pointRate, Integer savedPoint, LocalDateTime deliveredDate, List<ProdOrderDetail> orderDetails) {
+        this.member = member;
         this.address = address;
         this.statusCode = statusCode;
         this.totalPrice = totalPrice;
