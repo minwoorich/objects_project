@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
+import com.objects.marketbridge.domain.user.dto.CreateUser;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -46,6 +47,25 @@ public class User extends BaseEntity {
         this.birth = birth;
         this.isAlert = isAlert;
         this.isAgree = isAgree;
+    }
+
+//    public CreateUser toDto(){
+//
+//        return CreateUser.builder()
+//                .email()
+//                .name()
+//                .phoneNo()
+//                .password()
+//                .isAgree();
+//    }
+
+    public static User fromDto(CreateUser createUser){
+        return User.builder()
+                .email(createUser.getEmail())
+                .name(createUser.getName())
+                .phoneNo(createUser.getPhoneNo())
+                .password(createUser.getPassword())
+                .isAgree(createUser.getIsAgree()).build();
     }
 
 }
