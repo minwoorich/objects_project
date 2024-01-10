@@ -12,24 +12,24 @@ import lombok.NoArgsConstructor;
 public class Address extends BaseEntity{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User userId;
+    @JoinColumn(name = "member_id")
+    private Member memberId;
 
     @Embedded
     private AddressValue addressValue;
 
-    private boolean idDefault;
+    private boolean isDefault;
 
     @Builder
-    private Address(User userId, AddressValue addressValue, boolean idDefault) {
-        this.userId = userId;
+    private Address(Member memberId, AddressValue addressValue, boolean isDefault) {
+        this.memberId = memberId;
         this.addressValue = addressValue;
-        this.idDefault = idDefault;
+        this.isDefault = isDefault;
     }
 
 }
