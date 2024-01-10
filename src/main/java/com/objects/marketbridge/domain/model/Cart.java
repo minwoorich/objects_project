@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 public class Cart extends BaseEntity {
     @Id
     @GeneratedValue
-    @Column(name = "prod_order_return_id")
+    @Column(name = "cart_id")
     private Long id;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_order_id")
-    private ProdOrder orderId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prod_option_id")
+    private ProdOption prodOptionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -28,8 +28,8 @@ public class Cart extends BaseEntity {
     private Integer quantity;
 
     @Builder
-    private Cart(ProdOrder orderId, User userId, boolean isSubs, Integer quantity) {
-        this.orderId = orderId;
+    private Cart(ProdOption prodOptionId, User userId, boolean isSubs, Integer quantity) {
+        this.prodOptionId = prodOptionId;
         this.userId = userId;
         this.isSubs = isSubs;
         this.quantity = quantity;
