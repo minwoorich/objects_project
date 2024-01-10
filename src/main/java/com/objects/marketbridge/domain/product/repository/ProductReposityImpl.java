@@ -10,13 +10,17 @@ import java.util.Optional;
 @Repository
 public class ProductReposityImpl implements ProductRepository {
 
-    @Override
-    public Optional<Product> findById(Long productId) {
-        return Optional.empty();
+    private final ProductJpaRepository productJpaRepository;
+
+//    ProductJpaRepository가 이미구현체를 제공하기때문에 따로 만들어줄 필요가 없다.
+//    @Override
+//    public Optional<Product> findById(Long productId) {
+//        return Optional.empty();
+//    }
+
+    public void save(Product product) {
+        productJpaRepository.save(product);
     }
 
-    @Override
-    public Product save(Product product) {
-        return null;
-    }
+
 }
