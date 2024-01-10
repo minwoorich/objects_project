@@ -39,7 +39,7 @@ public class ProdOrder extends BaseEntity {
 
     private LocalDateTime deliveredDate;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "prodOrder")
     private List<ProdOrderDetail> orderDetails = new ArrayList<>();
 
     @Builder
