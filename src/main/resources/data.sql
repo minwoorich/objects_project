@@ -32,6 +32,4 @@ values (ORDER_INIT, "주문생성", "OR00"),
        (PRODUCT_DISPOSAL, "제품폐기", "PR09"),
 
        (CUSTOMER_FAULT, "고객과실", "CS08");
-
-
 */

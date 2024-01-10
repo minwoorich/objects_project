@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Delivery extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "delivery_id")
     private Long id;
 
@@ -32,21 +32,21 @@ public class Delivery extends BaseEntity {
 
     private String trackingNo;
 
-    private String status;
+    private String statusCode;
 
     private LocalDateTime shipDate;
 
     private LocalDateTime deliveredDate;
 
     @Builder
-    private Delivery(DeliveryType deliveryType, Long sellerId, Long addressId, Long orderDetailId, String carrier, String trackingNo, String status, LocalDateTime shipDate, LocalDateTime deliveredDate) {
+    private Delivery(DeliveryType deliveryType, Long sellerId, Long addressId, Long orderDetailId, String carrier, String trackingNo, String statusCode, LocalDateTime shipDate, LocalDateTime deliveredDate) {
         this.deliveryType = deliveryType;
         this.sellerId = sellerId;
         this.addressId = addressId;
         this.orderDetailId = orderDetailId;
         this.carrier = carrier;
         this.trackingNo = trackingNo;
-        this.status = status;
+        this.statusCode = statusCode;
         this.shipDate = shipDate;
         this.deliveredDate = deliveredDate;
     }
