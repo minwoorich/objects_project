@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,18 +20,52 @@ public class ProdOrderDetail extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prod_order_id")
-    private ProdOrder orderId;
+    private ProdOrder prodOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product productId;
+    private Product product;
 
-    private Long price;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
+
+    private Integer used_coupon;
+
+    private Integer quantity;
+
+    private Integer price;
+
+    private String statusCode;
+
+    private LocalDateTime deliveredDate;
+
+    private Integer usedPoint;
+
+    private String reason;
+
+    private LocalDateTime cancelledAt;
 
     @Builder
-    private ProdOrderDetail(ProdOrder orderId, Product productId, Long price) {
-        this.orderId = orderId;
-        this.productId = productId;
+    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, Integer used_coupon, Integer quantity, Integer price, String statusCode, LocalDateTime deliveredDate, Integer usedPoint, String reason, LocalDateTime cancelledAt) {
+        this.prodOrder = prodOrder;
+        this.product = product;
+        this.coupon = coupon;
+        this.used_coupon = used_coupon;
+        this.quantity = quantity;
         this.price = price;
+        this.statusCode = statusCode;
+        this.deliveredDate = deliveredDate;
+        this.usedPoint = usedPoint;
+        this.reason = reason;
+        this.cancelledAt = cancelledAt;
+    }
+
+    public void setOrder(ProdOrder prodOrder) {
+        this.prodOrder = prodOrder;
+    }
+
+    public void changeStatusCode(String statusCode) {
+        this.statusCode = statusCode;
     }
 }
