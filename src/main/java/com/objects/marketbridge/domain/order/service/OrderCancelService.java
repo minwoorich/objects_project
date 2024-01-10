@@ -3,6 +3,7 @@ package com.objects.marketbridge.domain.order.service;
 import com.objects.marketbridge.domain.model.ProdOrder;
 import com.objects.marketbridge.domain.model.ProdOrderDetail;
 import com.objects.marketbridge.domain.model.StatusCodeType;
+import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderCancelService {
 
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     public void orderCancel(Long orderId, String reason) {
+
         // orderId로 주문을 조회한다.
         Optional<ProdOrder> orderOptional = orderRepository.findById(orderId);
         if (orderOptional.isEmpty()) {
@@ -32,6 +35,9 @@ public class OrderCancelService {
         if (order.getStatusCode() == StatusCodeType.DELIVERY_ING.getCode()) {
             throw new IllegalStateException("주문 취소할 수 없는 상태입니다.");
         }
+
+        orderDetailRepository.changeAllType(orderId, StatusCodeType.ORDER_CANCEL.getCode());
+
 
         // 조회한 주문에 해당하는 order_details(List)를 가져오자.
         List<ProdOrderDetail> orderDetails = order.getOrderDetails();

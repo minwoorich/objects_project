@@ -28,9 +28,8 @@ class ProdOrderTest {
         Assertions.assertThat(getOrderDetails.size()).isEqualTo(3);
     }
 
-    private ProdOrder createOrder(List<ProdOrderDetail> orderDetails) {
+    private ProdOrder createOrder(List<ProdOrderDetail> prodOrderDetails) {
         return ProdOrder.builder()
-                .orderDetails(orderDetails)
                 .build();
     }
 
