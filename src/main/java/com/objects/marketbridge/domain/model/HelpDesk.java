@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class HelpDesk extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "help_desk_id")
     private Long id;
 
@@ -22,8 +22,8 @@ public class HelpDesk extends BaseEntity {
     //private Long orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User userId;
+    @JoinColumn(name = "member_id")
+    private Member memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -35,9 +35,9 @@ public class HelpDesk extends BaseEntity {
     private String content;
 
     @Builder
-    private HelpDesk(ProdOrder prodOrderId, User userId, Product productId, ContentType contentType, String content) {
+    private HelpDesk(ProdOrder prodOrderId, Member memberId, Product productId, ContentType contentType, String content) {
         this.prodOrderId = prodOrderId;
-        this.userId = userId;
+        this.memberId = memberId;
         this.productId = productId;
         this.contentType = contentType;
         this.content = content;

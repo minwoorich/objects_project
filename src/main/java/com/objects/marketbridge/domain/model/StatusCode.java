@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class StatusCode extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "status_code_id")
     private Long id;
 

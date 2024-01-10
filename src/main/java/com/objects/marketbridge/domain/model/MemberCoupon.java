@@ -11,17 +11,17 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CustomerCoupon extends BaseEntity {
+public class MemberCoupon extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "customer_coupon_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_coupon_id")
     private Long id;
 
     // TODO
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User userId;
+    @JoinColumn(name = "member_id")
+    private Member memberId;
     // TODO
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "couponId")
@@ -32,8 +32,8 @@ public class CustomerCoupon extends BaseEntity {
     private LocalDateTime usedDate;
 
     @Builder
-    private CustomerCoupon(User userId, Coupon couponId, boolean isUsed, LocalDateTime usedDate) {
-        this.userId = userId;
+    private MemberCoupon(Member memberId, Coupon couponId, boolean isUsed, LocalDateTime usedDate) {
+        this.memberId = memberId;
         this.couponId = couponId;
         this.isUsed = isUsed;
         this.usedDate = usedDate;
