@@ -11,4 +11,6 @@ public interface OrderRepository {
     Optional<ProdOrder> findById(Long orderId);
 
     ProdOrder save(ProdOrder order);
+
+    Optional<ProdOrder> findWithOrderDetailsAndProduct(Long orderId);
 }
