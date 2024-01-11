@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.user.dto;
+package com.objects.marketbridge.domain.member.dto;
 
 
 import jakarta.validation.constraints.*;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CreateUser {
+public class CreateMember {
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "이메일 필수값 입니다.")
     private String email;
@@ -27,7 +27,7 @@ public class CreateUser {
 
 
     @Builder
-    public CreateUser(String email, String password, String name, String phoneNo, Boolean isAgree) {
+    public CreateMember(String email, String password, String name, String phoneNo, Boolean isAgree) {
         this.email = email;
         this.password = password;
         this.name = name;

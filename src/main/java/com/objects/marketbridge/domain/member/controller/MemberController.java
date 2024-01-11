@@ -1,8 +1,8 @@
-package com.objects.marketbridge.domain.user.controller;
+package com.objects.marketbridge.domain.member.controller;
 
 
-import com.objects.marketbridge.domain.user.dto.CreateUser;
-import com.objects.marketbridge.domain.user.service.UserService;
+import com.objects.marketbridge.domain.member.dto.CreateMember;
+import com.objects.marketbridge.domain.member.service.MemberService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/member")
+public class MemberController {
 
     @Autowired
-    private UserService userService;
+    private MemberService memberService;
 
     @PostMapping("/signup")
-    public ApiResponse<Void> registerUser(@Valid @RequestBody CreateUser userDTO) {
-        userService.saveUser(userDTO);
+    public ApiResponse<Void> registerUser(@Valid @RequestBody CreateMember userDTO) {
+        memberService.save(userDTO);
         return ApiResponse.of(HttpStatus.CREATED,"completed",null);
     }
 }
