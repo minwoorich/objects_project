@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.model.ProdOrder;
-import com.objects.marketbridge.domain.model.StatusCodeType;
+import com.objects.marketbridge.domain.order.domain.ProdOrder;
+import com.objects.marketbridge.domain.order.domain.StatusCodeType;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import lombok.RequiredArgsConstructor;

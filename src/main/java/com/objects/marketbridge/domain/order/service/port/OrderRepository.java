@@ -1,7 +1,8 @@
 package com.objects.marketbridge.domain.order.service.port;
 
 
-import com.objects.marketbridge.domain.model.ProdOrder;
+import com.objects.marketbridge.domain.order.domain.ProdOrder;
+import com.objects.marketbridge.domain.order.repository.OrderJpaRepository;
 
 import java.util.Optional;
 
