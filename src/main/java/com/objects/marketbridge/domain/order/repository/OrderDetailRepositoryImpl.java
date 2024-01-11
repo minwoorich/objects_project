@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.order.repository;
 
+import com.objects.marketbridge.domain.model.ProdOrder;
 import com.objects.marketbridge.domain.model.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import lombok.RequiredArgsConstructor;
