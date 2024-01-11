@@ -27,7 +27,7 @@ public class MemberService {
             // 사용할 수 있는 email
             // 정상적인 가입이 가능하다
             // ....0
-             return false;
+            return false;
         }
     }
 
