@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.user;
+package com.objects.marketbridge.domain.member;
 
 public class dummy {
     //TEST!!
