@@ -18,19 +18,20 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void checkDuplicateEmail(String email){
+    public boolean checkDuplicateEmail(String email){
 
         User userEmail = userRepository.findByEmail(email).orElse(null);
 
         if (userEmail != null) {
             // null이 아니면 이미 가입된 email
             // 이미 등록된 아이디라는 문구 출력
-            //....
-
+            //....1
+            return true;
         } else {
             // 사용할 수 있는 email
             // 정상적인 가입이 가능하다
-            // ....
+            // ....0
+             return false;
         }
     }
 
