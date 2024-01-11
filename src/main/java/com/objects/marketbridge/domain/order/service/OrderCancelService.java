@@ -1,13 +1,15 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.model.ProdOrder;
-import com.objects.marketbridge.domain.model.StatusCodeType;
+import com.objects.marketbridge.domain.order.domain.ProdOrder;
+import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.domain.StatusCodeType;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,7 +23,7 @@ public class OrderCancelService {
     public void orderCancel(Long orderId, String reason) {
 
         // orderId로 주문을 조회한다.
-        Optional<ProdOrder> orderOptional = orderRepository.findById(orderId);
+        Optional<ProdOrder> orderOptional = orderRepository.findWithOrderDetailsAndProduct(orderId);
         if (orderOptional.isEmpty()) {
             throw new IllegalArgumentException("조회된 주문이 없습니다.");
         }
@@ -40,11 +42,17 @@ public class OrderCancelService {
         // 재고의 수량을 늘리자 (동시성 문제)
         // 고려사항 : 쿠팡이라면 orderDetail에 해당하는 상품들이 어디 wherehouse의 상품인지 알고있어야 한다.
         // 1. orderDetails에 해당하는 상품들을 리스트로 만들자.
+        List<ProdOrderDetail> orderDetails = order.getProdOrderDetails();
+        for (ProdOrderDetail orderDetail : orderDetails) {
+            //TODO 조인을 너무 많이 하는데 원래 이런가?
+//            orderDetail.getProduct()
+        }
         // 2. 상품 리스트들을 조건으로 상품 stock을 가지고 오자.
         // 3. stock의 재고량을 orderDetaeil의 quantity만큼 증가시키자.
 
 
         // ProdOrder에 존재하는 totalPrice의 값을 주문 유저의 계좌로 환불해주자.
             // (재고 수량 동시성 예외가 터져도 환불은 해줌 -> 재고 문제는 따로 처리해야 함)
+
     }
 }
