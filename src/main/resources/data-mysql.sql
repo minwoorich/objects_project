@@ -33,3 +33,5 @@ values (ORDER_INIT, "주문생성", "OR00"),
 
        (CUSTOMER_FAULT, "고객과실", "CS08");
 */
+
+/*insert into member(null, 'basic', 'kakao', 'test@email.com', '01012341234', '홍길동', '1234', '1','1', now(), now(), now());*/
