@@ -28,4 +28,8 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
         orderDetailJpaRepository.addReason(orderId, reason);
     }
 
+    @Override
+    public void save(ProdOrderDetail prodOrderDetail) {
+        orderDetailJpaRepository.save(prodOrderDetail);
+    }
 }

@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
+import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -59,6 +60,21 @@ public class ProdOrderDetail extends BaseEntity{
         this.usedPoint = usedPoint;
         this.reason = reason;
         this.cancelledAt = cancelledAt;
+    }
+
+    public static ProdOrderDetail from(CreateOrderDto dto) {
+        return ProdOrderDetail.builder()
+                .product(dto.getProduct())
+                .coupon(dto.getCoupon())
+                .usedCoupon(dto.getUsedCoupon())
+                .quantity(dto.getQuantity())
+                .price(dto.getPrice())
+                .statusCode(dto.getStatusCode())
+                .deliveredDate(dto.getDeliveredDate())
+                .usedPoint(dto.getUsedPoint())
+                .reason(dto.getReason())
+                .cancelledAt(dto.getCancelledAt())
+                .build();
     }
 
     public void setOrder(ProdOrder prodOrder) {
