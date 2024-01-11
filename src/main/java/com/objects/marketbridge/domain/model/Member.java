@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class Member extends BaseEntity {
 
-    @Id @GeneratedValue
-    @Column(name = "user_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -30,21 +30,19 @@ public class User extends BaseEntity {
 
     private String phoneNo;
 
-    private String birth;
     // 알림
     private boolean isAlert;
     // 약관동의
     private boolean isAgree;
 
     @Builder
-    private User(SocialType socialType, Membership membership, String email, String password, String name, String phoneNo, String birth, boolean isAlert, boolean isAgree) {
+    private Member(SocialType socialType, Membership membership, String email, String password, String name, String phoneNo, boolean isAlert, boolean isAgree) {
         this.socialType = socialType;
         this.membership = membership;
         this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNo = phoneNo;
-        this.birth = birth;
         this.isAlert = isAlert;
         this.isAgree = isAgree;
     }

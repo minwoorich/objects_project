@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
+import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class ProdOrderDetail extends BaseEntity{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "prod_order_detail_id")
     private Long id;
 
@@ -30,7 +31,7 @@ public class ProdOrderDetail extends BaseEntity{
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
-    private Integer used_coupon;
+    private Integer usedCoupon;
 
     private Integer quantity;
 
@@ -47,11 +48,11 @@ public class ProdOrderDetail extends BaseEntity{
     private LocalDateTime cancelledAt;
 
     @Builder
-    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, Integer used_coupon, Integer quantity, Integer price, String statusCode, LocalDateTime deliveredDate, Integer usedPoint, String reason, LocalDateTime cancelledAt) {
+    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, Integer usedCoupon, Integer quantity, Integer price, String statusCode, LocalDateTime deliveredDate, Integer usedPoint, String reason, LocalDateTime cancelledAt) {
         this.prodOrder = prodOrder;
         this.product = product;
         this.coupon = coupon;
-        this.used_coupon = used_coupon;
+        this.usedCoupon = usedCoupon;
         this.quantity = quantity;
         this.price = price;
         this.statusCode = statusCode;
@@ -59,6 +60,21 @@ public class ProdOrderDetail extends BaseEntity{
         this.usedPoint = usedPoint;
         this.reason = reason;
         this.cancelledAt = cancelledAt;
+    }
+
+    public static ProdOrderDetail from(CreateOrderDto dto) {
+        return ProdOrderDetail.builder()
+                .product(dto.getProduct())
+                .coupon(dto.getCoupon())
+                .usedCoupon(dto.getUsedCoupon())
+                .quantity(dto.getQuantity())
+                .price(dto.getPrice())
+                .statusCode(dto.getStatusCode())
+                .deliveredDate(dto.getDeliveredDate())
+                .usedPoint(dto.getUsedPoint())
+                .reason(dto.getReason())
+                .cancelledAt(dto.getCancelledAt())
+                .build();
     }
 
     public void setOrder(ProdOrder prodOrder) {

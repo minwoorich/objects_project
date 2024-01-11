@@ -1,9 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,17 +12,17 @@ import lombok.NoArgsConstructor;
 public class CouponBudget extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "estimated_time_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "coupon_budget_id")
     private Long id;
     // TODO
-    private Long userId;
+    private Long memberId;
 
     private int price;
 
     @Builder
-    private CouponBudget(Long userId, int price) {
-        this.userId = userId;
+    private CouponBudget(Long memberId, int price) {
+        this.memberId = memberId;
         this.price = price;
     }
 }

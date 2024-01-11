@@ -1,6 +1,5 @@
 package com.objects.marketbridge.domain.order.controller.request;
 
-import com.objects.marketbridge.domain.order.dto.OrderCreate;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -24,9 +23,4 @@ public class OrderCreateRequest {
         this.productOptionId = productOptionId;
         this.amount = amount;
     }
-
-//    public OrderCreate to() {
-//        return OrderCreate.builder()
-//                .
-//    }
 }

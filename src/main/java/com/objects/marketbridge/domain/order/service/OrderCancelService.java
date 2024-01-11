@@ -1,14 +1,13 @@
 package com.objects.marketbridge.domain.order.service;
 
 import com.objects.marketbridge.domain.model.ProdOrder;
-import com.objects.marketbridge.domain.model.ProdOrderDetail;
 import com.objects.marketbridge.domain.model.StatusCodeType;
+import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,9 +15,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderCancelService {
 
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     public void orderCancel(Long orderId, String reason) {
+
         // orderId로 주문을 조회한다.
         Optional<ProdOrder> orderOptional = orderRepository.findById(orderId);
         if (orderOptional.isEmpty()) {
@@ -33,11 +34,8 @@ public class OrderCancelService {
             throw new IllegalStateException("주문 취소할 수 없는 상태입니다.");
         }
 
-        // 조회한 주문에 해당하는 order_details(List)를 가져오자.
-        List<ProdOrderDetail> orderDetails = order.getOrderDetails();
-
-        // order_details의 상태값을 모두 CANCEL로 바꾸자.
-        orderDetails.forEach(o -> o.changeStatusCode(StatusCodeType.ORDER_CANCEL.getText()));
+        orderDetailRepository.changeAllType(orderId, StatusCodeType.ORDER_CANCEL.getCode());
+        orderDetailRepository.addReason(orderId, reason);
 
         // 재고의 수량을 늘리자 (동시성 문제)
         // 고려사항 : 쿠팡이라면 orderDetail에 해당하는 상품들이 어디 wherehouse의 상품인지 알고있어야 한다.

@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 public class Review extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User userId;
+    @JoinColumn(name = "member_id")
+    private Member memberId;
 
     //private Long orderId; orderid 제거
 
@@ -31,8 +31,8 @@ public class Review extends BaseEntity {
     private Integer rating; //1-5
 
     @Builder
-    private Review(User userId, Product productId, String content, Integer rating) {
-        this.userId = userId;
+    private Review(Member memberId, Product productId, String content, Integer rating) {
+        this.memberId = memberId;
         this.productId = productId;
         this.content = content;
         this.rating = rating;

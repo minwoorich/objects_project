@@ -1,4 +1,4 @@
 package com.objects.marketbridge.domain.product.dto;
 
-public class dummy {
+public class ProductResponseDto {
 }

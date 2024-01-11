@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.user.service;
 
-import com.objects.marketbridge.domain.model.User;
+import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.user.dto.CreateUser;
 import com.objects.marketbridge.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +14,12 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
-
         this.userRepository = userRepository;
     }
 
     public boolean checkDuplicateEmail(String email){
 
-        User userEmail = userRepository.findByEmail(email).orElse(null);
+        Member userEmail = userRepository.findByEmail(email).orElse(null);
 
         if (userEmail != null) {
             // null이 아니면 이미 가입된 email
@@ -36,7 +35,7 @@ public class UserService {
     }
 
     public void saveUser(CreateUser createUser){
-        User user = User.fromDto(createUser);
+        Member user = Member.fromDto(createUser);
         userRepository.save(user);
     }
 }

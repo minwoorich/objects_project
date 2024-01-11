@@ -12,26 +12,26 @@ import lombok.NoArgsConstructor;
 public class ProdOption extends BaseEntity{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "prod_option_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product productId;
+    private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_category_id")
-    private OptionCategory optionCategoryId;
+    private OptionCategory optionCategory;
 
     private String name;
 
     private Integer price;
 
     @Builder
-    private ProdOption(Product productId, OptionCategory optionCategoryId, String name, Integer price) {
-        this.productId = productId;
-        this.optionCategoryId = optionCategoryId;
+    private ProdOption(Product product, OptionCategory optionCategory, String name, Integer price) {
+        this.product = product;
+        this.optionCategory = optionCategory;
         this.name = name;
         this.price = price;
     }
