@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.model;
+package com.objects.marketbridge.domain.order.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

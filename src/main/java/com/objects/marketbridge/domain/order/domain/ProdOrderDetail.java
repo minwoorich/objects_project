@@ -1,5 +1,9 @@
-package com.objects.marketbridge.domain.model;
+package com.objects.marketbridge.domain.order.domain;
 
+import com.objects.marketbridge.domain.model.BaseEntity;
+import com.objects.marketbridge.domain.model.Coupon;
+import com.objects.marketbridge.domain.model.Product;
+import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProdOrderDetail extends BaseEntity{
+public class ProdOrderDetail extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,26 +66,21 @@ public class ProdOrderDetail extends BaseEntity{
         this.cancelledAt = cancelledAt;
     }
 
-    public static ProdOrderDetail from(CreateOrderDto dto) {
-        return ProdOrderDetail.builder()
-                .product(dto.getProduct())
-                .coupon(dto.getCoupon())
-                .usedCoupon(dto.getUsedCoupon())
-                .quantity(dto.getQuantity())
-                .price(dto.getPrice())
-                .statusCode(dto.getStatusCode())
-                .deliveredDate(dto.getDeliveredDate())
-                .usedPoint(dto.getUsedPoint())
-                .reason(dto.getReason())
-                .cancelledAt(dto.getCancelledAt())
-                .build();
-    }
-
     public void setOrder(ProdOrder prodOrder) {
         this.prodOrder = prodOrder;
     }
 
     public void changeStatusCode(String statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public static ProdOrderDetail create(Product product, Coupon coupon, Integer quantity, Integer price) {
+        return ProdOrderDetail.builder()
+                .product(product)
+                .coupon(coupon)
+                .quantity(quantity)
+                .price(price)
+                .statusCode(StatusCodeType.ORDER_INIT.getCode())
+                .build();
     }
 }
