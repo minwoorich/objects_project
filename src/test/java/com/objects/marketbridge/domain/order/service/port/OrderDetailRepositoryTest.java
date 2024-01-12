@@ -1,8 +1,8 @@
 package com.objects.marketbridge.domain.order.service.port;
 
-import com.objects.marketbridge.domain.model.ProdOrder;
-import com.objects.marketbridge.domain.model.ProdOrderDetail;
-import com.objects.marketbridge.domain.model.StatusCodeType;
+import com.objects.marketbridge.domain.order.domain.ProdOrder;
+import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.domain.StatusCodeType;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

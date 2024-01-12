@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.order.service.port;
 
-import com.objects.marketbridge.domain.model.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
 
 import java.util.List;
 
@@ -8,9 +8,11 @@ public interface OrderDetailRepository  {
 
     int changeAllType(Long orderId, String type);
 
-    List<ProdOrderDetail> saveAll(List<ProdOrderDetail> orderDetail1);
+    List<ProdOrderDetail> saveAll(List<ProdOrderDetail> orderDetail);
 
     void addReason(Long orderId, String reason);
 
     void save(ProdOrderDetail prodOrderDetail);
+
+
 }
