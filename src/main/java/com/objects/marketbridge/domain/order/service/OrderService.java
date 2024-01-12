@@ -67,7 +67,7 @@ public class OrderService {
         // TODO : payment 엔티티에 주문생성 초기에 들어가야할 데이터 생각
         // TODO : Response 에 들어갈것 생각
         // TODO : payment 엔티티 저장하기 구현
-        Payment payment =  Payment.create();
+//        Payment payment =  Payment.create();
 
 
 
