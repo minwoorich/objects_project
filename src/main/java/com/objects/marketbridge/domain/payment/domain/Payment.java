@@ -74,7 +74,7 @@ public class Payment extends BaseEntity {
         this.virtual = virtual;
     }
 
-    public Payment create() {
+    public static Payment create() {
         return Payment.builder().build();
     }
 }
