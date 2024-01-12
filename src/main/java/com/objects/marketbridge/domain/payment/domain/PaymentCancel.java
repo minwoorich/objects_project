@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class PaymentCancel {
     private Long cancelAmount;
-    private String cancelReason;
+    private String paymentCancelReason;
     private String canceledAt;
     private String transactionKey;
 }
