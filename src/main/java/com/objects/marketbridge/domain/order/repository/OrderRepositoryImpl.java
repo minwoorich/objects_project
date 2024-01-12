@@ -27,4 +27,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Optional<ProdOrder> findWithOrderDetailsAndProduct(Long orderId) {
         return orderJpaRepository.findWithOrderDetailsAndProduct(orderId);
     }
+
+    @Override
+    public void deleteAllInBatch() {
+        orderJpaRepository.deleteAllInBatch();
+    }
 }

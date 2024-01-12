@@ -13,4 +13,6 @@ public interface OrderRepository {
     ProdOrder save(ProdOrder order);
 
     Optional<ProdOrder> findWithOrderDetailsAndProduct(Long orderId);
+
+    void deleteAllInBatch();
 }
