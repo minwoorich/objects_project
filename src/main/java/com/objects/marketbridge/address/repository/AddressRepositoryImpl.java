@@ -1,6 +1,7 @@
 package com.objects.marketbridge.address.repository;
 
 import com.objects.marketbridge.domain.model.Address;
+import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.global.error.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -19,5 +20,15 @@ public class AddressRepositoryImpl implements AddressRepository {
     @Override
     public void save(Address address) {
         addressJpaRepository.save(address);
+    }
+
+    @Override
+    public Address findByMemberId(Long memberId) {
+        return addressJpaRepository.findByMemberId(memberId);
+    }
+
+    @Override
+    public void deleteAllInBatch(){
+        addressJpaRepository.deleteAllInBatch();
     }
 }
