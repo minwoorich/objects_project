@@ -3,6 +3,7 @@ package com.objects.marketbridge.domain.order.domain;
 import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.BaseEntity;
 import com.objects.marketbridge.domain.model.Member;
+import com.objects.marketbridge.domain.model.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -58,5 +59,18 @@ public class ProdOrder extends BaseEntity {
     public void addOrderDetail(ProdOrderDetail prodOrderDetails) {
         this.prodOrderDetails.add(prodOrderDetails);
         prodOrderDetails.setOrder(this);
+    }
+
+    //== 비즈니스 로직==//
+    public List<Product> cancel(String reason) {
+        List<Product> list = new ArrayList<>();
+
+        for (ProdOrderDetail prodOrderDetail : prodOrderDetails) {
+            Product product = prodOrderDetail.cancel(reason);
+            list.add(product);
+        }
+
+        return list;
+
     }
 }

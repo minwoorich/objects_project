@@ -7,9 +7,7 @@ import com.objects.marketbridge.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,10 +15,13 @@ public class OrderCancelController {
 
     private OrderCancelService orderCancelService;
 
-    @GetMapping("/orders/cancel-flow")
-    public ApiResponse<OrderCancelResponse> cancelOrder(@Valid @RequestBody OrderCancelRequest request) {
+    @PostMapping("/orders/cancel-flow")
+    public ApiResponse<OrderCancelResponse> cancelOrder(
+            @RequestParam Long orderId,
+            @RequestParam String reason) {
+
+        orderCancelService.orderCancel(orderId, reason);
+
         return ApiResponse.of(HttpStatus.OK, "이상없음", new OrderCancelResponse());
-
-
     }
 }
