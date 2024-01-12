@@ -3,8 +3,6 @@ package com.objects.marketbridge.domain.order.domain;
 import com.objects.marketbridge.domain.model.BaseEntity;
 import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.Product;
-import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
-import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -36,24 +34,24 @@ public class ProdOrderDetail extends BaseEntity {
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
-    private Integer usedCoupon;
+    private Long usedCoupon;
 
-    private Integer quantity;
+    private Long quantity;
 
-    private Integer price;
+    private Long price;
 
     private String statusCode;
 
     private LocalDateTime deliveredDate;
 
-    private Integer usedPoint;
+    private Long usedPoint;
 
     private String reason;
 
     private LocalDateTime cancelledAt;
 
     @Builder
-    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, Integer usedCoupon, Integer quantity, Integer price, String statusCode, LocalDateTime deliveredDate, Integer usedPoint, String reason, LocalDateTime cancelledAt) {
+    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, Long usedCoupon, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, Long usedPoint, String reason, LocalDateTime cancelledAt) {
         this.prodOrder = prodOrder;
         this.product = product;
         this.coupon = coupon;
@@ -75,13 +73,13 @@ public class ProdOrderDetail extends BaseEntity {
         this.statusCode = statusCode;
     }
 
-    public static ProdOrderDetail create(Product product, Coupon coupon, Integer quantity, Integer price) {
+    public static ProdOrderDetail create(Product product, Coupon coupon, Long quantity, Long price, String statusCode) {
         return ProdOrderDetail.builder()
                 .product(product)
                 .coupon(coupon)
                 .quantity(quantity)
                 .price(price)
-                .statusCode(StatusCodeType.ORDER_INIT.getCode())
+                .statusCode(statusCode)
                 .build();
     }
 

@@ -12,7 +12,15 @@ public interface OrderDetailRepository  {
 
     void addReason(Long orderId, String reason);
 
+    void deleteAllInBatch();
+
     void save(ProdOrderDetail prodOrderDetail);
+
+    ProdOrderDetail findById(Long id);
+
+    List<ProdOrderDetail> findByProductId(Long id);
+
+    List<ProdOrderDetail> findAll();
 
 
 }

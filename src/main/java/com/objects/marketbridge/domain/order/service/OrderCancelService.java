@@ -28,7 +28,7 @@ public class OrderCancelService {
         ProdOrder order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("조회된 주문이 없습니다."));
 
-        List<Product> products = order.cancel(reason);
+//        List<Product> products = order.cancel(reason);
 
         // 만약 배송 중 이라면 주문 취소를 할 수 없다.
         // 여차하면 객체로 빼야함
