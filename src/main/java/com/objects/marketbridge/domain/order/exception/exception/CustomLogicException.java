@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.order.exception;
+package com.objects.marketbridge.domain.order.exception.exception;
 
 import lombok.NoArgsConstructor;
 

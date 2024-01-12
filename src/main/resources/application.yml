@@ -27,6 +27,11 @@ spring:
     console:
       enabled: true
 
+logging:
+  level:
+    org.hibernate.sql: debug
+
+
 payment:
   toss:
     test_client_api_key : test_ck_GePWvyJnrK2PmxlyQWMqVgLzN97E
@@ -62,3 +67,7 @@ spring:
   h2:
     console:
       enabled: true
+
+logging:
+  level:
+    org.hibernate.sql: debug

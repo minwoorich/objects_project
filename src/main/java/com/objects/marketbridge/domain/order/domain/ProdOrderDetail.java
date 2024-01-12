@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -80,5 +81,16 @@ public class ProdOrderDetail extends BaseEntity {
                 .price(price)
                 .statusCode(statusCode)
                 .build();
+    }
+
+    public Product cancel(String reason) {
+        if (Objects.equals(statusCode, StatusCodeType.DELIVERY_COMPLETED.getCode())) {
+            throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
+        }
+
+        statusCode = StatusCodeType.ORDER_CANCEL.getCode();
+        this.reason = reason;
+
+        return product;
     }
 }
