@@ -32,9 +32,9 @@ public class OrderCancelService {
         // 만약 배송 중 이라면 주문 취소를 할 수 없다.
         // 여차하면 객체로 빼야함
         // TODO 주문 취소할 수 없는 상황이 언제인지 정책 정해야 함!
-        if (order.getStatusCode() == StatusCodeType.DELIVERY_ING.getCode()) {
-            throw new IllegalStateException("주문 취소할 수 없는 상태입니다.");
-        }
+//        if (order.getStatusCode() == StatusCodeType.DELIVERY_ING.getCode()) {
+//            throw new IllegalStateException("주문 취소할 수 없는 상태입니다.");
+//        }
 
         orderDetailRepository.changeAllType(orderId, StatusCodeType.ORDER_CANCEL.getCode());
         orderDetailRepository.addReason(orderId, reason);
