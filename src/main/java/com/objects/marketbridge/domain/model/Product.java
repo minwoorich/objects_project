@@ -24,16 +24,16 @@ public class Product extends BaseEntity{
 
     private String name;
 
-    private Integer price;
+    private Long price;
 
     private boolean isSubs;
 
     private String thumbImg;
 
-    private Integer discountRate;
+    private Long discountRate;
 
     @Builder
-    private Product(Category categoryId, boolean isOwn, String name, Integer price, boolean isSubs, String thumbImg, Integer discountRate) {
+    private Product(Category categoryId, boolean isOwn, String name, Long price, boolean isSubs, String thumbImg, Long discountRate) {
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
