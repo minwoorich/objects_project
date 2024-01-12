@@ -239,8 +239,12 @@ create table if not exists MarketBridge.payment
 (
    payment_id	            BIGINT      auto_increment
    primary key,
-    
-   prod_order_id		    BIGINT      NULL,
+
+   transaction_key          varchar(255)        null,
+   payment_cancel_reason    varchar(255)        null,
+   prod_order_id		    BIGINT              NULL,
+   order_name               varchar(255)        null,
+   order_no                 varchar(255)        null,
    receipt_id	            varchar(255)	    NULL,
    payment_type	            varchar(255)	    NULL,
    payment_method	        varchar(255)	    NULL,
@@ -254,7 +258,6 @@ create table if not exists MarketBridge.payment
    bank_code	            varchar(255)	    NULL,
    phone_no	                varchar(255)	    NULL,
    cancel_amount	        varchar(255)	    NULL,
-   cancel_toss_reason	    varchar(255) 	NULL,
    card_issuer_code 	    varchar(255)	    NULL,
    card_no	                varchar(255)	    NULL,
    installment_plan_months	BIGINT	    NULL,
@@ -268,6 +271,7 @@ create table if not exists MarketBridge.payment
    approved_at	            timestamp	NULL,
    requested_at	            timestamp	NULL,
    updated_at	            timestamp	NULL,
+   created_at	            timestamp	NULL,
    cancelled_at	            timestamp	NULL
 );
 
@@ -308,8 +312,10 @@ create table if not exists MarketBridge.prod_order
     prod_order_id  bigint auto_increment
     primary key,
 
+    order_name     varchar(255) ,
+    order_no       varchar(255) ,
+    address_id     bigint       ,
     member_id      bigint       ,
-    status_code    varchar(255) ,
     total_price    bigint       ,
     point_rate     int          ,
     saved_point    int          ,
