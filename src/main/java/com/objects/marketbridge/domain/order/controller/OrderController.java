@@ -6,6 +6,8 @@ import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
 import com.objects.marketbridge.domain.order.controller.response.CheckoutResponse;
 import com.objects.marketbridge.domain.order.controller.response.OrderResponse;
+import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
+import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.service.OrderService;
 import com.objects.marketbridge.domain.payment.service.TossPaymentService;
 import com.objects.marketbridge.global.common.ApiResponse;
@@ -14,14 +16,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
-    private final TossPaymentService paymentService;
-    private final MemberService memberService;
-    private final MemberRepository memberRepository;
 
     @GetMapping("/orders/direct/checkout")
     public ApiResponse<CheckoutResponse> showCheckout() {
@@ -30,8 +31,10 @@ public class OrderController {
 
     @PostMapping("/orders/toss")
     public ApiResponse<OrderResponse> createOrder(@SessionAttribute Long memberId, @Valid @RequestBody CreateOrderRequest createOrderRequest) {
-        String userEmail = memberRepository.findById(memberId).map(Member::getEmail).orElseThrow(IllegalArgumentException::new);
-        orderService.create(userEmail, createOrderRequest);
+        CreateProdOrderDto createProdOrderDto = createOrderRequest.toProdOrderDto(memberId);
+        List<CreateProdOrderDetailDto> createProdOrderDetailDtos = createOrderRequest.toProdOrderDetailDtos();
+        orderService.create(createProdOrderDto, createProdOrderDetailDtos);
         return null;
     }
+
 }

@@ -1,11 +1,17 @@
 package com.objects.marketbridge.domain.order.service;
 
+import com.objects.marketbridge.address.repository.AddressRepository;
 import com.objects.marketbridge.domain.coupon.repository.CouponRepository;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
+import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.Coupon;
+import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
+import com.objects.marketbridge.domain.order.domain.ProdOrder;
 import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
+import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.dto.ProductInfoDto;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
@@ -28,53 +34,62 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
+    private final AddressRepository addressRepository;
 
     @Transactional
-    public void create(String userEmail, CreateOrderRequest request) {
-
-        // request 에서 Product 를 추출하여 Map 으로 그룹핑
-        Map<Long, Product> productMap = GroupingHelper.groupingByKey(getAllProducts(request), Product::getId);
-
-        // request 에서 Coupon 을 추출하여 Map 으로 그룹핑
-        Map<Long, Coupon> couponMap = GroupingHelper.groupingByKey(getAllCoupons(request), Coupon::getId);
-
-        // request 에서 상품에 대한
-        List<ProductInfoDto> productInfoDtos = request.getProductInfos();
-
-        List<ProdOrderDetail> orderDetails =
-                createOrderDetails(productInfoDtos, productMap, couponMap);
+    public void create(CreateProdOrderDto prodOrderDto, List<CreateProdOrderDetailDto> prodOrderDetailDtos) {
+        ProdOrder prodOrder = createProdOrder(prodOrderDto);
+        List<ProdOrderDetail> prodOrderDetails = createProdOrderDetails(prodOrderDetailDtos);
 
         //TODO : 1) ProdOrder 엔티티 생성, 2) 엔티티 저장
+
     }
 
-    private List<ProdOrderDetail> createOrderDetails(List<ProductInfoDto> productInfoDtos, Map<Long, Product> productMap, Map<Long, Coupon> couponMap) {
-        return productInfoDtos.stream().map(info ->
+    private ProdOrder createProdOrder(CreateProdOrderDto dto) {
+
+        Member member = memberRepository.findById(dto.getMemberId()).orElseThrow(IllegalArgumentException::new);
+        Address address = addressRepository.findById(dto.getAddressId());
+        Long totalOrderPrice = dto.getTotalOrderPrice();
+
+        return ProdOrder.create(member, address, totalOrderPrice);
+    }
+
+    private List<ProdOrderDetail> createProdOrderDetails(List<CreateProdOrderDetailDto> dtos) {
+        // request 에서 Product 를 추출하여 Map 으로 그룹핑
+        List<Product> products = getAllProducts(dtos);
+        Map<Long, Product> productMap = GroupingHelper.groupingByKey(products, Product::getId);
+
+        // request 에서 Coupon 을 추출하여 Map 으로 그룹핑
+        List<Coupon> coupons = getAllCoupons(dtos);
+        Map<Long, Coupon> couponMap = GroupingHelper.groupingByKey(coupons, Coupon::getId);
+
+        return dtos.stream().map(d ->
                 ProdOrderDetail.create(
-                        productMap.get(info.getProductId()),
-                        couponMap.get(info.getUsedCouponId()),
-                        info.getQuantity(),
-                        info.getUnitOrderPrice()
+                        productMap.get(d.getProductId()),
+                        couponMap.get(d.getUsedCouponId()),
+                        d.getQuantity(),
+                        d.getUnitOrderPrice()
                 )
         ).toList();
     }
 
-    private List<Coupon> getAllCoupons(CreateOrderRequest request) {
-        return couponRepository.findAllByIds(extractCouponIds(request));
+    private List<Coupon> getAllCoupons(List<CreateProdOrderDetailDto> dtos) {
+        return couponRepository.findAllByIds(extractCouponIds(dtos));
     }
 
-    private List<Product> getAllProducts(CreateOrderRequest request) {
-        return productRepository.findAllById(extractProductIds(request));
+    private List<Product> getAllProducts(List<CreateProdOrderDetailDto> dtos) {
+        return productRepository.findAllById(extractProductIds(dtos));
     }
 
-    private static List<Long> extractCouponIds(CreateOrderRequest request) {
-        return request.getProductInfos().stream()
-                .map(ProductInfoDto::getUsedCouponId)
+    private static List<Long> extractCouponIds(List<CreateProdOrderDetailDto> dtos) {
+        return dtos.stream()
+                .map(CreateProdOrderDetailDto::getUsedCouponId)
                 .toList();
     }
 
-    private static List<Long> extractProductIds(CreateOrderRequest request) {
-        return request.getProductInfos().stream()
-                .map(ProductInfoDto::getProductId)
+    private static List<Long> extractProductIds(List<CreateProdOrderDetailDto> dtos) {
+        return dtos.stream()
+                .map(CreateProdOrderDetailDto::getProductId)
                 .toList();
     }
 }
