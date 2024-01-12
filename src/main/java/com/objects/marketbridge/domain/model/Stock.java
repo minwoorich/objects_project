@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Entity
 @Getter
@@ -12,24 +13,31 @@ import lombok.NoArgsConstructor;
 public class Stock extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stock_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
-    private Warehouse warehouseId;
+    private Warehouse warehouse;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_option_id")
-    private ProdOption productOptionId;
+    private ProdOption productOption;
 
-    private Integer quantity;
+    private Long quantity;
 
     @Builder
-    private Stock(Warehouse warehouseId, ProdOption productOptionId, Integer quantity) {
-        this.warehouseId = warehouseId;
-        this.productOptionId = productOptionId;
+    private Stock(Warehouse warehouse, ProdOption productOption, Long quantity) {
+        this.warehouse = warehouse;
+        this.productOption = productOption;
         this.quantity = quantity;
+    }
+
+    public void decrease(Long quantity) {
+        if (this.quantity - quantity < 0) {
+            throw new IllegalArgumentException("재고는 0개 미만이 될 수 없습니다.");
+        }
+        this.quantity -= quantity;
     }
 }

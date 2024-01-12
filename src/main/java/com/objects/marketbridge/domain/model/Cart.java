@@ -11,26 +11,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart extends BaseEntity {
     @Id
-    @GeneratedValue
-    @Column(name = "prod_order_return_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cart_id")
     private Long id;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_order_id")
-    private ProdOrder orderId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prod_option_id")
+    private ProdOption prodOptionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User userId;
+    @JoinColumn(name = "member_id")
+    private Member memberId;
 
     private boolean isSubs;
 
     private Integer quantity;
 
     @Builder
-    private Cart(ProdOrder orderId, User userId, boolean isSubs, Integer quantity) {
-        this.orderId = orderId;
-        this.userId = userId;
+    private Cart(ProdOption prodOptionId, Member memberId, boolean isSubs, Integer quantity) {
+        this.prodOptionId = prodOptionId;
+        this.memberId = memberId;
         this.isSubs = isSubs;
         this.quantity = quantity;
     }

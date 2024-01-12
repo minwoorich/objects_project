@@ -2,30 +2,26 @@ spring:
   profiles:
     default: local
 
-  datasource:
-    url: jdbc:h2:mem:~/MarketbridgeApplication
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-
 ---
 spring:
   config:
     activate:
       on-profile: local
 
+  datasource:
+    url: jdbc:mysql://localhost:3306/MarketBridge
+    username: objects
+    password: 1234
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-    defer-datasource-initialization: true # (2.5~) Hibernate 초기화 이후 data.sql 실행
+    defer-datasource-initialization: true # (2.5~) Hibernate 초기화 이후 data-mysql.sql 실행
+    # 이게 없으면 data-mysql.sql 스크립트가 수행 안 되고 에러 발생합니당.
 
   h2:
     console:
@@ -36,6 +32,13 @@ spring:
   config:
     activate:
       on-profile: test
+
+  datasource:
+#    url: jdbc:h2:tcp://localhost/~/Marketbridge
+    url: jdbc:h2:mem:~/Marketbridge
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
   jpa:
     hibernate:
@@ -48,3 +51,7 @@ spring:
   sql:
     init:
       mode: never
+
+  h2:
+    console:
+      enabled: true
