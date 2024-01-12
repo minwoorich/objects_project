@@ -14,15 +14,15 @@ public class ProductInfoDto {
 
     @Min(1)
     @NotNull
-    private Integer quantity;
+    private Long quantity;
 
     @NotNull
-    private Integer unitOrderPrice;
+    private Long unitOrderPrice;
 
     private Long usedCouponId;
 
     @Builder
-    public ProductInfoDto(Long productId, Integer quantity, Integer unitOrderPrice, Long usedCouponId) {
+    public ProductInfoDto(Long productId, Long quantity, Long unitOrderPrice, Long usedCouponId) {
         this.productId = productId;
         this.quantity = quantity;
         this.unitOrderPrice = unitOrderPrice;

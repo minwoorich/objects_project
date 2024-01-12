@@ -8,13 +8,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+@ActiveProfiles("test")
 @SpringBootTest
 @Transactional
 class OrderDetailRepositoryTest {
@@ -25,8 +26,6 @@ class OrderDetailRepositoryTest {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
-    @Autowired
-    EntityManager em;
 
     @Test
     @DisplayName("특정 주문에 해당하는 주문 상세의 상태 코드를 한번에 바꾼다.")

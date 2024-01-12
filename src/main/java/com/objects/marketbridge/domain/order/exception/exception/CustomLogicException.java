@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.order.exception;
+package com.objects.marketbridge.domain.order.exception.exception;
 
 import lombok.NoArgsConstructor;
 
@@ -6,8 +6,10 @@ import lombok.NoArgsConstructor;
 public class CustomLogicException extends RuntimeException {
 
     private ErrorCode errorCode;
+    private String message;
 
-    public CustomLogicException(ErrorCode errorCode) {
+    public CustomLogicException(String message, ErrorCode errorCode) {
+        super(message);
         this.errorCode = errorCode;
     }
 }

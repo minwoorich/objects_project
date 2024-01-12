@@ -2,7 +2,6 @@ package com.objects.marketbridge.domain.payment.domain;
 
 import com.objects.marketbridge.domain.model.BaseEntity;
 import com.objects.marketbridge.domain.order.domain.ProdOrder;
-import com.objects.marketbridge.domain.order.domain.StatusCodeType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,35 +18,63 @@ public class Payment extends BaseEntity {
     @Column(name = "payment_id")
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "prod_order_id")
-    private ProdOrder orderId;
+    private ProdOrder prodOrder;
 
-    //TODO : receipt가 테이블인지 아니면 그냥 텍스트인지 의문
     private String receiptId;
 
-    @Enumerated(EnumType.STRING)
-    private PayMethod payMethod; // CARD, CHECK, BANK, AUTO
+    private String paymentType; // 일반결제, 브랜드페이
+    private String paymentMethod; // CARD, TRANSFER, VIRTUAL
+    private Long totalAmount;
+    private Long balanceAmount;
+    private String requestedAt;
+    private String approvedAt;
+    private String paymentKey;
+    private String settlementStatus; // 정산 상태
+    private String paymentStatus;
+    private String refundStatus;
+    private String customerName;
+    private String bankCode;
+    private String orderName;
+    private String phoneNo;
 
-    //카드번호, 계좌번호
-    private String payNum;
+    // 결제 취소에 대한 값
+    @Embedded
+    private PaymentCancel paymentCancel;
 
-    // 카드사
-    private String pg;
+    // 카드 결제
+    @Embedded
+    private Card card;
 
-    //TODO : 서드 파티 결제 API가 보내주는 컬럼들 추가해야함
-
-
-    @Enumerated(EnumType.STRING)
-    private StatusCodeType status;
+    //가상 계좌 결제
+    @Embedded
+    private VirtualAccount virtual;
 
     @Builder
-    private Payment(ProdOrder orderId, String receiptId, PayMethod payMethod, String payNum, String pg, StatusCodeType status) {
-        this.orderId = orderId;
+    private Payment(ProdOrder prodOrder, String receiptId, String paymentType, String paymentMethod, Long totalAmount, Long balanceAmount, String requestedAt, String approvedAt, String paymentKey, String settlementStatus, String paymentStatus, String refundStatus, String customerName, String bankCode, String orderName, String phoneNo, PaymentCancel paymentCancel, Card card, VirtualAccount virtual) {
+        this.prodOrder = prodOrder;
         this.receiptId = receiptId;
-        this.payMethod = payMethod;
-        this.payNum = payNum;
-        this.pg = pg;
-        this.status = status;
+        this.paymentType = paymentType;
+        this.paymentMethod = paymentMethod;
+        this.totalAmount = totalAmount;
+        this.balanceAmount = balanceAmount;
+        this.requestedAt = requestedAt;
+        this.approvedAt = approvedAt;
+        this.paymentKey = paymentKey;
+        this.settlementStatus = settlementStatus;
+        this.paymentStatus = paymentStatus;
+        this.refundStatus = refundStatus;
+        this.customerName = customerName;
+        this.bankCode = bankCode;
+        this.orderName = orderName;
+        this.phoneNo = phoneNo;
+        this.paymentCancel = paymentCancel;
+        this.card = card;
+        this.virtual = virtual;
+    }
+
+    public static Payment create() {
+        return Payment.builder().build();
     }
 }

@@ -21,24 +21,25 @@ public class Coupon extends BaseEntity {
 
     private String name;
 
-    private Integer price;
+    private Long price;
 
-    // TODO
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    private Integer count;
+    private Long count;
 
-    private Integer minimumPrice;
+    private Long minimumPrice;
 
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
 
     @Builder
-    private Coupon(String name, Integer price, Long productId, Integer count, Integer minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+    private Coupon(String name, Long price, Product product, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
         this.name = name;
         this.price = price;
-        this.productId = productId;
+        this.product = product;
         this.count = count;
         this.minimumPrice = minimumPrice;
         this.startDate = startDate;
