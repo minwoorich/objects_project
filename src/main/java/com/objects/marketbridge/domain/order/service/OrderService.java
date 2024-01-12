@@ -7,12 +7,11 @@ import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
-import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
 import com.objects.marketbridge.domain.order.domain.ProdOrder;
 import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.domain.StatusCodeType;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
-import com.objects.marketbridge.domain.order.dto.ProductInfoDto;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
@@ -38,10 +37,18 @@ public class OrderService {
 
     @Transactional
     public void create(CreateProdOrderDto prodOrderDto, List<CreateProdOrderDetailDto> prodOrderDetailDtos) {
+
+        // 1. ProdOrder, ProdOrderDetail 엔티티 생성
         ProdOrder prodOrder = createProdOrder(prodOrderDto);
+        orderRepository.save(prodOrder);
         List<ProdOrderDetail> prodOrderDetails = createProdOrderDetails(prodOrderDetailDtos);
 
-        //TODO : 1) ProdOrder 엔티티 생성, 2) 엔티티 저장
+        // 2. 양방향관계이므로 양쪽 다 서로의 값을 집어넣어줘야함
+        prodOrderDetails.forEach(prodOrder::addOrderDetail);
+        prodOrderDetails.forEach(p -> p.setOrder(prodOrder));
+
+        // 3.주문 엔티티 저장
+        orderDetailRepository.saveAll(prodOrderDetails);
 
     }
 
@@ -55,20 +62,20 @@ public class OrderService {
     }
 
     private List<ProdOrderDetail> createProdOrderDetails(List<CreateProdOrderDetailDto> dtos) {
+
         // request 에서 Product 를 추출하여 Map 으로 그룹핑
-        List<Product> products = getAllProducts(dtos);
-        Map<Long, Product> productMap = GroupingHelper.groupingByKey(products, Product::getId);
+        Map<Long, Product> productMap = GroupingHelper.groupingByKey(getAllProducts(dtos), Product::getId);
 
         // request 에서 Coupon 을 추출하여 Map 으로 그룹핑
-        List<Coupon> coupons = getAllCoupons(dtos);
-        Map<Long, Coupon> couponMap = GroupingHelper.groupingByKey(coupons, Coupon::getId);
+        Map<Long, Coupon> couponMap = GroupingHelper.groupingByKey(getAllCoupons(dtos), Coupon::getId);
 
         return dtos.stream().map(d ->
                 ProdOrderDetail.create(
                         productMap.get(d.getProductId()),
                         couponMap.get(d.getUsedCouponId()),
                         d.getQuantity(),
-                        d.getUnitOrderPrice()
+                        d.getUnitOrderPrice(),
+                        StatusCodeType.ORDER_INIT.getCode()
                 )
         ).toList();
     }
