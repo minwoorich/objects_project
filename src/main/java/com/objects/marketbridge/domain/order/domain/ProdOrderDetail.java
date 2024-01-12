@@ -72,13 +72,13 @@ public class ProdOrderDetail extends BaseEntity {
         this.statusCode = statusCode;
     }
 
-    public static ProdOrderDetail create(Product product, Coupon coupon, Long quantity, Long price) {
+    public static ProdOrderDetail create(Product product, Coupon coupon, Long quantity, Long price, String statusCode) {
         return ProdOrderDetail.builder()
                 .product(product)
                 .coupon(coupon)
                 .quantity(quantity)
                 .price(price)
-                .statusCode(StatusCodeType.ORDER_INIT.getCode())
+                .statusCode(statusCode)
                 .build();
     }
 }

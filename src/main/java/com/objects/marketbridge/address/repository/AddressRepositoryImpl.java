@@ -1,7 +1,6 @@
 package com.objects.marketbridge.address.repository;
 
 import com.objects.marketbridge.domain.model.Address;
-import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.global.error.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

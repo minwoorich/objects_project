@@ -115,14 +115,15 @@ class OrderServiceTest {
         List<ProductInfoDto> productInfos = List.of(productInfoDto1, productInfoDto2, productInfoDto3);
 
         CreateOrderRequest createOrderRequest = CreateOrderRequest.builder()
-                .payMethod("신용카드")
+                .paymentMethod("신용카드")
                 .orderName("가방 외 2건")
                 .totalOrderPrice(14000L)
                 .addressId(findAddress.getId())
                 .productInfos(productInfos)
                 .build();
 
-        CreateProdOrderDto prodOrderDto = createOrderRequest.toProdOrderDto(findMember.getId());
+        String orderNo = "0000-0000-0000-0000";
+        CreateProdOrderDto prodOrderDto = createOrderRequest.toProdOrderDto(findMember.getId(), orderNo);
         List<CreateProdOrderDetailDto> prodOrderDetailDtos = createOrderRequest.toProdOrderDetailDtos();
 
         //when

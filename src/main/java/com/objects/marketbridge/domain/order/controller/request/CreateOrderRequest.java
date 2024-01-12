@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class CreateOrderRequest {
 
     @NotNull
-    private String payMethod;
+    private String paymentMethod;
 
     @NotNull
     private String orderName;
@@ -30,23 +30,16 @@ public class CreateOrderRequest {
     @NotNull
     private Long addressId;
 
-    private String successUrl;
-
-    private String failUrl;
-
-
     private List<ProductInfoDto> productInfos = new ArrayList<>();
 
     @Builder(builderClassName = "requestBuilder", toBuilder = true)
-    public CreateOrderRequest(String payMethod, String orderName, Long totalOrderPrice, Long addressId, String successUrl, String failUrl, @Singular("product") List<ProductInfoDto> productInfos) {
+    public CreateOrderRequest(String paymentMethod, String orderName, Long totalOrderPrice, Long addressId, @Singular("product") List<ProductInfoDto> productInfos) {
         validPaymentAmount(totalOrderPrice);
         validTotalOrderPrice(totalOrderPrice, productInfos);
-        this.payMethod = payMethod;
+        this.paymentMethod = paymentMethod;
         this.orderName = orderName;
         this.totalOrderPrice = totalOrderPrice;
         this.addressId = addressId;
-        this.successUrl = successUrl;
-        this.failUrl = failUrl;
         this.productInfos = productInfos;
     }
 
@@ -66,11 +59,14 @@ public class CreateOrderRequest {
         }
     }
 
-    public CreateProdOrderDto toProdOrderDto(Long memberId){
+    public CreateProdOrderDto toProdOrderDto(Long memberId, String orderNo){
         return CreateProdOrderDto.builder()
+                .orderNo(orderNo)
                 .memberId(memberId)
-                .addressId(this.addressId)
-                .totalOrderPrice(this.totalOrderPrice)
+                .paymentMethod(paymentMethod)
+                .addressId(addressId)
+                .orderName(orderName)
+                .totalOrderPrice(totalOrderPrice)
                 .build();
     }
 
