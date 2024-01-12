@@ -1,8 +1,8 @@
 package com.objects.marketbridge.domain.order.controller.request;
 
 import com.objects.marketbridge.domain.order.dto.ProductInfoDto;
-import com.objects.marketbridge.domain.order.exception.CustomLogicException;
-import com.objects.marketbridge.domain.order.exception.ErrorCode;
+import com.objects.marketbridge.domain.order.exception.exception.CustomLogicException;
+import com.objects.marketbridge.domain.order.exception.exception.ErrorCode;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
