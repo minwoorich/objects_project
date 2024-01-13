@@ -129,6 +129,7 @@ class OrderServiceTest {
         //when
         orderService.create(prodOrderDto, prodOrderDetailDtos);
         List<ProdOrderDetail> allOrders = orderDetailRepository.findAll();
+
         //then
         assertThat(allOrders).hasSize(3);
         assertThat(allOrders)
