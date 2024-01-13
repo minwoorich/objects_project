@@ -22,17 +22,17 @@ public class Point extends BaseEntity {
 
 //    private Long orderId;
 
-    private Integer inPoint;
+    private Long inPoint;
 
-    private Integer outPoint;
+    private Long outPoint;
 
-    private Integer balance;
+    private Long balance;
 
     private String comments;
 
 
     @Builder //order_id 제거
-    private Point(Member memberId, Integer inPoint, Integer outPoint, Integer balance, String comments) {
+    private Point(Member memberId, Long inPoint, Long outPoint, Long balance, String comments) {
         this.memberId = memberId;
         this.inPoint = inPoint;
         this.outPoint = outPoint;
