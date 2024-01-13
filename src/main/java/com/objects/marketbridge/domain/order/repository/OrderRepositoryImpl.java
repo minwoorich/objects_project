@@ -2,6 +2,7 @@ package com.objects.marketbridge.domain.order.repository;
 
 import com.objects.marketbridge.domain.order.domain.ProdOrder;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Optional<ProdOrder> findById(Long orderId) {
         return orderJpaRepository.findById(orderId);
+    }
+
+    @Override
+    public ProdOrder findByOrderNo(String orderNo) {
+        return orderJpaRepository.findByOrderNo(orderNo).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
     }
 
     @Override

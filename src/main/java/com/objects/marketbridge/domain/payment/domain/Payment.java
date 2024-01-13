@@ -26,7 +26,7 @@ public class Payment extends BaseEntity {
     private String orderNo;
     private String paymentType; // 일반결제, 브랜드페이
     private String paymentMethod; // CARD, TRANSFER, VIRTUAL
-    private Long totalAmount;
+    private Long totalPrice;
     private Long balanceAmount;
     private String requestedAt;
     private String approvedAt;
@@ -52,13 +52,13 @@ public class Payment extends BaseEntity {
     private VirtualAccount virtual;
 
     @Builder
-    private Payment(ProdOrder prodOrder, String orderNo, String receiptId, String paymentType, String paymentMethod, Long totalAmount, Long balanceAmount, String requestedAt, String approvedAt, String paymentKey, String settlementStatus, String paymentStatus, String refundStatus, String customerName, String bankCode, String orderName, String phoneNo, PaymentCancel paymentCancel, Card card, VirtualAccount virtual) {
+    private Payment(ProdOrder prodOrder, String orderNo, String receiptId, String paymentType, String paymentMethod, Long totalPrice, Long balanceAmount, String requestedAt, String approvedAt, String paymentKey, String settlementStatus, String paymentStatus, String refundStatus, String customerName, String bankCode, String orderName, String phoneNo, PaymentCancel paymentCancel, Card card, VirtualAccount virtual) {
         this.prodOrder = prodOrder;
         this.orderNo = orderNo;
         this.receiptId = receiptId;
         this.paymentType = paymentType;
         this.paymentMethod = paymentMethod;
-        this.totalAmount = totalAmount;
+        this.totalPrice = totalPrice;
         this.balanceAmount = balanceAmount;
         this.requestedAt = requestedAt;
         this.approvedAt = approvedAt;
@@ -75,14 +75,15 @@ public class Payment extends BaseEntity {
         this.virtual = virtual;
     }
 
-    public static Payment create(String customerName, String orderName, Long totalAmount, String orderNo, String paymentMethod, String phoneNo) {
+    public static Payment create(String customerName, String orderName, Long totalPrice, String orderNo, String paymentKey, String phoneNo, String paymentStatus) {
         return Payment.builder()
                 .customerName(customerName)
                 .orderName(orderName)
-                .totalAmount(totalAmount)
+                .totalPrice(totalPrice)
+                .paymentKey(paymentKey)
                 .orderNo(orderNo)
-                .paymentMethod(paymentMethod)
                 .phoneNo(phoneNo)
+                .paymentStatus(paymentStatus)
                 .build();
     }
 }
