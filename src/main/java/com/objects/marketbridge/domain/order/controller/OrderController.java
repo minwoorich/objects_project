@@ -1,11 +1,11 @@
 package com.objects.marketbridge.domain.order.controller;
 
 import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
-import com.objects.marketbridge.domain.order.controller.response.CheckoutResponse;
 import com.objects.marketbridge.domain.order.controller.response.PaymentResponse;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.service.OrderService;
+import com.objects.marketbridge.domain.payment.service.PaymentService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +19,10 @@ import java.util.UUID;
 public class OrderController {
 
     private final OrderService orderService;
+    private final PaymentService paymentService;
 
     @GetMapping("/orders/checkout")
-    public ApiResponse<CheckoutResponse> showCheckout() {
+    public ApiResponse<?> showCheckout() {
         return null;
     }
 

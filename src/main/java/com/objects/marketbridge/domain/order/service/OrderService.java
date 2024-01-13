@@ -15,6 +15,7 @@ import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.domain.Payment;
+import com.objects.marketbridge.domain.payment.service.PaymentService;
 import com.objects.marketbridge.domain.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import com.objects.marketbridge.global.error.EntityNotFoundException;
@@ -37,7 +38,7 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
     private final AddressRepository addressRepository;
-    private final PaymentRepository paymentRepository;
+    private final PaymentService paymentService;
 
     @Transactional
     public void create(CreateProdOrderDto prodOrderDto, List<CreateProdOrderDetailDto> prodOrderDetailDtos) {
@@ -55,31 +56,17 @@ public class OrderService {
         orderDetailRepository.saveAll(prodOrderDetails);
 
         // 4.결제 엔티티 저장
-        Member member = memberRepository.findById(prodOrderDto.getMemberId()).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
-
-        String memberName = member.getName();
-        String orderName = prodOrder.getOrderName();
-        Long totalOrderPrice = prodOrder.getTotalPrice();
-        String orderNo = prodOrderDto.getOrderNo();
-        String paymentMethod = prodOrderDto.getPaymentMethod();
-        String phoneNo = member.getPhoneNo();
-
-        // TODO : payment 엔티티에 주문생성 초기에 들어가야할 데이터 생각
-        // TODO : Response 에 들어갈것 생각
-        // TODO : payment 엔티티 저장하기 구현
-//        Payment payment =  Payment.create();
-
-
+        paymentService.create(prodOrderDto);
 
     }
 
     private ProdOrder createProdOrder(CreateProdOrderDto dto) {
 
-        Member member = memberRepository.findById(dto.getMemberId()).orElseThrow(IllegalArgumentException::new);
-        Address address = addressRepository.findById(dto.getAddressId());
-        Long totalOrderPrice = dto.getTotalOrderPrice();
-        String orderName = dto.getOrderName();
-        String orderNo = dto.getOrderNo();
+        Member member         = memberRepository.findById(dto.getMemberId()).orElseThrow(IllegalArgumentException::new);
+        Address address       = addressRepository.findById(dto.getAddressId());
+        Long totalOrderPrice  = dto.getTotalOrderPrice();
+        String orderName      = dto.getOrderName();
+        String orderNo        = dto.getOrderNo();
 
         return ProdOrder.create(member, address,orderName, orderNo, totalOrderPrice);
     }
