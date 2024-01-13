@@ -7,6 +7,7 @@ import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
+import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
 import com.objects.marketbridge.domain.order.domain.ProdOrder;
 import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.domain.StatusCodeType;
@@ -14,7 +15,9 @@ import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
+import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
+import com.objects.marketbridge.global.error.EntityNotFoundException;
 import com.objects.marketbridge.global.utils.GroupingHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,8 +36,11 @@ public class CreateOrderService {
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
     private final AddressRepository addressRepository;
+    private final TossPaymentConfig paymentConfig;
+
+
     @Transactional
-    public void orderCreate(CreateProdOrderDto prodOrderDto, List<CreateProdOrderDetailDto> prodOrderDetailDtos) {
+    public CreateOrderResponse create(CreateProdOrderDto prodOrderDto, List<CreateProdOrderDetailDto> prodOrderDetailDtos) {
         // 1. ProdOrder, ProdOrderDetail 엔티티 생성
         ProdOrder prodOrder = createProdOrder(prodOrderDto);
         List<ProdOrderDetail> prodOrderDetails = createProdOrderDetails(prodOrderDetailDtos);
@@ -47,6 +53,14 @@ public class CreateOrderService {
 
         // 3.주문 엔티티 저장
         orderDetailRepository.saveAll(prodOrderDetails);
+
+        Member member = memberRepository.findById(prodOrderDto.getMemberId()).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
+
+        String email          = member.getEmail();
+        String successUrl     = paymentConfig.getSuccessUrl();
+        String failUrl        = paymentConfig.getFailUrl();
+
+        return CreateOrderResponse.from(prodOrderDto, email, successUrl, failUrl);
     }
 
     private ProdOrder createProdOrder(CreateProdOrderDto dto) {
