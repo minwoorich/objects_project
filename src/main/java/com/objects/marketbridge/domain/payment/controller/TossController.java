@@ -26,8 +26,9 @@ public class TossController {
             @RequestParam(name ="amount") Long totalPrice) {
 
         createPaymentService.create(memberId, paymentKey, orderNo, totalPrice);
-        tossPaymentService.requestPaymentAccept(memberId, paymentKey, orderNo, totalPrice);
-        return null;
+        TossPaymentsResponse tossPaymentsResponse = tossPaymentService.requestPaymentAccept(memberId, paymentKey, orderNo, totalPrice);
+
+        return ApiResponse.ok(tossPaymentsResponse);
 
     }
 
