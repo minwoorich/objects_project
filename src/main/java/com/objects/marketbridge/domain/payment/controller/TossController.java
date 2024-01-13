@@ -2,7 +2,6 @@ package com.objects.marketbridge.domain.payment.controller;
 
 import com.objects.marketbridge.domain.payment.controller.response.TossPaymentsResponse;
 import com.objects.marketbridge.domain.payment.service.CreatePaymentService;
-import com.objects.marketbridge.domain.payment.service.PaymentService;
 import com.objects.marketbridge.domain.payment.service.TossPaymentService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;

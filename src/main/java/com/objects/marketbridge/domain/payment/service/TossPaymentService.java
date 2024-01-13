@@ -17,12 +17,11 @@ import static com.objects.marketbridge.domain.payment.config.TossPaymentConfig.T
 @RequiredArgsConstructor
 public class TossPaymentService {
 
-    private final WebClient webClient;
     private final TossPaymentConfig tossPaymentConfig;
     public TossPaymentsResponse requestPaymentAccept(Long memberId, String paymentKey, String orderNo, Long totalPrice) {
 
         String encodedAuthKey = new String(Base64.getEncoder().encode(tossPaymentConfig.getTestSecretKey().getBytes(StandardCharsets.UTF_8)));
-        return webClient.mutate()
+        return WebClient.builder()
                 .baseUrl(TOSS_BASE_URL)
                 .defaultHeaders(httpHeaders ->
                         httpHeaders.setBasicAuth(encodedAuthKey))
@@ -38,6 +37,5 @@ public class TossPaymentService {
                 .toStream() // SpringMVC 로 개발중인 경우 이렇게 Stream API를 사용해
                 .findFirst()// Optional<T> 로 반환 해야함.
                 .orElseThrow(IllegalArgumentException::new);
-
     }
 }
