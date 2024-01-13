@@ -33,10 +33,10 @@ public class TossPaymentService {
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(new TossParamsDto(paymentKey, orderNo, totalPrice))
                 .retrieve()
-                .bodyToMono(TossPaymentsResponse.class)
+                .bodyToMono(TossPaymentsResponse.class)// 여기까지만 하면 SpringFlux 의 Mono<T> 타입 객체를 반환함
                 .flux()
-                .toStream()
-                .findFirst()
+                .toStream() // SpringMVC 로 개발중인 경우 이렇게 Stream API를 사용해
+                .findFirst()// Optional<T> 로 반환 해야함.
                 .orElseThrow(IllegalArgumentException::new);
 
     }
