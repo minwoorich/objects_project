@@ -18,7 +18,7 @@ public class Point extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member memberId;
+    private Member member;
 
 //    private Long orderId;
 
@@ -32,11 +32,17 @@ public class Point extends BaseEntity {
 
 
     @Builder //order_id 제거
-    private Point(Member memberId, Long inPoint, Long outPoint, Long balance, String comments) {
-        this.memberId = memberId;
+    private Point(Member member, Long inPoint, Long outPoint, Long balance, String comments) {
+        this.member = member;
         this.inPoint = inPoint;
         this.outPoint = outPoint;
         this.balance = balance;
         this.comments = comments;
+    }
+
+    // 연관관계 편의 메서드 -> Point 쪽에서 한번에 저장
+    public void setMember(Member member) {
+        this.member = member;
+        member.changePoint(this);
     }
 }
