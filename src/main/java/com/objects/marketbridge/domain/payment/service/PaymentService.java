@@ -31,7 +31,5 @@ public class PaymentService {
 
         Payment payment = Payment.create(memberName, orderName, totalOrderPrice, orderNo, paymentMethod, phoneNo);
         paymentRepository.save(payment);
-
     }
-
 }
