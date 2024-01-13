@@ -5,6 +5,8 @@ import com.objects.marketbridge.global.error.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class AddressRepositoryImpl implements AddressRepository {
@@ -19,6 +21,11 @@ public class AddressRepositoryImpl implements AddressRepository {
     @Override
     public void save(Address address) {
         addressJpaRepository.save(address);
+    }
+
+    @Override
+    public void saveAll(List<Address> addresses) {
+        addressJpaRepository.saveAll(addresses);
     }
 
     @Override

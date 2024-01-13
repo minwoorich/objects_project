@@ -4,7 +4,6 @@ import com.objects.marketbridge.address.repository.AddressRepository;
 import com.objects.marketbridge.domain.coupon.repository.CouponRepository;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Address;
-import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
@@ -17,7 +16,6 @@ import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.product.repository.ProductJpaRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import com.objects.marketbridge.global.error.EntityNotFoundException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,16 +26,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("local")
-class OrderServiceTest {
+class CreateOrderServiceTest {
 
-    @Autowired OrderService orderService;
+    @Autowired CreateOrderService createOrderService;
     @Autowired ProductRepository productRepository;
     @Autowired ProductJpaRepository productJpaRepository;
     @Autowired CouponRepository couponRepository;
@@ -127,8 +124,9 @@ class OrderServiceTest {
         List<CreateProdOrderDetailDto> prodOrderDetailDtos = createOrderRequest.toProdOrderDetailDtos();
 
         //when
-        orderService.create(prodOrderDto, prodOrderDetailDtos);
+        createOrderService.create(prodOrderDto, prodOrderDetailDtos);
         List<ProdOrderDetail> allOrders = orderDetailRepository.findAll();
+
         //then
         assertThat(allOrders).hasSize(3);
         assertThat(allOrders)

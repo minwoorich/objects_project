@@ -16,7 +16,7 @@ public class Address extends BaseEntity{
     @Column(name = "address_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -30,6 +30,15 @@ public class Address extends BaseEntity{
         this.member = member;
         this.addressValue = addressValue;
         this.isDefault = isDefault;
+    }
+
+    // 연관관계 편의 메서드 -> Address 쪽에서 한번에 저장
+    public void setMember(Member member) {
+        if (this.member != null) {
+            this.member.getAddresses().remove(this);
+        }
+        this.member = member;
+        member.getAddresses().add(this);
     }
 
 }

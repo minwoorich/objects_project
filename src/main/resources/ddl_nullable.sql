@@ -248,7 +248,7 @@ create table if not exists MarketBridge.payment
    receipt_id	            varchar(255)	    NULL,
    payment_type	            varchar(255)	    NULL,
    payment_method	        varchar(255)	    NULL,
-   total_amount	            BIGINT	    NULL,
+   total_price	            BIGINT	    NULL,
    balance_amount	        BIGINT  	NULL,
    payment_key	            varchar(255) 	NULL,
    settlement_status	    varchar(255)	    NULL,

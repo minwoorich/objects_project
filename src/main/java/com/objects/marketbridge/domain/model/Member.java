@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,6 +33,12 @@ public class Member extends BaseEntity {
 
     private String phoneNo;
 
+    @OneToMany(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses = new ArrayList<>();
+
+    @OneToOne(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
+    private Point point;
+
     // 알림
     private boolean isAlert;
     // 약관동의
@@ -45,6 +54,10 @@ public class Member extends BaseEntity {
         this.phoneNo = phoneNo;
         this.isAlert = isAlert;
         this.isAgree = isAgree;
+    }
+
+    public void changePoint(Point point) {
+        this.point = point;
     }
 
 //    public CreateUser toDto(){
