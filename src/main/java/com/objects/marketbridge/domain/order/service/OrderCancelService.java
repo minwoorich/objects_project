@@ -43,6 +43,7 @@ public class OrderCancelService {
         // TODO 주문 취소하기 (주문 타입 변경 + reason 넣기)
         List<Product> products = order.cancel(reason);
 
+
 //        orderDetailRepository.changeAllType(orderId, StatusCodeType.ORDER_CANCEL.getCode());
 //        orderDetailRepository.addReason(orderId, reason);
 
