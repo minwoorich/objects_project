@@ -45,7 +45,6 @@ public class OrderCancelService {
         // 1. orderDetails에 해당하는 상품들을 리스트로 만들자.
 //        List<ProdOrderDetail> orderDetails = order.getProdOrderDetails();
 //        for (ProdOrderDetail orderDetail : orderDetails) {
-//            //TODO 조인을 너무 많이 하는데 원래 이런가?
 ////            orderDetail.getProduct()
 //        }
         // 2. 상품 리스트들을 조건으로 상품 stock을 가지고 오자.
