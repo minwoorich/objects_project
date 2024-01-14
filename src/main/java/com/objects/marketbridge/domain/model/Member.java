@@ -1,11 +1,10 @@
 package com.objects.marketbridge.domain.model;
 
-import com.objects.marketbridge.domain.member.dto.CreateMember;
+import com.objects.marketbridge.domain.member.dto.CreateMemberDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ public class Member extends BaseEntity {
     private SocialType socialType;
 
     @Enumerated(EnumType.STRING)
+    @Setter
     private Membership membership;
 
     private String email;
@@ -70,15 +70,25 @@ public class Member extends BaseEntity {
 //                .isAgree();
 //    }
 
-    public static Member fromDto(CreateMember createMember){
+    public static Member fromDto(CreateMemberDto createMemberDto){
         return Member.builder()
-                .email(createMember.getEmail())
-                .name(createMember.getName())
-                .phoneNo(createMember.getPhoneNo())
-                .password(createMember.getPassword())
-                .isAgree(createMember.getIsAgree()).build();
+                .email(createMemberDto.getEmail())
+                .name(createMemberDto.getName())
+                .phoneNo(createMemberDto.getPhoneNo())
+                .password(createMemberDto.getPassword())
+                .isAgree(createMemberDto.getIsAgree())
+                .membership(createMemberDto.getMembership()).build();
     }
 
+    public CreateMemberDto toDto(Optional<Member> member){
+        return CreateMemberDto.builder()
+                .email(email)
+                .name(name)
+                .phoneNo(phoneNo)
+                .password(password)
+                .isAgree(isAgree)
+                .membership(membership).build();
+    }
 }
 
 
