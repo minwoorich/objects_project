@@ -19,11 +19,9 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private SocialType socialType;
+    private String socialType;
 
-    @Enumerated(EnumType.STRING)
-    private Membership membership;
+    private String membership;
 
     private String email;
 
@@ -33,19 +31,21 @@ public class Member extends BaseEntity {
 
     private String phoneNo;
 
+    // 알림
+    private boolean isAlert;
+    // 약관동의
+    private boolean isAgree;
+
+
+    // 양방향 설정
     @OneToMany(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
     @OneToOne(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
     private Point point;
 
-    // 알림
-    private boolean isAlert;
-    // 약관동의
-    private boolean isAgree;
-
     @Builder
-    private Member(SocialType socialType, Membership membership, String email, String password, String name, String phoneNo, boolean isAlert, boolean isAgree) {
+    private Member(String socialType, String membership, String email, String password, String name, String phoneNo, boolean isAlert, boolean isAgree) {
         this.socialType = socialType;
         this.membership = membership;
         this.email = email;

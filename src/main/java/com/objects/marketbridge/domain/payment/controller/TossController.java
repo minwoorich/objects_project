@@ -27,6 +27,11 @@ public class TossController {
         createPaymentService.create(memberId, paymentKey, orderNo, totalPrice);
         TossPaymentsResponse tossPaymentsResponse = tossPaymentService.requestPaymentAccept(memberId, paymentKey, orderNo, totalPrice);
 
+        //TODO : tossPaymentsResponse 가 실패했을 수도 있으니 그것에 대한 코드도 만들어놔야함
+        // 결제인증실패 (/payments/toss/fail) 와 결제실패 는 엄연히 서로 다른 로직임
+        // '결제인증실패' 는 카드사에서 인증을 거부 한거고,
+        // '결제실패' 는 토스에서 거부당한것
+
         return ApiResponse.ok(tossPaymentsResponse);
 
     }

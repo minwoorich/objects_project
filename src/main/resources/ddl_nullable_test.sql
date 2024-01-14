@@ -1,7 +1,7 @@
-create table if not exists MarketBridge.address
+create table if not exists testmarketbridge.address
 (
     address_id bigint auto_increment
-        primary key,
+    primary key,
 
     member_id  bigint       ,
     alias      varchar(255) ,
@@ -15,13 +15,13 @@ create table if not exists MarketBridge.address
     created_at datetime(6)  ,
     updated_at datetime(6)  ,
     deleted_at datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.admin
+create table if not exists testmarketbridge.admin
 (
 
     admin_id   bigint auto_increment
-        primary key,
+    primary key,
 
     level      int          ,
     emp_no     varchar(255) ,
@@ -31,12 +31,12 @@ create table if not exists MarketBridge.admin
     created_at datetime(6)  ,
     updated_at datetime(6)  ,
     deleted_at datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.board
+create table if not exists testmarketbridge.board
 (
     board_id     bigint auto_increment
-        primary key,
+    primary key,
 
     content_type varchar(255) ,
     content      varchar(255) ,
@@ -45,12 +45,12 @@ create table if not exists MarketBridge.board
     updated_at   datetime(6)  ,
     deleted_at   datetime(6)  null
 
-);
+    );
 
-create table if not exists MarketBridge.cancel_payment
+create table if not exists testmarketbridge.cancel_payment
 (
     cancel_payment_id bigint auto_increment
-        primary key,
+    primary key,
 
     order_id          bigint       ,
     code              varchar(255) ,
@@ -58,12 +58,12 @@ create table if not exists MarketBridge.cancel_payment
     created_at        datetime(6)  ,
     updated_at        datetime(6)  ,
     deleted_at        datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.cart
+create table if not exists testmarketbridge.cart
 (
     cart_id        bigint auto_increment
-        primary key,
+    primary key,
 
     member_id      bigint      ,
     prod_option_id bigint      ,
@@ -75,12 +75,12 @@ create table if not exists MarketBridge.cart
     deleted_at     datetime(6) null
 
 
-);
+    );
 
-create table if not exists MarketBridge.category
+create table if not exists testmarketbridge.category
 (
     category_id bigint auto_increment
-        primary key,
+    primary key,
 
     prev_id     bigint       ,
     next_id     bigint       ,
@@ -89,12 +89,12 @@ create table if not exists MarketBridge.category
     created_at  datetime(6)  ,
     updated_at  datetime(6)  ,
     deleted_at  datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.coupon
+create table if not exists testmarketbridge.coupon
 (
     coupon_id     bigint auto_increment
-        primary key,
+    primary key,
 
     product_id    bigint       ,
     name          varchar(255) ,
@@ -109,12 +109,12 @@ create table if not exists MarketBridge.coupon
     deleted_at    datetime(6)  null
 
 
-);
+    );
 
-create table if not exists MarketBridge.coupon_budget
+create table if not exists testmarketbridge.coupon_budget
 (
     coupon_budget_id bigint auto_increment
-        primary key,
+    primary key,
 
     member_id        bigint      ,
     price            int         ,
@@ -122,12 +122,12 @@ create table if not exists MarketBridge.coupon_budget
     created_at       datetime(6) ,
     updated_at       datetime(6) ,
     deleted_at       datetime(6) null
-);
+    );
 
-create table if not exists MarketBridge.member_coupon
+create table if not exists testmarketbridge.member_coupon
 (
     member_coupon_id bigint auto_increment
-        primary key,
+    primary key,
 
     coupon_id        bigint      ,
     member_id        bigint      ,
@@ -137,12 +137,12 @@ create table if not exists MarketBridge.member_coupon
     created_at       datetime(6) ,
     updated_at       datetime(6) ,
     deleted_at       datetime(6) null
-);
+    );
 
-create table if not exists MarketBridge.delivery
+create table if not exists testmarketbridge.delivery
 (
     delivery_id     bigint auto_increment
-        primary key,
+    primary key,
 
     address_id      bigint       ,
     order_detail_id bigint       ,
@@ -158,12 +158,12 @@ create table if not exists MarketBridge.delivery
     updated_at      datetime(6)  ,
     deleted_at      datetime(6)  null
 
-);
+    );
 
-create table if not exists MarketBridge.estimated_time
+create table if not exists testmarketbridge.estimated_time
 (
     estimated_time_id bigint auto_increment
-        primary key,
+    primary key,
 
     add_day           int         ,
     hour              int         ,
@@ -171,12 +171,12 @@ create table if not exists MarketBridge.estimated_time
     created_at        datetime(6) ,
     updated_at        datetime(6) ,
     deleted_at        datetime(6) null
-);
+    );
 
-create table if not exists MarketBridge.help_desk
+create table if not exists testmarketbridge.help_desk
 (
     help_desk_id  bigint auto_increment
-        primary key,
+    primary key,
 
     member_id     bigint       ,
     product_id    bigint       ,
@@ -187,12 +187,12 @@ create table if not exists MarketBridge.help_desk
     created_at    datetime(6)  ,
     updated_at    datetime(6)  ,
     deleted_at    datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.image
+create table if not exists testmarketbridge.image
 (
     image_id   bigint auto_increment
-        primary key,
+    primary key,
 
     type       varchar(255) ,
     url        varchar(255) ,
@@ -200,13 +200,13 @@ create table if not exists MarketBridge.image
     created_at datetime(6)  ,
     updated_at datetime(6)  ,
     deleted_at datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.member
+create table if not exists testmarketbridge.member
 (
 
     member_id   bigint auto_increment
-        primary key,
+    primary key,
 
     membership  varchar(255) ,
     social_type varchar(255) ,
@@ -220,12 +220,12 @@ create table if not exists MarketBridge.member
     created_at  datetime(6)  ,
     updated_at  datetime(6)  ,
     deleted_at  datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.option_category
+create table if not exists testmarketbridge.option_category
 (
     option_category_id bigint auto_increment
-        primary key,
+    primary key,
 
     name               varchar(255) ,
 
@@ -233,12 +233,12 @@ create table if not exists MarketBridge.option_category
     updated_at         datetime(6)  ,
     deleted_at         datetime(6)  null
 
-);
+    );
 
-create table if not exists MarketBridge.payment
+create table if not exists testmarketbridge.payment
 (
     payment_id	            BIGINT      auto_increment
-        primary key,
+    primary key,
 
     transaction_key          varchar(255)        null,
     payment_cancel_reason    varchar(255)        null,
@@ -273,12 +273,12 @@ create table if not exists MarketBridge.payment
     updated_at	            timestamp	NULL,
     created_at	            timestamp	NULL,
     cancelled_at	            timestamp	NULL
-);
+    );
 
-create table if not exists MarketBridge.point
+create table if not exists testmarketbridge.point
 (
     point_id   bigint auto_increment
-        primary key,
+    primary key,
 
     member_id  bigint       ,
     in_point   int          ,
@@ -290,12 +290,12 @@ create table if not exists MarketBridge.point
     updated_at datetime(6)  ,
     deleted_at datetime(6)  null
 
-);
+    );
 
-create table if not exists MarketBridge.prod_option
+create table if not exists testmarketbridge.prod_option
 (
     prod_option_id     bigint auto_increment
-        primary key,
+    primary key,
 
     option_category_id bigint       ,
     product_id         bigint       ,
@@ -305,12 +305,12 @@ create table if not exists MarketBridge.prod_option
     created_at         datetime(6)  ,
     updated_at         datetime(6)  ,
     deleted_at         datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.prod_order
+create table if not exists testmarketbridge.prod_order
 (
     prod_order_id  bigint auto_increment
-        primary key,
+    primary key,
 
     order_name     varchar(255) ,
     order_no       varchar(255) ,
@@ -324,12 +324,12 @@ create table if not exists MarketBridge.prod_order
     created_at     datetime(6)  ,
     updated_at     datetime(6)  ,
     deleted_at     datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.prod_order_detail
+create table if not exists testmarketbridge.prod_order_detail
 (
     prod_order_detail_id bigint auto_increment
-        primary key,
+    primary key,
 
     product_id           bigint       ,
     prod_order_id        bigint       ,
@@ -348,12 +348,12 @@ create table if not exists MarketBridge.prod_order_detail
     deleted_at           datetime(6)  null
 
 
-);
+    );
 
-create table if not exists MarketBridge.prod_tag
+create table if not exists testmarketbridge.prod_tag
 (
     prod_tag_id bigint auto_increment
-        primary key,
+    primary key,
 
     product_id  bigint      ,
     tag_id      bigint      ,
@@ -362,12 +362,12 @@ create table if not exists MarketBridge.prod_tag
     updated_at  datetime(6) ,
     deleted_at  datetime(6) null
 
-);
+    );
 
-create table if not exists MarketBridge.product
+create table if not exists testmarketbridge.product
 (
     product_id    bigint auto_increment
-        primary key,
+    primary key,
 
     category_id   bigint       ,
     name          varchar(255) ,
@@ -380,12 +380,12 @@ create table if not exists MarketBridge.product
     created_at    datetime(6)  ,
     updated_at    datetime(6)  ,
     deleted_at    datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.product_image
+create table if not exists testmarketbridge.product_image
 (
     product_image_id bigint auto_increment
-        primary key,
+    primary key,
 
     image_id         bigint      ,
     product_id       bigint      ,
@@ -393,12 +393,12 @@ create table if not exists MarketBridge.product_image
     created_at       datetime(6) ,
     updated_at       datetime(6) ,
     deleted_at       datetime(6) null
-);
+    );
 
-create table if not exists MarketBridge.qna
+create table if not exists testmarketbridge.qna
 (
     board_id   bigint auto_increment
-        primary key,
+    primary key,
 
     member_id  bigint       ,
     seller_id  bigint       ,
@@ -408,12 +408,12 @@ create table if not exists MarketBridge.qna
     created_at datetime(6)  ,
     updated_at datetime(6)  ,
     deleted_at datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.review
+create table if not exists testmarketbridge.review
 (
     review_id  bigint auto_increment
-        primary key,
+    primary key,
 
     member_id  bigint       ,
     product_id bigint       ,
@@ -423,12 +423,12 @@ create table if not exists MarketBridge.review
     created_at datetime(6)  ,
     updated_at datetime(6)  ,
     deleted_at datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.review_image
+create table if not exists testmarketbridge.review_image
 (
     review_image_id bigint auto_increment
-        primary key,
+    primary key,
 
     image_id        bigint      ,
     review_id       bigint      ,
@@ -436,12 +436,12 @@ create table if not exists MarketBridge.review_image
     created_at      datetime(6) ,
     updated_at      datetime(6) ,
     deleted_at      datetime(6) null
-);
+    );
 
-create table if not exists MarketBridge.review_survey
+create table if not exists testmarketbridge.review_survey
 (
     review_survey_id          bigint auto_increment
-        primary key,
+    primary key,
 
     review_id                 bigint      ,
     review_survey_category_id bigint      ,
@@ -450,12 +450,12 @@ create table if not exists MarketBridge.review_survey
     created_at                datetime(6) ,
     updated_at                datetime(6) ,
     deleted_at                datetime(6) null
-);
+    );
 
-create table if not exists MarketBridge.review_survey_category
+create table if not exists testmarketbridge.review_survey_category
 (
     review_survey_category_id bigint auto_increment
-        primary key,
+    primary key,
 
     product_id                bigint       ,
     name                      varchar(255) ,
@@ -463,25 +463,25 @@ create table if not exists MarketBridge.review_survey_category
     created_at                datetime(6)  ,
     updated_at                datetime(6)  ,
     deleted_at                datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.reward
+create table if not exists testmarketbridge.reward
 (
 
     reward_id  bigint auto_increment
-        primary key,
+    primary key,
 
     rate       int         ,
 
     created_at datetime(6) ,
     updated_at datetime(6) ,
     deleted_at datetime(6) null
-);
+    );
 
-create table if not exists MarketBridge.seller
+create table if not exists testmarketbridge.seller
 (
     seller_id  bigint auto_increment
-        primary key,
+    primary key,
 
     name       varchar(255) ,
     owner      varchar(255) ,
@@ -496,12 +496,12 @@ create table if not exists MarketBridge.seller
     created_at datetime(6)  ,
     updated_at datetime(6)  ,
     deleted_at datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.seller_product
+create table if not exists testmarketbridge.seller_product
 (
     seller_product_id bigint auto_increment
-        primary key,
+    primary key,
 
     product_id        bigint      ,
     seller_id         bigint      ,
@@ -510,12 +510,12 @@ create table if not exists MarketBridge.seller_product
     updated_at        datetime(6) ,
     deleted_at        datetime(6) null
 
-);
+    );
 
-create table if not exists MarketBridge.social_credential
+create table if not exists testmarketbridge.social_credential
 (
     social_credential_id bigint auto_increment
-        primary key,
+    primary key,
 
     member_id            bigint       ,
     token_id             varchar(255) ,
@@ -524,12 +524,12 @@ create table if not exists MarketBridge.social_credential
     updated_at           datetime(6)  ,
     deleted_at           datetime(6)  null
 
-);
+    );
 
-create table if not exists MarketBridge.status_code
+create table if not exists testmarketbridge.status_code
 (
     status_code_id   bigint auto_increment
-        primary key,
+    primary key,
 
     code             varchar(255) ,
     name             varchar(255) ,
@@ -538,12 +538,12 @@ create table if not exists MarketBridge.status_code
     created_at       datetime(6)  ,
     updated_at       datetime(6)  ,
     deleted_at       datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.stock
+create table if not exists testmarketbridge.stock
 (
     stock_id          bigint auto_increment
-        primary key,
+    primary key,
 
     product_option_id bigint      ,
     warehouse_id      bigint      ,
@@ -553,12 +553,12 @@ create table if not exists MarketBridge.stock
     updated_at        datetime(6) ,
     deleted_at        datetime(6) null
 
-);
+    );
 
-create table if not exists MarketBridge.survey_content
+create table if not exists testmarketbridge.survey_content
 (
     survey_content_id  bigint auto_increment
-        primary key,
+    primary key,
 
     survey_category_id bigint       ,
     seq_no             int          ,
@@ -567,24 +567,24 @@ create table if not exists MarketBridge.survey_content
     created_at         datetime(6)  ,
     updated_at         datetime(6)  ,
     deleted_at         datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.tag
+create table if not exists testmarketbridge.tag
 (
     tag_id     bigint auto_increment
-        primary key,
+    primary key,
 
     name       varchar(255) ,
 
     created_at datetime(6)  ,
     updated_at datetime(6)  ,
     deleted_at datetime(6)  null
-);
+    );
 
-create table if not exists MarketBridge.warehouse
+create table if not exists testmarketbridge.warehouse
 (
     warehouse_id bigint auto_increment
-        primary key,
+    primary key,
 
     seller_id    bigint       ,
     alias        varchar(255) ,
@@ -597,5 +597,5 @@ create table if not exists MarketBridge.warehouse
     created_at   datetime(6)  ,
     updated_at   datetime(6)  ,
     deleted_at   datetime(6)  null
-);
+    );
 

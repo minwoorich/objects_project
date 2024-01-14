@@ -27,6 +27,7 @@ public class OrderController {
     @GetMapping("/orders/checkout")
     public ApiResponse<CheckoutResponse> showCheckout(@SessionAttribute Long memberId) {
 
+
         Member member = memberRepository.findByIdWithPointAndAddresses(memberId);
         List<Address> addresses = member.getAddresses();
         Point point = member.getPoint();
@@ -39,7 +40,7 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public ApiResponse<CreateOrderResponse> createOrder(@SessionAttribute Long memberId, @Valid @RequestBody CreateOrderRequest createOrderRequest) {
+    public ApiResponse<CreateOrderResponse> createOrder(@SessionAttribute(name="memberId") Long memberId, @Valid @RequestBody CreateOrderRequest createOrderRequest) {
 
         String orderNo = UUID.randomUUID().toString();
 

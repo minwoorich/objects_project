@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.member.repository;
 
-import com.objects.marketbridge.address.repository.AddressRepository;
+import com.objects.marketbridge.domain.address.repository.AddressRepository;
 import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.AddressValue;
 import com.objects.marketbridge.domain.model.Member;

@@ -1,4 +1,4 @@
-package com.objects.marketbridge.address.repository;
+package com.objects.marketbridge.domain.address.repository;
 
 import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.global.error.EntityNotFoundException;
