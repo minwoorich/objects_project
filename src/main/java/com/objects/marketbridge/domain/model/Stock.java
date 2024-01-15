@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 @Entity
 @Getter
@@ -39,5 +38,9 @@ public class Stock extends BaseEntity {
             throw new IllegalArgumentException("재고는 0개 미만이 될 수 없습니다.");
         }
         this.quantity -= quantity;
+    }
+
+    public void setProdOption(ProdOption prodOption) {
+        this.productOption = prodOption;
     }
 }

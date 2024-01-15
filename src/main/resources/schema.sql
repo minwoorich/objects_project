@@ -220,6 +220,8 @@ create table if not exists MarketBridge.member
     created_at  datetime(6)  not null,
     updated_at  datetime(6)  not null,
     deleted_at  datetime(6)  null
+    constraint email_unique
+    unique (email)
 );
 
 create table if not exists MarketBridge.option_category

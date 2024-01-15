@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.order.repository;
 
+import com.objects.marketbridge.domain.model.Stock;
 import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.global.error.EntityNotFoundException;
@@ -52,5 +53,10 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     @Override
     public List<ProdOrderDetail> findAll() {
         return orderDetailJpaRepository.findAll();
+    }
+
+    @Override
+    public ProdOrderDetail findByStockAndOrderId(Stock stock, Long orderId) {
+        return null;
     }
 }

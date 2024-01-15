@@ -2,6 +2,7 @@ package com.objects.marketbridge.domain.order.domain;
 
 import com.objects.marketbridge.domain.model.BaseEntity;
 import com.objects.marketbridge.domain.model.Coupon;
+import com.objects.marketbridge.domain.model.ProdOption;
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import jakarta.persistence.*;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+
+import static com.objects.marketbridge.domain.order.domain.StatusCodeType.*;
 
 @Entity
 @Getter
@@ -34,6 +37,10 @@ public class ProdOrderDetail extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prod_option_id")
+    private ProdOption prodOption;
 
     private Long usedCoupon;
 
@@ -84,14 +91,15 @@ public class ProdOrderDetail extends BaseEntity {
                 .build();
     }
 
-    public Product cancel(String reason) {
-        if (Objects.equals(statusCode, StatusCodeType.DELIVERY_COMPLETED.getCode())) {
+    public void cancel(String reason, String statusCode) {
+        if (Objects.equals(statusCode, DELIVERY_COMPLETED.getCode())) {
             throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
         }
-
-        statusCode = StatusCodeType.ORDER_CANCEL.getCode();
+        this.statusCode = statusCode;
         this.reason = reason;
+    }
 
-        return product;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

@@ -1,6 +1,8 @@
 package com.objects.marketbridge.domain.order.service;
 
+import com.objects.marketbridge.domain.model.ProdOption;
 import com.objects.marketbridge.domain.model.Product;
+import com.objects.marketbridge.domain.model.Stock;
 import com.objects.marketbridge.domain.order.domain.ProdOrder;
 import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.domain.StatusCodeType;
@@ -8,6 +10,7 @@ import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.dto.RefundDto;
 import com.objects.marketbridge.domain.payment.service.RefundService;
+import com.objects.marketbridge.domain.product.repository.stock.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.objects.marketbridge.domain.order.domain.QProdOrderDetail.prodOrderDetail;
+import static com.objects.marketbridge.domain.order.domain.StatusCodeType.*;
+
 @Service
 @RequiredArgsConstructor
 public class OrderCancelService {
 
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final StockRepository stockRepository;
 
     private final RefundService refundService;
 
@@ -40,12 +47,25 @@ public class OrderCancelService {
         ProdOrder order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("조회된 주문이 없습니다."));
 
-        // TODO 주문 취소하기 (주문 타입 변경 + reason 넣기)
-        List<Product> products = order.cancel(reason);
+        order.cancel(reason, ORDER_CANCEL.getCode());
 
+//        for (ProdOrderDetail orderDetail : order.getProdOrderDetails()) {
+//            for (ProdOption prodOption : orderDetail.getProduct().getProdOptions()) {
+//                for (Stock stock : prodOption.getStocks()) {
+//                    stock.decrease(orderDetail.getQuantity());
+//                }
+//            }
+//        }
 
-//        orderDetailRepository.changeAllType(orderId, StatusCodeType.ORDER_CANCEL.getCode());
-//        orderDetailRepository.addReason(orderId, reason);
+        List<Stock> stocks = stockRepository.findStockByProdOrderId(orderId);
+
+        for (Stock stock : stocks) {
+            ProdOrderDetail prodOrderDetail = orderDetailRepository.findByStockAndOrderId(stock, orderId);
+            if (prodOrderDetail != null) {
+                stock.decrease(prodOrderDetail.getQuantity());
+            }
+        }
+
 
         // TODO 재고의 수량을 늘리기 (동시성 문제 고려)
         // 고려사항 : 쿠팡이라면 orderDetail에 해당하는 상품들이 어디 wherehouse의 상품인지 알고있어야 한다.
