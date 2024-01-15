@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.order.repository;
 
-import com.objects.marketbridge.domain.model.ProdOrder;
+import com.objects.marketbridge.domain.order.domain.ProdOrder;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -21,5 +21,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public ProdOrder save(ProdOrder order) {
         return orderJpaRepository.save(order);
+    }
+
+    @Override
+    public Optional<ProdOrder> findWithOrderDetailsAndProduct(Long orderId) {
+        return orderJpaRepository.findWithOrderDetailsAndProduct(orderId);
     }
 }

@@ -575,4 +575,3 @@ create table if not exists MarketBridge.warehouse
     updated_at   datetime(6)  not null,
     deleted_at   datetime(6)  null
 );
-

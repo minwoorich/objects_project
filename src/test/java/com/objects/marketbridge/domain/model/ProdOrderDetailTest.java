@@ -1,10 +1,10 @@
 package com.objects.marketbridge.domain.model;
 
+import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.domain.StatusCodeType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ProdOrderDetailTest {
 

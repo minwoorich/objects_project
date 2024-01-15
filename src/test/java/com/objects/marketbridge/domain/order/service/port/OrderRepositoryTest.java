@@ -1,7 +1,6 @@
 package com.objects.marketbridge.domain.order.service.port;
 
-import com.objects.marketbridge.domain.model.ProdOrder;
-import org.junit.jupiter.api.Assertions;
+import com.objects.marketbridge.domain.order.domain.ProdOrder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
