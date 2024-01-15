@@ -20,6 +20,7 @@ public interface OrderDetailJpaRepository extends JpaRepository<ProdOrderDetail,
     @Query("update ProdOrderDetail pod set pod.reason = :reason where pod.prodOrder.id = :prodOrderId")
     void addReason(@Param("prodOrderId") Long prodOrderId, @Param("reason") String reason);
 
-
     List<ProdOrderDetail> findByProductId(Long memberId);
+
+
 }
