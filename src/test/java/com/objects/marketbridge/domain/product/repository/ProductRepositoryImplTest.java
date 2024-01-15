@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class ProductReposityImplTest {
+class ProductRepositoryImplTest {
 
     @Autowired ProductRepository productRepository;
 

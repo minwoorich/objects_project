@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
-public class ProductReposityImpl implements ProductRepository {
+public class ProductRepositoryImpl implements ProductRepository {
 
     private final ProductJpaRepository productJpaRepository;
 
@@ -34,8 +34,9 @@ public class ProductReposityImpl implements ProductRepository {
     }
 
     @Override
-    public void save(Product product) {
+    public Product save(Product product) {
         productJpaRepository.save(product);
+        return product;
     }
 
     @Override

@@ -42,4 +42,5 @@ public class Product extends BaseEntity{
         this.thumbImg = thumbImg;
         this.discountRate = discountRate;
     }
+
 }
