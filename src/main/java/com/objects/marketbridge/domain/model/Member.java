@@ -2,10 +2,17 @@ package com.objects.marketbridge.domain.model;
 
 import com.objects.marketbridge.domain.member.dto.CreateMember;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +20,18 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Slf4j
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private SocialType socialType;
+//    @Enumerated(EnumType.STRING)
+    private String socialType;
 
-    @Enumerated(EnumType.STRING)
-    private Membership membership;
+//    @Enumerated(EnumType.STRING)
+    private String membership;
 
     private String email;
 
@@ -45,7 +53,7 @@ public class Member extends BaseEntity {
     private boolean isAgree;
 
     @Builder
-    private Member(SocialType socialType, Membership membership, String email, String password, String name, String phoneNo, boolean isAlert, boolean isAgree) {
+    private Member(String socialType, String membership, String email, String password, String name, String phoneNo, boolean isAlert, boolean isAgree, List<String> roles) {
         this.socialType = socialType;
         this.membership = membership;
         this.email = email;
@@ -78,7 +86,6 @@ public class Member extends BaseEntity {
                 .password(createMember.getPassword())
                 .isAgree(createMember.getIsAgree()).build();
     }
-
 }
 
 
