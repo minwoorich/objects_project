@@ -19,13 +19,24 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/products")
-    public Product registerProduct(@RequestBody ProductDto productDto) {
-        return productService.registerProduct(productDto);
+    public ProductResponseDto registerProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
+
+        ProductResponseDto productResponseDto = new ProductResponseDto(
+                productRequestDto.getCategoryId(),
+                productRequestDto.getIsOwn(),
+                productRequestDto.getName(),
+                productRequestDto.getPrice(),
+                productRequestDto.getIsSubs(),
+                productRequestDto.getThumbImg(),
+                productRequestDto.getDiscountRate());
+
+        return productResponseDto;
     }
 
     @GetMapping("/products")
     public ProductResponseDto getProductList(@Valid @RequestBody ProductRequestDto request){
         // 담을거 가져오기
+        // 현재 임시로 기본생성자 사용.
         return new ProductResponseDto();
     }
 }

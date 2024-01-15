@@ -8,10 +8,10 @@ import lombok.Setter;
 public class ProductDto {
 
     private Category categoryId;
-    private boolean isOwn; // 로켓 true , 오픈 마켓 false
+    private Boolean isOwn; // 로켓 true , 오픈 마켓 false
     private String name;
     private Long price;
-    private boolean isSubs;
+    private Boolean isSubs;
     private String thumbImg;
     private Long discountRate;
 

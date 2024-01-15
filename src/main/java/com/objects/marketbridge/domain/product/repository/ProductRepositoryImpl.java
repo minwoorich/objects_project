@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domain.product.repository;
 
 import com.objects.marketbridge.domain.model.Product;
+import com.objects.marketbridge.domain.product.dto.ProductRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -34,9 +35,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product save(Product product) {
+    public void save(Product product) {
         productJpaRepository.save(product);
-        return product;
     }
 
     @Override

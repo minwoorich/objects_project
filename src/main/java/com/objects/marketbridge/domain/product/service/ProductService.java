@@ -2,6 +2,8 @@ package com.objects.marketbridge.domain.product.service;
 
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.product.dto.ProductDto;
+import com.objects.marketbridge.domain.product.dto.ProductRequestDto;
+import com.objects.marketbridge.domain.product.dto.ProductResponseDto;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepositoryImpl;
 import lombok.RequiredArgsConstructor;
@@ -16,25 +18,24 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductRepositoryImpl productRepositoryImpl;
+    private final ProductRepository productRepositoryImpl;
 
-    public Product registerProduct(ProductDto productDto) {
-//        Product product = Product.builder().build();
-//        productRepository.save(product);
+    @Transactional
+    public void registerProduct(ProductRequestDto productRequestDto) {
 
         // ProductDto에서 필요한 정보 추출하여 Product 엔터티 생성
         Product product = Product.builder()
-                .categoryId(productDto.getCategoryId())
-                .isOwn(productDto.isOwn())
-                .name(productDto.getName())
-                .price(productDto.getPrice())
-                .isSubs(productDto.isSubs())
-                .thumbImg(productDto.getThumbImg())
-                .discountRate(productDto.getDiscountRate())
+                .categoryId(productRequestDto.getCategoryId())
+                .isOwn(productRequestDto.getIsOwn())
+                .name(productRequestDto.getName())
+                .price(productRequestDto.getPrice())
+                .isSubs(productRequestDto.getIsSubs())
+                .thumbImg(productRequestDto.getThumbImg())
+                .discountRate(productRequestDto.getDiscountRate())
                 .build();
 
         // ProductRepositoryImpl 통해 엔터티를 저장
-        return productRepositoryImpl.save(product);
+        productRepositoryImpl.save(product);
 
     }
 

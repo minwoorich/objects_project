@@ -20,13 +20,13 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "category_id")
     private Category categoryId;
 
-    private boolean isOwn; // 로켓 true , 오픈 마켓 false
+    private Boolean isOwn; // 로켓 true , 오픈 마켓 false
 
     private String name;
 
     private Long price;
 
-    private boolean isSubs;
+    private Boolean isSubs;
 
     private String thumbImg;
 
