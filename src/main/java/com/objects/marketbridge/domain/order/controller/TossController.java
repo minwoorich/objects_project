@@ -1,8 +1,9 @@
-package com.objects.marketbridge.domain.payment.controller;
+package com.objects.marketbridge.domain.order.controller;
 
-import com.objects.marketbridge.domain.payment.controller.response.TossPaymentsResponse;
+import com.objects.marketbridge.domain.member.repository.MemberRepository;
+import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
+import com.objects.marketbridge.domain.order.service.TossService;
 import com.objects.marketbridge.domain.payment.service.CreatePaymentService;
-import com.objects.marketbridge.domain.payment.service.TossPaymentService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,22 +16,20 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 public class TossController {
 
     private final CreatePaymentService createPaymentService;
-    private final TossPaymentService tossPaymentService;
+    private final TossService tossService;
+    private final MemberRepository memberRepository;
 
     @GetMapping("/payments/toss/success")
     public ApiResponse<TossPaymentsResponse> tossPaymentSuccess(
             @SessionAttribute Long memberId,
             @RequestParam String paymentKey,
             @RequestParam(name = "orderId") String orderNo,
-            @RequestParam(name ="amount") Long totalPrice) {
+            @RequestParam(name ="amount") Long totalOrderPrice) {
 
-        createPaymentService.create(memberId, paymentKey, orderNo, totalPrice);
-        TossPaymentsResponse tossPaymentsResponse = tossPaymentService.requestPaymentAccept(memberId, paymentKey, orderNo, totalPrice);
+        TossPaymentsResponse tossPaymentsResponse = tossService.requestPaymentAccept(memberId, paymentKey, orderNo, totalOrderPrice);
+//        createPaymentService.create(memberId, paymentKey, orderNo, totalOrderPrice);
 
-        //TODO : tossPaymentsResponse 가 실패했을 수도 있으니 그것에 대한 코드도 만들어놔야함
-        // 결제인증실패 (/payments/toss/fail) 와 결제실패 는 엄연히 서로 다른 로직임
-        // '결제인증실패' 는 카드사에서 인증을 거부 한거고,
-        // '결제실패' 는 토스에서 거부당한것
+        //TODO : orderNo, totalPrice 검증 해야함(그리고 임시로 DB에 저장) -> redis?!
 
         return ApiResponse.ok(tossPaymentsResponse);
 

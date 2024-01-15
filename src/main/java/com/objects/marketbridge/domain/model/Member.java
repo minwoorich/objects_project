@@ -32,9 +32,9 @@ public class Member extends BaseEntity {
     private String phoneNo;
 
     // 알림
-    private boolean isAlert;
+    private Boolean isAlert;
     // 약관동의
-    private boolean isAgree;
+    private Boolean isAgree;
 
 
     // 양방향 설정
@@ -45,7 +45,7 @@ public class Member extends BaseEntity {
     private Point point;
 
     @Builder
-    private Member(String socialType, String membership, String email, String password, String name, String phoneNo, boolean isAlert, boolean isAgree) {
+    private Member(String socialType, String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
         this.socialType = socialType;
         this.membership = membership;
         this.email = email;

@@ -5,14 +5,14 @@ import lombok.Getter;
 
 @Getter
 public class TossParamsDto {
-    private final String paymenrKey;
+    private final String paymentKey;
     private final String orderNo;
-    private final Long totalPrice;
+    private final Long amount;
 
     @Builder
-    public TossParamsDto(String paymenrKey, String orderNo, Long totalPrice) {
-        this.paymenrKey = paymenrKey;
+    public TossParamsDto(String paymentKey, String orderNo, Long amount) {
+        this.paymentKey = paymentKey;
         this.orderNo = orderNo;
-        this.totalPrice = totalPrice;
+        this.amount = amount;
     }
 }

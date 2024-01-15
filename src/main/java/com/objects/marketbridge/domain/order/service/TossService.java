@@ -1,7 +1,7 @@
-package com.objects.marketbridge.domain.payment.service;
+package com.objects.marketbridge.domain.order.service;
 
 import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
-import com.objects.marketbridge.domain.payment.controller.response.TossPaymentsResponse;
+import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
 import com.objects.marketbridge.domain.payment.dto.TossParamsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -15,7 +15,7 @@ import static com.objects.marketbridge.domain.payment.config.TossPaymentConfig.T
 
 @Service
 @RequiredArgsConstructor
-public class TossPaymentService {
+public class TossService {
 
     private final TossPaymentConfig tossPaymentConfig;
     public TossPaymentsResponse requestPaymentAccept(Long memberId, String paymentKey, String orderNo, Long totalPrice) {

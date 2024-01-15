@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.payment.controller.response;
+package com.objects.marketbridge.domain.order.controller.response;
 
 import com.objects.marketbridge.domain.payment.domain.Card;
 import com.objects.marketbridge.domain.payment.domain.PaymentCancel;

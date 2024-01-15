@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.order.repository;
 
+import com.objects.marketbridge.domain.order.domain.OrderTemp;
 import com.objects.marketbridge.domain.order.domain.ProdOrder;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,6 +14,7 @@ import java.util.Optional;
 public class OrderRepositoryImpl implements OrderRepository {
 
     private final OrderJpaRepository orderJpaRepository;
+    private final OrderTempJpaRepository orderTempJpaRepository;
 
     @Override
     public Optional<ProdOrder> findById(Long orderId) {
@@ -37,5 +39,15 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public void deleteAllInBatch() {
         orderJpaRepository.deleteAllInBatch();
+    }
+
+    @Override
+    public OrderTemp findOrderTempByOrderNo(String orderNo) {
+        return orderTempJpaRepository.findOrderTempByOrderNo(orderNo);
+    }
+
+    @Override
+    public OrderTemp save(OrderTemp orderTemp) {
+        return orderTempJpaRepository.save(orderTemp);
     }
 }
