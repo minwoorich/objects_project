@@ -1,4 +1,4 @@
-drop table if exists MarketBridge.address
+create table if not exists MarketBridge.address
 (
     address_id bigint auto_increment
     primary key,
@@ -17,7 +17,7 @@ drop table if exists MarketBridge.address
     deleted_at datetime(6)  null
     );
 
-drop table if exists MarketBridge.admin
+create table if not exists MarketBridge.admin
 (
 
     admin_id   bigint auto_increment
@@ -33,7 +33,7 @@ drop table if exists MarketBridge.admin
     deleted_at datetime(6)  null
     );
 
-drop table if exists MarketBridge.board
+create table if not exists MarketBridge.board
 (
     board_id     bigint auto_increment
     primary key,
@@ -47,7 +47,7 @@ drop table if exists MarketBridge.board
 
     );
 
-drop table if exists MarketBridge.cancel_payment
+create table if not exists MarketBridge.cancel_payment
 (
     cancel_payment_id bigint auto_increment
     primary key,
@@ -60,7 +60,7 @@ drop table if exists MarketBridge.cancel_payment
     deleted_at        datetime(6)  null
     );
 
-drop table if exists MarketBridge.cart
+create table if not exists MarketBridge.cart
 (
     cart_id        bigint auto_increment
     primary key,
@@ -77,7 +77,7 @@ drop table if exists MarketBridge.cart
 
     );
 
-drop table if exists MarketBridge.category
+create table if not exists MarketBridge.category
 (
     category_id bigint auto_increment
     primary key,
@@ -91,7 +91,7 @@ drop table if exists MarketBridge.category
     deleted_at  datetime(6)  null
     );
 
-drop table if exists MarketBridge.coupon
+create table if not exists MarketBridge.coupon
 (
     coupon_id     bigint auto_increment
     primary key,
@@ -111,7 +111,7 @@ drop table if exists MarketBridge.coupon
 
     );
 
-drop table if exists MarketBridge.coupon_budget
+create table if not exists MarketBridge.coupon_budget
 (
     coupon_budget_id bigint auto_increment
     primary key,
@@ -124,7 +124,7 @@ drop table if exists MarketBridge.coupon_budget
     deleted_at       datetime(6) null
     );
 
-drop table if exists MarketBridge.member_coupon
+create table if not exists MarketBridge.member_coupon
 (
     member_coupon_id bigint auto_increment
     primary key,
@@ -139,7 +139,7 @@ drop table if exists MarketBridge.member_coupon
     deleted_at       datetime(6) null
     );
 
-drop table if exists MarketBridge.delivery
+create table if not exists MarketBridge.delivery
 (
     delivery_id     bigint auto_increment
     primary key,
@@ -160,7 +160,7 @@ drop table if exists MarketBridge.delivery
 
     );
 
-drop table if exists MarketBridge.estimated_time
+create table if not exists MarketBridge.estimated_time
 (
     estimated_time_id bigint auto_increment
     primary key,
@@ -173,7 +173,7 @@ drop table if exists MarketBridge.estimated_time
     deleted_at        datetime(6) null
     );
 
-drop table if exists MarketBridge.help_desk
+create table if not exists MarketBridge.help_desk
 (
     help_desk_id  bigint auto_increment
     primary key,
@@ -189,7 +189,7 @@ drop table if exists MarketBridge.help_desk
     deleted_at    datetime(6)  null
     );
 
-drop table if exists MarketBridge.image
+create table if not exists MarketBridge.image
 (
     image_id   bigint auto_increment
     primary key,
@@ -202,7 +202,7 @@ drop table if exists MarketBridge.image
     deleted_at datetime(6)  null
     );
 
-drop table if exists MarketBridge.member
+create table if not exists MarketBridge.member
 (
 
     member_id   bigint auto_increment
@@ -222,7 +222,7 @@ drop table if exists MarketBridge.member
     deleted_at  datetime(6)  null
     );
 
-drop table if exists MarketBridge.option_category
+create table if not exists MarketBridge.option_category
 (
     option_category_id bigint auto_increment
     primary key,
@@ -235,24 +235,47 @@ drop table if exists MarketBridge.option_category
 
     );
 
-drop table if exists MarketBridge.payment
+create table if not exists MarketBridge.payment
 (
-    payment_id    bigint auto_increment
-    primary key,
+   payment_id	            BIGINT      auto_increment
+   primary key,
 
-    prod_order_id bigint       ,
-    pay_num       varchar(255) ,
-    pg            varchar(255) ,
-    receipt_id    varchar(255) ,
-    pay_method    varchar(255) ,
-    status_code   varchar(255) ,
+   transaction_key          varchar(255)        null,
+   payment_cancel_reason    varchar(255)        null,
+   prod_order_id		    BIGINT              NULL,
+   order_name               varchar(255)        null,
+   order_no                 varchar(255)        null,
+   receipt_id	            varchar(255)	    NULL,
+   payment_type	            varchar(255)	    NULL,
+   payment_method	        varchar(255)	    NULL,
+   total_price	            BIGINT	    NULL,
+   balance_amount	        BIGINT  	NULL,
+   payment_key	            varchar(255) 	NULL,
+   settlement_status	    varchar(255)	    NULL,
+   payment_status	        varchar(255)	    NULL,
+   refund_status	        varchar(255)	    NULL,
+   customer_name	        varchar(255) 	NULL,
+   bank_code	            varchar(255)	    NULL,
+   phone_no	                varchar(255)	    NULL,
+   cancel_amount	        varchar(255)	    NULL,
+   card_issuer_code 	    varchar(255)	    NULL,
+   card_no	                varchar(255)	    NULL,
+   installment_plan_months	BIGINT	    NULL,
+   approve_no	            varchar(255)	    NULL,
+   account_no	            varchar(255)	    NULL,
+   v_account_no	            varchar(255)	    NULL,
+   v_due_date	            varchar(255)	    NULL,
+   v_expired	            boolean	    NULL,
+   deleted_at	            timestamp	NULL,
+   canceled_at	            timestamp	NULL,
+   approved_at	            timestamp	NULL,
+   requested_at	            timestamp	NULL,
+   updated_at	            timestamp	NULL,
+   created_at	            timestamp	NULL,
+   cancelled_at	            timestamp	NULL
+);
 
-    created_at    datetime(6)  ,
-    updated_at    datetime(6)  ,
-    deleted_at    datetime(6)  null
-    );
-
-drop table if exists MarketBridge.point
+create table if not exists MarketBridge.point
 (
     point_id   bigint auto_increment
     primary key,
@@ -269,7 +292,7 @@ drop table if exists MarketBridge.point
 
     );
 
-drop table if exists MarketBridge.prod_option
+create table if not exists MarketBridge.prod_option
 (
     prod_option_id     bigint auto_increment
     primary key,
@@ -284,13 +307,15 @@ drop table if exists MarketBridge.prod_option
     deleted_at         datetime(6)  null
     );
 
-drop table if exists MarketBridge.prod_order
+create table if not exists MarketBridge.prod_order
 (
     prod_order_id  bigint auto_increment
     primary key,
 
+    order_name     varchar(255) ,
+    order_no       varchar(255) ,
+    address_id     bigint       ,
     member_id      bigint       ,
-    status_code    varchar(255) ,
     total_price    bigint       ,
     point_rate     int          ,
     saved_point    int          ,
@@ -301,7 +326,7 @@ drop table if exists MarketBridge.prod_order
     deleted_at     datetime(6)  null
     );
 
-drop table if exists MarketBridge.prod_order_detail
+create table if not exists MarketBridge.prod_order_detail
 (
     prod_order_detail_id bigint auto_increment
     primary key,
@@ -325,7 +350,7 @@ drop table if exists MarketBridge.prod_order_detail
 
     );
 
-drop table if exists MarketBridge.prod_tag
+create table if not exists MarketBridge.prod_tag
 (
     prod_tag_id bigint auto_increment
     primary key,
@@ -339,7 +364,7 @@ drop table if exists MarketBridge.prod_tag
 
     );
 
-drop table if exists MarketBridge.product
+create table if not exists MarketBridge.product
 (
     product_id    bigint auto_increment
     primary key,
@@ -357,7 +382,7 @@ drop table if exists MarketBridge.product
     deleted_at    datetime(6)  null
     );
 
-drop table if exists MarketBridge.product_image
+create table if not exists MarketBridge.product_image
 (
     product_image_id bigint auto_increment
     primary key,
@@ -370,7 +395,7 @@ drop table if exists MarketBridge.product_image
     deleted_at       datetime(6) null
     );
 
-drop table if exists MarketBridge.qna
+create table if not exists MarketBridge.qna
 (
     board_id   bigint auto_increment
     primary key,
@@ -385,7 +410,7 @@ drop table if exists MarketBridge.qna
     deleted_at datetime(6)  null
     );
 
-drop table if exists MarketBridge.review
+create table if not exists MarketBridge.review
 (
     review_id  bigint auto_increment
     primary key,
@@ -400,7 +425,7 @@ drop table if exists MarketBridge.review
     deleted_at datetime(6)  null
     );
 
-drop table if exists MarketBridge.review_image
+create table if not exists MarketBridge.review_image
 (
     review_image_id bigint auto_increment
     primary key,
@@ -413,7 +438,7 @@ drop table if exists MarketBridge.review_image
     deleted_at      datetime(6) null
     );
 
-drop table if exists MarketBridge.review_survey
+create table if not exists MarketBridge.review_survey
 (
     review_survey_id          bigint auto_increment
     primary key,
@@ -427,7 +452,7 @@ drop table if exists MarketBridge.review_survey
     deleted_at                datetime(6) null
     );
 
-drop table if exists MarketBridge.review_survey_category
+create table if not exists MarketBridge.review_survey_category
 (
     review_survey_category_id bigint auto_increment
     primary key,
@@ -440,7 +465,7 @@ drop table if exists MarketBridge.review_survey_category
     deleted_at                datetime(6)  null
     );
 
-drop table if exists MarketBridge.reward
+create table if not exists MarketBridge.reward
 (
 
     reward_id  bigint auto_increment
@@ -453,7 +478,7 @@ drop table if exists MarketBridge.reward
     deleted_at datetime(6) null
     );
 
-drop table if exists MarketBridge.seller
+create table if not exists MarketBridge.seller
 (
     seller_id  bigint auto_increment
     primary key,
@@ -473,7 +498,7 @@ drop table if exists MarketBridge.seller
     deleted_at datetime(6)  null
     );
 
-drop table if exists MarketBridge.seller_product
+create table if not exists MarketBridge.seller_product
 (
     seller_product_id bigint auto_increment
     primary key,
@@ -487,7 +512,7 @@ drop table if exists MarketBridge.seller_product
 
     );
 
-drop table if exists MarketBridge.social_credential
+create table if not exists MarketBridge.social_credential
 (
     social_credential_id bigint auto_increment
     primary key,
@@ -501,7 +526,7 @@ drop table if exists MarketBridge.social_credential
 
     );
 
-drop table if exists MarketBridge.status_code
+create table if not exists MarketBridge.status_code
 (
     status_code_id   bigint auto_increment
     primary key,
@@ -515,7 +540,7 @@ drop table if exists MarketBridge.status_code
     deleted_at       datetime(6)  null
     );
 
-drop table if exists MarketBridge.stock
+create table if not exists MarketBridge.stock
 (
     stock_id          bigint auto_increment
     primary key,
@@ -530,7 +555,7 @@ drop table if exists MarketBridge.stock
 
     );
 
-drop table if exists MarketBridge.survey_content
+create table if not exists MarketBridge.survey_content
 (
     survey_content_id  bigint auto_increment
     primary key,
@@ -544,7 +569,7 @@ drop table if exists MarketBridge.survey_content
     deleted_at         datetime(6)  null
     );
 
-drop table if exists MarketBridge.tag
+create table if not exists MarketBridge.tag
 (
     tag_id     bigint auto_increment
     primary key,
@@ -556,7 +581,7 @@ drop table if exists MarketBridge.tag
     deleted_at datetime(6)  null
     );
 
-drop table if exists MarketBridge.warehouse
+create table if not exists MarketBridge.warehouse
 (
     warehouse_id bigint auto_increment
     primary key,

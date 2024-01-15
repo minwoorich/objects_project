@@ -23,6 +23,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        default_batch_fetch_size: 100
     defer-datasource-initialization: true # (2.5~) Hibernate 초기화 이후 data-mysql.sql 실행
     # 이게 없으면 data-mysql.sql 스크립트가 수행 안 되고 에러 발생합니당.
 
@@ -30,9 +31,17 @@ spring:
     console:
       enabled: true
 
+logging:
+  level:
+    org.hibernate.sql: debug
 
 
-
+payment:
+  toss:
+    test_client_api_key : "test_ck_GePWvyJnrK2PmxlyQWMqVgLzN97E"
+    test_secret_api_key : "test_sk_QbgMGZzorzyG7E6ZkybPVl5E1em4:"
+    success_url : "http://localhost:8080/payments/toss/success"
+    fail_url : "http://localhost:8080/payments/toss/fail"
 ---
 
 spring:
@@ -41,13 +50,14 @@ spring:
       on-profile: test
 
   datasource:
-    url: jdbc:mysql://localhost:3306/MarketBridge
-    username: objects
-    password: 1234
-#    url: jdbc:h2:mem:~/Marketbridge
-#    driver-class-name: org.h2.Driver
-#    username: sa
-#    password:
+#    url: jdbc:mysql://localhost:3306/MarketBridge
+#    username: objects
+#    password: 1234
+    #    url: jdbc:h2:tcp://localhost/~/Marketbridge
+    url: jdbc:h2:mem:~/Marketbridge
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
   jpa:
     hibernate:
@@ -60,3 +70,11 @@ spring:
   sql:
     init:
       mode: never
+
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    org.hibernate.sql: debug

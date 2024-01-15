@@ -24,9 +24,22 @@ public class ProductReposityImpl implements ProductRepository {
     }
 
     @Override
+    public List<Product> findByName(String name) {
+        return productJpaRepository.findByName(name);
+    }
+
+    @Override
+    public void deleteAllInBatch() {
+        productJpaRepository.deleteAllInBatch();
+    }
+
+    @Override
     public void save(Product product) {
         productJpaRepository.save(product);
     }
 
-
+    @Override
+    public void saveAll(List<Product> products) {
+        productJpaRepository.saveAll(products);
+    }
 }

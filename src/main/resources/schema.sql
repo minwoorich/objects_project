@@ -291,6 +291,8 @@ create table if not exists MarketBridge.prod_order
     prod_order_id  bigint auto_increment
         primary key,
 
+    order_name     varchar(255)     null,
+    order_no        varchar(255)    null,
     member_id      bigint       not null,
     status_code    varchar(255) not null,
     total_price    bigint       not null,

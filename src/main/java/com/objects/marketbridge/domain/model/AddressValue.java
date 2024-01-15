@@ -3,10 +3,12 @@ package com.objects.marketbridge.domain.model;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class AddressValue {
 
     private String phoneNo;
