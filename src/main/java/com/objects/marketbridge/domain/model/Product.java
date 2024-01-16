@@ -38,7 +38,7 @@ public class Product extends BaseEntity{
 
     private Long price;
 
-    private boolean isSubs;
+    private Boolean isSubs;
 
     private String thumbImg;
 
@@ -64,5 +64,6 @@ public class Product extends BaseEntity{
 ////        prodOptions.add(prodOption);
 //        prodOption.setProduct(this);
 //    }
+
 
 }
