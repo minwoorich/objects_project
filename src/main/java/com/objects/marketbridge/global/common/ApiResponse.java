@@ -28,7 +28,16 @@ public class ApiResponse<T> {
         return of(httpStatus, httpStatus.name(), data);
     }
 
+    public static <T> ApiResponse<T> of(HttpStatus httpStatus) {
+        return of(httpStatus, httpStatus.name(), null);
+    }
+
     public static <T> ApiResponse<T> ok(T data) {
         return of(HttpStatus.OK, data);
     }
+
+    public static <T> ApiResponse<T> create() {
+        return of(HttpStatus.CREATED);
+    }
+
 }

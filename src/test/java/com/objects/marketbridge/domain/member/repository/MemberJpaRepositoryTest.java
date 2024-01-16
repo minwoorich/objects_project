@@ -1,27 +1,22 @@
 package com.objects.marketbridge.domain.member.repository;
 
-import com.objects.marketbridge.address.repository.AddressRepository;
+import com.objects.marketbridge.domain.address.repository.AddressRepository;
 import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.AddressValue;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Point;
 import com.objects.marketbridge.domain.point.repository.PointRepository;
 import com.objects.marketbridge.global.error.EntityNotFoundException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

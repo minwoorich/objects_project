@@ -1,19 +1,28 @@
 package com.objects.marketbridge.domain.order.repository;
 
-import com.objects.marketbridge.domain.model.Stock;
 import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.global.error.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.objects.marketbridge.domain.model.QProdOption.prodOption;
+import static com.objects.marketbridge.domain.order.domain.QProdOrder.*;
+import static com.objects.marketbridge.domain.order.domain.QProdOrderDetail.prodOrderDetail;
+
 @Repository
-@RequiredArgsConstructor
 public class OrderDetailRepositoryImpl implements OrderDetailRepository {
 
     private final OrderDetailJpaRepository orderDetailJpaRepository;
+    private final JPAQueryFactory queryFactory;
+
+    public OrderDetailRepositoryImpl(OrderDetailJpaRepository orderDetailJpaRepository, EntityManager em) {
+        this.orderDetailJpaRepository = orderDetailJpaRepository;
+        this.queryFactory = new JPAQueryFactory(em);
+    }
 
     @Override
     public int changeAllType(Long orderId, String type) {
@@ -55,8 +64,17 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
         return orderDetailJpaRepository.findAll();
     }
 
+
     @Override
-    public ProdOrderDetail findByStockAndOrderId(Stock stock, Long orderId) {
+    public ProdOrderDetail findByStockIdAndOrderId(Long stockId, Long orderId) {
+//        return queryFactory.selectFrom(prodOrderDetail)
+//                .join(prodOrderDetail.prodOption, prodOption)
+//                .join(prodOption.stocks, stock)
+//                .where(
+//                        prodOrder.id.eq(orderId),
+//                        stock.id.eq(stockId)
+//                )
+//                .fetchOne();
         return null;
     }
 }

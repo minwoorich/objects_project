@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.address.repository.AddressRepository;
+import com.objects.marketbridge.domain.address.repository.AddressRepository;
 import com.objects.marketbridge.domain.coupon.repository.CouponRepository;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Address;
