@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -23,70 +24,67 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 class MemberServiceTest {
 
-    @Autowired
-    MemberService memberService;
+    @Autowired MemberService memberService;
 
-    @Autowired
-    MemberRepository memberRepository;
-    private Member existingMember; // 생성된 사용자 객체를 저장할 변수
-
+    @Autowired MemberRepository memberRepository;
 
     @BeforeEach
-    public void createMemberOrigin() {
-        existingMember = Member.builder().email("pmmh9395@gmail.com").build();
-        memberRepository.save(existingMember);
+    void init() {
+        Member member = Member.builder()
+            .email("iiwisii@naver.com")
+            .name("박정인")
+            .password("03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4")
+            .phoneNo("01073784758")
+            .isAgree(true)
+            .isAlert(true)
+            .membership(Membership.WOW.toString())
+            .socialType(SocialType.DEFAULT.toString())
+            .build();
+
+        memberRepository.save(member);
     }
 
     @Test
-    @DisplayName("이메일은 중복되지 않은 경우.")
-    public void checkEmail() throws Exception{
+    @DisplayName("이메일이 중복이 되었을 경우 true를 반환한다")
+    public void checkDuplicateEmailTrue() {
         //given
-        String emailCheck = "code11@gmail.com";
+            String email = "iiwisii@naver.com";
 
         //when
-        Boolean isEmailDuplicate = memberService.checkDuplicateEmail(emailCheck);
+        boolean isDuplicateEmail = memberService.isDuplicateEmail(email);
 
         //then
-        assertThat(isEmailDuplicate).isFalse(); // 중복되지 않는 경우 false 반환을 확인
+        assertThat(isDuplicateEmail).isTrue();
     }
 
     @Test
-    @DisplayName("이메일이 중복되는 경우")
-    public void testCheckEmailForDuplicate() {
-        // given
-        String emailToCheck = "pmmh9395@gmail.com";
+    @DisplayName("이메일이 중복이 되지 않았으면 false를 반환한다")
+    public void checkDuplicateEmailFalse() {
+        //given
+        String email = "iiii@naver.com";
 
-        // when
-        Boolean isEmailDuplicate = memberService.checkDuplicateEmail(emailToCheck);
+        //when
+        boolean isDuplicateEmail = memberService.isDuplicateEmail(email);
 
-        // then
-        assertThat(isEmailDuplicate).isTrue(); // 중복되는 경우 true 반환을 확인
+        //then
+        assertThat(isDuplicateEmail).isFalse();
     }
+
+    //sign up 테스트
+    //sign in 테스트
 
 
     @Test
     public void getTokenTest() {
 
-        List<String> roles = new ArrayList<>();
-        roles.add("USER");
-
         //given
-        Member member = Member.builder()
-                .email("iiwisii@naver.com")
-                .name("박정인")
-                .password("03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4")
-                .phoneNo("01073784758")
-                .isAgree(true)
-                .isAlert(true)
-                .membership(Membership.WOW.toString())
-                .socialType(SocialType.DEFAULT.toString())
-                .roles(roles)
-                .build();
 
-        memberRepository.save(member);
-        JwtToken jwt = memberService.signIn(member.getEmail(), member.getPassword());
+//
+//        memberRepository.save(member);
+        JwtToken jwt = memberService.signIn("iiwisii@naver.com", "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4");
 
         //when
 
