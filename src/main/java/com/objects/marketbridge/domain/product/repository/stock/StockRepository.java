@@ -12,6 +12,7 @@ public interface StockRepository {
 
     Optional<Stock> findById(long id);
 
-    List<Stock> findStocksByProdOrderId(Long prodOrderId);
+//    List<Stock> findStocksByProdOrderIdAndWarehouseId(Long prodOrderId, Long warehouseId);
 
+    List<Stock> saveAll(List<Stock> stocks);
 }

@@ -20,16 +20,16 @@ public class Stock extends BaseEntity {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "product_id")
+//    private Product product;
 
     private Long quantity;
 
     @Builder
     private Stock(Warehouse warehouse, Product product, Long quantity) {
         this.warehouse = warehouse;
-        this.product = product;
+//        this.product = product;
         this.quantity = quantity;
     }
 
@@ -45,7 +45,7 @@ public class Stock extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public void setProdOption(Product product) {
-        this.product = product;
-    }
+//    public void setProdOption(Product product) {
+//        this.product = product;
+//    }
 }

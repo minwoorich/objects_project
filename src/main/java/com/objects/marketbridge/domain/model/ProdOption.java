@@ -27,8 +27,8 @@ public class ProdOption extends BaseEntity{
     @JoinColumn(name = "option_id")
     private Option option;
 
-    @OneToMany(mappedBy = "productOption")
-    private List<Stock> stocks = new ArrayList<>();
+//    @OneToMany(mappedBy = "product")
+//    private List<Stock> stocks = new ArrayList<>();
 
     @Builder
     private ProdOption(Product product, Option option) {

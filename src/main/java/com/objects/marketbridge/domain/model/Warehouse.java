@@ -16,16 +16,16 @@ public class Warehouse extends BaseEntity {
     @Column(name = "warehouse_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
-    private Seller seller;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "seller_id")
+//    private Seller seller;
 
     @Embedded
     private AddressValue addressValue;
 
     @Builder
     private Warehouse(Seller seller, AddressValue addressValue) {
-        this.seller = seller;
+//        this.seller = seller;
         this.addressValue = addressValue;
     }
 }
