@@ -44,8 +44,10 @@ public class Product extends BaseEntity{
 
     private Long discountRate;
 
+    private Long stock;
+
     @Builder
-    private Product(Category categoryId, boolean isOwn, String name, Long price, boolean isSubs, String thumbImg, Long discountRate) {
+    public Product(Category categoryId, boolean isOwn, String name, Long price, boolean isSubs, String thumbImg, Long discountRate, Long stock) {
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
@@ -53,6 +55,7 @@ public class Product extends BaseEntity{
         this.isSubs = isSubs;
         this.thumbImg = thumbImg;
         this.discountRate = discountRate;
+        this.stock = stock;
     }
 
     public void addProdOrderDetail(ProdOrderDetail prodOrderDetail) {

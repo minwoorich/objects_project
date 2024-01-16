@@ -4,49 +4,69 @@ import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Point;
-import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
+import com.objects.marketbridge.domain.order.controller.request.TempOrderRequest;
 import com.objects.marketbridge.domain.order.controller.response.CheckoutResponse;
 import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
-import com.objects.marketbridge.domain.order.service.CreateOrderService;
+import com.objects.marketbridge.domain.order.domain.OrderTemp;
+import com.objects.marketbridge.domain.order.exception.exception.CustomLogicException;
+import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.global.common.ApiResponse;
+import com.objects.marketbridge.global.utils.GroupingHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.objects.marketbridge.domain.order.exception.exception.ErrorCode.SHIPPING_ADDRESS_NOT_REGISTERED;
 
 @RestController
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final CreateOrderService createOrderService;
     private final MemberRepository memberRepository;
+    private final OrderRepository orderRepository;
 
     @GetMapping("/orders/checkout")
-    public ApiResponse<CheckoutResponse> showCheckout(@SessionAttribute Long memberId) {
+    public ApiResponse<CheckoutResponse> getCheckout(
+            @SessionAttribute Long memberId) {
 
         Member member = memberRepository.findByIdWithPointAndAddresses(memberId);
-        List<Address> addresses = member.getAddresses();
-        Point point = member.getPoint();
-
-        CheckoutResponse checkoutResponse = CheckoutResponse.builder()
-                .addressList(addresses.stream().map(Address::getAddressValue).collect(Collectors.toList()))
-                .pointBalance(point.getBalance()).build();
+        CheckoutResponse checkoutResponse = createOrderResponse(member);
 
         return ApiResponse.ok(checkoutResponse);
     }
 
-    @PostMapping("/orders")
-    public ApiResponse<CreateOrderResponse> createOrder(@SessionAttribute Long memberId, @Valid @RequestBody CreateOrderRequest createOrderRequest) {
+    private CheckoutResponse createOrderResponse(Member member) {
 
-        String orderNo = UUID.randomUUID().toString();
+        Address address = filterDefaultAddress(member.getAddresses());
+        Point point = member.getPoint();
 
-        CreateOrderResponse resp = createOrderService.create(
-                createOrderRequest.toProdOrderDto(memberId, orderNo),
-                createOrderRequest.toProdOrderDetailDtos());
+        return CheckoutResponse.from(address.getAddressValue(), point.getBalance());
+    }
 
-        return ApiResponse.ok(resp);
+    private Address filterDefaultAddress(List<Address> addresses) {
+        return addresses.stream()
+                .filter(Address::isDefault)
+                .findFirst()
+                .orElseThrow(() -> new CustomLogicException(SHIPPING_ADDRESS_NOT_REGISTERED.getMessage(), SHIPPING_ADDRESS_NOT_REGISTERED));
+    }
+
+    @PostMapping("/orders/checkout")
+    public ApiResponse<String> saveOrderTemp(
+            @SessionAttribute(name="memberId") Long memberId,
+            @Valid @RequestBody TempOrderRequest request) {
+
+        List<OrderTemp> orderTemps = createOrderTempList(request);
+        orderRepository.saveOrderTempAll(orderTemps);
+
+        return ApiResponse.ok("");
+    }
+
+    private List<OrderTemp> createOrderTempList(TempOrderRequest request) {
+        return request.getProducts().stream().map(p ->
+                new OrderTemp(request.getOrderId(), request.getAmount(), p)
+        ).toList();
     }
 }

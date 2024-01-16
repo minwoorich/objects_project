@@ -1,12 +1,10 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.model.Stock;
 import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.dto.RefundDto;
 import com.objects.marketbridge.domain.payment.service.RefundService;
-import com.objects.marketbridge.domain.product.repository.stock.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +19,6 @@ public class OrderCancelService {
 
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
-    private final StockRepository stockRepository;
 
     private final RefundService refundService;
 
@@ -37,17 +34,17 @@ public class OrderCancelService {
     @Transactional
     // TODO 객체로 따로 빼야함
     public void cancel(Long orderId, String reason) {
-        // TODO findStockByProdOrderId TEST 진행
-        List<Stock> stocks = stockRepository.findStocksByProdOrderId(orderId);
-
-        for (Stock stock : stocks) {
-            // TODO findByStockIdAndOrderId TEST 진행
-            ProdOrderDetail prodOrderDetail = orderDetailRepository.findByStockIdAndOrderId(stock.getId(), orderId);
-            if (prodOrderDetail != null) {
-                prodOrderDetail.cancel(reason, ORDER_CANCEL.getCode());
-                stock.increase(prodOrderDetail.getQuantity());
-            }
-        }
+//        // TODO findStockByProdOrderId TEST 진행
+//        List<Stock> stocks = stockRepository.findStocksByProdOrderId(orderId);
+//
+//        for (Stock stock : stocks) {
+//            // TODO findByStockIdAndOrderId TEST 진행
+//            ProdOrderDetail prodOrderDetail = orderDetailRepository.findByStockIdAndOrderId(stock.getId(), orderId);
+//            if (prodOrderDetail != null) {
+//                prodOrderDetail.cancel(reason, ORDER_CANCEL.getCode());
+//                stock.increase(prodOrderDetail.getQuantity());
+//            }
+//        }
     }
 
 }

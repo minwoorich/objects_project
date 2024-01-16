@@ -1,4 +1,4 @@
-package com.objects.marketbridge.address.repository;
+package com.objects.marketbridge.domain.address.repository;
 
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Address;
@@ -14,11 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 @Transactional
 class AddressRepositoryImplTest {
 
-    @Autowired AddressRepository addressRepository;
+    @Autowired
+    AddressRepository addressRepository;
     @Autowired MemberRepository memberRepository;
 
     @AfterEach

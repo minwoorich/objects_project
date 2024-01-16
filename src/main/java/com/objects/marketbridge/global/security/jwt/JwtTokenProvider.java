@@ -47,11 +47,11 @@ public class JwtTokenProvider {
      */
     public JwtToken generateToken(Authentication authentication) {
 
-        Long memberId = ((CustomUserDetails) authentication.getPrincipal()).getId();
+        Long userId = ((CustomUserDetails) authentication.getPrincipal()).getId();
 
         String role = getAuthoritiesAsString(authentication);
-        String accessToken = issueToken(memberId, role, JwtConst.ACCESS_TOKEN_EXPIRE_TIME);
-        String refreshToken = issueToken(memberId, role, JwtConst.REFRESH_TOKEN_EXPIRE_TIME);
+        String accessToken = issueToken(userId, role, JwtConst.ACCESS_TOKEN_EXPIRE_TIME);
+        String refreshToken = issueToken(userId, role, JwtConst.REFRESH_TOKEN_EXPIRE_TIME);
 
         // .grantType("Bearer") - OAuth 2.0 방식의 토큰으로 설정
         return JwtToken.builder()
@@ -129,8 +129,8 @@ public class JwtTokenProvider {
         // claim에서 권한 정보 추출
         Collection<? extends GrantedAuthority> authorities = extractAuthoritiesFromToken(claims);
         List<String> roles = new ArrayList<>(Arrays.asList(claims.get(JwtConst.AUTH, String.class).split(",")));
-        Long memberId = Long.parseLong(claims.getSubject());
-        CustomUserDetails principal = new CustomUserDetails(memberId, null,null, roles);
+        Long userId = Long.parseLong(claims.getSubject());
+        CustomUserDetails principal = new CustomUserDetails(userId, null,null, roles);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 

@@ -1,8 +1,11 @@
-package com.objects.marketbridge.domain.payment.controller;
+package com.objects.marketbridge.domain.order.controller;
 
-import com.objects.marketbridge.domain.payment.controller.response.TossPaymentsResponse;
+import com.objects.marketbridge.domain.member.repository.MemberRepository;
+import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
+import com.objects.marketbridge.domain.order.service.TossService;
+import com.objects.marketbridge.domain.order.service.port.OrderRepository;
+import com.objects.marketbridge.domain.payment.dto.TossConfirmRequest;
 import com.objects.marketbridge.domain.payment.service.CreatePaymentService;
-import com.objects.marketbridge.domain.payment.service.TossPaymentService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,17 +18,21 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 public class TossController {
 
     private final CreatePaymentService createPaymentService;
-    private final TossPaymentService tossPaymentService;
+    private final TossService tossService;
+    private final MemberRepository memberRepository;
+    private final OrderRepository orderRepository;
 
     @GetMapping("/payments/toss/success")
     public ApiResponse<TossPaymentsResponse> tossPaymentSuccess(
             @SessionAttribute Long memberId,
             @RequestParam String paymentKey,
             @RequestParam(name = "orderId") String orderNo,
-            @RequestParam(name ="amount") Long totalPrice) {
+            @RequestParam(name ="amount") Long totalOrderPrice) {
 
-        createPaymentService.create(memberId, paymentKey, orderNo, totalPrice);
-        TossPaymentsResponse tossPaymentsResponse = tossPaymentService.requestPaymentAccept(memberId, paymentKey, orderNo, totalPrice);
+        TossPaymentsResponse tossPaymentsResponse = tossService.requestPaymentAccept(memberId, new TossConfirmRequest(paymentKey, orderNo, totalOrderPrice));
+//        createPaymentService.create(memberId, paymentKey, orderNo, totalOrderPrice);
+
+        //TODO : orderNo, totalPrice 검증 해야함(그리고 임시로 DB에 저장) -> redis?!
 
         return ApiResponse.ok(tossPaymentsResponse);
 
