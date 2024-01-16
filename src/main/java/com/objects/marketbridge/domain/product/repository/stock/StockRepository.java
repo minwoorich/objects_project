@@ -12,6 +12,6 @@ public interface StockRepository {
 
     Optional<Stock> findById(long id);
 
-    List<Stock> findStockByProdOrderId(Long prodOrderId);
+    List<Stock> findStocksByProdOrderId(Long prodOrderId);
 
 }
