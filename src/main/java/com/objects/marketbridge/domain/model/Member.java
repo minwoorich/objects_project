@@ -21,6 +21,7 @@ public class Member extends BaseEntity {
     private String socialType;
 
 //    @Enumerated(EnumType.STRING)
+    @Setter
     private String membership;
 
     private String email;
