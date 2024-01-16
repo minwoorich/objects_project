@@ -4,22 +4,24 @@ import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Point;
-import com.objects.marketbridge.domain.order.controller.request.TempOrderRequest;
+import com.objects.marketbridge.domain.order.controller.request.CheckoutRequest;
 import com.objects.marketbridge.domain.order.controller.response.CheckoutResponse;
-import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
 import com.objects.marketbridge.domain.order.domain.OrderTemp;
-import com.objects.marketbridge.domain.order.exception.exception.CustomLogicException;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.global.common.ApiResponse;
-import com.objects.marketbridge.global.utils.GroupingHelper;
+import com.objects.marketbridge.global.error.CustomLogicException;
+import com.objects.marketbridge.global.security.annotation.AuthMemberId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.objects.marketbridge.domain.order.exception.exception.ErrorCode.SHIPPING_ADDRESS_NOT_REGISTERED;
+import static com.objects.marketbridge.global.error.ErrorCode.SHIPPING_ADDRESS_NOT_REGISTERED;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class OrderController {
 
     @GetMapping("/orders/checkout")
     public ApiResponse<CheckoutResponse> getCheckout(
-            @SessionAttribute Long memberId) {
+            @AuthMemberId Long memberId) {
 
         Member member = memberRepository.findByIdWithPointAndAddresses(memberId);
         CheckoutResponse checkoutResponse = createOrderResponse(member);
@@ -55,18 +57,24 @@ public class OrderController {
 
     @PostMapping("/orders/checkout")
     public ApiResponse<String> saveOrderTemp(
-            @SessionAttribute(name="memberId") Long memberId,
-            @Valid @RequestBody TempOrderRequest request) {
+            @AuthMemberId Long memberId,
+            @Valid @RequestBody CheckoutRequest request) {
 
-        List<OrderTemp> orderTemps = createOrderTempList(request);
-        orderRepository.saveOrderTempAll(orderTemps);
+        // todo
+//        List<OrderTemp> orderTemps = createOrderTempList(request);
+//        orderRepository.saveOrderTempAll(orderTemps);
 
         return ApiResponse.ok("");
     }
-
-    private List<OrderTemp> createOrderTempList(TempOrderRequest request) {
-        return request.getProducts().stream().map(p ->
-                new OrderTemp(request.getOrderId(), request.getAmount(), p)
-        ).toList();
-    }
+//
+//    private List<OrderTemp> createOrderTempList(CheckoutRequest request) {
+//        return request.getProducts().stream().map(p ->
+//                OrderTemp.builder()
+//                        .orderNo(request.getOrderId())
+//                        .orderName(request.getOrderName())
+//                        .addressId(request.getAddressId())
+//                        .amount(request.getAmount())
+//                        .rewardType(request.getRewardType())
+//                        .product(p).build()).collect(Collectors.toList());
+//    }
 }

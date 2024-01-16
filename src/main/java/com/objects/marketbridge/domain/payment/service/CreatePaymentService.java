@@ -6,7 +6,7 @@ import com.objects.marketbridge.domain.order.domain.ProdOrder;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.domain.Payment;
 import com.objects.marketbridge.domain.payment.service.port.PaymentRepository;
-import com.objects.marketbridge.global.error.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

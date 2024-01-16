@@ -8,7 +8,7 @@ public interface AddressRepository {
 
     Address findById(Long id);
 
-    Address findByMemberId(Long memberId);
+    List<Address> findByMemberId(Long memberId);
 
     void save(Address address);
 

@@ -8,6 +8,7 @@ import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
+import com.objects.marketbridge.domain.order.domain.OrderTemp;
 import com.objects.marketbridge.domain.order.domain.ProdOrder;
 import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.domain.StatusCodeType;
@@ -17,14 +18,16 @@ import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import com.objects.marketbridge.global.error.EntityNotFoundException;
 import com.objects.marketbridge.global.utils.GroupingHelper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -41,6 +44,7 @@ public class CreateOrderService {
 
     @Transactional
     public CreateOrderResponse create(CreateProdOrderDto prodOrderDto, List<CreateProdOrderDetailDto> prodOrderDetailDtos) {
+
         // 1. ProdOrder, ProdOrderDetail 엔티티 생성
         ProdOrder prodOrder = createProdOrder(prodOrderDto);
         List<ProdOrderDetail> prodOrderDetails = createProdOrderDetails(prodOrderDetailDtos);
@@ -54,7 +58,7 @@ public class CreateOrderService {
         // 3.주문 엔티티 저장
         orderDetailRepository.saveAll(prodOrderDetails);
 
-        Member member = memberRepository.findById(prodOrderDto.getMemberId()).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
+        Member member = memberRepository.findById(prodOrderDto.getMemberId()).orElseThrow(EntityNotFoundException::new);
 
         String email          = member.getEmail();
         String successUrl     = paymentConfig.getSuccessUrl();
@@ -63,9 +67,24 @@ public class CreateOrderService {
         return CreateOrderResponse.from(prodOrderDto, email, successUrl, failUrl);
     }
 
+    @Transactional
+    public CreateOrderResponse create(Long memberId, String orderNo, String paymentKey, Long totalOrderPrice) {
+
+        // 1. ProdOrder 만들기
+        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
+        OrderTemp orderTemp = orderRepository.findOrderTempByOrderNo(orderNo);
+        Long addressId = orderTemp.getAddressId();
+        Address address = addressRepository.findById(addressId);
+        String orderName = orderTemp.getOrderName();
+        Long amount = orderTemp.getAmount();
+        String product = orderTemp.getProduct();
+
+        return null;
+    }
+
     private ProdOrder createProdOrder(CreateProdOrderDto dto) {
 
-        Member member         = memberRepository.findById(dto.getMemberId()).orElseThrow(IllegalArgumentException::new);
+        Member member         = memberRepository.findById(dto.getMemberId()).orElseThrow(EntityNotFoundException::new);
         Address address       = addressRepository.findById(dto.getAddressId());
         Long totalOrderPrice  = dto.getTotalOrderPrice();
         String orderName      = dto.getOrderName();

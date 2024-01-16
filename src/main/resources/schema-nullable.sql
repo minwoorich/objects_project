@@ -223,8 +223,7 @@ CREATE TABLE prod_order_detail (
                                      prod_order_id	bigint	,
                                      product_id	bigint	,
                                      coupon_id	bigint	,
-                                     saved_point	bigint	,
-                                     used_coupon_price	bigint	,
+                                     reward_type	varchar(255)	,
                                      quantity	bigint	,
                                      price	bigint	,
                                      status_code	varchar(255)	,
@@ -546,6 +545,7 @@ CREATE TABLE order_temp (
 
                               order_no	varchar(255)	,
                               amount	bigint	,
+                              address_id bigint,
                               product	varchar(255)	
 );
 
