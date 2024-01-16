@@ -1,6 +1,5 @@
 package com.objects.marketbridge.domain.model;
 
-import com.objects.marketbridge.domain.member.dto.CreateMember;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -59,14 +58,14 @@ public class Member extends BaseEntity {
         this.point = point;
     }
 
-    public static Member fromDto(CreateMember createMember){
-        return Member.builder()
-                .email(createMember.getEmail())
-                .name(createMember.getName())
-                .phoneNo(createMember.getPhoneNo())
-                .password(createMember.getPassword())
-                .isAgree(createMember.getIsAgree()).build();
-    }
+//    public static Member fromDto(CreateMember createMember){
+//        return Member.builder()
+//                .email(createMember.getEmail())
+//                .name(createMember.getName())
+//                .phoneNo(createMember.getPhoneNo())
+//                .password(createMember.getPassword())
+//                .isAgree(createMember.getIsAgree()).build();
+//    }
 }
 
 
