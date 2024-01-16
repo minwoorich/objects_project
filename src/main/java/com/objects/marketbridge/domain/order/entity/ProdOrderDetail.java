@@ -103,4 +103,8 @@ public class ProdOrderDetail extends BaseEntity {
     public void returnCoupon() {
         coupon.returnCoupon();
     }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 }

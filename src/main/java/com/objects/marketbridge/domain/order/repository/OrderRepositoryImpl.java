@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domain.order.repository;
 
 import com.objects.marketbridge.domain.model.QProduct;
+import com.objects.marketbridge.domain.order.domain.OrderTemp;
 import com.objects.marketbridge.domain.order.entity.ProdOrder;
 import com.objects.marketbridge.domain.order.entity.QProdOrder;
 import com.objects.marketbridge.domain.order.entity.QProdOrderDetail;
@@ -27,8 +28,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public OrderRepositoryImpl(OrderJpaRepository orderJpaRepository, EntityManager em) {
+    public OrderRepositoryImpl(OrderJpaRepository orderJpaRepository, OrderTempJpaRepository orderTempJpaRepository, EntityManager em) {
         this.orderJpaRepository = orderJpaRepository;
+        this.orderTempJpaRepository = orderTempJpaRepository;
         this.queryFactory = new JPAQueryFactory(em);
     }
 

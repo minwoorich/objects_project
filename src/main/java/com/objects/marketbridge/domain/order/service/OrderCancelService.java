@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.objects.marketbridge.domain.order.domain.StatusCodeType.*;
 import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
 
 @Service

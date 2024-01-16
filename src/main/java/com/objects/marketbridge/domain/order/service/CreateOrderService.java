@@ -8,6 +8,7 @@ import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
+import com.objects.marketbridge.domain.order.domain.OrderTemp;
 import com.objects.marketbridge.domain.order.entity.ProdOrder;
 import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
