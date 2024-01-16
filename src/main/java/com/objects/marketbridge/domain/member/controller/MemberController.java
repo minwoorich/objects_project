@@ -3,6 +3,7 @@ package com.objects.marketbridge.domain.member.controller;
 
 import com.objects.marketbridge.domain.member.dto.SignUpDto;
 import com.objects.marketbridge.domain.member.dto.SignInDto;
+import com.objects.marketbridge.domain.member.dto.FindPointDto;
 import com.objects.marketbridge.domain.member.service.MemberService;
 import com.objects.marketbridge.global.security.annotation.AuthMemberId;
 import com.objects.marketbridge.global.security.jwt.JwtToken;
@@ -11,12 +12,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/member")
 @RequiredArgsConstructor
+@RequestMapping("/member")
 public class MemberController {
 
     private final MemberService memberService;
@@ -50,5 +52,12 @@ public class MemberController {
     @GetMapping("/membership/{id}")
     public void changeMembership(@PathVariable Long id){
         memberService.changeMemberShip(id);
+    }
+
+    @GetMapping("/point/{id}")
+    public ApiResponse<FindPointDto> findPointById(@PathVariable Long id){
+
+        FindPointDto memberPoint = memberService.findPointById(id);
+        return ApiResponse.of(HttpStatus.OK,"completed",memberPoint);
     }
 }

@@ -1,11 +1,13 @@
 package com.objects.marketbridge.domain.member.service;
 
+import com.objects.marketbridge.domain.member.dto.FindPointDto;
 import com.objects.marketbridge.domain.member.dto.SignUpDto;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.global.security.jwt.JwtToken;
 import com.objects.marketbridge.global.security.jwt.JwtTokenProvider;
 import com.objects.marketbridge.domain.model.Membership;
+import com.objects.marketbridge.domain.model.Point;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -52,16 +54,21 @@ public class MemberService {
     @Transactional
     public void changeMemberShip(Long id){
         Member findMember = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id)); // id 를 통한 멤버조회
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id)); // id 를 통한 조회실패 예외발생
 
-        if(findMember.getMembership().equals(Membership.BASIC)){//멤버십 WOW 등록
-            findMember.setMembership(Membership.WOW);
+        if(findMember.getMembership().equals("BASIC")){//멤버십 WOW 등록
+            findMember.setMembership(Membership.WOW.toString());
             memberRepository.save(findMember);
         }else {// 멤버십 BASIC으로 해제
-            findMember.setMembership(Membership.BASIC);
+            findMember.setMembership(Membership.BASIC.toString());
             memberRepository.save(findMember);
         }
+    }
 
+    public FindPointDto findPointById(Long id){
+        Member findMemberWithPoint=memberRepository.findByIdWithPoint(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id));
 
+        return Point.toDto(findMemberWithPoint);
     }
 }
