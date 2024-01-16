@@ -4,30 +4,50 @@ package com.objects.marketbridge.domain.member.service;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Membership;
-import org.assertj.core.api.Assertions;
+import com.objects.marketbridge.domain.model.SocialType;
+import com.objects.marketbridge.global.security.jwt.JwtToken;
+import com.objects.marketbridge.global.security.jwt.JwtTokenProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.ArrayList;
+import java.util.List;
 
-@Rollback
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Slf4j
 @SpringBootTest
+@Transactional
+@ActiveProfiles("test")
 class MemberServiceTest {
 
-    @Autowired
-    MemberService memberService;
+    @Autowired MemberService memberService;
 
-    @Autowired
-    MemberRepository memberRepository;
+    @Autowired MemberRepository memberRepository;
 
     private Member existingMember;
+
+    @BeforeEach
+    void init() {
+        Member member = Member.builder()
+                .email("iiwisii@naver.com")
+                .name("박정인")
+                .password("03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4")
+                .phoneNo("01073784758")
+                .isAgree(true)
+                .isAlert(true)
+                .membership(Membership.WOW.toString())
+                .socialType(SocialType.DEFAULT.toString())
+                .build();
+
+        memberRepository.save(member);
+    }
 
     @BeforeEach
     public void createMemberOrigin() {
@@ -37,29 +57,29 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("이메일은 중복되지 않은 경우.")
-    public void checkEmail() throws Exception{
+    @DisplayName("이메일이 중복이 되었으면 true를 반환한다")
+    public void checkDuplicateEmailTrue() {
         //given
-        String emailCheck = "code11@gmail.com";
+            String email = "iiwisii@naver.com";
 
         //when
-        Boolean isEmailDuplicate = memberService.checkEmail(emailCheck);
+        boolean isDuplicateEmail = memberService.isDuplicateEmail(email);
 
         //then
-        assertThat(isEmailDuplicate).isFalse(); // 중복되지 않는 경우 true 반환을 확인
+        assertThat(isDuplicateEmail).isTrue();
     }
 
     @Test
-    @DisplayName("이메일이 중복되는 경우")
-    public void testCheckEmailForDuplicate() {
-        // given
-        String emailToCheck = "test1234@gmail.com";
+    @DisplayName("이메일이 중복이 되지 않았으면 false를 반환한다")
+    public void checkDuplicateEmailFalse() {
+        //given
+        String email = "iiii@naver.com";
 
         //when
-        Boolean isEmailDuplicate = memberService.checkEmail(emailToCheck);
+        boolean isDuplicateEmail = memberService.isDuplicateEmail(email);
 
         //then
-        assertThat(isEmailDuplicate).isTrue(); // 중복되지 않는 경우 true 반환을 확인
+        assertThat(isDuplicateEmail).isFalse();
     }
 
     @Test
@@ -74,5 +94,6 @@ class MemberServiceTest {
         assertThat(existingMember.getMembership()).isEqualTo(memberShipData);
     }
 
-
+    //sign up 테스트
+    //sign in 테스트
 }

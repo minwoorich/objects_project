@@ -1,20 +1,25 @@
 package com.objects.marketbridge.domain.order.controller.request;
 
+import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
+import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.dto.ProductInfoDto;
-import com.objects.marketbridge.domain.order.exception.CustomLogicException;
-import com.objects.marketbridge.domain.order.exception.ErrorCode;
+import com.objects.marketbridge.domain.order.exception.exception.CustomLogicException;
+import com.objects.marketbridge.domain.order.exception.exception.ErrorCode;
+import com.objects.marketbridge.global.error.OrderPriceMismatchException;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Getter
 @NoArgsConstructor
 public class CreateOrderRequest {
 
     @NotNull
-    private String payMethod;
+    private String paymentMethod;
 
     @NotNull
     private String orderName;
@@ -22,26 +27,56 @@ public class CreateOrderRequest {
     @NotNull
     private Long totalOrderPrice;
 
-    private String successUrl;
-
-    private String failUrl;
+    @NotNull
+    private Long addressId;
 
     private List<ProductInfoDto> productInfos = new ArrayList<>();
 
     @Builder(builderClassName = "requestBuilder", toBuilder = true)
-    public CreateOrderRequest(String payMethod, String orderName, Long totalOrderPrice, String successUrl, String failUrl, @Singular("product") List<ProductInfoDto> productInfos) {
-        validPaymentAmount();
-        this.payMethod = payMethod;
+    public CreateOrderRequest(String paymentMethod, String orderName, Long totalOrderPrice, Long addressId, @Singular("product") List<ProductInfoDto> productInfos) {
+        validPaymentAmount(totalOrderPrice);
+        validTotalOrderPrice(totalOrderPrice, productInfos);
+        this.paymentMethod = paymentMethod;
         this.orderName = orderName;
         this.totalOrderPrice = totalOrderPrice;
-        this.successUrl = successUrl;
-        this.failUrl = failUrl;
+        this.addressId = addressId;
         this.productInfos = productInfos;
     }
 
-    private void validPaymentAmount() {
-        if (totalOrderPrice > 1000000000 || totalOrderPrice < 1000) {
-            throw new CustomLogicException(ErrorCode.INVALID_PAYMENT_AMOUNT);
+    private void validPaymentAmount(Long totalOrderPrice) {
+        if (totalOrderPrice > 1000000000L || totalOrderPrice < 1000L) {
+            throw new CustomLogicException("금액은 최대 1,000,000,000원 그리고 최저 1,000 원 만 거래 가능합니다", ErrorCode.INVALID_PAYMENT_AMOUNT);
         }
+    }
+
+    private void validTotalOrderPrice(Long totalOrderPrice, List<ProductInfoDto> productInfos) {
+        Long sum = productInfos.stream()
+                .mapToLong(ProductInfoDto::getUnitOrderPrice)
+                .sum();
+
+        if (!sum.equals(totalOrderPrice)) {
+            throw new OrderPriceMismatchException("전달받은 totalOrderPrice : "+totalOrderPrice+", 계산한 totaOrderPrice : "+sum);
+        }
+    }
+
+    public CreateProdOrderDto toProdOrderDto(Long memberId, String orderNo){
+        return CreateProdOrderDto.builder()
+                .orderNo(orderNo)
+                .memberId(memberId)
+                .paymentMethod(paymentMethod)
+                .addressId(addressId)
+                .orderName(orderName)
+                .totalOrderPrice(totalOrderPrice)
+                .build();
+    }
+
+    public List<CreateProdOrderDetailDto> toProdOrderDetailDtos() {
+        return productInfos.stream()
+                .map(p -> CreateProdOrderDetailDto.builder()
+                        .productId(p.getProductId())
+                        .usedCouponId(p.getUsedCouponId())
+                        .quantity(p.getQuantity())
+                        .unitOrderPrice(p.getUnitOrderPrice()).build())
+                .collect(Collectors.toList());
     }
 }

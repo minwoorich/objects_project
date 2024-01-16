@@ -1,37 +1,52 @@
 package com.objects.marketbridge.domain.order.controller;
 
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.domain.member.service.MemberService;
+import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.Member;
+import com.objects.marketbridge.domain.model.Point;
 import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
 import com.objects.marketbridge.domain.order.controller.response.CheckoutResponse;
-import com.objects.marketbridge.domain.order.controller.response.OrderResponse;
-import com.objects.marketbridge.domain.order.service.OrderService;
-import com.objects.marketbridge.domain.payment.service.TossPaymentService;
+import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
+import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderService orderService;
-    private final TossPaymentService paymentService;
-    private final MemberService memberService;
+    private final CreateOrderService createOrderService;
     private final MemberRepository memberRepository;
 
-    @GetMapping("/orders/direct/checkout")
-    public ApiResponse<CheckoutResponse> showCheckout() {
-        return null;
+    @GetMapping("/orders/checkout")
+    public ApiResponse<CheckoutResponse> showCheckout(@SessionAttribute Long memberId) {
+
+        Member member = memberRepository.findByIdWithPointAndAddresses(memberId);
+        List<Address> addresses = member.getAddresses();
+        Point point = member.getPoint();
+
+        CheckoutResponse checkoutResponse = CheckoutResponse.builder()
+                .addressList(addresses.stream().map(Address::getAddressValue).collect(Collectors.toList()))
+                .pointBalance(point.getBalance()).build();
+
+        return ApiResponse.ok(checkoutResponse);
     }
 
-    @PostMapping("/orders/toss")
-    public ApiResponse<OrderResponse> createOrder(@SessionAttribute Long memberId, @Valid @RequestBody CreateOrderRequest createOrderRequest) {
-        String userEmail = memberRepository.findById(memberId).map(Member::getEmail).orElseThrow(IllegalArgumentException::new);
-        orderService.create(userEmail, createOrderRequest);
-        return null;
+    @PostMapping("/orders")
+    public ApiResponse<CreateOrderResponse> createOrder(@SessionAttribute Long memberId, @Valid @RequestBody CreateOrderRequest createOrderRequest) {
+
+        String orderNo = UUID.randomUUID().toString();
+
+        CreateOrderResponse resp = createOrderService.create(
+                createOrderRequest.toProdOrderDto(memberId, orderNo),
+                createOrderRequest.toProdOrderDetailDtos());
+
+        return ApiResponse.ok(resp);
     }
 }
