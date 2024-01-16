@@ -1,37 +1,62 @@
-/*
-insert into status_code(type, code, name)
-values (ORDER_INIT, "주문생성", "OR00"),
-       (ORDER_RECEIVED, "주문접수", "OR01"),
-       (ORDER_CANCEL, "주문취소", "OR02"),
-
-       (PAYMENT_PENDING, "결제대기", "PM01"),
-       (PAYMENT_COMPLETED, "결제완료", "PM04"),
-       (PAYMENT_FAILURE, "결제실패", "PM07"),
-       (PAYMENT_CANCEL, "결제취소", "PM05"),
-
-       (DELIVERY_PENDING, "배송대기", "DL01"),
-       (DELIVERY_ING, "배송중", "DL03"),
-       (DELIVERY_COMPLETED, "배송완료", "DL04"),
-       (DELIVERY_DELAY, "배송지연", "DL06"),
-
-       (RELEASE_PENDING, "출고대기", "RE01"),
-       (RELEASE_COMPLETED, "출고완료", "RE04"),
-
-       (RETURN_INIT, "반품접수", "RT00"),
-       (RETURN_CANCEL, "반품취소", "RT05"),
-       (RETURN_COMPLETED, "반품완료", "RT04"),
-
-       (RECALL_ING, "회수중", "RC03"),
-       (RECALL_COMPLETED, "회수완료", "RC04"),
-
-       (INSPECTION_ING, "검수중", "IP03"),
-       (INSPECTION_COMPLETED, "검수완료", "IP04"),
-
-       (SELLER_FAULT, "판매자과실", "SL08"),
-
-       (PRODUCT_DISPOSAL, "제품폐기", "PR09"),
-
-       (CUSTOMER_FAULT, "고객과실", "CS08");
-*/
-
-/*insert into member(null, 'basic', 'kakao', 'test@email.com', '01012341234', '홍길동', '1234', '1','1', now(), now(), now());*/
+# -- Address
+# INSERT INTO address (address_id, city, street, zip_code)
+# VALUES
+#     (1, 'Seoul', 'Gangnam-gu', '12345'),
+#     (2, 'Busan', 'Haeundae-gu', '67890');
+#
+# -- Category
+# INSERT INTO category (category_id, name)
+# VALUES
+#     (1, 'Electronics'),
+#     (2, 'Clothing');
+#
+# -- Option
+# INSERT INTO option (option_id, name, value)
+# VALUES
+#     (1, 'Color', 'Red'),
+#     (2, 'Size', 'XL');
+#
+# -- Product
+# INSERT INTO product (product_id, category_id, stock, product_no, is_own, name, price, is_subs, thumb_img, discount_rate)
+# VALUES
+#     (1, 1, 100, 'P123', true, 'Smartphone', 500000, false, 'phone.jpg', 10),
+#     (2, 2, 50, 'C456', false, 'T-shirt', 30000, true, 'shirt.jpg', 15);
+#
+# -- ProdOption
+# INSERT INTO prod_option (prod_option_id, product_id, option_id)
+# VALUES
+#     (1, 1, 1),
+#     (2, 1, 2),
+#     (3, 2, 2);
+#
+# -- Member
+# INSERT INTO member (member_id, social_type, membership, email, password, name, phone_no, is_alert, is_agree)
+# VALUES
+#     (1, 'Google', 'Gold', 'user1@example.com', 'password123', 'User1', '123456789', true, true),
+#     (2, 'Facebook', 'Silver', 'user2@example.com', 'password456', 'User2', '987654321', false, true);
+#
+# -- ProdOrder
+# INSERT INTO prod_order (prod_order_id, member_id, address_id, order_name, order_no, total_price, point_rate, saved_point, delivered_date)
+# VALUES
+#     (1, 1, 1, 'Order1', '123ABC', 550000, 5, 5000, '2024-01-16 12:30:00'),
+#     (2, 2, 2, 'Order2', '456DEF', 35000, 3, 1000, '2024-01-17 09:00:00');
+#
+# -- ProdOrderDetail
+# INSERT INTO prod_order_detail (prod_order_detail_id, prod_order_id, product_id, coupon_id, prod_option_id, used_coupon, quantity, price, status_code, delivered_date, used_point, reason, cancelled_at)
+# VALUES
+#     (1, 1, 1, 1, 1, 0, 2, 100000, 'COMPLETED', '2024-01-17 10:00:00', 0, NULL, NULL),
+#     (2, 1, 2, 2, 2, 1, 1, 25000, 'COMPLETED', '2024-01-17 11:30:00', 2000, NULL, NULL),
+#     (3, 2, 2, 1, 3, 0, 1, 30000, 'COMPLETED', '2024-01-17 12:45:00', 0, NULL, NULL);
+#
+# -- MemberCoupon
+# INSERT INTO member_coupon (member_coupon_id, member_id, coupon_id, is_used, used_date, end_date)
+# VALUES
+#     (1, 1, 1, false, NULL, '2024-12-31'),
+#     (2, 1, 2, true, '2024-01-17 10:30:00', '2024-12-31'),
+#     (3, 2, 1, false, NULL, '2024-12-31');
+#
+# -- Coupon
+# INSERT INTO coupon (coupon_id, product_id, name, price, count, minimum_price, start_date, end_date)
+# VALUES
+#     (1, 1, 'DiscountCoupon1', 5000, 100, 100000, '2024-01-01', '2024-06-30'),
+#     (2, 2, 'DiscountCoupon2', 2000, 50, 20000, '2024-01-01', '2024-06-30');
