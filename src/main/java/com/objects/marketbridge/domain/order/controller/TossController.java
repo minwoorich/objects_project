@@ -3,6 +3,8 @@ package com.objects.marketbridge.domain.order.controller;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
 import com.objects.marketbridge.domain.order.service.TossService;
+import com.objects.marketbridge.domain.order.service.port.OrderRepository;
+import com.objects.marketbridge.domain.payment.dto.TossConfirmRequest;
 import com.objects.marketbridge.domain.payment.service.CreatePaymentService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class TossController {
     private final CreatePaymentService createPaymentService;
     private final TossService tossService;
     private final MemberRepository memberRepository;
+    private final OrderRepository orderRepository;
 
     @GetMapping("/payments/toss/success")
     public ApiResponse<TossPaymentsResponse> tossPaymentSuccess(
@@ -26,7 +29,7 @@ public class TossController {
             @RequestParam(name = "orderId") String orderNo,
             @RequestParam(name ="amount") Long totalOrderPrice) {
 
-        TossPaymentsResponse tossPaymentsResponse = tossService.requestPaymentAccept(memberId, paymentKey, orderNo, totalOrderPrice);
+        TossPaymentsResponse tossPaymentsResponse = tossService.requestPaymentAccept(memberId, new TossConfirmRequest(paymentKey, orderNo, totalOrderPrice));
 //        createPaymentService.create(memberId, paymentKey, orderNo, totalOrderPrice);
 
         //TODO : orderNo, totalPrice 검증 해야함(그리고 임시로 DB에 저장) -> redis?!

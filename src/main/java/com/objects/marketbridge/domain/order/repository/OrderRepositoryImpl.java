@@ -7,6 +7,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -47,7 +48,17 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public OrderTemp save(OrderTemp orderTemp) {
-        return orderTempJpaRepository.save(orderTemp);
+    public void save(OrderTemp orderTemp) {
+        orderTempJpaRepository.save(orderTemp);
+    }
+
+    @Override
+    public void saveAll(List<ProdOrder> orders) {
+        orderJpaRepository.saveAll(orders);
+    }
+
+    @Override
+    public void saveOrderTempAll(List<OrderTemp> orderTempList) {
+        orderTempJpaRepository.saveAll(orderTempList);
     }
 }

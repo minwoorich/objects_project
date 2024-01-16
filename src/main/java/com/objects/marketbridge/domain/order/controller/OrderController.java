@@ -11,11 +11,13 @@ import com.objects.marketbridge.domain.order.domain.OrderTemp;
 import com.objects.marketbridge.domain.order.exception.exception.CustomLogicException;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.global.common.ApiResponse;
+import com.objects.marketbridge.global.utils.GroupingHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.objects.marketbridge.domain.order.exception.exception.ErrorCode.SHIPPING_ADDRESS_NOT_REGISTERED;
 
@@ -52,12 +54,19 @@ public class OrderController {
     }
 
     @PostMapping("/orders/checkout")
-    public ApiResponse<Object> saveOrderTemp(
+    public ApiResponse<String> saveOrderTemp(
             @SessionAttribute(name="memberId") Long memberId,
-            @Valid @RequestBody TempOrderRequest tempOrderRequest) {
+            @Valid @RequestBody TempOrderRequest request) {
 
-        orderRepository.save(new OrderTemp(tempOrderRequest.getOrderId(), tempOrderRequest.getAmount()));
+        List<OrderTemp> orderTemps = createOrderTempList(request);
+        orderRepository.saveOrderTempAll(orderTemps);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok("");
+    }
+
+    private List<OrderTemp> createOrderTempList(TempOrderRequest request) {
+        return request.getProducts().stream().map(p ->
+                new OrderTemp(request.getOrderId(), request.getAmount(), p)
+        ).toList();
     }
 }
