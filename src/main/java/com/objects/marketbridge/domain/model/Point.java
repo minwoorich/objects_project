@@ -58,7 +58,7 @@ public class Point extends BaseEntity {
                 .balance(member.getPoint().getBalance())
                 .inPoint(member.getPoint().getInPoint())
                 .outPoint(member.getPoint().getOutPoint())
-                .pointType(member.getPoint().getPointType().toString())
+                .pointType(member.getPoint().getPointType())
                 .comments(member.getPoint().getComments())
                 .createdAt(member.getPoint().getCreatedAt())
                 .build();
