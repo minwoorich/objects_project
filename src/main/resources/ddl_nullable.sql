@@ -510,31 +510,31 @@ CREATE TABLE cart (
                         quantity	bigint	
 );
 
-# DROP TABLE IF EXISTS like;
-#
-# CREATE TABLE like (
-#                         like_id	bigint auto_increment primary key,
-#                         Field	varchar(255))
-# );
+/*DROP TABLE IF EXISTS like;
 
-# DROP TABLE IF EXISTS prod_subs;
-#
-# CREATE TABLE prod_subs (
-#                              prod_subs_id	bigint auto_increment primary key,
-#                              period	bigint	,
-#                              mem_id	integer	,
-#                              subs_type	varchar(255)	,
-#                              ord_id	varchar(255)	,
-#                              delivey_value	integer	,
-#                              payment_schedule	date	,
-#                              payment_date	date	,
-#                              delivery_schedule	date	,
-#                              status	integer	,
-#                              receipt_url	varchar(255)	,
-#                              created_at	date	,
-#                              updated_at	date	,
-#                              payment_price	int
-# );
+CREATE TABLE like (
+                        like_id	bigint auto_increment primary key,
+                        Field	varchar(255))
+);
+
+DROP TABLE IF EXISTS prod_subs;
+
+CREATE TABLE prod_subs (
+                             prod_subs_id	bigint auto_increment primary key,
+                             period	bigint	,
+                             mem_id	integer	,
+                             subs_type	varchar(255)	,
+                             ord_id	varchar(255)	,
+                             delivey_value	integer	,
+                             payment_schedule	date	,
+                             payment_date	date	,
+                             delivery_schedule	date	,
+                             status	integer	,
+                             receipt_url	varchar(255)	,
+                             created_at	date	,
+                             updated_at	date	,
+                             payment_price	int
+);*/
 
 
 
