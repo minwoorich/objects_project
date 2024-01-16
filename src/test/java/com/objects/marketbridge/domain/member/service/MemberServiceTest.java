@@ -48,7 +48,7 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("이메일이 중복이 되었을 경우 true를 반환한다")
+    @DisplayName("이메일이 중복이 되었으면 true를 반환한다")
     public void checkDuplicateEmailTrue() {
         //given
             String email = "iiwisii@naver.com";
@@ -75,20 +75,4 @@ class MemberServiceTest {
 
     //sign up 테스트
     //sign in 테스트
-
-
-    @Test
-    public void getTokenTest() {
-
-        //given
-
-//
-//        memberRepository.save(member);
-        JwtToken jwt = memberService.signIn("iiwisii@naver.com", "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4");
-
-        //when
-
-
-        //then
-    }
 }

@@ -46,11 +46,6 @@ public class MemberService {
     public JwtToken signIn(String username, String password) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
-
-        // 리프레시 토큰 저장하는 로직 있어야 됨.
-        String refreshToken = jwtToken.getRefreshToken();
-
-        return jwtToken;
+        return jwtTokenProvider.generateToken(authentication);
     }
 }
