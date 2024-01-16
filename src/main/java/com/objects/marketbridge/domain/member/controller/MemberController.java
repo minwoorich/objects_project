@@ -2,6 +2,7 @@ package com.objects.marketbridge.domain.member.controller;
 
 
 import com.objects.marketbridge.domain.member.dto.CreateMemberDto;
+import com.objects.marketbridge.domain.member.dto.FindPointDto;
 import com.objects.marketbridge.domain.member.service.MemberService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import jakarta.validation.Valid;
@@ -25,5 +26,12 @@ public class MemberController {
     @GetMapping("/membership/{id}")
     public void changeMembership(@PathVariable Long id){
         memberService.changeMemberShip(id);
+    }
+
+    @GetMapping("/point/{id}")
+    public ApiResponse<FindPointDto> findPointById(@PathVariable Long id){
+
+        FindPointDto memberPoint = memberService.findPointById(id);
+        return ApiResponse.of(HttpStatus.OK,"completed",memberPoint);
     }
 }
