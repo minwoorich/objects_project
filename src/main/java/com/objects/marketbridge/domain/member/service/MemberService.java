@@ -1,9 +1,11 @@
 package com.objects.marketbridge.domain.member.service;
 
+import com.objects.marketbridge.domain.member.dto.FindPointDto;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.member.dto.CreateMemberDto;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Membership;
+import com.objects.marketbridge.domain.model.Point;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +38,12 @@ public class MemberService {
             findMember.setMembership(Membership.BASIC);
             memberRepository.save(findMember);
         }
+    }
 
+    public FindPointDto findPointById(Long id){
+        Member findMemberWithPoint=memberRepository.findByIdWithPoint(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id));
 
+        return Point.toDto(findMemberWithPoint);
     }
 }
