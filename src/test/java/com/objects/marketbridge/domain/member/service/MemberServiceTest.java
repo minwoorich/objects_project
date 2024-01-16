@@ -8,11 +8,8 @@ import com.objects.marketbridge.domain.model.Membership;
 import com.objects.marketbridge.domain.model.Point;
 import com.objects.marketbridge.domain.point.repository.PointRepository;
 import com.objects.marketbridge.global.error.EntityNotFoundException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import com.objects.marketbridge.domain.model.SocialType;
-import com.objects.marketbridge.global.security.jwt.JwtToken;
-import com.objects.marketbridge.global.security.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,12 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 @SpringBootTest
@@ -60,12 +52,6 @@ class MemberServiceTest {
                 .build();
 
         memberRepository.save(member);
-    }
-
-    @BeforeEach
-    public void createMemberOrigin() {
-        // 생성된 사용자 객체를 저장할 변수
-        originMember=memberRepository.save(createMember("test1234@gmail.com"));
     }
 
     @AfterEach
@@ -105,7 +91,7 @@ class MemberServiceTest {
     @DisplayName("멤버십 변경 API")
     public void testUpdateWowMemberShip(){
         //given
-        Membership memberShipData = Membership.WOW;
+        Membership memberShipData = Membership.BASIC;
         //when
         memberService.changeMemberShip(originMember.getId());
         //then
@@ -117,8 +103,8 @@ class MemberServiceTest {
     @DisplayName("포인트 조회 API")
     public void testFindPointById(){
             //given
-        Member member = memberRepository.findByEmail("test1234@gmail.com").orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
-        Point point = createPoint(member, 4500L);
+        Member member = memberRepository.findByEmail("iiwisii@naver.com").orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
+        Point point = createPoint(member);
         pointRepository.save(point);
 
             //when
@@ -130,15 +116,9 @@ class MemberServiceTest {
 
     }
 
-    private Member createMember(String email) {
-        return Member.builder()
-                .email(email)
-                .membership(Membership.BASIC)
-                .build();
-    }
 
-    private Point createPoint(Member member, Long balance) {
-        Point point = Point.builder().balance(balance).member(member).build();
+    private Point createPoint(Member member) {
+        Point point = Point.builder().balance(4500L).member(member).build();
         point.setMember(member);
 
         return point;
