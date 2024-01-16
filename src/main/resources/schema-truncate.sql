@@ -34,6 +34,8 @@ truncate table point;
 
 truncate table prod_option;
 
+truncate table options;
+
 truncate table prod_order;
 
 truncate table prod_order_detail;
@@ -64,10 +66,7 @@ truncate table social_credential;
 
 truncate table status_code;
 
-truncate table stock;
-
 truncate table survey_content;
 
 truncate table tag;
 
-truncate table warehouse;

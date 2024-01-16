@@ -546,6 +546,7 @@ CREATE TABLE order_temp (
 
                               order_no	varchar(255)	,
                               amount	bigint	,
+                              address_id bigint,
                               product	varchar(255)	
 );
 
