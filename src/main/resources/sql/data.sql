@@ -1,4 +1,4 @@
--- Address
+/*-- Address
 INSERT INTO address (address_id, city, street, zip_code)
 VALUES
     (1, 'Seoul', 'Gangnam-gu', '12345'),
@@ -60,3 +60,4 @@ INSERT INTO coupon (coupon_id, product_id, name, price, count, minimum_price, st
 VALUES
     (1, 1, 'DiscountCoupon1', 5000, 100, 100000, '2024-01-01', '2024-06-30'),
     (2, 2, 'DiscountCoupon2', 2000, 50, 20000, '2024-01-01', '2024-06-30');
+*/
