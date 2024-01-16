@@ -1,9 +1,8 @@
-package com.objects.marketbridge.domain.order.domain;
+package com.objects.marketbridge.domain.order.entity;
 
 import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.BaseEntity;
 import com.objects.marketbridge.domain.model.Member;
-import com.objects.marketbridge.domain.model.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -64,11 +63,6 @@ public class ProdOrder extends BaseEntity {
         prodOrderDetails.setOrder(this);
     }
 
-    //== 비즈니스 로직==//
-    public void cancel(String reason, String statusCode) {
-        prodOrderDetails.forEach(prodOrderDetail -> prodOrderDetail.cancel(reason, statusCode));
-    }
-
     public static ProdOrder create(Member member, Address address, String orderName, String orderNo, Long totalPrice){
         return ProdOrder.builder()
                 .member(member)
@@ -77,5 +71,14 @@ public class ProdOrder extends BaseEntity {
                 .orderNo(orderNo)
                 .totalPrice(totalPrice)
                 .build();
+    }
+
+    //== 비즈니스 로직==//
+    public void cancel(String reason, String statusCode) {
+        prodOrderDetails.forEach(prodOrderDetail -> prodOrderDetail.cancel(reason, statusCode));
+    }
+
+    public void returnCoupon() {
+        prodOrderDetails.forEach(ProdOrderDetail::returnCoupon);
     }
 }

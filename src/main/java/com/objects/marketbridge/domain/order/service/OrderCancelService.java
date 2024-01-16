@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.dto.RefundDto;
@@ -11,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.objects.marketbridge.domain.order.domain.StatusCodeType.*;
+import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,28 +24,30 @@ public class OrderCancelService {
     private final RefundService refundService;
 
     public void orderCancel(Long orderId, String reason) {
-        cancel(orderId, reason);
+        InnerService innerService = new InnerService();
 
-        // TODO 환불
-        // ProdOrder에 존재하는 totalPrice의 값을 주문 유저의 계좌로 환불해주자.
-        // (재고 수량 동시성 예외가 터져도 환불은 해줌 -> 재고 문제는 따로 처리해야 함)
-        RefundDto refundDto =  refundService.refund("계좌번호", 10000f);
+        innerService.cancel(orderId, reason);
+
+        // TODO 결제 취소(환불)
+        refundService.refund("계좌번호", 10000L);
     }
 
-    @Transactional
-    // TODO 객체로 따로 빼야함
-    public void cancel(Long orderId, String reason) {
-//        // TODO findStockByProdOrderId TEST 진행
-//        List<Stock> stocks = stockRepository.findStocksByProdOrderId(orderId);
-//
-//        for (Stock stock : stocks) {
-//            // TODO findByStockIdAndOrderId TEST 진행
-//            ProdOrderDetail prodOrderDetail = orderDetailRepository.findByStockIdAndOrderId(stock.getId(), orderId);
-//            if (prodOrderDetail != null) {
-//                prodOrderDetail.cancel(reason, ORDER_CANCEL.getCode());
-//                stock.increase(prodOrderDetail.getQuantity());
-//            }
-//        }
+
+    // TODO 객체로 따로 빼야함(임시로 사용)
+    class InnerService {
+        @Transactional
+        public void cancel(Long orderId, String reason) {
+            ProdOrder prodOrder = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당하는 주문이 없습니다."));
+
+            prodOrder.cancel(reason, ORDER_CANCEL.getCode());
+
+            prodOrder.returnCoupon();
+
+            // TODO 포인트 반환
+
+        }
+
     }
 
 }

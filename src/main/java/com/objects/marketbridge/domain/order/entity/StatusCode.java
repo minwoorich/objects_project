@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.order.domain;
+package com.objects.marketbridge.domain.order.entity;
 
 import com.objects.marketbridge.domain.model.BaseEntity;
 import jakarta.persistence.*;

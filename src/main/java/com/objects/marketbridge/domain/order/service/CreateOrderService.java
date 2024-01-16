@@ -9,9 +9,9 @@ import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
 import com.objects.marketbridge.domain.order.domain.OrderTemp;
-import com.objects.marketbridge.domain.order.domain.ProdOrder;
-import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
-import com.objects.marketbridge.domain.order.domain.StatusCodeType;
+import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
@@ -84,7 +84,7 @@ public class CreateOrderService {
 
     private ProdOrder createProdOrder(CreateProdOrderDto dto) {
 
-        Member member         = memberRepository.findById(dto.getMemberId()).orElseThrow(EntityNotFoundException::new);
+        Member member         = memberRepository.findById(dto.getMemberId()).orElseThrow(IllegalArgumentException::new);
         Address address       = addressRepository.findById(dto.getAddressId());
         Long totalOrderPrice  = dto.getTotalOrderPrice();
         String orderName      = dto.getOrderName();

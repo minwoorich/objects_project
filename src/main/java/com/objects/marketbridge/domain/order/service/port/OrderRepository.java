@@ -2,7 +2,7 @@ package com.objects.marketbridge.domain.order.service.port;
 
 
 import com.objects.marketbridge.domain.order.domain.OrderTemp;
-import com.objects.marketbridge.domain.order.domain.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.ProdOrder;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,4 +27,5 @@ public interface OrderRepository {
 
     void saveOrderTempAll(List<OrderTemp> orderTempList);
 
+    Optional<ProdOrder> findProdOrderWithDetailsAndProduct(Long orderId);
 }

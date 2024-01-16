@@ -1,16 +1,17 @@
-package com.objects.marketbridge.domain.order.domain;
+package com.objects.marketbridge.domain.order.entity;
 
 import com.objects.marketbridge.domain.model.BaseEntity;
 import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.ProdOption;
 import com.objects.marketbridge.domain.model.Product;
+import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import static com.objects.marketbridge.domain.order.domain.StatusCodeType.*;
+import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
 
 @Entity
 @Getter
@@ -96,6 +97,11 @@ public class ProdOrderDetail extends BaseEntity {
         }
         this.statusCode = statusCode;
         this.reason = reason;
+        this.product.increase(quantity);
+    }
+
+    public void returnCoupon() {
+        coupon.returnCoupon();
     }
 
     public void setProduct(Product product) {

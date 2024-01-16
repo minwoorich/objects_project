@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
-import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,13 +26,10 @@ public class Product extends BaseEntity{
 
     @OneToMany(mappedBy = "product")
     private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "product")
-//    private List<ProdOption> prodOptions = new ArrayList<>();
 
     private String productNo;
 
-    private boolean isOwn; // 로켓 true , 오픈 마켓 false
+    private Boolean isOwn; // 로켓 true , 오픈 마켓 false
 
     private String name;
 
@@ -47,8 +44,10 @@ public class Product extends BaseEntity{
     private Long stock;
 
     @Builder
-    public Product(Category categoryId, boolean isOwn, String name, Long price, boolean isSubs, String thumbImg, Long discountRate, Long stock) {
+    private Product(Category categoryId, List<ProdOrderDetail> prodOrderDetails, String productNo, Boolean isOwn, String name, Long price, Boolean isSubs, String thumbImg, Long discountRate, Long stock) {
         this.categoryId = categoryId;
+        this.prodOrderDetails = prodOrderDetails;
+        this.productNo = productNo;
         this.isOwn = isOwn;
         this.name = name;
         this.price = price;
@@ -63,8 +62,7 @@ public class Product extends BaseEntity{
         prodOrderDetail.setProduct(this);
     }
 
-//    public void addProdOption(ProdOption prodOption) {
-//        prodOptions.add(prodOption);
-//        prodOption.setProduct(this);
-//    }
+    public void increase(Long quantity) {
+        stock += quantity;
+    }
 }

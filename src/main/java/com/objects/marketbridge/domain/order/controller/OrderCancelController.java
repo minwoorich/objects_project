@@ -22,6 +22,6 @@ public class OrderCancelController {
 
         orderCancelService.orderCancel(orderId, reason);
 
-        return ApiResponse.of(HttpStatus.OK, "이상없음", new OrderCancelResponse());
+        return ApiResponse.ok();
     }
 }
