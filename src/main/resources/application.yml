@@ -10,7 +10,7 @@ spring:
   sql:
     init:
       mode: always
-      platform: mysql
+      platform: mysql # 이거 없으면 mysql 인식 못함
 
   jwt: # CLI 명령어 - openssl rand -base64 32 로 생성된 값
     secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
