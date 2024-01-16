@@ -23,7 +23,7 @@ public class ProductService {
     @Transactional
     public void registerProduct(ProductRequestDto productRequestDto) {
 
-        // ProductDto에서 필요한 정보 추출하여 Product 엔터티 생성
+        // ProductRequestDto에서 필요한 정보 추출하여 Product 엔터티 생성
         Product product = Product.builder()
                 .categoryId(productRequestDto.getCategoryId())
                 .isOwn(productRequestDto.getIsOwn())

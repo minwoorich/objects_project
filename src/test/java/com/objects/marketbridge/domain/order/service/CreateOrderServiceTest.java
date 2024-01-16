@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.address.repository.AddressRepository;
+import com.objects.marketbridge.domain.address.repository.AddressRepository;
 import com.objects.marketbridge.domain.coupon.repository.CouponRepository;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Address;
@@ -115,7 +115,7 @@ class CreateOrderServiceTest {
                 .paymentMethod("신용카드")
                 .orderName("가방 외 2건")
                 .totalOrderPrice(14000L)
-                .addressId(findAddress.getId())
+                .selectedAddressId(findAddress.getId())
                 .productInfos(productInfos)
                 .build();
 

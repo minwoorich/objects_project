@@ -1,18 +1,8 @@
 package com.objects.marketbridge.domain.model;
 
-import com.objects.marketbridge.domain.member.dto.CreateMember;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +17,8 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-//    @Enumerated(EnumType.STRING)
     private String socialType;
-
-//    @Enumerated(EnumType.STRING)
+    @Setter
     private String membership;
 
     private String email;
@@ -41,19 +29,21 @@ public class Member extends BaseEntity {
 
     private String phoneNo;
 
+    // 알림
+    private Boolean isAlert;
+    // 약관동의
+    private Boolean isAgree;
+
+
+    // 양방향 설정
     @OneToMany(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
     @OneToOne(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
     private Point point;
 
-    // 알림
-    private boolean isAlert;
-    // 약관동의
-    private boolean isAgree;
-
     @Builder
-    private Member(String socialType, String membership, String email, String password, String name, String phoneNo, boolean isAlert, boolean isAgree, List<String> roles) {
+    private Member(String socialType, String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
         this.socialType = socialType;
         this.membership = membership;
         this.email = email;
@@ -68,24 +58,14 @@ public class Member extends BaseEntity {
         this.point = point;
     }
 
-//    public CreateUser toDto(){
-//
-//        return CreateUser.builder()
-//                .email()
-//                .name()
-//                .phoneNo()
-//                .password()
-//                .isAgree();
+//    public static Member fromDto(CreateMember createMember){
+//        return Member.builder()
+//                .email(createMember.getEmail())
+//                .name(createMember.getName())
+//                .phoneNo(createMember.getPhoneNo())
+//                .password(createMember.getPassword())
+//                .isAgree(createMember.getIsAgree()).build();
 //    }
-
-    public static Member fromDto(CreateMember createMember){
-        return Member.builder()
-                .email(createMember.getEmail())
-                .name(createMember.getName())
-                .phoneNo(createMember.getPhoneNo())
-                .password(createMember.getPassword())
-                .isAgree(createMember.getIsAgree()).build();
-    }
 }
 
 

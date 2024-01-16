@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.product.controller;
 
+import com.objects.marketbridge.domain.model.Category;
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.product.dto.ProductDto;
 import com.objects.marketbridge.domain.product.dto.ProductRequestDto;
@@ -28,6 +29,7 @@ public class ProductController {
 //                productRequestDto.getName(),
 //                productRequestDto.getPrice(),
 //                productRequestDto.getIsSubs(),
+//                productRequestDto.getStock(),
 //                productRequestDto.getThumbImg(),
 //                productRequestDto.getDiscountRate());
 
