@@ -1,56 +1,129 @@
 package com.objects.marketbridge.domain.member.service;
 
 
+import com.objects.marketbridge.domain.member.dto.FindPointDto;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
+import com.objects.marketbridge.domain.model.Membership;
+import com.objects.marketbridge.domain.model.Point;
+import com.objects.marketbridge.domain.point.repository.PointRepository;
+import com.objects.marketbridge.global.error.EntityNotFoundException;
+import org.junit.jupiter.api.AfterEach;
+import com.objects.marketbridge.domain.model.SocialType;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Slf4j
 @SpringBootTest
+@Transactional
+@ActiveProfiles("test")
 class MemberServiceTest {
 
     @Autowired
     MemberService memberService;
 
     @Autowired
-    MemberRepository userRepository;
-    private Member existingMember; // 생성된 사용자 객체를 저장할 변수
+    MemberRepository memberRepository;
 
+    @Autowired
+    PointRepository pointRepository;
+
+    Member originMember;
 
     @BeforeEach
-    public void createMemberOrigin() {
-        existingMember = Member.builder().email("pmmh9395@gmail.com").build();
-        userRepository.save(existingMember);
+    void init() {
+        Member member = Member.builder()
+                .email("iiwisii@naver.com")
+                .name("박정인")
+                .password("03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4")
+                .phoneNo("01073784758")
+                .isAgree(true)
+                .isAlert(true)
+                .membership(Membership.WOW.toString())
+                .socialType(SocialType.DEFAULT.toString())
+                .build();
+
+        memberRepository.save(member);
+    }
+
+    @AfterEach
+    public void rollback(){
+        memberRepository.deleteAll();
+        pointRepository.deleteAllInBatch();
     }
 
     @Test
-    @DisplayName("이메일은 중복되지 않은 경우.")
-    public void checkEmail() throws Exception{
+    @DisplayName("이메일이 중복이 되었으면 true를 반환한다")
+    public void checkDuplicateEmailTrue() {
         //given
-        String emailCheck = "code11@gmail.com";
+            String email = "iiwisii@naver.com";
 
         //when
-        Boolean isEmailDuplicate = memberService.checkDuplicateEmail(emailCheck);
+        boolean isDuplicateEmail = memberService.isDuplicateEmail(email);
 
         //then
-        assertThat(isEmailDuplicate).isFalse(); // 중복되지 않는 경우 false 반환을 확인
+        assertThat(isDuplicateEmail).isTrue();
     }
 
     @Test
-    @DisplayName("이메일이 중복되는 경우")
-    public void testCheckEmailForDuplicate() {
-        // given
-        String emailToCheck = "pmmh9395@gmail.com";
+    @DisplayName("이메일이 중복이 되지 않았으면 false를 반환한다")
+    public void checkDuplicateEmailFalse() {
+        //given
+        String email = "iiii@naver.com";
 
-        // when
-        Boolean isEmailDuplicate = memberService.checkDuplicateEmail(emailToCheck);
+        //when
+        boolean isDuplicateEmail = memberService.isDuplicateEmail(email);
 
-        // then
-        assertThat(isEmailDuplicate).isTrue(); // 중복되는 경우 true 반환을 확인
+        //then
+        assertThat(isDuplicateEmail).isFalse();
     }
+
+    @Test
+    @Transactional
+    @DisplayName("멤버십 변경 API")
+    public void testUpdateWowMemberShip(){
+        //given
+        Membership memberShipData = Membership.BASIC;
+        //when
+        memberService.changeMemberShip(originMember.getId());
+        //then
+        assertThat(originMember.getMembership()).isEqualTo(memberShipData);
+    }
+
+
+    @Test
+    @DisplayName("포인트 조회 API")
+    public void testFindPointById(){
+            //given
+        Member member = memberRepository.findByEmail("iiwisii@naver.com").orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
+        Point point = createPoint(member);
+        pointRepository.save(point);
+
+            //when
+        FindPointDto findMember = memberService.findPointById(member.getId());
+
+
+            //then
+        assertThat(findMember.getBalance()).isEqualTo(4500L);
+
+    }
+
+
+    private Point createPoint(Member member) {
+        Point point = Point.builder().balance(4500L).member(member).build();
+        point.setMember(member);
+
+        return point;
+    }
+
+    //sign up 테스트
+    //sign in 테스트
 }

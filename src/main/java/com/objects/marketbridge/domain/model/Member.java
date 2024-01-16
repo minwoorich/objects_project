@@ -2,10 +2,8 @@ package com.objects.marketbridge.domain.model;
 
 import com.objects.marketbridge.domain.member.dto.CreateMember;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Slf4j
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +19,7 @@ public class Member extends BaseEntity {
     private Long id;
 
     private String socialType;
-
+    @Setter
     private String membership;
 
     private String email;
@@ -60,16 +59,6 @@ public class Member extends BaseEntity {
         this.point = point;
     }
 
-//    public CreateUser toDto(){
-//
-//        return CreateUser.builder()
-//                .email()
-//                .name()
-//                .phoneNo()
-//                .password()
-//                .isAgree();
-//    }
-
     public static Member fromDto(CreateMember createMember){
         return Member.builder()
                 .email(createMember.getEmail())
@@ -78,7 +67,6 @@ public class Member extends BaseEntity {
                 .password(createMember.getPassword())
                 .isAgree(createMember.getIsAgree()).build();
     }
-
 }
 
 
