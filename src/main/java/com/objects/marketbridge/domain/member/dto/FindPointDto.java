@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class FindPointDto extends BaseEntity {
 
-    private Long pointId;
     private Long balance;
     private Long inPoint;
     private Long outPoint;
