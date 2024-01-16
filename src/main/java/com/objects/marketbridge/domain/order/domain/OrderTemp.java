@@ -18,9 +18,12 @@ public class OrderTemp {
 
     Long amount;
 
+    String product;
+
     @Builder
-    public OrderTemp(String orderNo, Long amount) {
+    public OrderTemp(String orderNo, Long amount, String product) {
         this.orderNo = orderNo;
         this.amount = amount;
+        this.product = product;
     }
 }
