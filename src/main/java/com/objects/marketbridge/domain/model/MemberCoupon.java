@@ -21,20 +21,20 @@ public class MemberCoupon extends BaseEntity {
     // TODO
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member memberId;
+    private Member member;
     // TODO
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "couponId")
-    private Coupon couponId;
+    private Coupon coupon;
 
     private boolean isUsed;
 
     private LocalDateTime usedDate;
 
     @Builder
-    private MemberCoupon(Member memberId, Coupon couponId, boolean isUsed, LocalDateTime usedDate) {
-        this.memberId = memberId;
-        this.couponId = couponId;
+    private MemberCoupon(Member member, Coupon coupon, boolean isUsed, LocalDateTime usedDate) {
+        this.member = member;
+        this.coupon = coupon;
         this.isUsed = isUsed;
         this.usedDate = usedDate;
     }

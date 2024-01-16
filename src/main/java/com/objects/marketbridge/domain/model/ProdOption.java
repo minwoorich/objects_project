@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,18 +24,15 @@ public class ProdOption extends BaseEntity{
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "option_category_id")
-    private OptionCategory optionCategory;
+    @JoinColumn(name = "option_id")
+    private Option option;
 
-    private String name;
-
-    private Integer price;
+    @OneToMany(mappedBy = "productOption")
+    private List<Stock> stocks = new ArrayList<>();
 
     @Builder
-    private ProdOption(Product product, OptionCategory optionCategory, String name, Integer price) {
+    private ProdOption(Product product, Option option) {
         this.product = product;
-        this.optionCategory = optionCategory;
-        this.name = name;
-        this.price = price;
+        this.option = option;
     }
 }

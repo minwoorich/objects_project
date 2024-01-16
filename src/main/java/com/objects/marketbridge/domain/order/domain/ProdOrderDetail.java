@@ -2,16 +2,15 @@ package com.objects.marketbridge.domain.order.domain;
 
 import com.objects.marketbridge.domain.model.BaseEntity;
 import com.objects.marketbridge.domain.model.Coupon;
+import com.objects.marketbridge.domain.model.ProdOption;
 import com.objects.marketbridge.domain.model.Product;
-import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+
+import static com.objects.marketbridge.domain.order.domain.StatusCodeType.*;
 
 @Entity
 @Getter
@@ -35,6 +34,10 @@ public class ProdOrderDetail extends BaseEntity {
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prod_option_id")
+    private ProdOption prodOption;
+
     private Long usedCoupon;
 
     private Long quantity;
@@ -52,10 +55,11 @@ public class ProdOrderDetail extends BaseEntity {
     private LocalDateTime cancelledAt;
 
     @Builder
-    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, Long usedCoupon, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, Long usedPoint, String reason, LocalDateTime cancelledAt) {
+    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, ProdOption prodOption, Long usedCoupon, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, Long usedPoint, String reason, LocalDateTime cancelledAt) {
         this.prodOrder = prodOrder;
         this.product = product;
         this.coupon = coupon;
+        this.prodOption = prodOption;
         this.usedCoupon = usedCoupon;
         this.quantity = quantity;
         this.price = price;
@@ -84,14 +88,15 @@ public class ProdOrderDetail extends BaseEntity {
                 .build();
     }
 
-    public Product cancel(String reason) {
-        if (Objects.equals(statusCode, StatusCodeType.DELIVERY_COMPLETED.getCode())) {
+    public void cancel(String reason, String statusCode) {
+        if (Objects.equals(statusCode, DELIVERY_COMPLETED.getCode())) {
             throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
         }
-
-        statusCode = StatusCodeType.ORDER_CANCEL.getCode();
+        this.statusCode = statusCode;
         this.reason = reason;
+    }
 
-        return product;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

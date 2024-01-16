@@ -22,5 +22,5 @@ public interface OrderDetailRepository  {
 
     List<ProdOrderDetail> findAll();
 
-
+    ProdOrderDetail findByStockIdAndOrderId(Long stockId, Long orderId);
 }
