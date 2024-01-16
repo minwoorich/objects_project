@@ -46,4 +46,9 @@ public class MemberController {
         log.info("id = {}", id);
         return id;
     }
+
+    @GetMapping("/membership/{id}")
+    public void changeMembership(@PathVariable Long id){
+        memberService.changeMemberShip(id);
+    }
 }

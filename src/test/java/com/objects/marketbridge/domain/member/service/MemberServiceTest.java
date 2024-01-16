@@ -31,20 +31,29 @@ class MemberServiceTest {
 
     @Autowired MemberRepository memberRepository;
 
+    private Member existingMember;
+
     @BeforeEach
     void init() {
         Member member = Member.builder()
-            .email("iiwisii@naver.com")
-            .name("박정인")
-            .password("03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4")
-            .phoneNo("01073784758")
-            .isAgree(true)
-            .isAlert(true)
-            .membership(Membership.WOW.toString())
-            .socialType(SocialType.DEFAULT.toString())
-            .build();
+                .email("iiwisii@naver.com")
+                .name("박정인")
+                .password("03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4")
+                .phoneNo("01073784758")
+                .isAgree(true)
+                .isAlert(true)
+                .membership(Membership.WOW.toString())
+                .socialType(SocialType.DEFAULT.toString())
+                .build();
 
         memberRepository.save(member);
+    }
+
+    @BeforeEach
+    public void createMemberOrigin() {
+        // 생성된 사용자 객체를 저장할 변수
+        existingMember = Member.builder().email("test1234@gmail.com").membership(Membership.BASIC).build();
+        memberRepository.save(existingMember);
     }
 
     @Test
@@ -71,6 +80,18 @@ class MemberServiceTest {
 
         //then
         assertThat(isDuplicateEmail).isFalse();
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("멤버십 변경 API")
+    public void testUpdateWowMemberShip(){
+        //given
+        Membership memberShipData = Membership.WOW;
+        //when
+        memberService.changeMemberShip(existingMember.getId());
+        //then
+        assertThat(existingMember.getMembership()).isEqualTo(memberShipData);
     }
 
     //sign up 테스트
