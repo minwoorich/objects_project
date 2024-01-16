@@ -8,6 +8,9 @@ spring:
     activate:
       on-profile: local
 
+  jwt: # CLI 명령어 - openssl rand -base64 32 로 생성된 값
+    secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
+
   datasource:
     url: jdbc:mysql://localhost:3306/MarketBridge
     username: objects
@@ -28,6 +31,11 @@ spring:
     console:
       enabled: true
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
 logging:
   level:
     org.hibernate.sql: debug
@@ -46,8 +54,14 @@ spring:
     activate:
       on-profile: test
 
+  jwt: # CLI 명령어 - openssl rand -base64 32 로 생성된 값
+    secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
+
   datasource:
-#    url: jdbc:h2:tcp://localhost/~/Marketbridge
+#    url: jdbc:mysql://localhost:3306/MarketBridge
+#    username: objects
+#    password: 1234
+    #    url: jdbc:h2:tcp://localhost/~/Marketbridge
     url: jdbc:h2:mem:~/Marketbridge
     driver-class-name: org.h2.Driver
     username: sa
@@ -60,7 +74,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        default_batch_fetch_size: 100
 
   sql:
     init:
@@ -73,3 +86,10 @@ spring:
 logging:
   level:
     org.hibernate.sql: debug
+
+payment:
+  toss:
+    test_client_api_key: "test_ck_GePWvyJnrK2PmxlyQWMqVgLzN97E"
+    test_secret_api_key: "test_sk_QbgMGZzorzyG7E6ZkybPVl5E1em4:"
+    success_url: "http://localhost:8080/payments/toss/success"
+    fail_url: "http://localhost:8080/payments/toss/fail"
