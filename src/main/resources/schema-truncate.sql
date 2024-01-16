@@ -4,8 +4,6 @@ truncate table admin;
 
 truncate table board;
 
-truncate table cancel_payment;
-
 truncate table cart;
 
 truncate table category;
@@ -56,7 +54,7 @@ truncate table review_survey;
 
 truncate table review_survey_category;
 
-truncate table reward;
+truncate table reward_policy;
 
 truncate table seller;
 
