@@ -12,6 +12,7 @@ import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.objects.marketbridge.domain.model.QProduct.*;
@@ -22,6 +23,8 @@ import static com.objects.marketbridge.domain.order.entity.QProdOrderDetail.*;
 public class OrderRepositoryImpl implements OrderRepository {
 
     private final OrderJpaRepository orderJpaRepository;
+    private final OrderTempJpaRepository orderTempJpaRepository;
+
     private final JPAQueryFactory queryFactory;
 
     public OrderRepositoryImpl(OrderJpaRepository orderJpaRepository, EntityManager em) {
@@ -67,4 +70,29 @@ public class OrderRepositoryImpl implements OrderRepository {
         );
     }
 
+
+    @Override
+    public Optional<ProdOrder> findByIdWithOrderDetail(Long orderId) {
+        return null;
+    }
+
+    @Override
+    public OrderTemp findOrderTempByOrderNo(String orderNo) {
+        return orderTempJpaRepository.findOrderTempByOrderNo(orderNo).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public void save(OrderTemp orderTemp) {
+        orderTempJpaRepository.save(orderTemp);
+    }
+
+    @Override
+    public void saveAll(List<ProdOrder> orders) {
+        orderJpaRepository.saveAll(orders);
+    }
+
+    @Override
+    public void saveOrderTempAll(List<OrderTemp> orderTempList) {
+        orderTempJpaRepository.saveAll(orderTempList);
+    }
 }

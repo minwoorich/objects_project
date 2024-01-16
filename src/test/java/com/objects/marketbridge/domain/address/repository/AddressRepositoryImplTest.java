@@ -1,4 +1,4 @@
-package com.objects.marketbridge.address.repository;
+package com.objects.marketbridge.domain.address.repository;
 
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Address;
@@ -14,11 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 @Transactional
 class AddressRepositoryImplTest {
 
-    @Autowired AddressRepository addressRepository;
+    @Autowired
+    AddressRepository addressRepository;
     @Autowired MemberRepository memberRepository;
 
     @AfterEach
@@ -38,7 +39,7 @@ class AddressRepositoryImplTest {
 
         //when
         Member findMember = memberRepository.findByEmail(testEmail).orElseThrow(IllegalArgumentException::new);
-        Address findAddress = addressRepository.findByMemberId(findMember.getId());
+        Address findAddress = addressRepository.findByMemberId(findMember.getId()).get(0);
 
         //then
         assertThat(findAddress.getMember().getEmail()).isEqualTo(testEmail);

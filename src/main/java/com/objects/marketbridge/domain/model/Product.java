@@ -27,11 +27,14 @@ public class Product extends BaseEntity{
     @OneToMany(mappedBy = "product")
     private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product")
+    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
+
     private Long stock;
 
     private String productNo;
 
-    private boolean isOwn; // 로켓 true , 오픈 마켓 false
+    private Boolean isOwn; // 로켓 true , 오픈 마켓 false
 
     private String name;
 
@@ -43,11 +46,11 @@ public class Product extends BaseEntity{
 
     private Long discountRate;
 
+    private Long stock;
+
     @Builder
-    private Product(Category categoryId, List<ProdOrderDetail> prodOrderDetails, Long stock, String productNo, boolean isOwn, String name, Long price, Boolean isSubs, String thumbImg, Long discountRate) {
+    public Product(Category categoryId, Boolean isOwn, String name, Long price, boolean isSubs, String thumbImg, Long discountRate, Long stock) {
         this.categoryId = categoryId;
-        this.prodOrderDetails = prodOrderDetails;
-        this.stock = stock;
         this.productNo = productNo;
         this.isOwn = isOwn;
         this.name = name;
@@ -55,6 +58,7 @@ public class Product extends BaseEntity{
         this.isSubs = isSubs;
         this.thumbImg = thumbImg;
         this.discountRate = discountRate;
+        this.stock = stock;
     }
 
     public void addProdOrderDetail(ProdOrderDetail prodOrderDetail) {

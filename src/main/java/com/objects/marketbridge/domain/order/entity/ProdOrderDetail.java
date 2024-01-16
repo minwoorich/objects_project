@@ -4,6 +4,7 @@ import com.objects.marketbridge.domain.model.BaseEntity;
 import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.ProdOption;
 import com.objects.marketbridge.domain.model.Product;
+import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,7 +39,7 @@ public class ProdOrderDetail extends BaseEntity {
     @JoinColumn(name = "prod_option_id")
     private ProdOption prodOption;
 
-    private Long usedCoupon;
+    private String rewardType;
 
     private Long quantity;
 
@@ -55,12 +56,12 @@ public class ProdOrderDetail extends BaseEntity {
     private LocalDateTime cancelledAt;
 
     @Builder
-    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, ProdOption prodOption, Long usedCoupon, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, Long usedPoint, String reason, LocalDateTime cancelledAt) {
+    public ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, ProdOption prodOption, String rewardType, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, Long usedPoint, String reason, LocalDateTime cancelledAt) {
         this.prodOrder = prodOrder;
         this.product = product;
         this.coupon = coupon;
         this.prodOption = prodOption;
-        this.usedCoupon = usedCoupon;
+        this.rewardType = rewardType;
         this.quantity = quantity;
         this.price = price;
         this.statusCode = statusCode;
@@ -69,6 +70,8 @@ public class ProdOrderDetail extends BaseEntity {
         this.reason = reason;
         this.cancelledAt = cancelledAt;
     }
+
+
 
     public void setOrder(ProdOrder prodOrder) {
         this.prodOrder = prodOrder;
@@ -88,11 +91,6 @@ public class ProdOrderDetail extends BaseEntity {
                 .build();
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    // == 비즈니스 로직 == //
     public void cancel(String reason, String statusCode) {
         if (Objects.equals(statusCode, DELIVERY_COMPLETED.getCode())) {
             throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");

@@ -1,12 +1,12 @@
 package com.objects.marketbridge.domain.member.repository;
 
-import com.objects.marketbridge.address.repository.AddressRepository;
+import com.objects.marketbridge.domain.address.repository.AddressRepository;
 import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.AddressValue;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Point;
 import com.objects.marketbridge.domain.point.repository.PointRepository;
-import com.objects.marketbridge.global.error.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class MemberCustomRepositoryImplTest {
     @Test
     void findByIdWithPointAndAddresses() {
         //given
-        Member member = memberRepository.findByEmail("test@email.com").orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
+        Member member = memberRepository.findByEmail("test@email.com").orElseThrow(EntityNotFoundException::new);
         Address address1 = createAddress("서울", member);
         Address address2 = createAddress("부산", member);
 

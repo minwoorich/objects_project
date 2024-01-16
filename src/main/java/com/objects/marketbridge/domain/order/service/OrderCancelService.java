@@ -1,20 +1,18 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.model.Stock;
 import com.objects.marketbridge.domain.order.entity.ProdOrder;
 import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.dto.RefundDto;
 import com.objects.marketbridge.domain.payment.service.RefundService;
-import com.objects.marketbridge.domain.product.repository.stock.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
+import static com.objects.marketbridge.domain.order.domain.StatusCodeType.*;
 import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
 
 @Service
@@ -22,6 +20,7 @@ import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
 public class OrderCancelService {
 
     private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     private final RefundService refundService;
 

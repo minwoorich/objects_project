@@ -8,10 +8,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Table(name = "options")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Option extends BaseEntity {
+public class Option extends BaseEntity{
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "option_id")
     private Long id;
 

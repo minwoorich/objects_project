@@ -1,7 +1,7 @@
-package com.objects.marketbridge.address.repository;
+package com.objects.marketbridge.domain.address.repository;
 
 import com.objects.marketbridge.domain.model.Address;
-import com.objects.marketbridge.global.error.EntityNotFoundException;
+import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +15,7 @@ public class AddressRepositoryImpl implements AddressRepository {
 
     @Override
     public Address findById(Long id) {
-        return addressJpaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 엔티티가 존재하지 않습니다"));
+        return addressJpaRepository.findById(id).orElseThrow(EntityExistsException::new);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
-    public Address findByMemberId(Long memberId) {
+    public List<Address> findByMemberId(Long memberId) {
         return addressJpaRepository.findByMemberId(memberId);
     }
 

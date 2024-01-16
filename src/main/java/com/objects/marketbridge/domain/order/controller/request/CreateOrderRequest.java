@@ -3,8 +3,8 @@ package com.objects.marketbridge.domain.order.controller.request;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.dto.ProductInfoDto;
-import com.objects.marketbridge.domain.order.exception.exception.CustomLogicException;
-import com.objects.marketbridge.domain.order.exception.exception.ErrorCode;
+import com.objects.marketbridge.global.error.CustomLogicException;
+import com.objects.marketbridge.global.error.ErrorCode;
 import com.objects.marketbridge.global.error.OrderPriceMismatchException;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,8 +17,10 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 public class CreateOrderRequest {
+    // TODO : 이때 이미 orderNo 를 만들어놓고 주문테이블에 저장하든, 캐시에 저장하든 해놔야함.
+    // 왜냐하면 클라이언트가 결제요청을 할당시에 이미 orderNo를 알고 있기 때문
 
-    @NotNull
+//    @NotNull
     private String paymentMethod;
 
     @NotNull
@@ -27,19 +29,18 @@ public class CreateOrderRequest {
     @NotNull
     private Long totalOrderPrice;
 
-    @NotNull
-    private Long addressId;
+    private Long selectedAddressId;
 
     private List<ProductInfoDto> productInfos = new ArrayList<>();
 
     @Builder(builderClassName = "requestBuilder", toBuilder = true)
-    public CreateOrderRequest(String paymentMethod, String orderName, Long totalOrderPrice, Long addressId, @Singular("product") List<ProductInfoDto> productInfos) {
+    public CreateOrderRequest(String paymentMethod, String orderName, Long totalOrderPrice, Long selectedAddressId, @Singular("product") List<ProductInfoDto> productInfos) {
         validPaymentAmount(totalOrderPrice);
         validTotalOrderPrice(totalOrderPrice, productInfos);
         this.paymentMethod = paymentMethod;
         this.orderName = orderName;
         this.totalOrderPrice = totalOrderPrice;
-        this.addressId = addressId;
+        this.selectedAddressId = selectedAddressId;
         this.productInfos = productInfos;
     }
 
@@ -51,7 +52,7 @@ public class CreateOrderRequest {
 
     private void validTotalOrderPrice(Long totalOrderPrice, List<ProductInfoDto> productInfos) {
         Long sum = productInfos.stream()
-                .mapToLong(ProductInfoDto::getUnitOrderPrice)
+                .mapToLong(p -> p.getUnitOrderPrice() * p.getQuantity())
                 .sum();
 
         if (!sum.equals(totalOrderPrice)) {
@@ -63,8 +64,7 @@ public class CreateOrderRequest {
         return CreateProdOrderDto.builder()
                 .orderNo(orderNo)
                 .memberId(memberId)
-                .paymentMethod(paymentMethod)
-                .addressId(addressId)
+                .addressId(selectedAddressId)
                 .orderName(orderName)
                 .totalOrderPrice(totalOrderPrice)
                 .build();

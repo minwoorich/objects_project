@@ -9,21 +9,19 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CancelPayment extends BaseEntity{
+public class RewardPolicy extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cancel_payment_id")
+    @Column(name = "reward_id")
     private Long id;
-    // TODO
-    private Long orderId;
 
-    // TODO 정인님 과제
-    private String code;
+    private String type;
+    private Long rate;
 
     @Builder
-    private CancelPayment(Long orderId, String code) {
-        this.orderId = orderId;
-        this.code = code;
+    public RewardPolicy(String type, Long rate) {
+        this.type = type;
+        this.rate = rate;
     }
 }
