@@ -1,7 +1,6 @@
 package com.objects.marketbridge.domain.order.repository;
 
-import com.objects.marketbridge.domain.model.Stock;
-import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.global.error.EntityNotFoundException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,8 +11,8 @@ import java.util.List;
 
 import static com.objects.marketbridge.domain.model.QProdOption.prodOption;
 import static com.objects.marketbridge.domain.model.QStock.*;
-import static com.objects.marketbridge.domain.order.domain.QProdOrder.*;
-import static com.objects.marketbridge.domain.order.domain.QProdOrderDetail.prodOrderDetail;
+import static com.objects.marketbridge.domain.order.entity.QProdOrder.*;
+import static com.objects.marketbridge.domain.order.entity.QProdOrderDetail.prodOrderDetail;
 
 @Repository
 public class OrderDetailRepositoryImpl implements OrderDetailRepository {
@@ -67,15 +66,15 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     }
 
 
-    @Override
-    public ProdOrderDetail findByStockIdAndOrderId(Long stockId, Long orderId) {
-        return queryFactory.selectFrom(prodOrderDetail)
-                .join(prodOrderDetail.prodOption, prodOption)
-                .join(prodOption.stocks, stock)
-                .where(
-                        prodOrder.id.eq(orderId),
-                        stock.id.eq(stockId)
-                )
-                .fetchOne();
-    }
+//    @Override
+//    public ProdOrderDetail findByStockIdAndOrderId(Long stockId, Long orderId) {
+//        return queryFactory.selectFrom(prodOrderDetail)
+//                .join(prodOrderDetail.prodOption, prodOption)
+//                .join(prodOption.stocks, stock)
+//                .where(
+//                        prodOrder.id.eq(orderId),
+//                        stock.id.eq(stockId)
+//                )
+//                .fetchOne();
+//    }
 }

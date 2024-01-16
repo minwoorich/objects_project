@@ -1,9 +1,9 @@
 package com.objects.marketbridge.domain.order.service.port;
 
 import com.objects.marketbridge.domain.model.*;
-import com.objects.marketbridge.domain.order.domain.ProdOrder;
-import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
-import com.objects.marketbridge.domain.order.domain.StatusCodeType;
+import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -177,38 +177,6 @@ class OrderDetailRepositoryTest {
         em.persist(seller1);
         em.persist(seller2);
 
-        Warehouse warehouse1 = Warehouse.builder()
-                .addressValue(addressValue1)
-                .seller(seller1)
-                .build();
-        Warehouse warehouse2 = Warehouse.builder()
-                .addressValue(addressValue2)
-                .seller(seller2)
-                .build();
-        em.persist(warehouse1);
-        em.persist(warehouse2);
-
-        Stock stock1 = Stock.builder()
-                .product(product1)
-                .warehouse(warehouse1)
-                .build();
-        Stock stock2 = Stock.builder()
-                .product(product2)
-                .warehouse(warehouse1)
-                .build();
-        Stock stock3 = Stock.builder()
-                .product(product1)
-                .warehouse(warehouse1)
-                .build();
-        Stock stock4 = Stock.builder()
-                .product(product2)
-                .warehouse(warehouse1)
-                .build();
-        em.persist(stock1);
-        em.persist(stock2);
-        em.persist(stock3);
-        em.persist(stock4);
-
         Member member = Member.builder()
                 .name("화나게하지마")
                 .build();
@@ -280,7 +248,6 @@ class OrderDetailRepositoryTest {
         orderRepository.save(prodOrder);
 
         // when
-        ProdOrderDetail orderDetail = orderDetailRepository.findByStockIdAndOrderId(stock1.getId(), prodOrder.getId());
 
         // then
     }

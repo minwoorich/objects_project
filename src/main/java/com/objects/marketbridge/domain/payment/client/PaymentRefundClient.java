@@ -8,7 +8,7 @@ import java.util.Optional;
 @Component
 public class PaymentRefundClient implements RefundClient{
     @Override
-    public Optional<RefundInfoDto> refund(String accountNo, Float refundPrice) {
+    public Optional<RefundInfoDto> refund(String accountNo, Long refundPrice) {
         return Optional.empty();
     }
 }
