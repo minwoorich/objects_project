@@ -21,18 +21,19 @@ public class Stock extends BaseEntity {
     private Warehouse warehouse;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_option_id")
-    private ProdOption productOption;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     private Long quantity;
 
     @Builder
-    private Stock(Warehouse warehouse, ProdOption productOption, Long quantity) {
+    private Stock(Warehouse warehouse, Product product, Long quantity) {
         this.warehouse = warehouse;
-        this.productOption = productOption;
+        this.product = product;
         this.quantity = quantity;
     }
 
+    // == 비즈니스 메서드 ==//
     public void decrease(Long quantity) {
         if (this.quantity - quantity < 0) {
             throw new IllegalArgumentException("재고는 0개 미만이 될 수 없습니다.");
@@ -40,7 +41,11 @@ public class Stock extends BaseEntity {
         this.quantity -= quantity;
     }
 
-    public void setProdOption(ProdOption prodOption) {
-        this.productOption = prodOption;
+    public void increase(Long quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setProdOption(Product product) {
+        this.product = product;
     }
 }

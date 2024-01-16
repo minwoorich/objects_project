@@ -24,8 +24,8 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "category_id")
     private Category categoryId;
 
-//    @OneToMany(mappedBy = "product")
-//    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
+    @OneToMany(mappedBy = "product")
+    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
 //
 //    @OneToMany(mappedBy = "product")
 //    private List<ProdOption> prodOptions = new ArrayList<>();
@@ -56,14 +56,12 @@ public class Product extends BaseEntity{
     }
 
     public void addProdOrderDetail(ProdOrderDetail prodOrderDetail) {
-//        prodOrderDetails.add(prodOrderDetail);
+        prodOrderDetails.add(prodOrderDetail);
         prodOrderDetail.setProduct(this);
     }
 
 //    public void addProdOption(ProdOption prodOption) {
-////        prodOptions.add(prodOption);
+//        prodOptions.add(prodOption);
 //        prodOption.setProduct(this);
 //    }
-
-
 }

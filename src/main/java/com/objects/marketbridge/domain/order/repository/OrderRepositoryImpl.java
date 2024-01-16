@@ -14,6 +14,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     private final OrderJpaRepository orderJpaRepository;
 
+
     @Override
     public Optional<ProdOrder> findById(Long orderId) {
         return orderJpaRepository.findById(orderId);
@@ -37,5 +38,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public void deleteAllInBatch() {
         orderJpaRepository.deleteAllInBatch();
+    }
+
+    @Override
+    public Optional<ProdOrder> findByIdWithOrderDetail(Long orderId) {
+        return null;
     }
 }

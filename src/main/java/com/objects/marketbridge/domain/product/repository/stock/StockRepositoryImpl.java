@@ -4,6 +4,8 @@ package com.objects.marketbridge.domain.product.repository.stock;
 import com.objects.marketbridge.domain.model.Stock;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -44,19 +46,15 @@ public class StockRepositoryImpl implements StockRepository {
     }
 
     @Override
-    public List<Stock> findStockByProdOrderId(Long prodOrderId) {
-        return null;
+    public List<Stock> findStocksByProdOrderId(Long prodOrderId) {
+        return queryFactory
+                .selectFrom(stock)
+                .join(stock.productOption, prodOption)
+                .join(prodOption.product, product)
+                .join(product.prodOrderDetails, prodOrderDetail)
+                .join(prodOrderDetail.prodOrder, prodOrder)
+                .where(prodOrder.id.eq(prodOrderId))
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                .fetch();
     }
-
-//    @Override
-//    public List<Stock> findStockByProdOrderId(Long prodOrderId) {
-//        return queryFactory
-//                .selectFrom(stock)
-//                .join(stock.productOption, prodOption)
-//                .join(prodOption.product, product)
-//                .join(product.prodOrderDetails, prodOrderDetail)
-//                .join(prodOrderDetail.prodOrder, prodOrder)
-//                .where(prodOrder.id.eq(prodOrderId))
-//                .fetch();
-//    }
 }

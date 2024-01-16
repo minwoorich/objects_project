@@ -4,12 +4,8 @@ import com.objects.marketbridge.domain.model.BaseEntity;
 import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.ProdOption;
 import com.objects.marketbridge.domain.model.Product;
-import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -59,10 +55,11 @@ public class ProdOrderDetail extends BaseEntity {
     private LocalDateTime cancelledAt;
 
     @Builder
-    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, Long usedCoupon, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, Long usedPoint, String reason, LocalDateTime cancelledAt) {
+    private ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, ProdOption prodOption, Long usedCoupon, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, Long usedPoint, String reason, LocalDateTime cancelledAt) {
         this.prodOrder = prodOrder;
         this.product = product;
         this.coupon = coupon;
+        this.prodOption = prodOption;
         this.usedCoupon = usedCoupon;
         this.quantity = quantity;
         this.price = price;

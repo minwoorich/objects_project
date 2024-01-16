@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,7 +102,7 @@ class OrderDetailRepositoryTest {
     @Test
     @DisplayName("")
     @Rollback(value = false)
-    public void findByStockAndOrderId() {
+    public void findByStockIdAndOrderId() {
         Product product1 = Product.builder()
                 .price(10000L)
                 .name("옷")
@@ -162,6 +161,54 @@ class OrderDetailRepositoryTest {
         em.persist(prodOption3);
         em.persist(prodOption4);
 
+        AddressValue addressValue1 = AddressValue.builder()
+                .name("인천 창고 주소")
+                .build();
+        AddressValue addressValue2 = AddressValue.builder()
+                .name("대구 창고 주소")
+                .build();
+
+        Seller seller1 = Seller.builder()
+                .name("판매자1")
+                .build();
+        Seller seller2 = Seller.builder()
+                .name("판매자2")
+                .build();
+        em.persist(seller1);
+        em.persist(seller2);
+
+        Warehouse warehouse1 = Warehouse.builder()
+                .addressValue(addressValue1)
+                .seller(seller1)
+                .build();
+        Warehouse warehouse2 = Warehouse.builder()
+                .addressValue(addressValue2)
+                .seller(seller2)
+                .build();
+        em.persist(warehouse1);
+        em.persist(warehouse2);
+
+        Stock stock1 = Stock.builder()
+                .product(product1)
+                .warehouse(warehouse1)
+                .build();
+        Stock stock2 = Stock.builder()
+                .product(product2)
+                .warehouse(warehouse1)
+                .build();
+        Stock stock3 = Stock.builder()
+                .product(product1)
+                .warehouse(warehouse1)
+                .build();
+        Stock stock4 = Stock.builder()
+                .product(product2)
+                .warehouse(warehouse1)
+                .build();
+        em.persist(stock1);
+        em.persist(stock2);
+        em.persist(stock3);
+        em.persist(stock4);
+
         Member member = Member.builder()
                 .name("화나게하지마")
                 .build();
@@ -200,34 +247,6 @@ class OrderDetailRepositoryTest {
                 .build();
         em.persist(point);
 
-        AddressValue addressValue1 = AddressValue.builder()
-                .name("인천 창고 주소")
-                .build();
-        AddressValue addressValue2 = AddressValue.builder()
-                .name("대구 창고 주소")
-                .build();
-
-        Seller seller1 = Seller.builder()
-                .name("판매자1")
-                .build();
-        Seller seller2 = Seller.builder()
-                .name("판매자2")
-                .build();
-        em.persist(seller1);
-        em.persist(seller2);
-
-        Warehouse warehouse1 = Warehouse.builder()
-                .addressValue(addressValue1)
-                .seller(seller1)
-                .build();
-        Warehouse warehouse2 = Warehouse.builder()
-                .addressValue(addressValue2)
-                .seller(seller2)
-                .seller(seller2)
-                .build();
-        em.persist(warehouse1);
-        em.persist(warehouse2);
-
         // given
         ProdOrder prodOrder = ProdOrder.builder()
                 .member(member)
@@ -236,11 +255,13 @@ class OrderDetailRepositoryTest {
         // 상품 옵션 추가
         ProdOrderDetail prodOrderDetail1 = ProdOrderDetail.builder()
                 .prodOrder(prodOrder)
-                .product(product1)
+                .prodOption(prodOption1)
+                .quantity(10L)
                 .build();
         ProdOrderDetail prodOrderDetail2 = ProdOrderDetail.builder()
                 .prodOrder(prodOrder)
-                .product(product2)
+                .prodOption(prodOption4)
+                .quantity(20L)
                 .build();
         em.persist(prodOrderDetail1);
         em.persist(prodOrderDetail2);
@@ -256,54 +277,11 @@ class OrderDetailRepositoryTest {
         em.persist(delivery1);
         em.persist(delivery2);
 
-        Stock stock1 = Stock.builder()
-                .productOption(prodOption1)
-                .warehouse(warehouse1)
-                .build();
-        Stock stock2 = Stock.builder()
-                .productOption(prodOption2)
-                .warehouse(warehouse1)
-                .build();
-        Stock stock3 = Stock.builder()
-                .productOption(prodOption3)
-                .warehouse(warehouse1)
-                .build();
-        Stock stock4 = Stock.builder()
-                .productOption(prodOption4)
-                .warehouse(warehouse1)
-                .build();
-        Stock stock5 = Stock.builder()
-                .productOption(prodOption1)
-                .warehouse(warehouse2)
-                .build();
-        Stock stock6 = Stock.builder()
-                .productOption(prodOption2)
-                .warehouse(warehouse2)
-                .build();
-        Stock stock7 = Stock.builder()
-                .productOption(prodOption3)
-                .warehouse(warehouse2)
-                .build();
-        Stock stock8 = Stock.builder()
-                .productOption(prodOption4)
-                .warehouse(warehouse2)
-                .build();
-
-        em.persist(stock1);
-        em.persist(stock2);
-        em.persist(stock3);
-        em.persist(stock4);
-        em.persist(stock5);
-        em.persist(stock6);
-        em.persist(stock7);
-        em.persist(stock8);
-
         orderRepository.save(prodOrder);
 
         // when
+        ProdOrderDetail orderDetail = orderDetailRepository.findByStockIdAndOrderId(stock1.getId(), prodOrder.getId());
 
-        orderDetailRepository.findByStockAndOrderId(stock1, prodOrder.getId());
-    
         // then
     }
 
