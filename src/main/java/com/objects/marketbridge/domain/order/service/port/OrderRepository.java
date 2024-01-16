@@ -19,6 +19,8 @@ public interface OrderRepository {
 
     void deleteAllInBatch();
 
+    Optional<ProdOrder> findByIdWithOrderDetail(Long orderId);
+
     OrderTemp findOrderTempByOrderNo(String orderNo);
 
     void save(OrderTemp orderTemp);

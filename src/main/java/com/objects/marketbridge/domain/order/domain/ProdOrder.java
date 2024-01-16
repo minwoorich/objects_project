@@ -65,16 +65,8 @@ public class ProdOrder extends BaseEntity {
     }
 
     //== 비즈니스 로직==//
-    public List<Product> cancel(String reason) {
-        List<Product> list = new ArrayList<>();
-
-        for (ProdOrderDetail prodOrderDetail : prodOrderDetails) {
-            Product product = prodOrderDetail.cancel(reason);
-            list.add(product);
-        }
-
-        return list;
-
+    public void cancel(String reason, String statusCode) {
+        prodOrderDetails.forEach(prodOrderDetail -> prodOrderDetail.cancel(reason, statusCode));
     }
 
     public static ProdOrder create(Member member, Address address, String orderName, String orderNo, Long totalPrice){

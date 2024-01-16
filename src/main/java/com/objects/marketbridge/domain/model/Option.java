@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "option")
+@Table(name = "options")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Option extends BaseEntity{
 
@@ -21,9 +21,11 @@ public class Option extends BaseEntity{
     @JoinColumn(name = "option_category_id")
     private OptionCategory optionCategory;
 
+    private String name;
 
     @Builder
-    public Option(OptionCategory optionCategory) {
+    private Option(OptionCategory optionCategory, String name) {
         this.optionCategory = optionCategory;
+        this.name = name;
     }
 }

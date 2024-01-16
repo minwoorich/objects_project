@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domain.product.repository;
 
 import com.objects.marketbridge.domain.model.Product;
+import com.objects.marketbridge.domain.product.dto.ProductRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
-public class ProductReposityImpl implements ProductRepository {
+public class ProductRepositoryImpl implements ProductRepository {
 
     private final ProductJpaRepository productJpaRepository;
 

@@ -1,10 +1,14 @@
 package com.objects.marketbridge.domain.model;
 
+import com.objects.marketbridge.domain.order.domain.ProdOrderDetail;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,13 +24,21 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "category_id")
     private Category categoryId;
 
+    @OneToMany(mappedBy = "product")
+    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "product")
+//    private List<ProdOption> prodOptions = new ArrayList<>();
+
+    private String productNo;
+
     private boolean isOwn; // 로켓 true , 오픈 마켓 false
 
     private String name;
 
     private Long price;
 
-    private boolean isSubs;
+    private Boolean isSubs;
 
     private String thumbImg;
 
@@ -45,4 +57,14 @@ public class Product extends BaseEntity{
         this.discountRate = discountRate;
         this.stock = stock;
     }
+
+    public void addProdOrderDetail(ProdOrderDetail prodOrderDetail) {
+        prodOrderDetails.add(prodOrderDetail);
+        prodOrderDetail.setProduct(this);
+    }
+
+//    public void addProdOption(ProdOption prodOption) {
+//        prodOptions.add(prodOption);
+//        prodOption.setProduct(this);
+//    }
 }
