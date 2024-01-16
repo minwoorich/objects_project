@@ -3,8 +3,8 @@ package com.objects.marketbridge.domain.order.controller.request;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.dto.ProductInfoDto;
-import com.objects.marketbridge.domain.order.exception.exception.CustomLogicException;
-import com.objects.marketbridge.domain.order.exception.exception.ErrorCode;
+import com.objects.marketbridge.global.error.CustomLogicException;
+import com.objects.marketbridge.global.error.ErrorCode;
 import com.objects.marketbridge.global.error.OrderPriceMismatchException;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -64,7 +64,6 @@ public class CreateOrderRequest {
         return CreateProdOrderDto.builder()
                 .orderNo(orderNo)
                 .memberId(memberId)
-                .paymentMethod(paymentMethod)
                 .addressId(selectedAddressId)
                 .orderName(orderName)
                 .totalOrderPrice(totalOrderPrice)

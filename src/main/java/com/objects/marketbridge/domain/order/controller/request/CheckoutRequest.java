@@ -1,11 +1,8 @@
 package com.objects.marketbridge.domain.order.controller.request;
 
-import com.objects.marketbridge.global.error.DataVerificationException;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.List;
 
 @Getter
 public class CheckoutRequest {
@@ -17,20 +14,26 @@ public class CheckoutRequest {
     private Long amount;
 
     @NotNull
-    private List<String> products;
+    private Long addressId;
+
+    @NotNull
+    private String orderName;
+
+    @NotNull
+    private String rewardType;
+
+    // "[p1:4,p2:1]?[c1,c2]"
+    // [상품아이디1:수량,상품아이디2:수량]?[사용된 쿠폰아이디1,사용된 쿠폰아이디1]
+    // 띄어쓰기 x, 구분자는 ?
+    @NotNull
+    private String stringfyData;
 
     @Builder
-    public CheckoutRequest(String orderId, Long amount, List<String> products) {
-        valid(products);
+    public CheckoutRequest(String orderId, Long amount, Long addressId, String orderName, String rewardType) {
         this.orderId = orderId;
         this.amount = amount;
-        this.products = products;
-    }
-
-    private void valid(List<String> products) {
-        int size = products.size();
-        if (size == 0 || size % 2 == 1) {
-            throw new DataVerificationException("유효성검사 실패");
-        }
+        this.addressId = addressId;
+        this.orderName = orderName;
+        this.rewardType = rewardType;
     }
 }

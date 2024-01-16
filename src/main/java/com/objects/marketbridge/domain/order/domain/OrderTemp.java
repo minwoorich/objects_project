@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.order.domain;
 
+import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,12 +19,22 @@ public class OrderTemp {
 
     Long amount;
 
+    Long addressId;
+
+    String orderName;
+
+    String rewardType;
+
     String product;
 
+
     @Builder
-    public OrderTemp(String orderNo, Long amount, String product) {
+    public OrderTemp(String orderNo, Long amount, Long addressId, String orderName, String rewardType, String product) {
         this.orderNo = orderNo;
         this.amount = amount;
+        this.addressId = addressId;
+        this.orderName = orderName;
+        this.rewardType = rewardType;
         this.product = product;
     }
 }

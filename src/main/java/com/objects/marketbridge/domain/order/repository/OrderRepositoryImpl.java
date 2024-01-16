@@ -50,7 +50,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public OrderTemp findOrderTempByOrderNo(String orderNo) {
-        return orderTempJpaRepository.findOrderTempByOrderNo(orderNo);
+        return orderTempJpaRepository.findOrderTempByOrderNo(orderNo).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
