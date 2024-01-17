@@ -1,9 +1,9 @@
-package com.objects.marketbridge.global.security.jwt.constants;
+package com.objects.marketbridge.global.security.constants;
 
 /**
  * 토큰 정보 값을 설정하는 클래스
  */
-public class JwtConst {
+public class SecurityConst {
     //6시간
     public static final int ACCESS_TOKEN_EXPIRE_TIME = 6;
 
@@ -17,4 +17,8 @@ public class JwtConst {
     public static final String BEARER = "bearer";
 
     public static final String AUTHORIZATION = "Authorization";
+
+    public static final String ID = "id";
+
+    public static final String AUTH_USER = "hasAuthority('USER')";
 }

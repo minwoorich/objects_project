@@ -1,6 +1,6 @@
-package com.objects.marketbridge.global.security.jwt.constants;
+package com.objects.marketbridge.global.security.constants;
 
-public class JwtErrConst {
+public class SecurityErrConst {
 
     public static final String AUTHENTICATION_TOKEN_ERR = "권한 정보가 없는 토큰입니다.";
 

@@ -1,12 +1,13 @@
 package com.objects.marketbridge.global.security.jwt;
 
 import com.objects.marketbridge.global.security.user.CustomUserDetails;
-import com.objects.marketbridge.global.security.jwt.constants.JwtConst;
-import com.objects.marketbridge.global.security.jwt.constants.JwtErrConst;
+import com.objects.marketbridge.global.security.constants.SecurityErrConst;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,8 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.objects.marketbridge.global.security.constants.SecurityConst.*;
+
 /**
  * Spring security와 JWT 토큰을 사용하여 인증과 권한 부여를 처리하는 클래스
  * @Component 스프링 빈으로 자동 등록
@@ -30,10 +33,15 @@ public class JwtTokenProvider {
 
     private final Key KEY;
 
+    private final JwtTokenRepository jwtTokenRepository;
+
     /**
-     * @param secretKey @Value 어노테이션을 통해 yml파일의 jwt sercet을 가져온다.
+     * @param secretKey          @Value 어노테이션을 통해 yml파일의 jwt sercet을 가져온다.
+     * @param jwtTokenRepository
      */
-    public JwtTokenProvider(@Value(JwtConst.SECRET_KEY) String secretKey) {
+
+    public JwtTokenProvider(@Value(SECRET_KEY) String secretKey, @Autowired JwtTokenRepository jwtTokenRepository) {
+        this.jwtTokenRepository = jwtTokenRepository;
         // base64 문자열을 byte 배열로 변환
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 
@@ -50,15 +58,17 @@ public class JwtTokenProvider {
         Long userId = ((CustomUserDetails) authentication.getPrincipal()).getId();
 
         String role = getAuthoritiesAsString(authentication);
-        String accessToken = issueToken(userId, role, JwtConst.ACCESS_TOKEN_EXPIRE_TIME);
-        String refreshToken = issueToken(userId, role, JwtConst.REFRESH_TOKEN_EXPIRE_TIME);
-
-        // .grantType("Bearer") - OAuth 2.0 방식의 토큰으로 설정
-        return JwtToken.builder()
-                .grantType(JwtConst.BEARER)
+        String accessToken = issueToken(userId, role, ACCESS_TOKEN_EXPIRE_TIME);
+        String refreshToken = issueToken(userId, role, REFRESH_TOKEN_EXPIRE_TIME);
+        JwtToken jwtToken = JwtToken.builder()
+                .grantType(BEARER)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+
+        jwtTokenRepository.save(jwtToken);
+
+        return jwtToken;
     }
 
     /**
@@ -107,7 +117,7 @@ public class JwtTokenProvider {
         // .compact() JWT를 문자열로 반환
         return Jwts.builder()
                 .setSubject(memberId.toString())
-                .claim(JwtConst.AUTH, role)
+                .claim(AUTH, role)
                 .setExpiration(new Date(expiresIn))
                 .signWith(KEY, SignatureAlgorithm.HS256)
                 .compact();
@@ -121,14 +131,14 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
 
         Claims claims = parseClaims(token);
-        // claims.get(JwtConst.AUTH) 토큰 정보에 있는 권한 리스트를 가져온다.
-        if (claims.get(JwtConst.AUTH) == null) {
-            throw new RuntimeException(JwtErrConst.AUTHENTICATION_TOKEN_ERR);
+        // claims.get(SecurityConst.AUTH) 토큰 정보에 있는 권한 리스트를 가져온다.
+        if (claims.get(AUTH) == null) {
+            throw new RuntimeException(SecurityErrConst.AUTHENTICATION_TOKEN_ERR);
 
         }
         // claim에서 권한 정보 추출
         Collection<? extends GrantedAuthority> authorities = extractAuthoritiesFromToken(claims);
-        List<String> roles = new ArrayList<>(Arrays.asList(claims.get(JwtConst.AUTH, String.class).split(",")));
+        List<String> roles = new ArrayList<>(Arrays.asList(claims.get(AUTH, String.class).split(",")));
         Long userId = Long.parseLong(claims.getSubject());
         CustomUserDetails principal = new CustomUserDetails(userId, null,null, roles);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
@@ -140,7 +150,7 @@ public class JwtTokenProvider {
      * @return GrantedAuthority 권한 정보 컬렉션
      */
     private Collection<? extends GrantedAuthority> extractAuthoritiesFromToken(Claims claims) {
-        return Arrays.stream(claims.get(JwtConst.AUTH).toString().split(","))
+        return Arrays.stream(claims.get(AUTH).toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
@@ -158,13 +168,13 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            log.info(JwtErrConst.INVALID_TOKEN_ERR, e);
+            log.info(SecurityErrConst.INVALID_TOKEN_ERR, e);
         } catch (ExpiredJwtException e) {
-            log.info(JwtErrConst.EXPIRED_TOKEN_ERR, e);
+            log.info(SecurityErrConst.EXPIRED_TOKEN_ERR, e);
         } catch (UnsupportedJwtException e) {
-            log.info(JwtErrConst.UNSUPPORTED_TOKEN_ERR, e);
+            log.info(SecurityErrConst.UNSUPPORTED_TOKEN_ERR, e);
         } catch (IllegalStateException e) {
-            log.info(JwtErrConst.EMPTY_TOKEN_ERR, e);
+            log.info(SecurityErrConst.EMPTY_TOKEN_ERR, e);
         }
 
         return false;
