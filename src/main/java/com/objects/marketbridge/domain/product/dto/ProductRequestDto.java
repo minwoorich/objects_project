@@ -8,20 +8,22 @@ import lombok.Getter;
 public class ProductRequestDto {
 
     private Category categoryId;
+    //    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
     private Boolean isOwn; // 로켓 true , 오픈 마켓 false
     private String name;
     private Long price;
     private Boolean isSubs;
+    private Long stock;
     private String thumbImg;
     private Long discountRate;
 
-    @Builder
-    public ProductRequestDto(Category categoryId, boolean isOwn, String name, Long price, boolean isSubs, String thumbImg, Long discountRate) {
+    public ProductRequestDto(Category categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate) {
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
         this.price = price;
         this.isSubs = isSubs;
+        this.stock = stock;
         this.thumbImg = thumbImg;
         this.discountRate = discountRate;
     }
