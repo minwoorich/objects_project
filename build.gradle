@@ -14,6 +14,7 @@ java {
 }
 
 configurations {
+//	querydsl.extendsFrom implementation, compileOnly, runtimeOnly
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -67,8 +68,11 @@ ext { // 전역 변수
 	snippetsDir = file('build/generated-snippets')
 }
 
-test {
+tasks.named('test') {
 	useJUnitPlatform()
+}
+
+test {
 	outputs.dir snippetsDir
 }
 
@@ -88,4 +92,28 @@ bootJar {
 	from("${asciidoctor.outputDir}") {
 		into 'static/docs'
 	}
+}
+
+//querydsl {
+//	jpa = true
+////	library = 'com.querydsl:querydsl-apt:5.0.0'
+//	querydslSourcesDir = "src/main/generated"
+//}
+//
+//compileQuerydsl {
+//	options.annotationProcessorPath = configurations.querydsl
+//}
+
+def querydslDir = "src/main/generated"
+
+sourceSets {
+	main.java.srcDirs += [ querydslDir ]
+}
+
+tasks.withType(JavaCompile) {
+	options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
+}
+
+clean.doLast {
+	file(querydslDir).deleteDir()
 }
