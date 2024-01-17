@@ -205,10 +205,11 @@ CREATE TABLE prod_order (
                               order_name	varchar(255)	,
                               order_no	varchar(255)	,
                               total_saved_point	bigint	,
-                              total_used_coupon	bigint	,
+                              total_used_coupon_price	bigint	,
                               membership_discount_price	bigint	,
                               total_price	bigint	,
                               real_price	bigint	,
+                              used_point    bigint  ,
                               created_at	datetime(6)	,
                               updated_at	datetime(6)	,
                               deleted_at	datetime(6)	
@@ -227,7 +228,7 @@ CREATE TABLE prod_order_detail (
                                      quantity	bigint	,
                                      price	bigint	,
                                      status_code	varchar(255)	,
-                                     deilvered_date	datetime(6)	,
+                                     delivered_date	datetime(6)	,
                                      used_point	bigint	,
                                      reason	text	,
                                      cancelled_at	datetime(6)	,
@@ -554,7 +555,10 @@ DROP TABLE IF EXISTS prod_option;
 CREATE TABLE prod_option (
                                prod_option_id	bigint auto_increment primary key,
                                product_id	bigint	,
-                               option_id	bigint	
+                               option_id	bigint	,
+                               created_at	datetime(6)	,
+                               updated_at	datetime(6)	,
+                               deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS product;

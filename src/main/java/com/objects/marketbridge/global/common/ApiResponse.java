@@ -40,10 +40,4 @@ public class ApiResponse<T> {
         return of(HttpStatus.CREATED);
     }
 
-
-    public static <T> ApiResponse<T> ok() {
-        return ApiResponse.<T>builder()
-                .status(HttpStatus.OK)
-                .build();
-    }
 }
