@@ -2,7 +2,7 @@ package com.objects.marketbridge.domain.order.service;
 
 import com.objects.marketbridge.domain.order.controller.response.TossErrorResponse;
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
-import com.objects.marketbridge.domain.order.domain.OrderTemp;
+import com.objects.marketbridge.domain.order.entity.OrderTemp;
 import com.objects.marketbridge.global.error.CustomLogicException;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;

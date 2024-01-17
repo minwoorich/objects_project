@@ -13,16 +13,25 @@ public class CheckoutResponse {
     // 보유 포인트
     Long pointBalance;
 
+    String successUrl;
+    String failUrl;
+
     @Builder
-    public CheckoutResponse(AddressValue address, Long pointBalance) {
+    public CheckoutResponse(AddressValue address, Long pointBalance, String successUrl, String failUrl) {
         this.address = address;
         this.pointBalance = pointBalance;
+        this.successUrl = successUrl;
+        this.failUrl = failUrl;
     }
 
-    public static CheckoutResponse from(AddressValue address, Long pointBalance) {
+
+    public static CheckoutResponse from(AddressValue address, Long pointBalance, String successUrl, String failUrl) {
         return CheckoutResponse.builder()
                 .address(address)
-                .pointBalance(pointBalance).build();
+                .pointBalance(pointBalance)
+                .successUrl(successUrl)
+                .failUrl(failUrl)
+                .build();
     }
 
 }
