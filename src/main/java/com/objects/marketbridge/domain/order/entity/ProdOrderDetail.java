@@ -35,12 +35,6 @@ public class ProdOrderDetail extends BaseEntity {
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_option_id")
-    private ProdOption prodOption;
-
-    private String rewardType;
-
     private Long quantity;
 
     private Long price;
@@ -49,29 +43,24 @@ public class ProdOrderDetail extends BaseEntity {
 
     private LocalDateTime deliveredDate;
 
-    private Long usedPoint;
-
     private String reason;
 
     private LocalDateTime cancelledAt;
 
+    private String rewardType;
     @Builder
-    public ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, ProdOption prodOption, String rewardType, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, Long usedPoint, String reason, LocalDateTime cancelledAt) {
+    public ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, String rewardType, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
         this.prodOrder = prodOrder;
         this.product = product;
         this.coupon = coupon;
-        this.prodOption = prodOption;
         this.rewardType = rewardType;
         this.quantity = quantity;
         this.price = price;
         this.statusCode = statusCode;
         this.deliveredDate = deliveredDate;
-        this.usedPoint = usedPoint;
         this.reason = reason;
         this.cancelledAt = cancelledAt;
     }
-
-
 
     public void setOrder(ProdOrder prodOrder) {
         this.prodOrder = prodOrder;

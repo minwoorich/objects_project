@@ -1,24 +1,20 @@
 package com.objects.marketbridge.domain.order.repository;
 
-import com.objects.marketbridge.domain.model.QProduct;
-import com.objects.marketbridge.domain.order.domain.OrderTemp;
+import com.objects.marketbridge.domain.order.entity.OrderTemp;
 import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.QProdOrder;
-import com.objects.marketbridge.domain.order.entity.QProdOrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.LockModeType;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.objects.marketbridge.domain.model.QProduct.*;
-import static com.objects.marketbridge.domain.order.entity.QProdOrder.*;
-import static com.objects.marketbridge.domain.order.entity.QProdOrderDetail.*;
+import static com.objects.marketbridge.domain.model.QProduct.product;
+import static com.objects.marketbridge.domain.order.entity.QProdOrder.prodOrder;
+import static com.objects.marketbridge.domain.order.entity.QProdOrderDetail.prodOrderDetail;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {

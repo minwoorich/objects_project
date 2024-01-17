@@ -2,6 +2,7 @@ package com.objects.marketbridge.domain.order.controller;
 
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
+import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import com.objects.marketbridge.domain.order.service.TossApiService;
@@ -34,7 +35,7 @@ public class TossController {
         TossPaymentsResponse tossPaymentsResponse = tossApiService.requestPaymentAccept(memberId, new TossConfirmRequest(paymentKey, orderNo, totalOrderPrice));
 
         // 2. 주문 생성
-        createOrderService.create(memberId, orderNo, paymentKey, totalOrderPrice);
+//        createOrderService.create(new CreateOrderDto());
 //        createPaymentService.create(memberId, paymentKey, orderNo, totalOrderPrice);
 
         //TODO : orderNo, totalPrice 검증 해야함(그리고 임시로 DB에 저장) -> redis?!

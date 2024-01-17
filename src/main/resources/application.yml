@@ -7,6 +7,10 @@ spring:
   config:
     activate:
       on-profile: local
+  sql:
+    init:
+      mode: always
+      platform: mysql # 이거 없으면 mysql 인식 못함
 
   jwt: # CLI 명령어 - openssl rand -base64 32 로 생성된 값
     secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
@@ -16,7 +20,7 @@ spring:
     username: objects
     password: 1234
 
-#  datasource:
+  #  datasource:
 #    url: jdbc:h2:tcp://localhost/~/Marketbridge
 #    username: sa
 #    password:
@@ -45,9 +49,7 @@ logging:
   level:
     org.hibernate.sql: debug
 
-  sql:
-    init:
-      mode: always
+
 
 
 payment:
