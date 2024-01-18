@@ -6,32 +6,23 @@ import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
-import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
-import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
-import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
-import com.objects.marketbridge.domain.order.dto.ProductInfoDto;
+import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.product.repository.ProductJpaRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-
 @SpringBootTest
 @Transactional
-@ActiveProfiles("local")
 class CreateOrderServiceTest {
 
     @Autowired CreateOrderService createOrderService;
@@ -80,5 +71,16 @@ class CreateOrderServiceTest {
         orderDetailRepository.deleteAllInBatch();
         orderRepository.deleteAllInBatch();
     }
+
+//    @DisplayName("주문 생성시 먼저 ProdOrder를 생성 할 수 있다.")
+//    @Test
+//    void create(){
+//        //given
+//        CreateOrderDto createOrderDto = CreateOrderDto.builder()
+//                .
+//        //when
+//
+//        //then
+//    }
 
 }

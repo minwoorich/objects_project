@@ -64,8 +64,12 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
         return orderDetailJpaRepository.findAll();
     }
 
+    @Override
+    public ProdOrderDetail findByOrderNo(String orderNo) {
+        return orderDetailJpaRepository.findByOrderNo(orderNo);
+    }
 
-//    @Override
+    //    @Override
 //    public ProdOrderDetail findByStockIdAndOrderId(Long stockId, Long orderId) {
 //        return queryFactory.selectFrom(prodOrderDetail)
 //                .join(prodOrderDetail.prodOption, prodOption)

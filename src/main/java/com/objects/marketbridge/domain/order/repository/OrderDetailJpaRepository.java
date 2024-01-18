@@ -20,5 +20,7 @@ public interface OrderDetailJpaRepository extends JpaRepository<ProdOrderDetail,
 
     List<ProdOrderDetail> findByProductId(Long memberId);
 
+    ProdOrderDetail findByOrderNo(String orderNo);
+
 
 }

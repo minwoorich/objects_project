@@ -1,7 +1,6 @@
 package com.objects.marketbridge.domain.order.controller;
 
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
-import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import com.objects.marketbridge.domain.order.service.TossApiService;
 import com.objects.marketbridge.domain.payment.dto.TossConfirmRequest;
 import com.objects.marketbridge.domain.payment.service.PaymentService;
@@ -29,12 +28,13 @@ public class TossController {
 
         // 1. 결제 요청
         TossPaymentsResponse tossPaymentsResponse =
-                tossApiService.requestPaymentAccept(memberId, new TossConfirmRequest(paymentKey, orderNo, totalOrderPrice));
+                tossApiService.requestPaymentAccept(new TossConfirmRequest(paymentKey, orderNo, totalOrderPrice));
 
         // 2. Payment 생성
         paymentService.create(tossPaymentsResponse);
 
-        // 3. TODO : 1) 판매자 금액 추가(실제입금은 배치로 들어가겠지만, 우선 어딘가에 판매자의 돈이 올라갔음을 저장해놔야함)
+        // 3.
+        // TODO : 1) 판매자 금액 추가(실제입금은 배치로 들어가겠지만, 우선 어딘가에 판매자의 돈이 올라갔음을 저장해놔야함)
         //  TODO : 2) 재고 감소
         // TODO : 3) 쿠폰 사용시 쿠폰 감소
         // TODO : 4) 배송 엔티티 생성 되어야함

@@ -2,6 +2,8 @@ package com.objects.marketbridge.domain.payment.service;
 
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
 import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.domain.*;
 import com.objects.marketbridge.domain.payment.service.port.PaymentRepository;
@@ -16,6 +18,7 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     public void create(TossPaymentsResponse tossPaymentsResponse) {
 
@@ -23,8 +26,12 @@ public class PaymentService {
         Payment payment = createPayment(tossPaymentsResponse);
 
         // 2. 연관관계 매핑
-        ProdOrder order = orderRepository.findByOrderNo(tossPaymentsResponse.getOrderId());
-        payment.linkProdOrder(order);
+        ProdOrderDetail orderDetail = orderDetailRepository.findByOrderNo(tossPaymentsResponse.getOrderId());
+        ProdOrder prodOrder = orderDetail.getProdOrder();
+        payment.linkProdOrder(prodOrder);
+
+        // 3. orderDetail 에 paymentKey 집어넣어주기
+        orderDetail.changePaymentKey(tossPaymentsResponse.getPaymentKey());
 
         // 3. 영속성 저장
         paymentRepository.save(payment);

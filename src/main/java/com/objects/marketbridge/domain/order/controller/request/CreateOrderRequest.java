@@ -17,10 +17,8 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 public class CreateOrderRequest {
-    // TODO : 이때 이미 orderNo 를 만들어놓고 주문테이블에 저장하든, 캐시에 저장하든 해놔야함.
-    // 왜냐하면 클라이언트가 결제요청을 할당시에 이미 orderNo를 알고 있기 때문
 
-//    @NotNull
+    @NotNull
     private String paymentMethod;
 
     @NotNull

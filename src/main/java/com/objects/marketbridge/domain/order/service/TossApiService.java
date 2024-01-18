@@ -30,7 +30,7 @@ public class TossApiService {
     private final TossPaymentConfig tossPaymentConfig;
     private final OrderRepository orderRepository;
 
-    public TossPaymentsResponse requestPaymentAccept(Long memberId, TossConfirmRequest request) {
+    public TossPaymentsResponse requestPaymentAccept(TossConfirmRequest request) {
 
         // 1-1. 데이터 검증
         validPayment(request.getOrderNo(), request.getAmount());

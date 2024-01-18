@@ -37,6 +37,8 @@ public class ProdOrderDetail extends BaseEntity {
 
     private Long quantity;
 
+    private String orderNo;
+
     private Long price;
 
     private String statusCode;
@@ -45,10 +47,14 @@ public class ProdOrderDetail extends BaseEntity {
 
     private String reason;
 
+    private String paymentKey;
+
     private LocalDateTime cancelledAt;
 
     @Builder
-    public ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
+    public ProdOrderDetail(ProdOrder prodOrder, String orderNo, String paymentKey, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
+        this.orderNo = orderNo;
+        this.paymentKey = paymentKey;
         this.prodOrder = prodOrder;
         this.product = product;
         this.coupon = coupon;
@@ -64,12 +70,16 @@ public class ProdOrderDetail extends BaseEntity {
         this.prodOrder = prodOrder;
     }
 
+    public void changePaymentKey(String paymentKey) {
+        this.paymentKey = paymentKey;
+    }
     public void changeStatusCode(String statusCode) {
         this.statusCode = statusCode;
     }
 
-    public static ProdOrderDetail create(Product product, Coupon coupon, Long quantity, Long price, String statusCode) {
+    public static ProdOrderDetail create(Product product, String orderNo, Coupon coupon, Long quantity, Long price, String statusCode) {
         return ProdOrderDetail.builder()
+                .orderNo(orderNo)
                 .product(product)
                 .coupon(coupon)
                 .quantity(quantity)
