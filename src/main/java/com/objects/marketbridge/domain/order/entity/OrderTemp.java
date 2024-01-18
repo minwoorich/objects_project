@@ -23,19 +23,16 @@ public class OrderTemp {
 
     String orderName;
 
-    String rewardType;
-
     @Embedded
     ProductValue productValue;
 
 
     @Builder
-    public OrderTemp(String orderNo, Long amount, Long addressId, String orderName, String rewardType, ProductValue productValue) {
+    public OrderTemp(String orderNo, Long amount, Long addressId, String orderName, ProductValue productValue) {
         this.orderNo = orderNo;
         this.amount = amount;
         this.addressId = addressId;
         this.orderName = orderName;
-        this.rewardType = rewardType;
         this.productValue = productValue;
     }
 
@@ -44,7 +41,6 @@ public class OrderTemp {
                 .orderNo(request.getOrderId())
                 .amount(request.getAmount())
                 .orderName(request.getOrderName())
-                .rewardType(request.getRewardType())
                 .addressId(request.getAddressId()).build();
     }
 
@@ -53,7 +49,6 @@ public class OrderTemp {
                 .orderId(orderNo)
                 .amount(amount)
                 .orderName(orderName)
-                .rewardType(rewardType)
                 .addressId(addressId)
                 .build();
     }

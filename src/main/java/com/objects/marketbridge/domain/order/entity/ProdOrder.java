@@ -39,7 +39,7 @@ public class ProdOrder extends BaseEntity {
 
     private Long membershipDiscountPrice;
 
-    private Long totalPrice; // 주문 금액
+    private Long totalPrice; // 찐 최종 주문 금액
 
     private Long realPrice; // 쿠폰, 포인트사용 뺀 진짜 결제된 금액
 
