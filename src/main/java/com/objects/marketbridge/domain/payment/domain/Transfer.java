@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Transfer {
     private String bankCode;
-    private String settlementStatus;
 
     @Builder
-    public Transfer(String bankCode, String settlementStatus) {
+    public Transfer(String bankCode) {
         this.bankCode = bankCode;
-        this.settlementStatus = settlementStatus;
     }
 }

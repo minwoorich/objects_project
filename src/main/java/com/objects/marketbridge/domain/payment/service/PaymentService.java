@@ -15,6 +15,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
 
     public void create(TossPaymentsResponse tossPaymentsResponse) {
+        String orderNo = tossPaymentsResponse.getOrderId();
         String paymentType = tossPaymentsResponse.getPaymentType();
         String paymentMethod = tossPaymentsResponse.getPaymentMethod();
         String paymentKey = tossPaymentsResponse.getPaymentKey();
@@ -25,7 +26,7 @@ public class PaymentService {
         VirtualAccount virtualAccount = tossPaymentsResponse.getVirtualAccount();
         Transfer transfer = tossPaymentsResponse.getTransfer();
 
-        Payment.create(paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus, paymentCancel, card, virtualAccount, transfer);
+        Payment.create(orderNo, paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,  card, virtualAccount, transfer);
     }
 
 }

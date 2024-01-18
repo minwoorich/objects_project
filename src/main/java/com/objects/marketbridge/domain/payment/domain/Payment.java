@@ -21,15 +21,13 @@ public class Payment extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "prod_order_id")
     private ProdOrder prodOrder;
+
+    private String orderNo;
     private String paymentType;
     private String paymentMethod; // CARD, TRANSFER, VIRTUAL
     private String paymentKey;
     private String paymentStatus;
     private String refundStatus;
-
-    // 결제 취소에 대한 값
-    @Embedded
-    private PaymentCancel paymentCancel;
 
     // 카드 결제
     @Embedded
@@ -44,27 +42,27 @@ public class Payment extends BaseEntity {
     private Transfer transfer;
 
     @Builder
-    public Payment(ProdOrder prodOrder, String paymentType, String paymentMethod, String paymentKey, String paymentStatus, String refundStatus, PaymentCancel paymentCancel, Card card, VirtualAccount virtualAccount, Transfer transfer) {
+    public Payment(ProdOrder prodOrder, String orderNo, String paymentType, String paymentMethod, String paymentKey, String paymentStatus, String refundStatus,  Card card, VirtualAccount virtualAccount, Transfer transfer) {
         this.prodOrder = prodOrder;
+        this.orderNo = orderNo;
         this.paymentType = paymentType;
         this.paymentMethod = paymentMethod;
         this.paymentKey = paymentKey;
         this.paymentStatus = paymentStatus;
         this.refundStatus = refundStatus;
-        this.paymentCancel = paymentCancel;
         this.card = card;
         this.virtualAccount = virtualAccount;
         this.transfer = transfer;
     }
 
-    public static Payment create(String paymentType, String paymentMethod, String paymentKey, String paymentStatus, String refundStatus, PaymentCancel paymentCancel, Card card, VirtualAccount virtualAccount, Transfer transfer) {
+    public static Payment create(String orderNo, String paymentType, String paymentMethod, String paymentKey, String paymentStatus, String refundStatus,  Card card, VirtualAccount virtualAccount, Transfer transfer) {
         return Payment.builder()
+                .orderNo(orderNo)
                 .paymentType(paymentType)
                 .paymentMethod(paymentMethod)
                 .paymentKey(paymentKey)
                 .paymentStatus(paymentStatus)
                 .refundStatus(refundStatus)
-                .paymentCancel(paymentCancel)
                 .card(card)
                 .virtualAccount(virtualAccount)
                 .transfer(transfer)

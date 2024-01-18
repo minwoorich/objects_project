@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class TossPaymentsResponse {
 
+    private String orderId;
     private String receiptId;
     private String paymentType; // 일반결제, 브랜드페이
     private String paymentMethod; // CARD, TRANSFER, VIRTUAL
@@ -35,7 +36,8 @@ public class TossPaymentsResponse {
     // 계좌 이체 결제
     private Transfer transfer;
 
-    public TossPaymentsResponse(String receiptId, String paymentType, String paymentMethod, Long totalAmount, String paymentKey, String paymentStatus, String refundStatus, String bankCode, String orderName, List<PaymentCancel> cancels, Card card, VirtualAccount virtualAccount, Transfer transfer) {
+    public TossPaymentsResponse(String orderId, String receiptId, String paymentType, String paymentMethod, Long totalAmount, String paymentKey, String paymentStatus, String refundStatus, String bankCode, String orderName, List<PaymentCancel> cancels, Card card, VirtualAccount virtualAccount, Transfer transfer) {
+        this.orderId = orderId;
         this.receiptId = receiptId;
         this.paymentType = paymentType;
         this.paymentMethod = paymentMethod;
