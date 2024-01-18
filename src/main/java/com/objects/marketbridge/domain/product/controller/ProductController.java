@@ -2,7 +2,6 @@ package com.objects.marketbridge.domain.product.controller;
 
 import com.objects.marketbridge.domain.model.Category;
 import com.objects.marketbridge.domain.model.Product;
-import com.objects.marketbridge.domain.product.dto.ProductDto;
 import com.objects.marketbridge.domain.product.dto.ProductRequestDto;
 import com.objects.marketbridge.domain.product.dto.ProductResponseDto;
 import com.objects.marketbridge.domain.product.service.ProductService;
@@ -21,6 +20,8 @@ public class ProductController {
 
     private final ProductService productService;
 
+
+    //상품등록
     @UserAuthorize
     @PostMapping("/products")
     public ApiResponse<ProductResponseDto> registerProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
@@ -33,17 +34,22 @@ public class ProductController {
                 productRequestDto.getIsSubs(),
                 productRequestDto.getStock(),
                 productRequestDto.getThumbImg(),
-                productRequestDto.getDiscountRate());
+                productRequestDto.getItemImgUrls(),
+                productRequestDto.getDetailImgUrls(),
+                productRequestDto.getDiscountRate(),
+                productRequestDto.getOptionNames());
 
 //        ProductResponseDto productResponseDto = new ProductResponseDto();
 
         productService.registerProduct(productRequestDto);
-
         return ApiResponse.ok(productResponseDto);
     }
 
-    @GetMapping("/products")
+
+    //상품조회
+    @GetMapping("/products/{product_name}")
     public ProductResponseDto getProductList(@Valid @RequestBody ProductRequestDto request){
+
         // 담을거 가져오기
         // 현재 임시로 기본생성자 사용.
         return new ProductResponseDto();
