@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.order.controller;
+package com.objects.marketbridge.domain.payment.controller;
 
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
 import com.objects.marketbridge.domain.order.service.TossApiService;
