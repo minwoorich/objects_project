@@ -1,6 +1,8 @@
 package com.objects.marketbridge.domain.payment.service;
 
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
+import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.domain.*;
 import com.objects.marketbridge.domain.payment.service.port.PaymentRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final OrderRepository orderRepository;
 
     public void create(TossPaymentsResponse tossPaymentsResponse) {
+
+        // 1. Payment 엔티티 생성
+        Payment payment = createPayment(tossPaymentsResponse);
+
+        // 2. 연관관계 매핑
+        ProdOrder order = orderRepository.findByOrderNo(tossPaymentsResponse.getOrderId());
+        payment.linkProdOrder(order);
+
+        // 3. 영속성 저장
+        paymentRepository.save(payment);
+    }
+
+    private Payment createPayment(TossPaymentsResponse tossPaymentsResponse) {
+
         String orderNo = tossPaymentsResponse.getOrderId();
         String paymentType = tossPaymentsResponse.getPaymentType();
         String paymentMethod = tossPaymentsResponse.getPaymentMethod();
@@ -26,7 +43,7 @@ public class PaymentService {
         VirtualAccount virtualAccount = tossPaymentsResponse.getVirtualAccount();
         Transfer transfer = tossPaymentsResponse.getTransfer();
 
-        Payment.create(orderNo, paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,  card, virtualAccount, transfer);
+        return Payment.create(orderNo, paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,  card, virtualAccount, transfer);
     }
 
 }

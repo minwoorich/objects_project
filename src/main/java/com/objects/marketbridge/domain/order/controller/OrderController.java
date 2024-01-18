@@ -53,6 +53,7 @@ public class OrderController {
     }
 
     private Address filterDefaultAddress(List<Address> addresses) {
+
         return addresses.stream()
                 .filter(Address::isDefault)
                 .findFirst()

@@ -3,6 +3,7 @@ package com.objects.marketbridge.domain.order.service;
 import com.objects.marketbridge.domain.order.controller.response.TossErrorResponse;
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
 import com.objects.marketbridge.domain.order.entity.OrderTemp;
+import com.objects.marketbridge.domain.order.entity.ProdOrder;
 import com.objects.marketbridge.global.error.CustomLogicException;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
@@ -30,7 +31,8 @@ public class TossApiService {
     private final OrderRepository orderRepository;
 
     public TossPaymentsResponse requestPaymentAccept(Long memberId, TossConfirmRequest request) {
-        // 1-1. 데이터 검증 TODO : orderTemp 가 아니라 prodOrder 에서 꺼내와야함
+
+        // 1-1. 데이터 검증
         validPayment(request.getOrderNo(), request.getAmount());
 
         // 1-2. 결제 요청
@@ -60,11 +62,14 @@ public class TossApiService {
                 // API를 여러개 호출하거나 requestPaymentAccept() 이후에 다른 작업이 쌓여있을 경우
                 // Mono<T> 로 감싸서 반환하여 비동기작업을 해볼법 하나 현재 그렇지 않기때문에 그냥 block() 으로 끝냄
 
+                // TODO : 결제 실패시 어떻게 처리?
+
     }
 
     private void validPayment(String orderNo, Long totalOrderPrice) {
-        OrderTemp orderTemp = orderRepository.findOrderTempByOrderNo(orderNo);
-        if (!orderNo.equals(orderTemp.getOrderNo()) || !totalOrderPrice.equals(orderTemp.getAmount())) {
+
+        ProdOrder order = orderRepository.findByOrderNo(orderNo);
+        if (!orderNo.equals(order.getOrderNo()) || !totalOrderPrice.equals(order.getTotalPrice())) {
             throw new CustomLogicException("결제정보가 맞지 않습니다", ErrorCode.MISMATCHED_PAYMENT_DATA.toString());
         }
     }

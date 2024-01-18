@@ -563,3 +563,16 @@ CREATE TABLE product (
                            deleted_at	datetime(6)	
 );
 
+DROP TABLE IF EXISTS seller_account;
+
+create table seller_account
+(
+    seller_account_id BIGINT auto_increment primary key ,
+    seller_id         BIGINT null,
+    incoming          BIGINT null,
+    outgoing          BIGINT null,
+    balance           BIGINT null
+
+);
+
+
