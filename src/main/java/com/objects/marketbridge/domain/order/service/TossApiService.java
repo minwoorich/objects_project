@@ -29,11 +29,8 @@ public class TossApiService {
     private final TossPaymentConfig tossPaymentConfig;
     private final OrderRepository orderRepository;
 
-
-
-
     public TossPaymentsResponse requestPaymentAccept(Long memberId, TossConfirmRequest request) {
-        // 1-1. 데이터 검증
+        // 1-1. 데이터 검증 TODO : orderTemp 가 아니라 prodOrder 에서 꺼내와야함
         validPayment(request.getOrderNo(), request.getAmount());
 
         // 1-2. 결제 요청
@@ -70,7 +67,5 @@ public class TossApiService {
         if (!orderNo.equals(orderTemp.getOrderNo()) || !totalOrderPrice.equals(orderTemp.getAmount())) {
             throw new CustomLogicException("결제정보가 맞지 않습니다", ErrorCode.MISMATCHED_PAYMENT_DATA.toString());
         }
-
-
     }
 }

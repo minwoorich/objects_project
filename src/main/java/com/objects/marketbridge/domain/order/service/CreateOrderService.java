@@ -9,23 +9,22 @@ import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
-import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.entity.ProdOrder;
 import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
+import com.objects.marketbridge.domain.payment.domain.*;
+import com.objects.marketbridge.domain.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import com.objects.marketbridge.global.utils.GroupingHelper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,34 +32,57 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CreateOrderService {
 
-    private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
     private final AddressRepository addressRepository;
-    private final TossPaymentConfig paymentConfig;
+    private final PaymentRepository paymentRepository;
 
 
     @Transactional
-    public CreateOrderResponse create(CreateOrderDto createOrderDto) {
+    public void create(CreateOrderDto createOrderDto) {
 
-        // 1. ProdOrder, ProdOrderDetail 엔티티 생성
+        // 1. ProdOrder 생성
         ProdOrder prodOrder = createProdOrder(createOrderDto);
 
+        // 2. ProdOrderDetail 생성
         List<ProdOrderDetail> prodOrderDetails = createProdOrderDetail(createOrderDto);
+
+        // 3. Payment 생성
+        Payment payment = createPayment(createOrderDto);
+
+        // 4. ProdOrder - ProdOrderDetail 연관관계 매핑
         for (ProdOrderDetail orderDetail : prodOrderDetails) {
             prodOrder.addOrderDetail(orderDetail);
         }
 
+        // 4.1 ProdOrder - Payment 연관관계 매핑
+        payment.linkProdOrder(prodOrder);
+
+        // 5. 영속성 저장
         orderDetailRepository.saveAll(prodOrderDetails);
-
-
-
-//        return CreateOrderResponse.from(prodOrderDto, email, successUrl, failUrl);
-        return null;
+        paymentRepository.save(payment);
     }
 
+    private ProdOrder createProdOrder(CreateOrderDto createOrderDto) {
+
+        Member member = memberRepository.findById(createOrderDto.getMemberId()).orElseThrow(EntityNotFoundException::new);
+        Address address = addressRepository.findById(createOrderDto.getAddressId());
+        String orderName = createOrderDto.getOrderName();
+        String orderNo = createOrderDto.getOrderNo();
+        Long totalOrderPrice = createOrderDto.getTotalOrderPrice();
+        Long totalUsedCouponPrice = geTotalCouponPrice(createOrderDto);
+
+        return ProdOrder.create(member, address, orderName, orderNo, totalOrderPrice, totalUsedCouponPrice);
+    }
+
+    private Long geTotalCouponPrice(CreateOrderDto createOrderDto) {
+
+        List<Coupon> coupons = couponRepository.findAllByIds(createOrderDto.getProductValues().stream().map(ProductValue::getCouponId).filter(Objects::nonNull).collect(Collectors.toList()));
+
+        return coupons.stream().mapToLong(Coupon::getPrice).sum();
+    }
 
     private List<ProdOrderDetail> createProdOrderDetail(CreateOrderDto createOrderDto) {
 
@@ -83,21 +105,19 @@ public class CreateOrderService {
         return prodOrderDetails;
     }
 
-    private ProdOrder createProdOrder(CreateOrderDto createOrderDto) {
+    private Payment createPayment(CreateOrderDto createOrderDto) {
 
-        Member member = memberRepository.findById(createOrderDto.getMemberId()).orElseThrow(EntityNotFoundException::new);
-        Address address = addressRepository.findById(createOrderDto.getAddressId());
-        String orderName = createOrderDto.getOrderName();
-        String orderNo = createOrderDto.getOrderNo();
-        Long totalOrderPrice = createOrderDto.getTotalOrderPrice();
-        List<Coupon> coupons = getCoupons(createOrderDto);
-        Long totalUsedCouponPrice = coupons.stream().mapToLong(Coupon::getPrice).sum();
+        String paymentType = createOrderDto.getPaymentType();
+        String paymentMethod = createOrderDto.getPaymentMethod();
+        String paymentKey = createOrderDto.getPaymentKey();
+        String paymentStatus = createOrderDto.getPaymentStatus();
+        String refundStatus = createOrderDto.getRefundStatus();
+        PaymentCancel paymentCancel = createOrderDto.getPaymentCancel();
+        Card card = createOrderDto.getCard();
+        VirtualAccount virtual = createOrderDto.getVirtual();
+        Transfer transfer = createOrderDto.getTransfer();
 
-        return ProdOrder.create(member, address, orderName, orderNo, totalOrderPrice, totalUsedCouponPrice);
-    }
-
-    private List<Coupon> getCoupons(CreateOrderDto createOrderDto) {
-        return couponRepository.findAllByIds(createOrderDto.getProductValues().stream().map(ProductValue::getCouponId).filter(Objects::nonNull).collect(Collectors.toList()));
+        return Payment.create(paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,  paymentCancel, card, virtual, transfer);
     }
 
 
