@@ -2,6 +2,8 @@ package com.objects.marketbridge.domain.payment.service;
 
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
 import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.domain.BankCode;
 import com.objects.marketbridge.domain.payment.domain.Card;
@@ -16,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -24,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CreatePaymentServiceTest {
 
     @Autowired OrderRepository orderRepository;
+    @Autowired OrderDetailRepository orderDetailRepository;
     @Autowired ProductRepository productRepository;
     @Autowired CreatePaymentService createPaymentService;
     @Autowired PaymentRepository paymentRepository;
@@ -36,8 +41,23 @@ class CreatePaymentServiceTest {
                 .totalPrice(10000L)
                 .orderName("홍길동")
                 .build();
-
         orderRepository.save(order);
+
+        ProdOrderDetail orderDetail1 = ProdOrderDetail.builder()
+                .orderNo("aaaa-aaaa-aaaa")
+                .build();
+
+        ProdOrderDetail orderDetail2 = ProdOrderDetail.builder()
+                .orderNo("aaaa-aaaa-aaaa")
+                .build();
+        List<ProdOrderDetail> orderDetails = List.of(orderDetail1, orderDetail2);
+
+        for (ProdOrderDetail orderDetail : orderDetails) {
+            order.addOrderDetail(orderDetail);
+        }
+
+        orderDetailRepository.saveAll(orderDetails);
+
     }
 
     @DisplayName("Payment 엔티티를 생성해야한다.")
@@ -94,5 +114,28 @@ class CreatePaymentServiceTest {
         //then
         Payment payment = paymentRepository.findByOrderNo("aaaa-aaaa-aaaa");
         assertThat(payment.getProdOrder()).isEqualTo(order);
+    }
+    
+    @DisplayName("ProdOrderDetail 에 paymentKey를 할당해줘야한다.")
+    @Test
+    void changePaymentKey(){
+
+        //given
+        ProdOrder order = orderRepository.findByOrderNo("aaaa-aaaa-aaaa");
+        List<ProdOrderDetail> prodOrderDetails = order.getProdOrderDetails();
+
+        Card card = getCard("1234-5678", BankCode.HANA.getCode());
+        TossPaymentsResponse tossPaymentsResponse =
+                getTossPaymentResponse(order.getOrderNo(), "페이먼트키", card);
+
+
+        //when
+        createPaymentService.create(tossPaymentsResponse);
+        
+        //then
+        assertThat(prodOrderDetails).hasSize(2);
+        for (ProdOrderDetail prodOrderDetail : prodOrderDetails) {
+            assertThat(prodOrderDetail.getPaymentKey()).isEqualTo(tossPaymentsResponse.getPaymentKey());
+        }
     }
 }
