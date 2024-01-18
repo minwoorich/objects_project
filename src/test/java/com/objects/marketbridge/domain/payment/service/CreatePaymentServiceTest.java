@@ -27,6 +27,7 @@ class CreatePaymentServiceTest {
     @Autowired ProductRepository productRepository;
     @Autowired CreatePaymentService createPaymentService;
     @Autowired PaymentRepository paymentRepository;
+
     @BeforeEach
     void init() {
 
@@ -42,11 +43,13 @@ class CreatePaymentServiceTest {
     @DisplayName("Payment 엔티티를 생성해야한다.")
     @Test
     void createPayment(){
+
         //given
         ProdOrder order = orderRepository.findByOrderNo("aaaa-aaaa-aaaa");
         Card card = getCard("1234-5678", BankCode.HANA.getCode());
         TossPaymentsResponse tossPaymentsResponse =
                 getTossPaymentResponse(order.getOrderNo(), "페이먼트키", card);
+
 
         //when
         createPaymentService.create(tossPaymentsResponse);
@@ -54,7 +57,7 @@ class CreatePaymentServiceTest {
         //then
         Payment payment = paymentRepository.findByOrderNo(order.getOrderNo());
 
-        assertThat(payment.getOrderNo()).isEqualTo(order.getOrderNo());
+        assertThat(payment.getOrderNo()).isEqualTo("aaaa-aaaa-aaaa");
         assertThat(payment.getPaymentKey()).isEqualTo("페이먼트키");
         assertThat(payment.getCard()).isEqualTo(card);
 
@@ -67,10 +70,29 @@ class CreatePaymentServiceTest {
                 .card(card)
                 .build();
     }
+
     private static Card getCard(String cardNo, String cardIssuerCode) {
         return Card.builder()
                 .cardNo(cardNo)
                 .cardIssuerCode(cardIssuerCode)
                 .build();
+    }
+
+    @DisplayName("Payment 와 ProdOrder 가 연관관계 매핑이 되어 있어야한다.")
+    @Test
+    void mappingPaymentWithProdOrder(){
+        //given
+        ProdOrder order = orderRepository.findByOrderNo("aaaa-aaaa-aaaa");
+        Card card = getCard("1234-5678", BankCode.HANA.getCode());
+        TossPaymentsResponse tossPaymentsResponse =
+                getTossPaymentResponse(order.getOrderNo(), "페이먼트키", card);
+
+
+        //when
+        createPaymentService.create(tossPaymentsResponse);
+
+        //then
+        Payment payment = paymentRepository.findByOrderNo("aaaa-aaaa-aaaa");
+        assertThat(payment.getProdOrder()).isEqualTo(order);
     }
 }
