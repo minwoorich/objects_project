@@ -228,6 +228,7 @@ CREATE TABLE prod_order_detail (
                                      status_code	varchar(255)	,
                                      delivered_date	datetime(6)	,
                                      reason	text	,
+                                     payment_key varchar(255),
                                      cancelled_at	datetime(6)	,
                                      created_at	datetime(6)	,
                                      updated_at	datetime(6)	,
