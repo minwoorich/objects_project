@@ -244,8 +244,6 @@ CREATE TABLE payment (
                                primary key,
 
                            prod_order_id	bigint	,
-                           receipt_id	varchar(255)	,
-                           order_name	varchar(255)	,
                            order_no	varchar(255)	,
                            transaction_key	varchar(255)	,
                            payment_type	varchar(255)	,

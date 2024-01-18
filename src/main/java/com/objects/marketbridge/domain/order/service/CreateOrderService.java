@@ -107,6 +107,7 @@ public class CreateOrderService {
 
     private Payment createPayment(CreateOrderDto createOrderDto) {
 
+        String orderNo = createOrderDto.getOrderNo();
         String paymentType = createOrderDto.getPaymentType();
         String paymentMethod = createOrderDto.getPaymentMethod();
         String paymentKey = createOrderDto.getPaymentKey();
@@ -117,7 +118,7 @@ public class CreateOrderService {
         VirtualAccount virtual = createOrderDto.getVirtual();
         Transfer transfer = createOrderDto.getTransfer();
 
-        return Payment.create(paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,  paymentCancel, card, virtual, transfer);
+        return Payment.create(orderNo, paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,  paymentCancel, card, virtual, transfer);
     }
 
 
