@@ -47,13 +47,11 @@ public class ProdOrderDetail extends BaseEntity {
 
     private LocalDateTime cancelledAt;
 
-    private String rewardType;
     @Builder
-    public ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon, String rewardType, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
+    public ProdOrderDetail(ProdOrder prodOrder, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
         this.prodOrder = prodOrder;
         this.product = product;
         this.coupon = coupon;
-        this.rewardType = rewardType;
         this.quantity = quantity;
         this.price = price;
         this.statusCode = statusCode;

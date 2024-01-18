@@ -118,7 +118,7 @@ public class CreateOrderService {
         VirtualAccount virtual = createOrderDto.getVirtual();
         Transfer transfer = createOrderDto.getTransfer();
 
-        return Payment.create(orderNo, paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,  paymentCancel, card, virtual, transfer);
+        return Payment.create(orderNo, paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,   card, virtual, transfer);
     }
 
 

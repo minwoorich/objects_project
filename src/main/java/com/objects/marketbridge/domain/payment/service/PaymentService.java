@@ -26,7 +26,7 @@ public class PaymentService {
         VirtualAccount virtualAccount = tossPaymentsResponse.getVirtualAccount();
         Transfer transfer = tossPaymentsResponse.getTransfer();
 
-        Payment.create(orderNo, paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus, paymentCancel, card, virtualAccount, transfer);
+        Payment.create(orderNo, paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,  card, virtualAccount, transfer);
     }
 
 }
