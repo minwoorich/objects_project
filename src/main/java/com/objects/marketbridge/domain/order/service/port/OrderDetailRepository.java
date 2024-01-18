@@ -22,7 +22,7 @@ public interface OrderDetailRepository  {
 
     List<ProdOrderDetail> findAll();
 
-    ProdOrderDetail findByOrderNo(String orderNo);
+    List<ProdOrderDetail> findByOrderNo(String orderNo);
 
 //    ProdOrderDetail findByStockIdAndOrderId(Long stockId, Long orderId);
 }

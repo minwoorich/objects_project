@@ -11,14 +11,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class PaymentService {
+public class CreatePaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final OrderRepository orderRepository;
 
     public void create(TossPaymentsResponse tossPaymentsResponse) {
 
@@ -26,12 +28,12 @@ public class PaymentService {
         Payment payment = createPayment(tossPaymentsResponse);
 
         // 2. 연관관계 매핑
-        ProdOrderDetail orderDetail = orderDetailRepository.findByOrderNo(tossPaymentsResponse.getOrderId());
-        ProdOrder prodOrder = orderDetail.getProdOrder();
-        payment.linkProdOrder(prodOrder);
+        List<ProdOrderDetail> orderDetails = orderDetailRepository.findByOrderNo(tossPaymentsResponse.getOrderId());
+        ProdOrder order = orderRepository.findByOrderNo(tossPaymentsResponse.getOrderId());
+        payment.linkProdOrder(order);
 
         // 3. orderDetail 에 paymentKey 집어넣어주기
-        orderDetail.changePaymentKey(tossPaymentsResponse.getPaymentKey());
+        orderDetails.forEach(o -> o.changePaymentKey(tossPaymentsResponse.getPaymentKey()));
 
         // 3. 영속성 저장
         paymentRepository.save(payment);
@@ -45,7 +47,6 @@ public class PaymentService {
         String paymentKey = tossPaymentsResponse.getPaymentKey();
         String paymentStatus = tossPaymentsResponse.getPaymentStatus();
         String refundStatus = tossPaymentsResponse.getRefundStatus();
-        PaymentCancel paymentCancel = tossPaymentsResponse.getCancels().get(0);
         Card card = tossPaymentsResponse.getCard();
         VirtualAccount virtualAccount = tossPaymentsResponse.getVirtualAccount();
         Transfer transfer = tossPaymentsResponse.getTransfer();

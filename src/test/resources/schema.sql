@@ -14,9 +14,9 @@ CREATE TABLE member (
                           birth	varchar(255)	,
                           is_alert	bit	,
                           is_agree	bit	,
-                          created_at	datetime(6)	,
-                          updated_at	datetime(6)	,
-                          deleted_at	datetime(6)	
+                          created_at	timestamp	,
+                          updated_at	timestamp	,
+                          deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS seller;
@@ -33,9 +33,9 @@ CREATE TABLE seller (
                           license_no	varchar(255)	,
                           email	varchar(255)	,
                           account_no	varchar(255)	,
-                          created_at	datetime(6)	,
-                          updated_at	datetime(6)	,
-                          deleted_at	datetime(6)	
+                          created_at	timestamp	,
+                          updated_at	timestamp	,
+                          deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS address;
@@ -52,9 +52,9 @@ CREATE TABLE address (
                            zipcode	varchar(255)	,
                            detail varchar(255),
                            is_default	bit	,
-                           created_at	datetime(6)	,
-                           updated_at	datetime(6)	,
-                           deleted_at	datetime(6)	
+                           created_at	timestamp	,
+                           updated_at	timestamp	,
+                           deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS social_credential;
@@ -64,9 +64,9 @@ CREATE TABLE social_credential (
                                          primary key,
                                      user_id	bigint	,
                                      token_id	varchar(255)	,
-                                     created_at	datetime(6)	,
-                                     updated_at	datetime(6)	,
-                                     deleted_at	datetime(6)	
+                                     created_at	timestamp	,
+                                     updated_at	timestamp	,
+                                     deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS category;
@@ -77,9 +77,9 @@ CREATE TABLE category (
                             prev_id	bigint	,
                             next_id	bigint	,
                             name	varchar(255)	,
-                            created_at	datetime(6)	,
-                            updated_at	datetime(6)	,
-                            deleted_at	datetime(6)	
+                            created_at	timestamp	,
+                            updated_at	timestamp	,
+                            deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS reward_policy;
@@ -89,9 +89,9 @@ CREATE TABLE reward_policy (
                                      primary key,
                                  type	varchar(255)	,
                                  rate	bigint	,
-                                 created_at	datetime(6)	,
-                                 updated_at	datetime(6)	,
-                                 deleted_at	datetime(6)	
+                                 created_at	timestamp	,
+                                 updated_at	timestamp	,
+                                 deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS seller_product;
@@ -101,9 +101,9 @@ CREATE TABLE seller_product (
                                       primary key,
                                   seller_id	bigint	,
                                   product_id	bigint	,
-                                  created_at	datetime(6)	,
-                                  updated_at	datetime(6)	,
-                                  deleted_at	datetime(6)	
+                                  created_at	timestamp	,
+                                  updated_at	timestamp	,
+                                  deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS product_image;
@@ -113,9 +113,9 @@ CREATE TABLE product_image (
                                      primary key,
                                  product_id	bigint	,
                                  image_id	bigint	,
-                                 created_at	datetime(6)	,
-                                 updated_at	datetime(6)	,
-                                 deleted_at	datetime(6)	
+                                 created_at	timestamp	,
+                                 updated_at	timestamp	,
+                                 deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS image;
@@ -125,9 +125,9 @@ CREATE TABLE image (
                              primary key,
                          type	varchar(255)	,
                          url	varchar(255)	,
-                         created_at	datetime(6)	,
-                         updated_at	datetime(6)	,
-                         deleted_at	datetime(6)	
+                         created_at	timestamp	,
+                         updated_at	timestamp	,
+                         deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS option_category;
@@ -137,9 +137,9 @@ CREATE TABLE option_category (
                                        primary key,
 
                                    name	varchar(255)	,
-                                   created_at	datetime(6)	,
-                                   updated_at	datetime(6)	,
-                                   deleted_at	datetime(6)	
+                                   created_at	timestamp	,
+                                   updated_at	timestamp	,
+                                   deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS options;
@@ -150,9 +150,9 @@ CREATE TABLE options (
 
                           option_category_id	bigint	,
                           name	varchar(255)	,
-                          created_at	datetime(6)	,
-                          updated_at	datetime(6)	,
-                          deleted_at	datetime(6)	
+                          created_at	timestamp	,
+                          updated_at	timestamp	,
+                          deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS tag;
@@ -162,9 +162,9 @@ CREATE TABLE tag (
                            primary key,
 
                        name	varchar(255)	,
-                       created_at	datetime(6)	,
-                       updated_at	datetime(6)	,
-                       deleted_at	datetime(6)	
+                       created_at	timestamp	,
+                       updated_at	timestamp	,
+                       deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS prod_tag;
@@ -175,9 +175,9 @@ CREATE TABLE prod_tag (
 
                             tag_id	bigint	,
                             product_id	bigint	,
-                            created_at	datetime(6)	,
-                            updated_at	datetime(6)	,
-                            deleted_at	datetime(6)	
+                            created_at	timestamp	,
+                            updated_at	timestamp	,
+                            deleted_at	timestamp	
 );
 
 
@@ -190,9 +190,9 @@ CREATE TABLE status_code (
                                type	varchar(255)	,
                                code	varchar(255)	,
                                name	varchar(255)	,
-                               created_at	datetime(6)	,
-                               updated_at	datetime(6)	,
-                               deleted_at	datetime(6)	
+                               created_at	timestamp	,
+                               updated_at	timestamp	,
+                               deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS prod_order;
@@ -209,9 +209,9 @@ CREATE TABLE prod_order (
                               total_price	bigint	,
                               real_price	bigint	,
                               used_point    bigint  ,
-                              created_at	datetime(6)	,
-                              updated_at	datetime(6)	,
-                              deleted_at	datetime(6)	
+                              created_at	timestamp	,
+                              updated_at	timestamp	,
+                              deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS prod_order_detail;
@@ -222,19 +222,19 @@ CREATE TABLE prod_order_detail (
 
                                      prod_order_id	bigint	,
                                      product_id	bigint	,
+                                     order_no varchar(255),
                                      coupon_id	bigint	,
                                      reward_type	varchar(255)	,
                                      quantity	bigint	,
-                                     order_no varchar(255),
                                      price	bigint	,
                                      status_code	varchar(255)	,
-                                     delivered_date	datetime(6)	,
+                                     delivered_date	timestamp	,
                                      reason	text	,
                                      payment_key varchar(255),
-                                     cancelled_at	datetime(6)	,
-                                     created_at	datetime(6)	,
-                                     updated_at	datetime(6)	,
-                                     deleted_at	datetime(6)	
+                                     cancelled_at	timestamp	,
+                                     created_at	timestamp	,
+                                     updated_at	timestamp	,
+                                     deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS payment;
@@ -259,9 +259,9 @@ CREATE TABLE payment (
                            v_due_date	varchar(255)	,
                            v_expired	bit	,
                            tr_bank_code	varchar(255)	,
-                           deleted_at	datetime(6)	,
-                           updated_at	datetime(6)	,
-                           created_at	datetime(6)
+                           deleted_at	timestamp	,
+                           updated_at	timestamp	,
+                           created_at	timestamp
 );
 
 DROP TABLE IF EXISTS review;
@@ -274,9 +274,9 @@ CREATE TABLE review (
                           product_id	bigint	,
                           content	text	,
                           rating	bigint	,
-                          created_at	datetime(6)	,
-                          updated_at	datetime(6)	,
-                          deleted_at	datetime(6)	
+                          created_at	timestamp	,
+                          updated_at	timestamp	,
+                          deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS review_image;
@@ -287,9 +287,9 @@ CREATE TABLE review_image (
 
                                 review_id	bigint	,
                                 image_id	bigint	,
-                                created_at	datetime(6)	,
-                                updated_at	datetime(6)	,
-                                deleted_at	datetime(6)	
+                                created_at	timestamp	,
+                                updated_at	timestamp	,
+                                deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS review_survey;
@@ -301,9 +301,9 @@ CREATE TABLE review_survey (
                                  review_id	bigint	,
                                  review_survey_category_id	bigint	,
                                  survey_content_id	bigint	,
-                                 created_at	datetime(6)	,
-                                 updated_at	datetime(6)	,
-                                 deleted_at	datetime(6)	
+                                 created_at	timestamp	,
+                                 updated_at	timestamp	,
+                                 deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS review_survey_category;
@@ -314,9 +314,9 @@ CREATE TABLE review_survey_category (
 
                                           product_id	bigint	,
                                           name	varchar(255)	,
-                                          created_at	datetime(6)	,
-                                          updated_at	datetime(6)	,
-                                          deleted_at	datetime(6)	
+                                          created_at	timestamp	,
+                                          updated_at	timestamp	,
+                                          deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS survey_content;
@@ -328,9 +328,9 @@ CREATE TABLE survey_content (
                                   review_survey_category_id	bigint	,
                                   seq_no	bigint	,
                                   content	varchar(255)	,
-                                  created_at	datetime(6)	,
-                                  updated_at	datetime(6)	,
-                                  deleted_at	datetime(6)	
+                                  created_at	timestamp	,
+                                  updated_at	timestamp	,
+                                  deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS board;
@@ -342,9 +342,9 @@ CREATE TABLE board (
                          type	varchar(255)	,
                          subject	varchar(255)	,
                          contents	varchar(255)	,
-                         created_at	datetime(6)	,
-                         updated_at	datetime(6)	,
-                         deleted_at	datetime(6)	
+                         created_at	timestamp	,
+                         updated_at	timestamp	,
+                         deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS qna;
@@ -357,9 +357,9 @@ CREATE TABLE qna (
                        user_id	bigint	,
                        content_type	varchar(255)	,
                        content	text	,
-                       created_at	datetime(6)	,
-                       updated_at	datetime(6)	,
-                       deleted_at	datetime(6)	
+                       created_at	timestamp	,
+                       updated_at	timestamp	,
+                       deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS help_desk;
@@ -373,9 +373,9 @@ CREATE TABLE help_desk (
                              prod_order_id	bigint	,
                              contents_type	varchar(255)	,
                              content	text	,
-                             created_at	datetime(6)	,
-                             updated_at	datetime(6)	,
-                             deleted_at	datetime(6)	
+                             created_at	timestamp	,
+                             updated_at	timestamp	,
+                             deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS delivery;
@@ -391,11 +391,11 @@ CREATE TABLE delivery (
                             carrier	varchar(255)	,
                             tracking_no	varchar(255)	,
                             status	varchar(255)	,
-                            ship_date	datetime(6)	,
-                            delivered_date	datetime(6)	,
-                            created_at	datetime(6)	,
-                            updated_at	datetime(6)	,
-                            deleted_at	datetime(6)	
+                            ship_date	timestamp	,
+                            delivered_date	timestamp	,
+                            created_at	timestamp	,
+                            updated_at	timestamp	,
+                            deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS estimated_time;
@@ -404,11 +404,11 @@ CREATE TABLE estimated_time (
                                   estimated_time_id	bigint auto_increment
                                       primary key,
 
-                                  hour	bigint	,
+                                  hours	bigint	,
                                   add_day	bigint	,
-                                  created_at	datetime(6)	,
-                                  updated_at	datetime(6)	,
-                                  deleted_at	datetime(6)	
+                                  created_at	timestamp	,
+                                  updated_at	timestamp	,
+                                  deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS coupon_budget;
@@ -419,9 +419,9 @@ CREATE TABLE coupon_budget (
                                  balance	bigint	,
                                  outgoing	bigint	,
                                  incoming	bigint	,
-                                 created_at	datetime(6)	,
-                                 updated_at	datetime(6)	,
-                                 deleted_at	datetime(6)	
+                                 created_at	timestamp	,
+                                 updated_at	timestamp	,
+                                 deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS coupon;
@@ -435,11 +435,11 @@ CREATE TABLE coupon (
                           price	varchar(255)	,
                           count	bigint	,
                           minimum_price	bigint	,
-                          start_date	datetime(6)	,
-                          end_date	datetime(6)	,
-                          created_at	datetime(6)	,
-                          updated_at	datetime(6)	,
-                          deleted_at	datetime(6)	
+                          start_date	timestamp	,
+                          end_date	timestamp	,
+                          created_at	timestamp	,
+                          updated_at	timestamp	,
+                          deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS point;
@@ -454,9 +454,9 @@ CREATE TABLE point (
                          balance	bigint	,
                          type	varchar(255)	,
                          comments	varchar(255)	,
-                         created_at	datetime(6)	,
-                         updated_at	datetime(6)	,
-                         deleted_at	datetime(6)	
+                         created_at	timestamp	,
+                         updated_at	timestamp	,
+                         deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS member_coupon;
@@ -466,11 +466,11 @@ CREATE TABLE member_coupon (
                                  member_id	bigint	,
                                  coupon_id	bigint	,
                                  is_used	bit	,
-                                 used_date	datetime(6)	,
-                                 end_date	datetime(6)	,
-                                 created_at	datetime(6)	,
-                                 updated_at	datetime(6)	,
-                                 deleted_at	datetime(6)	
+                                 used_date	timestamp	,
+                                 end_date	timestamp	,
+                                 created_at	timestamp	,
+                                 updated_at	timestamp	,
+                                 deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS admin;
@@ -481,9 +481,9 @@ CREATE TABLE admin (
                          password	varchar(255)	,
                          name	varchar(255)	,
                          level	bigint	,
-                         created_at	datetime(6)	,
-                         updated_at	datetime(6)	,
-                         deleted_at	datetime(6)	
+                         created_at	timestamp	,
+                         updated_at	timestamp	,
+                         deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS cart;
@@ -542,9 +542,9 @@ CREATE TABLE prod_option (
                                prod_option_id	bigint auto_increment primary key,
                                product_id	bigint	,
                                option_id	bigint	,
-                               created_at	datetime(6)	,
-                               updated_at	datetime(6)	,
-                               deleted_at	datetime(6)
+                               created_at	timestamp	,
+                               updated_at	timestamp	,
+                               deleted_at	timestamp
 );
 
 DROP TABLE IF EXISTS product;
@@ -560,9 +560,9 @@ CREATE TABLE product (
                            stock	bigint	,
                            thumb_img	varchar(255)	,
                            discount_rate	bigint	,
-                           created_at	datetime(6)	,
-                           updated_at	datetime(6)	,
-                           deleted_at	datetime(6)	
+                           created_at	timestamp	,
+                           updated_at	timestamp	,
+                           deleted_at	timestamp	
 );
 
 DROP TABLE IF EXISTS seller_account;

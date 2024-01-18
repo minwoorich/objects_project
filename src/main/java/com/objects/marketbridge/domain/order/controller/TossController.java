@@ -3,7 +3,7 @@ package com.objects.marketbridge.domain.order.controller;
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
 import com.objects.marketbridge.domain.order.service.TossApiService;
 import com.objects.marketbridge.domain.payment.dto.TossConfirmRequest;
-import com.objects.marketbridge.domain.payment.service.PaymentService;
+import com.objects.marketbridge.domain.payment.service.CreatePaymentService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import com.objects.marketbridge.global.security.annotation.AuthMemberId;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TossController {
 
-    private final PaymentService paymentService;
+    private final CreatePaymentService createPaymentService;
     private final TossApiService tossApiService;
 
     @GetMapping("/payments/toss/success")
@@ -31,7 +31,7 @@ public class TossController {
                 tossApiService.requestPaymentAccept(new TossConfirmRequest(paymentKey, orderNo, totalOrderPrice));
 
         // 2. Payment 생성
-        paymentService.create(tossPaymentsResponse);
+        createPaymentService.create(tossPaymentsResponse);
 
         // 3.
         // TODO : 1) 판매자 금액 추가(실제입금은 배치로 들어가겠지만, 우선 어딘가에 판매자의 돈이 올라갔음을 저장해놔야함)

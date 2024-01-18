@@ -65,7 +65,7 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     }
 
     @Override
-    public ProdOrderDetail findByOrderNo(String orderNo) {
+    public List<ProdOrderDetail> findByOrderNo(String orderNo) {
         return orderDetailJpaRepository.findByOrderNo(orderNo);
     }
 

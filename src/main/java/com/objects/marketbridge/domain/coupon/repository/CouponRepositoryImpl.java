@@ -27,4 +27,13 @@ public class CouponRepositoryImpl implements CouponRepository {
         couponJpaRepository.save(coupon);
     }
 
+    @Override
+    public void saveAll(List<Coupon> coupons) {
+        couponJpaRepository.saveAll(coupons);
+    }
+
+    @Override
+    public List<Coupon> findAll() {
+        return couponJpaRepository.findAll();
+    }
 }

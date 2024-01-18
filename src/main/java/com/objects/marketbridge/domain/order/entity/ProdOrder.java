@@ -63,13 +63,14 @@ public class ProdOrder extends BaseEntity {
         prodOrderDetail.setOrder(this);
     }
 
-    public static ProdOrder create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long totalUsedCouponPrice){
+    public static ProdOrder create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice, Long totalUsedCouponPrice){
         return ProdOrder.builder()
                 .member(member)
                 .address(address)
                 .orderName(orderName)
                 .orderNo(orderNo)
                 .totalPrice(totalPrice)
+                .realPrice(realPrice)
                 .totalUsedCouponPrice(totalUsedCouponPrice)
                 .build();
     }
