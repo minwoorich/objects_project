@@ -258,6 +258,7 @@ CREATE TABLE payment (
                            v_account_no	varchar(255)	,
                            v_due_date	varchar(255)	,
                            v_expired	bit	,
+                           v_bank	varchar(255)	,
                            tr_bank_code	varchar(255)	,
                            deleted_at	timestamp	,
                            updated_at	timestamp	,

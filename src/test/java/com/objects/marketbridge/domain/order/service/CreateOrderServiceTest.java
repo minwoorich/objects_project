@@ -18,7 +18,6 @@ import com.objects.marketbridge.domain.product.repository.ProductJpaRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
