@@ -58,7 +58,7 @@ public class ProductService {
 
             ProductImage productImage = ProductImage.builder()
                     .image(imageRepository.findById(itemImg.getId()))
-                    .product(productRepository.findById(product.getId()).orElseThrow(NullPointerException::new))
+                    .product(productRepository.findById(product.getId()))
                     .build();
 
             productImageRepository.save(productImage);
@@ -73,7 +73,7 @@ public class ProductService {
 
             ProductImage productImage = ProductImage.builder()
                     .image(imageRepository.findById(detailImg.getId()))
-                    .product(productRepository.findById(product.getId()).orElseThrow(NullPointerException::new))
+                    .product(productRepository.findById(product.getId()))
                     .build();
 
             productImageRepository.save(productImage);
@@ -89,7 +89,7 @@ public class ProductService {
         List<String> optionNames = productRequestDto.getOptionNames();
         for (String optionName : optionNames) {
             ProdOption prodOption = ProdOption.builder()
-                    .product(productRepository.findById(product.getId()).orElseThrow(NullPointerException::new))
+                    .product(productRepository.findById(product.getId()))
                     .option(optionRepository.findByName(optionName))
                     .build();
 
