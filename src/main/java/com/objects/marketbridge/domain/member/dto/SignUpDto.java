@@ -8,7 +8,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 @Getter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class SignUpDto {

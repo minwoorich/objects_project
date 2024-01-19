@@ -8,6 +8,7 @@ import com.objects.marketbridge.domain.model.Membership;
 import com.objects.marketbridge.domain.model.Point;
 import com.objects.marketbridge.domain.point.repository.PointRepository;
 import com.objects.marketbridge.global.error.EntityNotFoundException;
+import com.objects.marketbridge.global.security.jwt.JwtTokenProvider;
 import org.junit.jupiter.api.AfterEach;
 import com.objects.marketbridge.domain.model.SocialType;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,9 @@ class MemberServiceTest {
 
     @Autowired
     PointRepository pointRepository;
+
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
 
     @BeforeEach
     void init() {
@@ -65,7 +69,7 @@ class MemberServiceTest {
             String email = "iiwisii@naver.com";
 
         //when
-        boolean isDuplicateEmail = memberService.isDuplicateEmail(email);
+        boolean isDuplicateEmail = (memberService.isDuplicateEmail(email)).isChecked();
 
         //then
         assertThat(isDuplicateEmail).isTrue();
@@ -78,7 +82,7 @@ class MemberServiceTest {
         String email = "iiii@naver.com";
 
         //when
-        boolean isDuplicateEmail = memberService.isDuplicateEmail(email);
+        boolean isDuplicateEmail = (memberService.isDuplicateEmail(email)).isChecked();
 
         //then
         assertThat(isDuplicateEmail).isFalse();
@@ -124,5 +128,23 @@ class MemberServiceTest {
     }
 
     //sign up 테스트
+    @Test
+    public void signUpTest() {
+        //given
+
+        //when
+
+        //then
+    }
+
     //sign in 테스트
+    @Test
+    public void signInTest() {
+        //given
+
+        //when
+
+        //then
+    }
+
 }
