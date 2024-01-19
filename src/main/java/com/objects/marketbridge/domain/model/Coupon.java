@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -19,13 +23,16 @@ public class Coupon extends BaseEntity {
     @Column(name = "coupon_id")
     private Long id;
 
+    private String name;
+
+    private Long price;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private String name;
-
-    private Long price;
+    @OneToMany(mappedBy = "coupon")
+    private List<MemberCoupon> memberCoupons = new ArrayList<>();
 
     private Long count;
 
@@ -46,13 +53,14 @@ public class Coupon extends BaseEntity {
         this.startDate = startDate;
         this.endDate = endDate;
     }
-    //    private Coupon(String name, Long price, Product product, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
-//        this.name = name;
-//        this.price = price;
-//        this.product = product;
-//        this.count = count;
-//        this.minimumPrice = minimumPrice;
-//        this.startDate = startDate;
-//        this.endDate = endDate;
-//    }
+
+    public void addMemberCoupon(MemberCoupon memberCoupon) {
+        memberCoupons.add(memberCoupon);
+        memberCoupon.setCoupon(this);
+    }
+
+    public void returnCoupon() {
+        memberCoupons.forEach(MemberCoupon::returnCoupon);
+        this.count += 1;
+    }
 }

@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface RefundClient {
 
-    Optional<RefundInfoDto> refund(String accountNo, Float refundPrice);
+    Optional<RefundInfoDto> refund(String accountNo, Long refundPrice);
 }

@@ -6,9 +6,9 @@ import com.objects.marketbridge.domain.product.repository.Image.ImageRepository;
 import com.objects.marketbridge.domain.product.repository.Image.ProductImageRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import com.objects.marketbridge.domain.product.repository.category.CategoryRepository;
-import com.objects.marketbridge.domain.product.repository.option.OptionJpaRepository;
 import com.objects.marketbridge.domain.product.repository.option.OptionRepository;
 import com.objects.marketbridge.domain.product.repository.option.ProdOptionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,12 +53,14 @@ public class ProductService {
         // 상품등록시 image테이블에 아이템이미지url들 추가, product_image테이블에 추가.
         List<String> itemImgUrls = productRequestDto.getItemImgUrls();
         for (String itemImgUrl : itemImgUrls) {
-            Image itemImg = Image.builder().url(itemImgUrl).build();
+            Image itemImg = Image.builder()
+                    .type(ImageType.ITEM_IMG.toString())
+                    .url(itemImgUrl).build();
             imageRepository.save(itemImg);
 
             ProductImage productImage = ProductImage.builder()
                     .image(imageRepository.findById(itemImg.getId()))
-                    .product(productRepository.findById(product.getId()).orElseThrow(NullPointerException::new))
+                    .product(productRepository.findById(product.getId()))
                     .build();
 
             productImageRepository.save(productImage);
@@ -68,12 +70,14 @@ public class ProductService {
         // 상품등록시 image테이블에 디테일이미지url들 추가, product_image테이블에 추가.
         List<String> detailImgUrls = productRequestDto.getDetailImgUrls();
         for (String detailImgUrl : detailImgUrls) {
-            Image detailImg = Image.builder().url(detailImgUrl).build();
+            Image detailImg = Image.builder()
+                    .type(ImageType.DETAIL_IMG.toString())
+                    .url(detailImgUrl).build();
             imageRepository.save(detailImg);
 
             ProductImage productImage = ProductImage.builder()
                     .image(imageRepository.findById(detailImg.getId()))
-                    .product(productRepository.findById(product.getId()).orElseThrow(NullPointerException::new))
+                    .product(productRepository.findById(product.getId()))
                     .build();
 
             productImageRepository.save(productImage);
@@ -89,7 +93,7 @@ public class ProductService {
         List<String> optionNames = productRequestDto.getOptionNames();
         for (String optionName : optionNames) {
             ProdOption prodOption = ProdOption.builder()
-                    .product(productRepository.findById(product.getId()).orElseThrow(NullPointerException::new))
+                    .product(productRepository.findById(product.getId()))
                     .option(optionRepository.findByName(optionName))
                     .build();
 

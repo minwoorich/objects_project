@@ -17,7 +17,7 @@ public class RefundService {
     private final RefundClient refundClient;
     private final RefundHistoryRepository refundHistoryRepository;
 
-    public RefundDto refund(String accountNo, Float refundPrice) {
+    public RefundDto refund(String accountNo, Long refundPrice) {
         Optional<RefundInfoDto> refundInfo = refundClient.refund(accountNo, refundPrice);
 
         if (refundInfo.isPresent()) {
