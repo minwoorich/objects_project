@@ -158,7 +158,7 @@ VALUES
     (2, 2, 2, 'Express', 'FedEx', '9876543210', 'Delivered', NOW(), NOW(), NOW(), NOW(), NULL);
 
 -- Insert statements for estimated_time table
-INSERT INTO marketbridge.estimated_time (hour, add_day, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.estimated_time (hours, add_day, created_at, updated_at, deleted_at)
 VALUES
     (24, 2, NOW(), NOW(), NULL),
     (48, 1, NOW(), NOW(), NULL);
