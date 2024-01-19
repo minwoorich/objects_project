@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.payment.exception.exception;
+package com.objects.marketbridge.domain.payment.exception;
 
 public class RefundRejectException extends RuntimeException {
 

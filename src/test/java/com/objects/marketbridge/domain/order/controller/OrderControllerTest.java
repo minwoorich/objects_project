@@ -1,13 +1,10 @@
 package com.objects.marketbridge.domain.order.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
 import com.objects.marketbridge.domain.order.dto.ProductInfoDto;
 import com.objects.marketbridge.domain.order.service.CreateOrderService;
-import com.objects.marketbridge.domain.order.service.OrderService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

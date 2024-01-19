@@ -7,15 +7,13 @@ import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
-import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import com.objects.marketbridge.domain.order.entity.ProdOrder;
 import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.domain.payment.domain.*;
-import com.objects.marketbridge.domain.payment.service.port.PaymentRepository;
+import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +31,11 @@ import java.util.stream.Collectors;
 public class CreateOrderService {
 
     private final OrderDetailRepository orderDetailRepository;
+    private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
     private final AddressRepository addressRepository;
-    private final PaymentRepository paymentRepository;
 
 
     @Transactional
@@ -45,24 +43,17 @@ public class CreateOrderService {
 
         // 1. ProdOrder 생성
         ProdOrder prodOrder = createProdOrder(createOrderDto);
+        orderRepository.save(prodOrder);
 
         // 2. ProdOrderDetail 생성
         List<ProdOrderDetail> prodOrderDetails = createProdOrderDetail(createOrderDto);
 
-        // 3. Payment 생성
-        Payment payment = createPayment(createOrderDto);
-
-        // 4. ProdOrder - ProdOrderDetail 연관관계 매핑
+        // 3. ProdOrder - ProdOrderDetail 연관관계 매핑
         for (ProdOrderDetail orderDetail : prodOrderDetails) {
             prodOrder.addOrderDetail(orderDetail);
         }
-
-        // 4.1 ProdOrder - Payment 연관관계 매핑
-        payment.linkProdOrder(prodOrder);
-
-        // 5. 영속성 저장
+        // 4. 영속성 저장
         orderDetailRepository.saveAll(prodOrderDetails);
-        paymentRepository.save(payment);
     }
 
     private ProdOrder createProdOrder(CreateOrderDto createOrderDto) {
@@ -72,9 +63,10 @@ public class CreateOrderService {
         String orderName = createOrderDto.getOrderName();
         String orderNo = createOrderDto.getOrderNo();
         Long totalOrderPrice = createOrderDto.getTotalOrderPrice();
+        Long realOrderPrice = createOrderDto.getRealOrderPrice();
         Long totalUsedCouponPrice = geTotalCouponPrice(createOrderDto);
 
-        return ProdOrder.create(member, address, orderName, orderNo, totalOrderPrice, totalUsedCouponPrice);
+        return ProdOrder.create(member, address, orderName, orderNo, totalOrderPrice, realOrderPrice, totalUsedCouponPrice);
     }
 
     private Long geTotalCouponPrice(CreateOrderDto createOrderDto) {
@@ -91,12 +83,15 @@ public class CreateOrderService {
         for (ProductValue productValue : createOrderDto.getProductValues()) {
 
             Product product = productRepository.findById(productValue.getProductId());
-            Coupon coupon = couponRepository.findById(productValue.getCouponId());
+            // 쿠폰이 적용안된 product 가 존재할 경우 그냥 null 저장
+            Coupon coupon = (productValue.getCouponId() != null) ? couponRepository.findById(productValue.getCouponId()) : null ;
+            String orderNo = createOrderDto.getOrderNo();
             Long quantity = productValue.getQuantity();
             Long price = product.getPrice();
 
             // ProdOrderDetail 엔티티 생성
-            ProdOrderDetail prodOrderDetail = ProdOrderDetail.create(product, coupon, quantity, price, StatusCodeType.ORDER_INIT.toString());
+            ProdOrderDetail prodOrderDetail =
+                    ProdOrderDetail.create(product, orderNo, coupon, quantity, price, StatusCodeType.ORDER_INIT.getCode());
 
             // prodOrderDetails 에 추가
             prodOrderDetails.add(prodOrderDetail);
@@ -104,23 +99,4 @@ public class CreateOrderService {
 
         return prodOrderDetails;
     }
-
-    private Payment createPayment(CreateOrderDto createOrderDto) {
-
-        String orderNo = createOrderDto.getOrderNo();
-        String paymentType = createOrderDto.getPaymentType();
-        String paymentMethod = createOrderDto.getPaymentMethod();
-        String paymentKey = createOrderDto.getPaymentKey();
-        String paymentStatus = createOrderDto.getPaymentStatus();
-        String refundStatus = createOrderDto.getRefundStatus();
-        PaymentCancel paymentCancel = createOrderDto.getPaymentCancel();
-        Card card = createOrderDto.getCard();
-        VirtualAccount virtual = createOrderDto.getVirtual();
-        Transfer transfer = createOrderDto.getTransfer();
-
-        return Payment.create(orderNo, paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,   card, virtual, transfer);
-    }
-
-
-
 }

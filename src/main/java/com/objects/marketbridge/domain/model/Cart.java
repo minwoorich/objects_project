@@ -15,23 +15,31 @@ public class Cart extends BaseEntity {
     @Column(name = "cart_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member memberId;
 
-    private boolean isSubs;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    private Boolean isSubs;
 
     private Long quantity;
 
     @Builder
-    private Cart(Product product, Member memberId, boolean isSubs, Long quantity) {
-        this.product = product;
+
+    public Cart(Member memberId, Product product, Boolean isSubs, Long quantity) {
         this.memberId = memberId;
+        this.product = product;
         this.isSubs = isSubs;
         this.quantity = quantity;
     }
+
+    //    private Cart(Product product, Member memberId, boolean isSubs, Long quantity) {
+//        this.product = product;
+//        this.memberId = memberId;
+//        this.isSubs = isSubs;
+//        this.quantity = quantity;
+//    }
 }

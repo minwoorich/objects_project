@@ -36,8 +36,6 @@ class MemberServiceTest {
     @Autowired
     PointRepository pointRepository;
 
-    Member originMember;
-
     @BeforeEach
     void init() {
         Member member = Member.builder()
@@ -91,11 +89,12 @@ class MemberServiceTest {
     @DisplayName("멤버십 변경 API")
     public void testUpdateWowMemberShip(){
         //given
-        Membership memberShipData = Membership.BASIC;
+        Member member = memberRepository.findByEmail("iiwisii@naver.com").orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
+        String memberShipData = "BASIC";
         //when
-        memberService.changeMemberShip(originMember.getId());
+        memberService.changeMemberShip(member.getId());
         //then
-        assertThat(originMember.getMembership()).isEqualTo(memberShipData);
+        assertThat(member.getMembership()).isEqualTo(memberShipData);
     }
 
 
