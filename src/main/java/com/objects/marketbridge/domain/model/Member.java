@@ -1,25 +1,25 @@
 package com.objects.marketbridge.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Slf4j
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private SocialType socialType;
-
-    @Enumerated(EnumType.STRING)
-    private Membership membership;
+    private String socialType;
+    @Setter
+    private String membership;
 
     private String email;
 
@@ -30,12 +30,20 @@ public class Member extends BaseEntity {
     private String phoneNo;
 
     // 알림
-    private boolean isAlert;
+    private Boolean isAlert;
     // 약관동의
-    private boolean isAgree;
+    private Boolean isAgree;
+
+
+    // 양방향 설정
+    @OneToMany(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses = new ArrayList<>();
+
+    @OneToOne(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
+    private Point point;
 
     @Builder
-    private Member(SocialType socialType, Membership membership, String email, String password, String name, String phoneNo, boolean isAlert, boolean isAgree) {
+    private Member(String socialType, String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
         this.socialType = socialType;
         this.membership = membership;
         this.email = email;
@@ -46,6 +54,18 @@ public class Member extends BaseEntity {
         this.isAgree = isAgree;
     }
 
+    public void changePoint(Point point) {
+        this.point = point;
+    }
+
+//    public static Member fromDto(CreateMember createMember){
+//        return Member.builder()
+//                .email(createMember.getEmail())
+//                .name(createMember.getName())
+//                .phoneNo(createMember.getPhoneNo())
+//                .password(createMember.getPassword())
+//                .isAgree(createMember.getIsAgree()).build();
+//    }
 }
 
 

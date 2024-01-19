@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProdOption extends BaseEntity{
-
+public class ProdOption extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "prod_option_id")
@@ -18,21 +17,15 @@ public class ProdOption extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product productId;
+    private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "option_category_id")
-    private OptionCategory optionCategoryId;
-
-    private String name;
-
-    private Integer price;
+    @JoinColumn(name = "option_id")
+    private Option option;
 
     @Builder
-    private ProdOption(Product productId, OptionCategory optionCategoryId, String name, Integer price) {
-        this.productId = productId;
-        this.optionCategoryId = optionCategoryId;
-        this.name = name;
-        this.price = price;
+    private ProdOption(Product product, Option option) {
+        this.product = product;
+        this.option = option;
     }
 }

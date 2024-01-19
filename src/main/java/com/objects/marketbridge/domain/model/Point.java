@@ -1,10 +1,13 @@
 package com.objects.marketbridge.domain.model;
 
+import com.objects.marketbridge.domain.member.dto.FindPointDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -18,25 +21,41 @@ public class Point extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member memberId;
+    private Member member;
 
-//    private Long orderId;
+    private Long inPoint;
 
-    private Integer inPoint;
+    private Long outPoint;
 
-    private Integer outPoint;
-
-    private Integer balance;
+    private Long balance;
 
     private String comments;
 
+    private LocalDateTime createdAt;
+
 
     @Builder //order_id 제거
-    private Point(Member memberId, Integer inPoint, Integer outPoint, Integer balance, String comments) {
-        this.memberId = memberId;
+    private Point(Member member, Long inPoint, Long outPoint, Long balance, String comments) {
+        this.member = member;
         this.inPoint = inPoint;
         this.outPoint = outPoint;
         this.balance = balance;
         this.comments = comments;
+    }
+
+    // 연관관계 편의 메서드 -> Point 쪽에서 한번에 저장
+    public void setMember(Member member) {
+        this.member = member;
+        member.changePoint(this);
+    }
+
+    public static FindPointDto toDto(Member member){
+        return FindPointDto.builder()
+                .balance(member.getPoint().getBalance())
+                .inPoint(member.getPoint().getInPoint())
+                .outPoint(member.getPoint().getOutPoint())
+                .comments(member.getPoint().getComments())
+                .createdAt(member.getPoint().getCreatedAt())
+                .build();
     }
 }

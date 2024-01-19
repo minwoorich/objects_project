@@ -3,10 +3,12 @@ package com.objects.marketbridge.domain.model;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class AddressValue {
 
     private String phoneNo;
@@ -14,16 +16,18 @@ public class AddressValue {
     private String city;
     private String street;
     private String zipcode;
+    private String detail;
 
     private String alias;
 
     @Builder
-    private AddressValue(String phoneNo, String name, String city, String street, String zipcode, String alias) {
+    private AddressValue(String phoneNo, String name, String city, String street, String zipcode, String detail, String alias) {
         this.phoneNo = phoneNo;
         this.name = name;
         this.city = city;
         this.street = street;
         this.zipcode = zipcode;
+        this.detail = detail;
         this.alias = alias;
     }
 }
