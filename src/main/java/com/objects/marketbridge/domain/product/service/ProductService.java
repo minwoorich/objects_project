@@ -1,16 +1,19 @@
 package com.objects.marketbridge.domain.product.service;
 
-import com.objects.marketbridge.domain.model.Product;
-import com.objects.marketbridge.domain.product.dto.ProductDto;
+import com.objects.marketbridge.domain.model.*;
 import com.objects.marketbridge.domain.product.dto.ProductRequestDto;
-import com.objects.marketbridge.domain.product.dto.ProductResponseDto;
+import com.objects.marketbridge.domain.product.repository.Image.ImageRepository;
+import com.objects.marketbridge.domain.product.repository.Image.ProductImageRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import com.objects.marketbridge.domain.product.repository.ProductRepositoryImpl;
+import com.objects.marketbridge.domain.product.repository.category.CategoryRepository;
+import com.objects.marketbridge.domain.product.repository.option.OptionJpaRepository;
+import com.objects.marketbridge.domain.product.repository.option.OptionRepository;
+import com.objects.marketbridge.domain.product.repository.option.ProdOptionRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -18,26 +21,82 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductRepository productRepositoryImpl;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
+    private final ProductImageRepository productImageRepository;
+    private final OptionRepository optionRepository;
+    private final ProdOptionRepository prodOptionRepository;
 
     @Transactional
     public void registerProduct(ProductRequestDto productRequestDto) {
 
-        // ProductDto에서 필요한 정보 추출하여 Product 엔터티 생성
+        // category가 DB에 등록되어있다고 가정.
+        Category category = categoryRepository.findById(productRequestDto.getCategoryId());
+
+        // ProductRequestDto에서 필요한 정보 추출하여 Product 엔터티 생성
         Product product = Product.builder()
-                .categoryId(productRequestDto.getCategoryId())
+                .category(category)
                 .isOwn(productRequestDto.getIsOwn())
                 .name(productRequestDto.getName())
                 .price(productRequestDto.getPrice())
                 .isSubs(productRequestDto.getIsSubs())
+                .stock(productRequestDto.getStock())
                 .thumbImg(productRequestDto.getThumbImg())
                 .discountRate(productRequestDto.getDiscountRate())
                 .build();
 
         // ProductRepositoryImpl 통해 엔터티를 저장
-        productRepositoryImpl.save(product);
+        productRepository.save(product);
 
+
+        // 상품등록시 image테이블에 아이템이미지url들 추가, product_image테이블에 추가.
+        List<String> itemImgUrls = productRequestDto.getItemImgUrls();
+        for (String itemImgUrl : itemImgUrls) {
+            Image itemImg = Image.builder().url(itemImgUrl).build();
+            imageRepository.save(itemImg);
+
+            ProductImage productImage = ProductImage.builder()
+                    .image(imageRepository.findById(itemImg.getId()))
+                    .product(productRepository.findById(product.getId()).orElseThrow(NullPointerException::new))
+                    .build();
+
+            productImageRepository.save(productImage);
+
+        }
+
+        // 상품등록시 image테이블에 디테일이미지url들 추가, product_image테이블에 추가.
+        List<String> detailImgUrls = productRequestDto.getDetailImgUrls();
+        for (String detailImgUrl : detailImgUrls) {
+            Image detailImg = Image.builder().url(detailImgUrl).build();
+            imageRepository.save(detailImg);
+
+            ProductImage productImage = ProductImage.builder()
+                    .image(imageRepository.findById(detailImg.getId()))
+                    .product(productRepository.findById(product.getId()).orElseThrow(NullPointerException::new))
+                    .build();
+
+            productImageRepository.save(productImage);
+        }
+
+
+        // product ----- product_option ---- options ---- option_category 연결되어 있음.
+        // 1. option_category테이블에 데이터가 등록되어있다고 가정. (색상, 사이즈 등)
+        // 2. options테이블에도 데이터가 등록되어 있다고 가정. (색상-white, 사이즈-XL 등. 따로 api만들어야할듯.)
+        // 하나의 상품에대한 재고는(stock)은 options테이블의 해당옵션의 stock(재고)수임.
+        // 3. 등록 => ProductRequestDto에 optionNames(String배열)를 Json형식으로 받아와서
+        // product(id)와 option(id)가 등록되게 prod_option테이블에 등록.
+        List<String> optionNames = productRequestDto.getOptionNames();
+        for (String optionName : optionNames) {
+            ProdOption prodOption = ProdOption.builder()
+                    .product(productRepository.findById(product.getId()).orElseThrow(NullPointerException::new))
+                    .option(optionRepository.findByName(optionName))
+                    .build();
+
+            prodOptionRepository.save(prodOption);
+        }
     }
+
 
     public void getProductList(){
     }
