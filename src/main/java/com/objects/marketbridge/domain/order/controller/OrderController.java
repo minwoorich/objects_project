@@ -18,10 +18,7 @@ import com.objects.marketbridge.global.security.annotation.UserAuthorize;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,7 +57,6 @@ public class OrderController {
                 .orElseThrow(() -> new CustomLogicException(SHIPPING_ADDRESS_NOT_REGISTERED.getMessage(), SHIPPING_ADDRESS_NOT_REGISTERED));
     }
 
-    @UserAuthorize
     @PostMapping("/orders/checkout")
     public ApiResponse<CheckoutRequest> saveOrderTemp(
             @AuthMemberId Long memberId,

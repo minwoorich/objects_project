@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Singular;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class CheckoutRequest {
     private String failUrl;
 
     @Builder
-    public CheckoutRequest(String orderId, Long amount, Long addressId, String orderName, List<ProductValue> productValues, String successUrl, String failUrl) {
+    public CheckoutRequest(String orderId, Long amount, Long addressId, String orderName, @Singular List<ProductValue> productValues, String successUrl, String failUrl) {
         this.orderId = orderId;
         this.amount = amount;
         this.addressId = addressId;

@@ -5,8 +5,8 @@ VALUES
 
 -- Insert statements for member table
 INSERT INTO marketbridge.member (member_type, social_type, membership, email, password, name, phone_no, birth, is_alert, is_agree, created_at, updated_at, deleted_at)
-VALUES ('Regular', 'Email', 'Silver', 'user1@example.com', 'password123', 'User One', '010-1234-5678', '1990-01-01', 1, 1, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
-('VIP', 'Facebook', 'Gold', 'user2@example.com', 'securepass456', 'User Two', '010-9876-5432', '1985-05-15', 1, 1, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
+VALUES ('Regular', 'Email', 'Silver', 'member1@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member One', '010-1234-5678', '1990-01-01', 1, 1, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
+('VIP', 'Facebook', 'Gold', 'member2@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member Two', '010-9876-5432', '1985-05-15', 1, 1, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
 
 -- Insert statements for seller table
 INSERT INTO marketbridge.seller (name, biz_no, owner, category, detail, address, license_no, email, account_no, created_at, updated_at, deleted_at)
@@ -21,7 +21,7 @@ VALUES
     (2, 'Office', 'Jane Doe', '9876543210', 'Busan', '456 Oak St', '54321', 1, NOW(), NOW(), NULL);
 
 -- Insert statements for social_credential table
-INSERT INTO marketbridge.social_credential (user_id, token_id, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.social_credential (member_id, token_id, created_at, updated_at, deleted_at)
 VALUES
     (1, 'token123', NOW(), NOW(), NULL),
     (2, 'token456', NOW(), NOW(), NULL);
@@ -140,13 +140,13 @@ VALUES
     ('News', 'Exciting Update', 'Check out our latest news!', NOW(), NOW(), NULL);
 
 -- Insert statements for qna table
-INSERT INTO marketbridge.qna (seller_id, user_id, content_type, content, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.qna (seller_id, member_id, content_type, content, created_at, updated_at, deleted_at)
 VALUES
     (1, 1, 'Product', 'Do you have this product in different colors?', NOW(), NOW(), NULL),
     (2, 2, 'Shipping', 'When will my order be delivered?', NOW(), NOW(), NULL);
 
 -- Insert statements for help_desk table
-INSERT INTO marketbridge.help_desk (user_id, product_id, prod_order_id, contents_type, content, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.help_desk (member_id, product_id, prod_order_id, contents_type, content, created_at, updated_at, deleted_at)
 VALUES
     (1, 1, 1, 'Product Inquiry', 'I have a question about this product.', NOW(), NOW(), NULL),
     (2, 2, 2, 'Order Issue', 'I need assistance with my order.', NOW(), NOW(), NULL);
@@ -176,7 +176,7 @@ VALUES
     (2, 'Free Shipping Coupon', '30', 50, 100, '2024-03-01', '2024-04-01', NOW(), NOW(), NULL);
 
 -- Insert statements for point table
-INSERT INTO marketbridge.point (user_id, in_point, out_point, balance, type, comments, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.point (member_id, in_point, out_point, balance, type, comments, created_at, updated_at, deleted_at)
 VALUES
     (1, 100, 50, 50, 'Credit', 'Reward points for order', NOW(), NOW(), NULL),
     (2, 80, 30, 50, 'Credit', 'Reward points for order', NOW(), NOW(), NULL);
@@ -190,7 +190,7 @@ VALUES
 -- Insert statements for admin table
 INSERT INTO marketbridge.admin (emp_no, password, name, level, created_at, updated_at, deleted_at)
 VALUES
-    ('EMP001', 'admin123', 'Admin User', 1, NOW(), NOW(), NULL),
+    ('EMP001', 'admin123', 'Admin member', 1, NOW(), NOW(), NULL),
     ('EMP002', 'admin456', 'Super Admin', 2, NOW(), NOW(), NULL);
 
 -- Insert statements for cart table
