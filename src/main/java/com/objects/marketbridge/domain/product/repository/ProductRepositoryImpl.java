@@ -2,6 +2,7 @@ package com.objects.marketbridge.domain.product.repository;
 
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.product.dto.ProductRequestDto;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,8 +16,13 @@ public class ProductRepositoryImpl implements ProductRepository {
     private final ProductJpaRepository productJpaRepository;
 
     @Override
-    public Optional<Product> findById(Long id) {
-        return productJpaRepository.findById(id);
+    public List<Product> findAll() {
+        return productJpaRepository.findAll();
+    }
+
+    @Override
+    public Product findById(Long id) {
+        return productJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

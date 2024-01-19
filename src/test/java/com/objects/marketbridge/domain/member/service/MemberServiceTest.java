@@ -7,7 +7,7 @@ import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Membership;
 import com.objects.marketbridge.domain.model.Point;
 import com.objects.marketbridge.domain.point.repository.PointRepository;
-import com.objects.marketbridge.global.error.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import com.objects.marketbridge.domain.model.SocialType;
 import lombok.extern.slf4j.Slf4j;
@@ -102,7 +102,7 @@ class MemberServiceTest {
     @DisplayName("포인트 조회 API")
     public void testFindPointById(){
             //given
-        Member member = memberRepository.findByEmail("iiwisii@naver.com").orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
+        Member member = memberRepository.findByEmail("iiwisii@naver.com").orElseThrow(EntityNotFoundException::new);
         Point point = createPoint(member);
         pointRepository.save(point);
 

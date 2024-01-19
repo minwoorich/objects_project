@@ -10,19 +10,17 @@ import java.util.UUID;
 public class CheckoutResponse {
     // 이름, 배송지, 연락처
     AddressValue address;
-    // 보유 포인트
-    Long pointBalance;
 
     @Builder
-    public CheckoutResponse(AddressValue address, Long pointBalance) {
+    public CheckoutResponse(AddressValue address) {
         this.address = address;
-        this.pointBalance = pointBalance;
     }
 
-    public static CheckoutResponse from(AddressValue address, Long pointBalance) {
+
+    public static CheckoutResponse from(AddressValue address) {
         return CheckoutResponse.builder()
                 .address(address)
-                .pointBalance(pointBalance).build();
+                .build();
     }
 
 }

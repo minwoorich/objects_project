@@ -3,8 +3,8 @@ package com.objects.marketbridge.domain.order.controller.request;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
 import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
 import com.objects.marketbridge.domain.order.dto.ProductInfoDto;
-import com.objects.marketbridge.domain.order.exception.exception.CustomLogicException;
-import com.objects.marketbridge.domain.order.exception.exception.ErrorCode;
+import com.objects.marketbridge.global.error.CustomLogicException;
+import com.objects.marketbridge.global.error.ErrorCode;
 import com.objects.marketbridge.global.error.OrderPriceMismatchException;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,10 +17,8 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 public class CreateOrderRequest {
-    // TODO : 이때 이미 orderNo 를 만들어놓고 주문테이블에 저장하든, 캐시에 저장하든 해놔야함.
-    // 왜냐하면 클라이언트가 결제요청을 할당시에 이미 orderNo를 알고 있기 때문
 
-//    @NotNull
+    @NotNull
     private String paymentMethod;
 
     @NotNull
@@ -64,7 +62,6 @@ public class CreateOrderRequest {
         return CreateProdOrderDto.builder()
                 .orderNo(orderNo)
                 .memberId(memberId)
-                .paymentMethod(paymentMethod)
                 .addressId(selectedAddressId)
                 .orderName(orderName)
                 .totalOrderPrice(totalOrderPrice)
