@@ -36,7 +36,7 @@ public class SignUpDto {
                 .password(member.getPassword())
                 .name(member.getName())
                 .phoneNo(member.getPhoneNo())
-                .isAgree(member.isAgree())
+                .isAgree(member.getIsAgree())
                 .build();
     }
 

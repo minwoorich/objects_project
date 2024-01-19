@@ -1,6 +1,10 @@
 package com.objects.marketbridge.domain.order.service.port;
 
-import com.objects.marketbridge.domain.order.domain.ProdOrder;
+import com.objects.marketbridge.domain.model.Product;
+import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.product.repository.ProductRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,6 +26,9 @@ class OrderRepositoryTest {
 
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    ProductRepository productRepository;
 
     @Test
     @DisplayName("주문ID로 주문을 조회한다.")
@@ -66,4 +75,26 @@ class OrderRepositoryTest {
         assertTrue(foundOrder.isPresent());
         assertThat(savedOrder.getId()).isEqualTo(foundOrder.get().getId());
     }
+
+    @Test
+    @DisplayName("주문 아이디로 주문, 주문상세, 상품을 한번에 조회 할 수 있다.")
+    public void findProdOrderWithDetailsAndProduct() {
+        // given
+        ProdOrder prodOrder = ProdOrder.builder().build();
+        Product product = Product.builder().build();
+        ProdOrderDetail prodOrderDetail = ProdOrderDetail.builder()
+                .prodOrder(prodOrder)
+                .product(product)
+                .build();
+        prodOrder.addOrderDetail(prodOrderDetail);
+        productRepository.save(product);
+        orderRepository.save(prodOrder);
+
+        // when
+        ProdOrder findOrder = orderRepository.findProdOrderWithDetailsAndProduct(prodOrder.getId()).get();
+
+        // then
+        assertThat(findOrder.getId()).isEqualTo(prodOrder.getId());
+    }
+
 }
