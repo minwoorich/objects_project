@@ -3,30 +3,28 @@ package com.objects.marketbridge.domain.order.controller.request;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Singular;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class CheckoutRequest {
 
-    @NotNull
+//    @NotNull
     private String orderId;
 
-    @NotNull
+//    @NotNull
     private Long amount;
 
-    @NotNull
+//    @NotNull
     private Long addressId;
 
-    @NotNull
+//    @NotNull
     private String orderName;
 
-    @NotNull
+//    @NotNull
     private List<ProductValue> productValues;
 
     private String successUrl;

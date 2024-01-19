@@ -1,12 +1,10 @@
 package com.objects.marketbridge.domain.product.controller;
 
-import com.objects.marketbridge.domain.model.Category;
-import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.product.dto.ProductRequestDto;
 import com.objects.marketbridge.domain.product.dto.ProductResponseDto;
 import com.objects.marketbridge.domain.product.service.ProductService;
 import com.objects.marketbridge.global.common.ApiResponse;
-import com.objects.marketbridge.global.security.annotation.UserAuthorize;
+import com.objects.marketbridge.global.security.mock.UserAuthorize;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

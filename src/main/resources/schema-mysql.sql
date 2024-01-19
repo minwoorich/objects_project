@@ -11,7 +11,6 @@ CREATE TABLE member (
                         password	varchar(255)	,
                         name	varchar(255)	,
                         phone_no	varchar(255)	,
-                        birth	varchar(255)	,
                         is_alert	bit	,
                         is_agree	bit	,
                         created_at	datetime(6)	,

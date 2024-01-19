@@ -4,9 +4,9 @@ VALUES
     (2, 'Clothing');*/
 
 -- Insert statements for member table
-INSERT INTO marketbridge.member (member_type, social_type, membership, email, password, name, phone_no, birth, is_alert, is_agree, created_at, updated_at, deleted_at)
-VALUES ('Regular', 'Email', 'Silver', 'member1@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member One', '010-1234-5678', '1990-01-01', 1, 1, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
-('VIP', 'Facebook', 'Gold', 'member2@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member Two', '010-9876-5432', '1985-05-15', 1, 1, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
+INSERT INTO marketbridge.member (member_type, social_type, membership, email, password, name, phone_no,  is_alert, is_agree, created_at, updated_at, deleted_at)
+VALUES ('Regular', 'Email', 'Silver', 'member1@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member One', '010-1234-5678',  1, 1, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
+('VIP', 'Facebook', 'Gold', 'member2@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member Two', '010-9876-5432',  1, 1, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
 
 -- Insert statements for seller table
 INSERT INTO marketbridge.seller (name, biz_no, owner, category, detail, address, license_no, email, account_no, created_at, updated_at, deleted_at)
