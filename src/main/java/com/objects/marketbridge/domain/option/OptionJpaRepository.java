@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.product.repository.option;
+package com.objects.marketbridge.domain.option;
 
 import com.objects.marketbridge.domain.model.Option;
 import org.springframework.data.jpa.repository.JpaRepository;

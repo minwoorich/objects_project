@@ -30,7 +30,8 @@ public class Product extends BaseEntity{
 //    @OneToMany(mappedBy = "product")
 //    private List<ProdOption> prodOptions = new ArrayList<>();
 
-    private String productNo;
+//    TODO 넣을지 말지
+//    private String productNo;
 
     private Boolean isOwn; // 로켓 true , 오픈 마켓 false
 
@@ -48,10 +49,9 @@ public class Product extends BaseEntity{
 
 
     @Builder
-    private Product(Category category, List<ProdOrderDetail> prodOrderDetails, String productNo, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate) {
+    private Product(Category category, List<ProdOrderDetail> prodOrderDetails, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate) {
         this.category = category;
         this.prodOrderDetails = prodOrderDetails;
-        this.productNo = productNo;
         this.isOwn = isOwn; // 로켓 true , 오픈 마켓 false
         this.name = name;
         this.price = price;
