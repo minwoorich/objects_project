@@ -3,7 +3,6 @@ plugins {
 	id 'org.springframework.boot' version '3.2.1'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id "org.asciidoctor.jvm.convert" version '3.3.2'
-	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.objects'
@@ -14,7 +13,6 @@ java {
 }
 
 configurations {
-//	querydsl.extendsFrom implementation, compileOnly, runtimeOnly
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -94,21 +92,7 @@ bootJar {
 	}
 }
 
-//querydsl {
-//	jpa = true
-////	library = 'com.querydsl:querydsl-apt:5.0.0'
-//	querydslSourcesDir = "src/main/generated"
-//}
-//
-//compileQuerydsl {
-//	options.annotationProcessorPath = configurations.querydsl
-//}
-
 def querydslDir = "src/main/generated"
-
-sourceSets {
-	main.java.srcDirs += [ querydslDir ]
-}
 
 tasks.withType(JavaCompile) {
 	options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
