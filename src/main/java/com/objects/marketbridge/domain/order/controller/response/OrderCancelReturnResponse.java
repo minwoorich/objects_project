@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
-public class OrderCancelResponse {
+public class OrderCancelReturnResponse {
 
     private Long orderId;
     private String orderNumber;
@@ -23,7 +23,7 @@ public class OrderCancelResponse {
     private RefundInfo refundInfo;
 
     @Builder
-    public OrderCancelResponse(Long orderId, String orderNumber, Long totalPrice, LocalDateTime cancellationDate, RefundInfo refundInfo, List<ProductResponse> cancelledItems) {
+    public OrderCancelReturnResponse(Long orderId, String orderNumber, Long totalPrice, LocalDateTime cancellationDate, RefundInfo refundInfo, List<ProductResponse> cancelledItems) {
         this.orderId = orderId;
         this.orderNumber = orderNumber;
         this.totalPrice = totalPrice;
@@ -32,8 +32,8 @@ public class OrderCancelResponse {
         this.cancelledItems = cancelledItems;
     }
 
-    public static OrderCancelResponse of(ProdOrder order, RefundDto refundDto) {
-        return OrderCancelResponse.builder()
+    public static OrderCancelReturnResponse of(ProdOrder order, RefundDto refundDto) {
+        return OrderCancelReturnResponse.builder()
                 .orderId(order.getId())
                 .orderNumber(order.getOrderNo())
                 .totalPrice(order.getTotalPrice())

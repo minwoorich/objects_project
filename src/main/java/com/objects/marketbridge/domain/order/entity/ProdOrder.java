@@ -76,7 +76,7 @@ public class ProdOrder extends BaseEntity {
     }
 
     //== 비즈니스 로직==//
-    public void cancel(String reason, String statusCode, LocalDateTime cancelDateTime) {
+    public void cancelReturn(String reason, String statusCode, LocalDateTime cancelDateTime) {
         changeUpdateAt(cancelDateTime);
         prodOrderDetails.forEach(prodOrderDetail -> prodOrderDetail.cancel(reason, statusCode));
     }

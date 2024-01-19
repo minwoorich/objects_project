@@ -1,15 +1,12 @@
 package com.objects.marketbridge.domain.order.controller;
 
 import com.objects.marketbridge.domain.order.controller.request.OrderCancelRequest;
-import com.objects.marketbridge.domain.order.controller.response.OrderCancelResponse;
+import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnResponse;
 import com.objects.marketbridge.domain.order.service.OrderCancelService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -19,8 +16,9 @@ public class OrderCancelController {
 
     private final OrderCancelService orderCancelService;
 
-    @PostMapping("/orders/cancel-flow")
-    public ApiResponse<OrderCancelResponse> cancelOrder(@RequestBody @Valid OrderCancelRequest request) {
-        return ApiResponse.ok(orderCancelService.orderCancel(request.toServiceRequest(), LocalDateTime.now()));
+    @PostMapping("/orders/cancel-return-flow/thank-you")
+    public ApiResponse<OrderCancelReturnResponse> cancelReturnOrder(@RequestBody @Valid OrderCancelRequest request) {
+        return ApiResponse.ok(orderCancelService.cancelReturnOrder(request.toServiceRequest(), LocalDateTime.now()));
     }
+
 }

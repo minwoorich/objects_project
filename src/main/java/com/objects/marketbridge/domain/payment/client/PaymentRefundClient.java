@@ -53,23 +53,23 @@ public class PaymentRefundClient implements RefundClient{
         return RefundInfoDto.of(response);
     }
 
-    static class Request {
-
-        private String cancelReason;
-        private Long cancelAmount;
-
-        @Builder
-        public Request(String cancelReason, Long cancelAmount) {
-            this.cancelReason = cancelReason;
-            this.cancelAmount = cancelAmount;
-        }
-
-        public static Request create(String cancelReason, Long cancelAmount) {
-            return Request.builder()
-                    .cancelAmount(cancelAmount)
-                    .cancelReason(cancelReason)
-                    .build();
-        }
-    }
+//    static class Request {
+//
+//        private String cancelReason;
+//        private Long cancelAmount;
+//
+//        @Builder
+//        public Request(String cancelReason, Long cancelAmount) {
+//            this.cancelReason = cancelReason;
+//            this.cancelAmount = cancelAmount;
+//        }
+//
+//        public static Request create(String cancelReason, Long cancelAmount) {
+//            return Request.builder()
+//                    .cancelAmount(cancelAmount)
+//                    .cancelReason(cancelReason)
+//                    .build();
+//        }
+//    }
 
 }

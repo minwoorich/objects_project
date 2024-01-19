@@ -1,10 +1,8 @@
 package com.objects.marketbridge.domain.order.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.RestDocsSupport;
 import com.objects.marketbridge.domain.order.controller.request.OrderCancelRequest;
-import com.objects.marketbridge.domain.order.controller.response.OrderCancelResponse;
+import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnResponse;
 import com.objects.marketbridge.domain.order.controller.response.ProductResponse;
 import com.objects.marketbridge.domain.order.controller.response.RefundInfo;
 import com.objects.marketbridge.domain.order.dto.OrderCancelServiceDto;
@@ -12,22 +10,17 @@ import com.objects.marketbridge.domain.order.service.OrderCancelService;
 import com.objects.marketbridge.domain.payment.dto.RefundDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -52,8 +45,8 @@ public class OrderCancelControllerTest extends RestDocsSupport {
                 .build()
                 .toServiceRequest();
 
-        given(orderCancelService.orderCancel(any(OrderCancelServiceDto.class), any(LocalDateTime.class)))
-                .willReturn(OrderCancelResponse.builder()
+        given(orderCancelService.cancelReturnOrder(any(OrderCancelServiceDto.class), any(LocalDateTime.class)))
+                .willReturn(OrderCancelReturnResponse.builder()
                         .orderId(1L)
                         .orderNumber("ORD001")
                         .totalPrice(300L)
@@ -85,13 +78,13 @@ public class OrderCancelControllerTest extends RestDocsSupport {
 
         // when // then
         mockMvc.perform(
-                        post("/orders/cancel-flow")
+                        post("/orders/cancel-return-flow/thank-you")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("order-cancel",
+                .andDo(document("order-cancel-return",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
