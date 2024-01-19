@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domain.product.repository.Image;
+package com.objects.marketbridge.domain.Image;
 
 import com.objects.marketbridge.domain.model.Image;
 
