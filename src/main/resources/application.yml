@@ -65,6 +65,10 @@ spring:
     activate:
       on-profile: test
 
+  sql:
+    init:
+      mode: always
+
   jwt: # CLI 명령어 - openssl rand -base64 32 로 생성된 값
     secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
 
@@ -80,16 +84,14 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
 
-  sql:
-    init:
-      mode: never
+
 
   h2:
     console:

@@ -1,10 +1,10 @@
 package com.objects.marketbridge.global.security.jwt;
 
-import com.objects.marketbridge.global.security.jwt.constants.JwtConst;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -13,6 +13,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+
+import static com.objects.marketbridge.global.security.constants.SecurityConst.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,7 +26,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * 모든 요청에서 토큰이 있는 지 확인하여 인증 처리
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
         // resolveToken() request 객체에서 token을 추출
         String token = resolveToken(request);
 
@@ -45,8 +51,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @return String
      */
     private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(JwtConst.AUTHORIZATION);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(JwtConst.BEARER)) {
+        String bearerToken = request.getHeader(AUTHORIZATION);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER)) {
             return bearerToken.substring(7).trim();
         }
         return null;

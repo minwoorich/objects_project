@@ -87,15 +87,15 @@ VALUES
     ('Order', '1002', 'Shipped', NOW(), NOW(), NULL);
 
 -- Insert statements for prod_order table
-INSERT INTO marketbridge.prod_order (member_id, address_id, order_name, order_no, total_saved_point, total_used_coupon_price, membership_discount_price, total_price, real_price, used_point, created_at, updated_at, deleted_at)
-VALUES (1, 101, 'First Order', 'ORD001', 50, 20, 10, 300, 280, 5, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
-(2, 102, 'Second Order', 'ORD002', 30, 15, 8, 200, 185, 3, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
+INSERT INTO marketbridge.prod_order (member_id, address_id, order_name, order_no,  total_used_coupon_price,  total_price, real_price, used_point, created_at, updated_at, deleted_at)
+VALUES (1, 101, 'First Order', 'ORD001',  20,  300, 280, 5, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
+(2, 102, 'Second Order', 'ORD002',  15,  200, 185, 3, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
 
 -- Insert statements for prod_order_detail table
-INSERT INTO marketbridge.prod_order_detail (prod_order_id, product_id, coupon_id, reward_type, quantity, price, status_code, delivered_date, used_point, reason, cancelled_at, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.prod_order_detail (prod_order_id, product_id, coupon_id, reward_type, quantity, price, status_code, delivered_date,  reason, cancelled_at, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, 1, 'Cashback', 2, 200, '1001', NULL, 30, NULL, NULL, NOW(), NOW(), NULL),
-    (2, 2, 2, 'Discount', 1, 150, '1002', NOW(), 20, 'Out of stock', NULL, NOW(), NOW(), NULL);
+    (1, 1, 1, 'Cashback', 2, 200, '1001', NULL,  NULL, NULL, NOW(), NOW(), NULL),
+    (2, 2, 2, 'Discount', 1, 150, '1002', NOW(),  'Out of stock', NULL, NOW(), NOW(), NULL);
 
 -- Insert statements for payment table
 /*INSERT INTO payment (prod_order_id, receipt_id, order_name, order_no, transaction_key, payment_type, payment_method, total_amount, balance_amount, payment_key, settlement_status, payment_status, refund_status, customer_name, bank_code, phone_no, cancel_amount, cancel_toss_reason, card_issuer_code, card_no, installment_plan_months, approve_no, account_no, v_account_no, v_due_date, v_expired, deleted_at, canceled_at, approved_at, requested_at, updated_at, cancelled_at, created_at)

@@ -37,21 +37,17 @@ public class ProdOrder extends BaseEntity {
 
     private Long totalUsedCouponPrice; // 총 사용된 쿠폰 금액
 
-    private Long membershipDiscountPrice;
-
     private Long totalPrice; // 찐 최종 주문 금액
 
     private Long realPrice; // 쿠폰, 포인트사용 뺀 진짜 결제된 금액
 
     private Long usedPoint; // 구매하는데 사용한 포인트
 
-    private Long totalSavedPoint; // 적립된 포인트
-
     @OneToMany(mappedBy = "prodOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
 
     @Builder
-    public ProdOrder(Member member, Address address, String orderName, String orderNo, Long realPrice, Long totalPrice, Long totalUsedCouponPrice, Long usedPoint, Long totalSavedPoint) {
+    public ProdOrder(Member member, Address address, String orderName, String orderNo, Long realPrice, Long totalPrice, Long totalUsedCouponPrice, Long usedPoint) {
         this.member = member;
         this.address = address;
         this.orderName = orderName;
@@ -60,7 +56,6 @@ public class ProdOrder extends BaseEntity {
         this.totalPrice = totalPrice;
         this.totalUsedCouponPrice = totalUsedCouponPrice;
         this.usedPoint = usedPoint;
-        this.totalSavedPoint = totalSavedPoint;
     }
 
     public void addOrderDetail(ProdOrderDetail prodOrderDetail) {
@@ -68,13 +63,14 @@ public class ProdOrder extends BaseEntity {
         prodOrderDetail.setOrder(this);
     }
 
-    public static ProdOrder create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long totalUsedCouponPrice){
+    public static ProdOrder create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice, Long totalUsedCouponPrice){
         return ProdOrder.builder()
                 .member(member)
                 .address(address)
                 .orderName(orderName)
                 .orderNo(orderNo)
                 .totalPrice(totalPrice)
+                .realPrice(realPrice)
                 .totalUsedCouponPrice(totalUsedCouponPrice)
                 .build();
     }

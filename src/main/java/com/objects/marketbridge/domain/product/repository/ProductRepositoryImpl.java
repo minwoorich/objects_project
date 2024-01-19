@@ -16,6 +16,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     private final ProductJpaRepository productJpaRepository;
 
     @Override
+    public List<Product> findAll() {
+        return productJpaRepository.findAll();
+    }
+
+    @Override
     public Product findById(Long id) {
         return productJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }

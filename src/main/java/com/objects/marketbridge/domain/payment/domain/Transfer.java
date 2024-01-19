@@ -8,12 +8,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class Transfer {
-    private String bankCode;
-    private String settlementStatus;
+    private String trBankCode;
 
     @Builder
-    public Transfer(String bankCode, String settlementStatus) {
-        this.bankCode = bankCode;
-        this.settlementStatus = settlementStatus;
+    public Transfer(String bankCode) {
+        this.trBankCode = trBankCode;
     }
 }
