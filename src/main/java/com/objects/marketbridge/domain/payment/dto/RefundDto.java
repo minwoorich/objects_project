@@ -20,4 +20,8 @@ public class RefundDto {
         this.refundMethod = refundMethod;
         this.refundProcessedAt = refundProcessedAt;
     }
+
+    public static RefundDto of(RefundInfoDto refundInfoDto) {
+        return null;
+    }
 }
