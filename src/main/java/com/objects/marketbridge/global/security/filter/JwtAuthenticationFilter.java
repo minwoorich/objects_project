@@ -37,7 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         // resolveToken() request 객체에서 token을 추출
         String token = resolveToken(request);
-
         // 토큰이 존재하고, 검증상태가 유효하면
         if (token != null && jwtTokenProvider.validateToken(token)) {
 

@@ -11,7 +11,6 @@ CREATE TABLE member (
                         password	varchar(255)	,
                         name	varchar(255)	,
                         phone_no	varchar(255)	,
-                        birth	varchar(255)	,
                         is_alert	bit	,
                         is_agree	bit	,
                         created_at	datetime(6)	,
@@ -62,7 +61,7 @@ DROP TABLE IF EXISTS social_credential;
 CREATE TABLE social_credential (
                                    social_credential_id	bigint auto_increment
                                        primary key,
-                                   user_id	bigint	,
+                                   member_id	bigint	,
                                    token_id	varchar(255)	,
                                    created_at	datetime(6)	,
                                    updated_at	datetime(6)	,
@@ -355,7 +354,7 @@ CREATE TABLE qna (
                          primary key,
 
                      seller_id	bigint	,
-                     user_id	bigint	,
+                     member_id	bigint	,
                      content_type	varchar(255)	,
                      content	text	,
                      created_at	datetime(6)	,
@@ -369,7 +368,7 @@ CREATE TABLE help_desk (
                            help_desk_id	bigint auto_increment
                                primary key,
 
-                           user_id	bigint	,
+                           member_id	bigint	,
                            product_id	bigint	,
                            prod_order_id	bigint	,
                            contents_type	varchar(255)	,
@@ -449,7 +448,7 @@ CREATE TABLE point (
                        point_id	bigint auto_increment
                            primary key,
 
-                       user_id	bigint	,
+                       member_id	bigint	,
                        in_point	bigint	,
                        out_point	bigint	,
                        balance	bigint	,

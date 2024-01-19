@@ -5,7 +5,7 @@ import com.objects.marketbridge.domain.order.service.TossApiService;
 import com.objects.marketbridge.domain.payment.dto.TossConfirmRequest;
 import com.objects.marketbridge.domain.payment.service.CreatePaymentService;
 import com.objects.marketbridge.global.common.ApiResponse;
-import com.objects.marketbridge.global.security.annotation.AuthMemberId;
+import com.objects.marketbridge.global.security.mock.AuthMemberId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -3,29 +3,28 @@ package com.objects.marketbridge.domain.order.controller.request;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class CheckoutRequest {
 
-    @NotNull
+//    @NotNull
     private String orderId;
 
-    @NotNull
+//    @NotNull
     private Long amount;
 
-    @NotNull
+//    @NotNull
     private Long addressId;
 
-    @NotNull
+//    @NotNull
     private String orderName;
 
-    @NotNull
+//    @NotNull
     private List<ProductValue> productValues;
 
     private String successUrl;
@@ -33,7 +32,7 @@ public class CheckoutRequest {
     private String failUrl;
 
     @Builder
-    public CheckoutRequest(String orderId, Long amount, Long addressId, String orderName, List<ProductValue> productValues, String successUrl, String failUrl) {
+    public CheckoutRequest(String orderId, Long amount, Long addressId, String orderName, @Singular List<ProductValue> productValues, String successUrl, String failUrl) {
         this.orderId = orderId;
         this.amount = amount;
         this.addressId = addressId;
