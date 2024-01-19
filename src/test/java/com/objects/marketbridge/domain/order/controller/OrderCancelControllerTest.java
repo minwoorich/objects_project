@@ -96,7 +96,8 @@ public class OrderCancelControllerTest extends RestDocsSupport {
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("orderId").type(JsonFieldType.NUMBER)
-                                        .description("상품 타입"),
+                                        .description("상품 타입")
+                                        .optional(),
                                 fieldWithPath("cancelReason").type(JsonFieldType.STRING)
                                         .description("상품 판매상태")
                         ),
