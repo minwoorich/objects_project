@@ -16,6 +16,7 @@ import static com.objects.marketbridge.domain.model.QProduct.product;
 import static com.objects.marketbridge.domain.order.entity.QProdOrder.prodOrder;
 import static com.objects.marketbridge.domain.order.entity.QProdOrderDetail.prodOrderDetail;
 
+
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
 

@@ -2,13 +2,13 @@ package com.objects.marketbridge.domain.product.service;
 
 import com.objects.marketbridge.domain.model.*;
 import com.objects.marketbridge.domain.product.dto.ProductRequestDto;
-import com.objects.marketbridge.domain.product.repository.Image.ImageRepository;
-import com.objects.marketbridge.domain.product.repository.Image.ProductImageRepository;
+import com.objects.marketbridge.domain.Image.ImageRepository;
+import com.objects.marketbridge.domain.Image.ProductImageRepository;
+import com.objects.marketbridge.domain.product.dto.ProductResponseDto;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import com.objects.marketbridge.domain.product.repository.category.CategoryRepository;
-import com.objects.marketbridge.domain.product.repository.option.OptionJpaRepository;
-import com.objects.marketbridge.domain.product.repository.option.OptionRepository;
-import com.objects.marketbridge.domain.product.repository.option.ProdOptionRepository;
+import com.objects.marketbridge.domain.category.CategoryRepository;
+import com.objects.marketbridge.domain.option.OptionRepository;
+import com.objects.marketbridge.domain.option.ProdOptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +28,9 @@ public class ProductService {
     private final OptionRepository optionRepository;
     private final ProdOptionRepository prodOptionRepository;
 
+    // 상품등록
     @Transactional
-    public void registerProduct(ProductRequestDto productRequestDto) {
+    public Long registerProduct(ProductRequestDto productRequestDto) {
 
         // category가 DB에 등록되어있다고 가정.
         Category category = categoryRepository.findById(productRequestDto.getCategoryId());
@@ -49,11 +50,12 @@ public class ProductService {
         // ProductRepositoryImpl 통해 엔터티를 저장
         productRepository.save(product);
 
-
-        // 상품등록시 image테이블에 아이템이미지url들 추가, product_image테이블에 추가.
+                // 상품등록시 image테이블에 아이템이미지url들 추가, product_image테이블에 추가.
         List<String> itemImgUrls = productRequestDto.getItemImgUrls();
         for (String itemImgUrl : itemImgUrls) {
-            Image itemImg = Image.builder().url(itemImgUrl).build();
+            Image itemImg = Image.builder()
+                    .type(ImageType.ITEM_IMG.toString())
+                    .url(itemImgUrl).build();
             imageRepository.save(itemImg);
 
             ProductImage productImage = ProductImage.builder()
@@ -68,7 +70,9 @@ public class ProductService {
         // 상품등록시 image테이블에 디테일이미지url들 추가, product_image테이블에 추가.
         List<String> detailImgUrls = productRequestDto.getDetailImgUrls();
         for (String detailImgUrl : detailImgUrls) {
-            Image detailImg = Image.builder().url(detailImgUrl).build();
+            Image detailImg = Image.builder()
+                    .type(ImageType.DETAIL_IMG.toString())
+                    .url(detailImgUrl).build();
             imageRepository.save(detailImg);
 
             ProductImage productImage = ProductImage.builder()
@@ -95,9 +99,40 @@ public class ProductService {
 
             prodOptionRepository.save(prodOption);
         }
+
+        Long productId = product.getId();
+        return productId;
     }
 
 
+
+    // 상품조회
     public void getProductList(){
     }
+
+
+
+//    // 상품수정
+//    @Transactional
+//    public void updateProduct (Long id, ProductRequestDto productRequestDto) {
+//
+//        // 상품 ID에 해당하는 상품을 찾음
+//        Product findProduct = productRepository.findById(id);
+//        Category category = categoryRepository.findById(productRequestDto.getCategoryId());
+//
+//        if(findProduct == null){
+//            throw new EntityNotFoundException("해당 id에 해당하는 상품이 없습니다.");
+//        }
+//
+//        // 업데이트 요청의 내용을 상품에 저장
+//        findProduct.set
+//
+//        // 상품 업데이트 및 저장
+//        productRepository.save(findProduct);
+//    }
+
+
+
+
+    // 상품삭제
 }

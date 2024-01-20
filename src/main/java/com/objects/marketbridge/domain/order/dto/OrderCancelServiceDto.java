@@ -8,12 +8,11 @@ import lombok.Getter;
 public class OrderCancelServiceDto {
 
     private Long orderId;
-    private String reason;
+    private String cancelReason;
 
     @Builder
-    public OrderCancelServiceDto(Long orderId, String reason) {
+    public OrderCancelServiceDto(Long orderId, String cancelReason) {
         this.orderId = orderId;
-        this.reason = reason;
+        this.cancelReason = cancelReason;
     }
-
 }

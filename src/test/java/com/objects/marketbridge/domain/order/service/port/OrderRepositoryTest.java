@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -95,6 +96,38 @@ class OrderRepositoryTest {
 
         // then
         assertThat(findOrder.getId()).isEqualTo(prodOrder.getId());
+    }
+
+
+    @Autowired
+    OrderDetailRepository orderDetailRepository;
+
+    @Test
+    @DisplayName("")
+    public void test() {
+        // given
+        ProdOrder prodOrder = ProdOrder.builder().build();
+        Product product = Product.builder().build();
+        ProdOrderDetail prodOrderDetail1 = ProdOrderDetail.builder()
+                .prodOrder(prodOrder)
+                .price(1000L)
+                .product(product)
+                .build();
+        ProdOrderDetail prodOrderDetail2 = ProdOrderDetail.builder()
+                .prodOrder(prodOrder)
+                .price(2000L)
+                .product(product)
+                .build();
+        prodOrder.addOrderDetail(prodOrderDetail1);
+        prodOrder.addOrderDetail(prodOrderDetail2);
+
+        // when
+        orderRepository.save(prodOrder);
+
+        // then
+        ProdOrderDetail orderDetail = orderDetailRepository.findById(prodOrderDetail1.getId());
+        System.out.println("orderDetail = " + orderDetail);
+
     }
 
 }

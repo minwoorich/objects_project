@@ -3,25 +3,18 @@ package com.objects.marketbridge.domain.order.controller;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.model.Address;
 import com.objects.marketbridge.domain.model.Member;
-import com.objects.marketbridge.domain.model.Point;
 import com.objects.marketbridge.domain.order.controller.request.CheckoutRequest;
 import com.objects.marketbridge.domain.order.controller.response.CheckoutResponse;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.entity.OrderTemp;
 import com.objects.marketbridge.domain.order.service.CreateOrderService;
-import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
 import com.objects.marketbridge.global.common.ApiResponse;
 import com.objects.marketbridge.global.error.CustomLogicException;
-import com.objects.marketbridge.global.security.annotation.AuthMemberId;
-import com.objects.marketbridge.global.security.annotation.UserAuthorize;
+import com.objects.marketbridge.global.security.mock.AuthMemberId;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,14 +53,11 @@ public class OrderController {
                 .orElseThrow(() -> new CustomLogicException(SHIPPING_ADDRESS_NOT_REGISTERED.getMessage(), SHIPPING_ADDRESS_NOT_REGISTERED));
     }
 
-    @UserAuthorize
     @PostMapping("/orders/checkout")
     public ApiResponse<CheckoutRequest> saveOrderTemp(
             @AuthMemberId Long memberId,
             @Valid @RequestBody CheckoutRequest request) {
 
-//        OrderTemp orderTemp = OrderTemp.from(request);
-//        orderRepository.save(orderTemp);
         request.setSuccessUrl(tossPaymentConfig.getSuccessUrl());
         request.setFailUrl(tossPaymentConfig.getFailUrl());
 

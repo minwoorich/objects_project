@@ -14,18 +14,19 @@ public class OrderCancelRequest {
     private Long orderId;
 
     @NotNull
-    private String reason;
+    private String cancelReason;
+
 
     @Builder
-    public OrderCancelRequest(Long orderId, String reason) {
+    public OrderCancelRequest(Long orderId, String cancelReason) {
         this.orderId = orderId;
-        this.reason = reason;
+        this.cancelReason = cancelReason;
     }
 
     public OrderCancelServiceDto toServiceRequest() {
         return OrderCancelServiceDto.builder()
                 .orderId(orderId)
-                .reason(reason)
+                .cancelReason(cancelReason)
                 .build();
     }
 }
