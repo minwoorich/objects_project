@@ -1,9 +1,6 @@
-package com.objects.marketbridge.domain.product.repository.Image;
+package com.objects.marketbridge.domain.Image;
 
-import com.objects.marketbridge.domain.model.Category;
-import com.objects.marketbridge.domain.model.Image;
 import com.objects.marketbridge.domain.model.ProductImage;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

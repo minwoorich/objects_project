@@ -49,6 +49,7 @@ dependencies {
 
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation("org.springframework.security:spring-security-test")
 
 	// JWT
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -78,10 +79,7 @@ asciidoctor {
 	inputs.dir snippetsDir
 	configurations 'asciidoctorExt'
 
-	sources { // 특정 파일만 html로 만든다.
-		include("**/index.adoc")
-	}
-	baseDirFollowsSourceFile() // 다른 adoc 파일을 include 할 때 경로를 baseDir로 맞춘다.
+
 	dependsOn test
 }
 
@@ -91,6 +89,7 @@ bootJar {
 		into 'static/docs'
 	}
 }
+
 
 def querydslDir = "src/main/generated"
 
