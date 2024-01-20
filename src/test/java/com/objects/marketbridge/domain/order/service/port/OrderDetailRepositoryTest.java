@@ -4,7 +4,9 @@ import com.objects.marketbridge.domain.model.*;
 import com.objects.marketbridge.domain.order.entity.ProdOrder;
 import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
+import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -27,6 +30,9 @@ class OrderDetailRepositoryTest {
 
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    ProductRepository productRepository;
 
     @Autowired EntityManager em;
 
@@ -98,159 +104,40 @@ class OrderDetailRepositoryTest {
         String savedReason = getReason(orderId);
         assertThat(reason).isEqualTo(savedReason);
     }
-    
-//    @Test
-//    @DisplayName("")
-//    @Rollback(value = false)
-//    public void findByStockIdAndOrderId() {
-//        Product product1 = Product.builder()
-//                .price(10000L)
-//                .name("옷")
-//                .build();
-//        Product product2= Product.builder()
-//                .price(20000L)
-//                .name("신발")
-//                .build();
-//        em.persist(product1);
-//        em.persist(product2);
-//
-//        OptionCategory optionCategory = OptionCategory.builder()
-//                .name("사이즈")
-//                .build();
-//        em.persist(optionCategory);
-//
-//        Option option1 = Option.builder()
-//                .optionCategory(optionCategory)
-//                .name("M")
-//                .build();
-//        Option option2 = Option.builder()
-//                .optionCategory(optionCategory)
-//                .name("L")
-//                .build();
-//        Option option3 = Option.builder()
-//                .optionCategory(optionCategory)
-//                .name("250")
-//                .build();
-//        Option option4 = Option.builder()
-//                .optionCategory(optionCategory)
-//                .name("260")
-//                .build();
-//        em.persist(option1);
-//        em.persist(option2);
-//        em.persist(option3);
-//        em.persist(option4);
-//
-//        ProdOption prodOption1 = ProdOption.builder()
-//                .option(option1)
-//                .product(product1)
-//                .build();
-//        ProdOption prodOption2 = ProdOption.builder()
-//                .option(option2)
-//                .product(product1)
-//                .build();
-//        ProdOption prodOption3 = ProdOption.builder()
-//                .option(option3)
-//                .product(product2)
-//                .build();
-//        ProdOption prodOption4 = ProdOption.builder()
-//                .option(option4)
-//                .product(product2)
-//                .build();
-//        em.persist(prodOption1);
-//        em.persist(prodOption2);
-//        em.persist(prodOption3);
-//        em.persist(prodOption4);
-//
-//        AddressValue addressValue1 = AddressValue.builder()
-//                .name("인천 창고 주소")
-//                .build();
-//        AddressValue addressValue2 = AddressValue.builder()
-//                .name("대구 창고 주소")
-//                .build();
-//
-//        Seller seller1 = Seller.builder()
-//                .name("판매자1")
-//                .build();
-//        Seller seller2 = Seller.builder()
-//                .name("판매자2")
-//                .build();
-//        em.persist(seller1);
-//        em.persist(seller2);
-//
-//        Member member = Member.builder()
-//                .name("화나게하지마")
-//                .build();
-//        em.persist(member);
-//
-//        Coupon coupon1 = Coupon.builder()
-//                .price(1000L)
-//                .product(product1)
-//                .name("옷 할인 쿠폰")
-//                .build();
-//        Coupon coupon2 = Coupon.builder()
-//                .price(2000L)
-//                .product(product2)
-//                .name("신발 할인 쿠폰")
-//                .build();
-//        em.persist(coupon1);
-//        em.persist(coupon2);
-//
-//        MemberCoupon memberCoupon1 = MemberCoupon.builder()
-//                .member(member)
-//                .coupon(coupon1)
-//                .isUsed(true)
-//                .build();
-//        MemberCoupon memberCoupon2 = MemberCoupon.builder()
-//                .member(member)
-//                .coupon(coupon2)
-//                .isUsed(true)
-//                .build();
-//        em.persist(memberCoupon1);
-//        em.persist(memberCoupon2);
-//
-//        Point point = Point.builder()
-//                .outPoint(0L)
-//                .balance(10000L)
-//                .member(member)
-//                .build();
-//        em.persist(point);
-//
-//        // given
-//        ProdOrder prodOrder = ProdOrder.builder()
-//                .member(member)
-//                .build();
-//
-//        // 상품 옵션 추가
-//        ProdOrderDetail prodOrderDetail1 = ProdOrderDetail.builder()
-//                .prodOrder(prodOrder)
-//                .product(prodOption1)
-//                .quantity(10L)
-//                .build();
-//        ProdOrderDetail prodOrderDetail2 = ProdOrderDetail.builder()
-//                .prodOrder(prodOrder)
-//                .product(prodOption4)
-//                .quantity(20L)
-//                .build();
-//        em.persist(prodOrderDetail1);
-//        em.persist(prodOrderDetail2);
-//
-//        Delivery delivery1 = Delivery.builder()
-//                .prodOrderDetail(prodOrderDetail1)
-//                .statusCode(StatusCodeType.DELIVERY_PENDING.getCode())
-//                .build();
-//        Delivery delivery2 = Delivery.builder()
-//                .prodOrderDetail(prodOrderDetail2)
-//                .statusCode(StatusCodeType.DELIVERY_PENDING.getCode())
-//                .build();
-//        em.persist(delivery1);
-//        em.persist(delivery2);
-//
-//        orderRepository.save(prodOrder);
-//
-//        // when
-//
-//        // then
-//    }
+
+    @Test
+    @DisplayName("주문 ID와 상품 리스트가 주어지면 주문 상세 리스트를 조회할 수 있다.")
+    public void findByProdOrder_IdAndProductIn() {
+        // given
+        Product product1 = Product.builder().name("옷").build();
+        Product product2 = Product.builder().name("바지").build();
+        Product product3 = Product.builder().name("신발").build();
+        
+        ProdOrderDetail orderDetail1 = ProdOrderDetail.builder().product(product1).build();
+        ProdOrderDetail orderDetail2 = ProdOrderDetail.builder().product(product2).build();
+        ProdOrderDetail orderDetail3 = ProdOrderDetail.builder().product(product3).build();
+
+        ProdOrder order = ProdOrder.builder().build();
+        order.addOrderDetail(orderDetail1);
+        order.addOrderDetail(orderDetail2);
+        order.addOrderDetail(orderDetail3);
+
+        List<Product> products = List.of(product1, product2, product3);
+        productRepository.saveAll(products);
+        orderRepository.save(order);
+
+        // when
+        List<ProdOrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(order.getId(), products);
+
+        // then
+        Assertions.assertThat(orderDetails).hasSize(3)
+                .extracting("product", "prodOrder")
+                .contains(
+                        tuple(product1, order),
+                        tuple(product2, order),
+                        tuple(product3, order)
+                );
+    }
 
     private String getReason(Long orderId) {
         List<ProdOrderDetail> prodOrderDetails = orderRepository.findById(orderId).get().getProdOrderDetails();
