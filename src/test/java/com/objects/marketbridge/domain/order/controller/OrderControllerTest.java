@@ -23,7 +23,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -62,38 +65,51 @@ class OrderControllerTest {
     @Test
     void createOrder() throws Exception {
 
-        ProductValue productValue1 = ProductValue.builder()
-                .couponId(1L)
-                .productId(1L)
-                .quantity(1L).build();
+        // given
+        List<ProductValue> productValues = createProductValues();
+        CheckoutRequest request = createCheckoutRequest(productValues);
 
-        ProductValue productValue2 = ProductValue.builder()
-                .couponId(2L)
-                .productId(2L)
-                .quantity(2L).build();
+//        given(tossPaymentConfig.getSuccessUrl()).willReturn("/success");
+//        given(tossPaymentConfig.getFailUrl()).willReturn("/fail");
 
-        List<ProductValue> productValues = List.of(productValue1, productValue2);
+        // when,then
+         mockMvc.perform(MockMvcRequestBuilders
+                .post("/orders/checkout")
+                 .with(csrf())
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk())
+                 .andDo(print());
 
-        CheckoutRequest request = CheckoutRequest.builder()
+
+
+
+    }
+
+    private CheckoutRequest createCheckoutRequest(List<ProductValue> productValues) {
+        return CheckoutRequest.builder()
+                .addressId(1L)
                 .orderId("aaaa-aaaa-aaaa")
                 .orderName("가방외 1건")
                 .amount(20000L)
                 .productValues(productValues)
                 .build();
+    }
 
-        // given
-         mockMvc.perform(MockMvcRequestBuilders
-                .post("/orders/checkout")
-                         .with(csrf())
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk());
+    private List<ProductValue> createProductValues() {
+        ProductValue productValue1 = ProductValue.builder()
+                .deliveredDate("2024-01-21")
+                .couponId(1L)
+                .productId(1L)
+                .quantity(1L).build();
 
-        // when
+        ProductValue productValue2 = ProductValue.builder()
+                .deliveredDate("2024-01-21")
+                .couponId(2L)
+                .productId(2L)
+                .quantity(2L).build();
 
-        //then
-
-
+        return List.of(productValue1, productValue2);
     }
 
 }

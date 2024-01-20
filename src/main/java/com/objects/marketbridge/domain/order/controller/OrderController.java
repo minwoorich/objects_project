@@ -58,7 +58,6 @@ public class OrderController {
             @AuthMemberId Long memberId,
             @Valid @RequestBody CheckoutRequest request) {
 
-
         request.setSuccessUrl(tossPaymentConfig.getSuccessUrl());
         request.setFailUrl(tossPaymentConfig.getFailUrl());
 

@@ -14,6 +14,10 @@ endif::[]
 
 include::api/order/ordercancel.adoc[]
 
+[[OrderCreate-API]]
+== OrderCreate API
+
+include::api/order/ordercreate.adoc[]
 // [[Order-API]]
 // == Order API
 //
