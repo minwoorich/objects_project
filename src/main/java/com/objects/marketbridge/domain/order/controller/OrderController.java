@@ -48,7 +48,7 @@ public class OrderController {
     private Address filterDefaultAddress(List<Address> addresses) {
 
         return addresses.stream()
-                .filter(Address::isDefault)
+                .filter(Address::getIsDefault)
                 .findFirst()
                 .orElseThrow(() -> new CustomLogicException(SHIPPING_ADDRESS_NOT_REGISTERED.getMessage(), SHIPPING_ADDRESS_NOT_REGISTERED));
     }
