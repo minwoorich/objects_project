@@ -12,9 +12,5 @@ endif::[]
 [[OrderCancel-API]]
 == OrderCancel API
 
+include::api/order/ordercancelreturn.adoc[]
 include::api/order/ordercancel.adoc[]
-
-// [[Order-API]]
-// == Order API
-//
-// include::api/order/ordercancel.adoc[]
