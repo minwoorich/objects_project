@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.order.repository;
 
+import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -69,15 +70,9 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
         return orderDetailJpaRepository.findByOrderNo(orderNo);
     }
 
-    //    @Override
-//    public ProdOrderDetail findByStockIdAndOrderId(Long stockId, Long orderId) {
-//        return queryFactory.selectFrom(prodOrderDetail)
-//                .join(prodOrderDetail.prodOption, prodOption)
-//                .join(prodOption.stocks, stock)
-//                .where(
-//                        prodOrder.id.eq(orderId),
-//                        stock.id.eq(stockId)
-//                )
-//                .fetchOne();
-//    }
+    @Override
+    public List<ProdOrderDetail> findByProdOrder_IdAndProductIn(Long orderId, List<Product> products) {
+        return orderDetailJpaRepository.findByProdOrder_IdAndProductIn(orderId, products);
+    }
+
 }

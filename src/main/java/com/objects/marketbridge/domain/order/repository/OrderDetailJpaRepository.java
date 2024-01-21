@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.order.repository;
 
+import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,5 +23,6 @@ public interface OrderDetailJpaRepository extends JpaRepository<ProdOrderDetail,
 
     List<ProdOrderDetail> findByOrderNo(String orderNo);
 
+    List<ProdOrderDetail> findByProdOrder_IdAndProductIn(Long orderId, List<Product> products);
 
 }

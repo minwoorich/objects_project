@@ -98,10 +98,10 @@ VALUES
     (2, 2, 2, 'Discount', 1, 150, '1002', NOW(),  'Out of stock', NULL, NOW(), NOW(), NULL);
 
 -- Insert statements for payment table
-/*INSERT INTO payment (prod_order_id, receipt_id, order_name, order_no, transaction_key, payment_type, payment_method, total_amount, balance_amount, payment_key, settlement_status, payment_status, refund_status, customer_name, bank_code, phone_no, cancel_amount, cancel_toss_reason, card_issuer_code, card_no, installment_plan_months, approve_no, account_no, v_account_no, v_due_date, v_expired, deleted_at, canceled_at, approved_at, requested_at, updated_at, cancelled_at, created_at)
-VALUES
-    (1, 'REC123', 'Order 123', 'ORD123', 'TRANSKEY123', 'Credit Card', 'VISA', 500, 100, 'PAYKEY123', 'Settled', 'Paid', NULL, 'John Doe', 'BANK123', '9876543210', NULL, NULL, 'ISSUER123', 'CARDNO123', 3, 'APPROVE123', 'ACC123', 'VACC123', '2024-02-01', 0, NULL, NULL, NULL, NOW(), NULL, NOW()),
-    (2, 'REC456', 'Order 456', 'ORD456', 'TRANSKEY456', 'Debit Card', 'MasterCard', 300, 50, 'PAYKEY456', 'Settled', 'Paid', NULL, 'Jane Doe', 'BANK456', '1234567890', NULL, NULL, 'ISSUER456', 'CARDNO456', 2, 'APPROVE456', 'ACC456', 'VACC456', '2024-03-01', 0, NULL, NULL, NULL, NOW(), NULL, NOW());*/
+INSERT INTO payment (prod_order_id, order_no, payment_type, payment_method, payment_key, payment_status, refund_status, card_issuer_code, card_no, card_installment_plan_months, card_approve_no, v_account_no, v_due_date, v_expired, v_bank, tr_bank_code, deleted_at, updated_at, created_at)
+VALUES (1, 'ORDER001', 'Online', 'Credit Card', 'ABC123', 'Completed', 'Not Refunded', 'VISA', '************1234', 6, '987654', 'V987654', '2024-12-31', 0, 'XYZ Bank', 'XYZ123', NULL, '2024-01-19 12:34:56', '2024-01-19 12:34:56'),
+       (2, 'ORDER002', 'In-store', 'Debit Card', 'XYZ789', 'Pending', 'Not Refunded', 'MasterCard', '************5678', 3, '456789', 'V456789', '2024-12-31', 0, 'ABC Bank', 'ABC456', NULL, '2024-01-19 12:45:00', '2024-01-19 12:45:00');
+
 
 -- Insert statements for review table
 INSERT INTO marketbridge.review (member_id, product_id, content, rating, created_at, updated_at, deleted_at)
