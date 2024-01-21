@@ -1,4 +1,4 @@
-[[order-cancel]]
+[[order-create]]
 === 주문 생성
 
 ==== HTTP Request

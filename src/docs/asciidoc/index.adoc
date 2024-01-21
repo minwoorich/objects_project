@@ -18,6 +18,11 @@ include::api/order/ordercancel.adoc[]
 == OrderCreate API
 
 include::api/order/ordercreate.adoc[]
+
+[[OrderCheckout-API]]
+== OrderCheckout API
+
+include::api/order/ordercheckout.adoc[]
 // [[Order-API]]
 // == Order API
 //
