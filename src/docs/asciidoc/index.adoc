@@ -14,3 +14,4 @@ endif::[]
 
 include::api/order/ordercancelreturn.adoc[]
 include::api/order/ordercancel.adoc[]
+include::api/order/orderreturn.adoc[]
