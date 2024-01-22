@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 public class OrderCancelResponse {
 
     private List<ProductInfoResponse> productResponses;
-    private RefundInfoResponse refundInfoResponse;
+    private CancelRefundInfoResponse cancelRefundInfoResponse;
 
     @Builder
-    private OrderCancelResponse(List<ProductInfoResponse> productResponses, RefundInfoResponse refundInfoResponse) {
+    private OrderCancelResponse(List<ProductInfoResponse> productResponses, CancelRefundInfoResponse cancelRefundInfoResponse) {
         this.productResponses = productResponses;
-        this.refundInfoResponse = refundInfoResponse;
+        this.cancelRefundInfoResponse = cancelRefundInfoResponse;
     }
 
     public static OrderCancelResponse of(List<ProdOrderDetail> orderDetails, ProdOrder prodOrder) {
@@ -28,9 +28,9 @@ public class OrderCancelResponse {
                         .map(ProductInfoResponse::of)
                         .collect(Collectors.toList())
                 )
-                .refundInfoResponse(RefundInfoResponse.builder()
-                        .refundFee(0)
-                        .deliveryFee(0) // TODO 주문에서 배송비 가져오기
+                .cancelRefundInfoResponse(CancelRefundInfoResponse.builder()
+                        .refundFee(0L)
+                        .deliveryFee(0L) // TODO 주문에서 배송비 가져오기
                         .discountPrice(prodOrder.getTotalUsedCouponPrice()) // TODO 할인금액 쿠폰만 가능?
                         .totalPrice(orderDetails.stream()
                                 .mapToLong(ProdOrderDetail::getPrice)

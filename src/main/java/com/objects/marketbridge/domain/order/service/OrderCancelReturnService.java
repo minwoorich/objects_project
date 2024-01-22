@@ -4,6 +4,7 @@ import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelResponse;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnResponse;
 import com.objects.marketbridge.domain.order.dto.OrderCancelServiceDto;
+import com.objects.marketbridge.domain.order.dto.OrderReturnResponse;
 import com.objects.marketbridge.domain.order.entity.ProdOrder;
 import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
@@ -15,6 +16,7 @@ import com.objects.marketbridge.domain.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import com.objects.marketbridge.global.error.CustomLogicException;
 import com.objects.marketbridge.global.error.ErrorCode;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,12 +62,20 @@ public class OrderCancelReturnService {
 
     @Transactional(readOnly = true)
     public OrderCancelResponse requestCancel(Long orderId, List<Long> productIds) {
-        ProdOrder prodOrder = orderRepository.findById(orderId).orElseThrow(() -> new NoSuchElementException("조회한 주문이 없습니다."));
+        ProdOrder prodOrder = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("조회한 주문이 없습니다."));
         List<Product> products = validProducts(productIds);
 
         List<ProdOrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(orderId, products);
 
         return OrderCancelResponse.of(orderDetails, prodOrder);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderReturnResponse requestReturn(Long orderId, List<Long> productIds) {
+        List<Product> products = validProducts(productIds);
+        List<ProdOrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(orderId, products);
+
+        return OrderReturnResponse.of(orderDetails);
     }
 
     // TODO 객체로 따로 빼야함(임시로 사용)
