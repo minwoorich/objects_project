@@ -23,7 +23,7 @@ public class Address extends BaseEntity{
     @Embedded
     private AddressValue addressValue;
 
-    private boolean isDefault;
+    private Boolean isDefault;
 
 
     @Builder
@@ -41,5 +41,4 @@ public class Address extends BaseEntity{
         this.member = member;
         member.getAddresses().add(this);
     }
-
 }

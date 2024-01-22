@@ -32,6 +32,7 @@ public class OrderController {
     public ApiResponse<CheckoutResponse> getCheckout(
             @AuthMemberId Long memberId) {
 
+//        Long id = memberId;
         Member member = memberRepository.findByIdWithAddresses(memberId).orElseThrow(EntityNotFoundException::new);
         CheckoutResponse checkoutResponse = createOrderResponse(member);
 
@@ -48,7 +49,7 @@ public class OrderController {
     private Address filterDefaultAddress(List<Address> addresses) {
 
         return addresses.stream()
-                .filter(Address::isDefault)
+                .filter(Address::getIsDefault)
                 .findFirst()
                 .orElseThrow(() -> new CustomLogicException(SHIPPING_ADDRESS_NOT_REGISTERED.getMessage(), SHIPPING_ADDRESS_NOT_REGISTERED));
     }
