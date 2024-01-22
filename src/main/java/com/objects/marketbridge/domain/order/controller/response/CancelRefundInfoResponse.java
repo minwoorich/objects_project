@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RefundInfoResponse {
-    private Integer deliveryFee;
-    private Integer refundFee;
+public class CancelRefundInfoResponse {
+    private Long deliveryFee;
+    private Long refundFee;
     private Long discountPrice;
     private Long totalPrice;
 
     @Builder
-    private RefundInfoResponse(Integer deliveryFee, Integer refundFee, Long discountPrice, Long totalPrice) {
+    private CancelRefundInfoResponse(Long deliveryFee, Long refundFee, Long discountPrice, Long totalPrice) {
         this.deliveryFee = deliveryFee;
         this.refundFee = refundFee;
         this.discountPrice = discountPrice;
