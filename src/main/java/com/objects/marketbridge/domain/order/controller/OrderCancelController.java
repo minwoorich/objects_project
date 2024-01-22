@@ -4,6 +4,7 @@ import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.controller.request.OrderCancelRequest;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelResponse;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnResponse;
+import com.objects.marketbridge.domain.order.dto.OrderReturnResponse;
 import com.objects.marketbridge.domain.order.service.OrderCancelReturnService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import jakarta.validation.Valid;
@@ -30,6 +31,14 @@ public class OrderCancelController {
             @RequestParam(name = "productIds") List<Long> productIds
     ) {
         return ApiResponse.ok(orderCancelReturnService.requestCancel(orderId, productIds));
+    }
+
+    @GetMapping("/orders/return-flow")
+    public ApiResponse<OrderReturnResponse> requestReturnOrder(
+            @RequestParam(name = "orderId") Long orderId,
+            @RequestParam(name = "productIds") List<Long> productIds
+    ) {
+        return ApiResponse.ok(orderCancelReturnService.requestReturn(orderId, productIds));
     }
 
 }
