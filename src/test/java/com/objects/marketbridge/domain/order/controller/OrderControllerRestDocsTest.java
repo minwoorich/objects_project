@@ -9,7 +9,6 @@ import com.objects.marketbridge.domain.order.controller.request.CheckoutRequest;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
-import com.objects.marketbridge.global.security.mock.AuthMemberId;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,12 +19,14 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,16 +36,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class OrderControllerRestDocsTest extends RestDocsSupport {
 
-    private final MemberRepository memberRepository = mock(MemberRepository.class);
-    private final TossPaymentConfig tossPaymentConfig = mock(TossPaymentConfig.class);
-    private final CreateOrderService createOrderService = mock(CreateOrderService.class);
-    private final AuthMemberId authMemberId = mock(AuthMemberId.class);
+    MemberRepository memberRepository = mock(MemberRepository.class);
+    TossPaymentConfig tossPaymentConfig = mock(TossPaymentConfig.class);
+    CreateOrderService createOrderService = mock(CreateOrderService.class);
 
     @Override
     protected Object initController() {
         return new OrderController(memberRepository, tossPaymentConfig, createOrderService);
     }
 
+    @Override
+    protected boolean useStandaloneSetup() {
+        return true;
+    }
 
     @DisplayName("checkout 화면에 필요한 데이터를 반환해준다")
     @Test
@@ -53,14 +57,11 @@ public class OrderControllerRestDocsTest extends RestDocsSupport {
         // given
         List<Address> addresses = getAddresses();
         Member member = createMember(addresses);
-        doNothing().when(memberRepository.save(member));
-
-        // TODO : 계속 EntityNotFoundException 발생 이거 해결해야함
-        given(memberRepository.findByIdWithAddresses(1L)).willReturn(Optional.of(member));
+        when(memberRepository.findByIdWithAddresses(any())).thenReturn(Optional.ofNullable(member));
 
         // when, then
         mockMvc.perform(
-                get("/orders/checkout"))
+                get("/orders/checkout").with(csrf()))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("order-checkout",
@@ -91,10 +92,8 @@ public class OrderControllerRestDocsTest extends RestDocsSupport {
                                         .description("상세 주소"),
                                 fieldWithPath("data.address.alias").type(JsonFieldType.STRING)
                                         .description("배송지 별칭")
-
                         )
                 ));
-
     }
 
     private Member createMember(List<Address> addresses) {

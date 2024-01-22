@@ -32,6 +32,7 @@ public class OrderController {
     public ApiResponse<CheckoutResponse> getCheckout(
             @AuthMemberId Long memberId) {
 
+//        Long id = memberId;
         Member member = memberRepository.findByIdWithAddresses(memberId).orElseThrow(EntityNotFoundException::new);
         CheckoutResponse checkoutResponse = createOrderResponse(member);
 
