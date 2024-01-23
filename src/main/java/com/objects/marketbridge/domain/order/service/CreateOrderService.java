@@ -3,12 +3,14 @@ package com.objects.marketbridge.domain.order.service;
 import com.objects.marketbridge.domain.address.repository.AddressRepository;
 import com.objects.marketbridge.domain.coupon.repository.CouponRepository;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
+import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
+import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
+import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
 import com.objects.marketbridge.model.Address;
 import com.objects.marketbridge.model.Coupon;
 import com.objects.marketbridge.model.Member;
 import com.objects.marketbridge.model.Product;
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
-import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
@@ -29,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,17 +39,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CreateOrderService {
 
+    private final TossPaymentConfig tossPaymentConfig;
     private final OrderDetailRepository orderDetailRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
     private final AddressRepository addressRepository;
-    private final PaymentRepository paymentRepository;
 
 
     @Transactional
-    public void create(CreateOrderDto createOrderDto, TossPaymentsResponse tossPaymentsResponse) {
+    public CreateOrderResponse create(CreateOrderDto createOrderDto) {
 
         // 1. Order 생성
         Order order = createOrder(createOrderDto);
@@ -55,24 +58,18 @@ public class CreateOrderService {
         // 2. OrderDetail 생성
         List<OrderDetail> orderDetails = createOrderDetail(createOrderDto);
 
-        // 3. Payment 엔티티 생성
-        Payment payment = createPayment(tossPaymentsResponse);
-
-        // 4. Order - OrderDetail 연관관계 매핑
+        // 3. Order - OrderDetail 연관관계 매핑
         for (OrderDetail orderDetail : orderDetails) {
             order.addOrderDetail(orderDetail);
         }
 
-        // 5. Order - Payment 연관관계 매핑
-        payment.linkOrder(order);
-
-        // 6. orderDetail 에 paymentKey 집어넣어주기
-        orderDetails.forEach(o -> o.changePaymentKey(tossPaymentsResponse.getPaymentKey()));
-
         // 4. 영속성 저장
         orderDetailRepository.saveAll(orderDetails);
-        paymentRepository.save(payment);
+
+        return createOrderResponse(createOrderDto);
     }
+
+
 
     private Order createOrder(CreateOrderDto createOrderDto) {
 
@@ -82,12 +79,12 @@ public class CreateOrderService {
         String orderNo = createOrderDto.getOrderNo();
         Long totalOrderPrice = createOrderDto.getTotalOrderPrice();
         Long realOrderPrice = createOrderDto.getRealOrderPrice();
-        Long totalUsedCouponPrice = geTotalCouponPrice(createOrderDto);
+        Long totalUsedCouponPrice = getTotalCouponPrice(createOrderDto);
 
         return Order.create(member, address, orderName, orderNo, totalOrderPrice, realOrderPrice, totalUsedCouponPrice);
     }
 
-    private Long geTotalCouponPrice(CreateOrderDto createOrderDto) {
+    private Long getTotalCouponPrice(CreateOrderDto createOrderDto) {
 
         List<Coupon> coupons = couponRepository.findAllByIds(createOrderDto.getProductValues().stream().map(ProductValue::getCouponId).filter(Objects::nonNull).collect(Collectors.toList()));
 
@@ -117,6 +114,31 @@ public class CreateOrderService {
 
         return orderDetails;
     }
+
+    private CreateOrderResponse createOrderResponse(CreateOrderDto createOrderDto) {
+
+        Member member = memberRepository.findById(createOrderDto.getMemberId()).orElseThrow(EntityNotFoundException::new);
+
+        return createOrderDto.toResponse(
+                member.getEmail(),
+                tossPaymentConfig.getSuccessUrl(),
+                tossPaymentConfig.getFailUrl());
+    }
+
+    // TODO : 이거 UpdateOrderSevice 로 옮겨야함
+//    public void updatePayment(TossPaymentsResponse tossPaymentsResponse) {
+//        // 3. Payment 엔티티 생성
+//        Payment payment = createPayment(tossPaymentsResponse);
+//
+//        // 5. Order - Payment 연관관계 매핑
+//        payment.linkOrder(order);
+//
+//        // 6. orderDetail 에 paymentKey 집어넣어주기
+//        orderDetails.forEach(o -> o.changePaymentKey(tossPaymentsResponse.getPaymentKey()));
+//
+//        // 4. 영속성 저장
+//        paymentRepository.save(payment);
+//    }
 
     private Payment createPayment(TossPaymentsResponse tossPaymentsResponse) {
 

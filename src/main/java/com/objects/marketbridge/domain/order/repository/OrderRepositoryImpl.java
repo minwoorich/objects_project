@@ -1,7 +1,6 @@
 package com.objects.marketbridge.domain.order.repository;
 
 import com.objects.marketbridge.domain.order.entity.Order;
-import com.objects.marketbridge.domain.order.entity.OrderTemp;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,20 +14,18 @@ import java.util.Optional;
 
 import static com.objects.marketbridge.domain.order.entity.QOrder.order;
 import static com.objects.marketbridge.domain.order.entity.QOrderDetail.orderDetail;
+import static com.objects.marketbridge.domain.order.entity.StatusCodeType.ORDER_CANCEL;
+import static com.objects.marketbridge.domain.order.entity.StatusCodeType.RETURN_COMPLETED;
 import static com.objects.marketbridge.model.QProduct.product;
-import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
 
     private final OrderJpaRepository orderJpaRepository;
-    private final OrderTempJpaRepository orderTempJpaRepository;
-
     private final JPAQueryFactory queryFactory;
 
-    public OrderRepositoryImpl(OrderJpaRepository orderJpaRepository, OrderTempJpaRepository orderTempJpaRepository, EntityManager em) {
+    public OrderRepositoryImpl(OrderJpaRepository orderJpaRepository, EntityManager em) {
         this.orderJpaRepository = orderJpaRepository;
-        this.orderTempJpaRepository = orderTempJpaRepository;
         this.queryFactory = new JPAQueryFactory(em);
     }
 
@@ -48,8 +45,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Optional<Order> findWithOrderDetailsAndProduct(Long orderId) {
-        return orderJpaRepository.findWithOrderDetailsAndProduct(orderId);
+    public Order findWithOrderDetailsAndProduct(Long orderId) {
+        return orderJpaRepository.findWithOrderDetailsAndProduct(orderId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -90,19 +87,10 @@ public class OrderRepositoryImpl implements OrderRepository {
 
 
     @Override
-    public Optional<Order> findByIdWithOrderDetail(Long orderId) {
+    public Order findByIdWithOrderDetail(Long orderId) {
         return null;
     }
 
-    @Override
-    public OrderTemp findOrderTempByOrderNo(String orderNo) {
-        return orderTempJpaRepository.findOrderTempByOrderNo(orderNo).orElseThrow(EntityNotFoundException::new);
-    }
-
-    @Override
-    public void save(OrderTemp orderTemp) {
-        orderTempJpaRepository.save(orderTemp);
-    }
 
     @Override
     public void saveAll(List<Order> orders) {
@@ -110,7 +98,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public void saveOrderTempAll(List<OrderTemp> orderTempList) {
-        orderTempJpaRepository.saveAll(orderTempList);
+    public void deleteByOrderNo(String orderNo) {
+        orderJpaRepository.deleteByOrderNo(orderNo);
     }
 }
