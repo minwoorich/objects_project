@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domain.member.service;
 
+import com.objects.marketbridge.domain.member.dto.CheckedResultDto;
 import com.objects.marketbridge.domain.member.dto.FindPointDto;
-import com.objects.marketbridge.domain.member.dto.IsCheckedDto;
 import com.objects.marketbridge.domain.member.dto.SignInDto;
 import com.objects.marketbridge.domain.member.dto.SignUpDto;
 import com.objects.marketbridge.domain.model.Member;
@@ -32,9 +32,9 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
-    public IsCheckedDto isDuplicateEmail(String email){
+    public CheckedResultDto isDuplicateEmail(String email){
         boolean isDuplicateEmail = memberRepository.findByEmail(email).isPresent();
-        return IsCheckedDto.builder().isChecked(isDuplicateEmail).build();
+        return CheckedResultDto.builder().checked(isDuplicateEmail).build();
     }
 
     @Transactional
