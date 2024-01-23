@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domain.order.service.port;
 
 
+import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.entity.OrderTemp;
 import com.objects.marketbridge.domain.order.entity.Order;
 
@@ -28,4 +29,7 @@ public interface OrderRepository {
     void saveOrderTempAll(List<OrderTemp> orderTempList);
 
     Optional<Order> findOrderWithDetailsAndProduct(Long orderId);
+    Optional<Order> findProdOrderWithDetailsAndProduct(Long orderId);
+
+    List<Order> findDistinctWithDetailsByMemberId(Long memberId);
 }

@@ -1,8 +1,9 @@
 package com.objects.marketbridge.domain.order.repository;
 
-import com.objects.marketbridge.domain.order.entity.OrderTemp;
 import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderTemp;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,7 +16,7 @@ import java.util.Optional;
 import static com.objects.marketbridge.domain.order.entity.QOrder.order;
 import static com.objects.marketbridge.domain.order.entity.QOrderDetail.orderDetail;
 import static com.objects.marketbridge.model.QProduct.product;
-
+import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
@@ -67,6 +68,24 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetchOne()
         );
+    }
+
+
+    @Override
+    public List<Order> findDistinctWithDetailsByMemberId(Long memberId) {
+
+        BooleanExpression statusCondition = orderDetail.statusCode.eq(ORDER_CANCEL.getCode());
+        BooleanExpression orCondition = statusCondition.or(orderDetail.statusCode.eq(RETURN_COMPLETED.getCode()));
+
+        return queryFactory
+                .selectDistinct(order)
+                .from(order)
+                .join(order.orderDetails, orderDetail).fetchJoin()
+                .where(
+                        order.member.id.eq(memberId),
+                        orCondition
+                )
+                .fetch();
     }
 
 

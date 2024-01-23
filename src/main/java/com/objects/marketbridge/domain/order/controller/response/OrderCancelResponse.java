@@ -2,12 +2,10 @@ package com.objects.marketbridge.domain.order.controller.response;
 
 import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
-import com.objects.marketbridge.domain.payment.dto.RefundDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,37 +13,31 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class OrderCancelResponse {
 
-    private Long orderId;
-    private String orderNumber;
-    private Long totalPrice;
-    private LocalDateTime cancellationDate; // 주문 취소 일자
-    private List<ProductResponse> cancelledItems;
-    private RefundInfo refundInfo;
+    private List<ProductInfoResponse> productResponses;
+    private CancelRefundInfoResponse cancelRefundInfoResponse;
 
     @Builder
-    public OrderCancelResponse(Long orderId, String orderNumber, Long totalPrice, LocalDateTime cancellationDate, RefundInfo refundInfo, List<ProductResponse> cancelledItems) {
-        this.orderId = orderId;
-        this.orderNumber = orderNumber;
-        this.totalPrice = totalPrice;
-        this.cancellationDate = cancellationDate;
-        this.refundInfo = refundInfo;
-        this.cancelledItems = cancelledItems;
+    private OrderCancelResponse(List<ProductInfoResponse> productResponses, CancelRefundInfoResponse cancelRefundInfoResponse) {
+        this.productResponses = productResponses;
+        this.cancelRefundInfoResponse = cancelRefundInfoResponse;
     }
 
-    public static OrderCancelResponse of(Order order, RefundDto refundDto) {
+    public static OrderCancelResponse of(List<OrderDetail> orderDetails, Order order) {
         return OrderCancelResponse.builder()
-                .orderId(order.getId())
-                .orderNumber(order.getOrderNo())
-                .totalPrice(order.getTotalPrice())
-                .cancellationDate(order.getUpdatedAt())
-                .refundInfo(RefundInfo.of(refundDto))
-                .cancelledItems(
-                        order.getOrderDetails().stream()
-                                .map(OrderDetail::getProduct)
-                                .map(ProductResponse::of)
-                                .collect(Collectors.toList())
+                .productResponses(orderDetails.stream()
+                        .map(ProductInfoResponse::of)
+                        .collect(Collectors.toList())
                 )
+                .cancelRefundInfoResponse(CancelRefundInfoResponse.builder()
+                        .refundFee(0L)
+                        .deliveryFee(0L) // TODO 주문에서 배송비 가져오기
+                        .discountPrice(order.getTotalUsedCouponPrice()) // TODO 할인금액 쿠폰만 가능?
+                        .totalPrice(orderDetails.stream()
+                                .mapToLong(OrderDetail::getPrice)
+                                .sum()
+                        )
+                        .build())
                 .build();
-
     }
+
 }
