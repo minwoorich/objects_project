@@ -1,4 +1,4 @@
-package com.objects.marketbridge.global.security.mock;
+package com.objects.marketbridge.global.security.annotation;
 
 import com.objects.marketbridge.global.security.user.CustomUserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

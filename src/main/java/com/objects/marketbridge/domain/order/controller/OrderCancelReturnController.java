@@ -7,7 +7,7 @@ import com.objects.marketbridge.domain.order.controller.response.OrderCancelRetu
 import com.objects.marketbridge.domain.order.dto.OrderReturnResponse;
 import com.objects.marketbridge.domain.order.service.OrderCancelReturnService;
 import com.objects.marketbridge.global.common.ApiResponse;
-import com.objects.marketbridge.global.security.mock.AuthMemberId;
+import com.objects.marketbridge.global.security.annotation.AuthMemberId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
