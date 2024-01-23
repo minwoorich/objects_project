@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domain.order.repository;
 
-import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
+import com.objects.marketbridge.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

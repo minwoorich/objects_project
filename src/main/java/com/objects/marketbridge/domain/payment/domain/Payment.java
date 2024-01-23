@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.payment.domain;
 
-import com.objects.marketbridge.domain.model.BaseEntity;
+import com.objects.marketbridge.model.BaseEntity;
 import com.objects.marketbridge.domain.order.entity.Order;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -42,7 +42,7 @@ public class Payment extends BaseEntity {
     private Transfer transfer;
 
     @Builder
-    public Payment(Order order, String orderNo, String paymentType, String paymentMethod, String paymentKey, String paymentStatus, String refundStatus, Card card, VirtualAccount virtualAccount, Transfer transfer) {
+    public Payment(Order order, String orderNo, String paymentType, String paymentMethod, String paymentKey, String paymentStatus, String refundStatus,  Card card, VirtualAccount virtualAccount, Transfer transfer) {
         this.order = order;
         this.orderNo = orderNo;
         this.paymentType = paymentType;
@@ -69,8 +69,8 @@ public class Payment extends BaseEntity {
                 .build();
     }
 
-    // ProdOrder와 연관관계 매핑 해주는 메서드 (단방향)
-    public void linkProdOrder(Order order) {
+    // Order와 연관관계 매핑 해주는 메서드 (단방향)
+    public void linkOrder(Order order) {
         this.order = order;
     }
 }

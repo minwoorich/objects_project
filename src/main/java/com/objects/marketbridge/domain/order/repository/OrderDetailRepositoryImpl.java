@@ -1,14 +1,15 @@
 package com.objects.marketbridge.domain.order.repository;
 
-import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
+import com.objects.marketbridge.model.Product;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 
 @Repository
 public class OrderDetailRepositoryImpl implements OrderDetailRepository {

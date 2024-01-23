@@ -8,9 +8,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 public interface OrderJpaRepository extends JpaRepository<Order, Long> {
 
-    @EntityGraph(attributePaths = "orderDetail.product")
-    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails od LEFT JOIN FETCH od.product WHERE o.id = :prodOrderId")
-    Optional<Order> findWithOrderDetailsAndProduct(@Param("prodOrderId") Long prodOrderId);
+    @EntityGraph(attributePaths = "orderDetails.product")
+    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails od LEFT JOIN FETCH od.product WHERE o.id = :orderId")
+    Optional<Order> findWithOrderDetailsAndProduct(@Param("orderId") Long orderId);
 
     Optional<Order> findByOrderNo(String orderNo);
 

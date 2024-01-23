@@ -1,6 +1,5 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelResponse;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnListResponse;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnResponse;
@@ -17,6 +16,7 @@ import com.objects.marketbridge.domain.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import com.objects.marketbridge.global.error.CustomLogicException;
 import com.objects.marketbridge.global.error.ErrorCode;
+import com.objects.marketbridge.model.Product;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -88,7 +88,7 @@ public class OrderCancelReturnService {
     // TODO 객체로 따로 빼야함(임시로 사용)
     class InnerService {
         public Order cancelReturn(Long orderId, String reason, LocalDateTime cancelDateTime) {
-            Order order = orderRepository.findProdOrderWithDetailsAndProduct(orderId)
+            Order order = orderRepository.findOrderWithDetailsAndProduct(orderId)
                     .orElseThrow(() -> new IllegalArgumentException("해당하는 주문이 없습니다."));
 
             order.cancelReturn(reason, ORDER_CANCEL.getCode(), cancelDateTime);
