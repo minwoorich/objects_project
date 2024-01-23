@@ -8,8 +8,8 @@ import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
@@ -100,7 +100,7 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        ProdOrder order = orderRepository.findByOrderNo(createOrderDto.getOrderNo());
+        Order order = orderRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(order.getMember().getId()).isEqualTo(member.getId());
@@ -134,7 +134,7 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        List<ProdOrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(orderDetails).hasSize(3);
@@ -159,15 +159,15 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        List<ProdOrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
-        ProdOrder order = orderRepository.findByOrderNo(createOrderDto.getOrderNo());
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
+        Order order = orderRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
-        List<ProdOrderDetail> actualList = order.getProdOrderDetails();
+        List<OrderDetail> actualList = order.getOrderDetails();
         Assertions.assertThat(actualList).containsExactlyInAnyOrderElementsOf(orderDetails);
 
-        for (ProdOrderDetail orderDetail : actualList) {
-            assertThat(orderDetail.getProdOrder()).isEqualTo(order);
+        for (OrderDetail orderDetail : actualList) {
+            assertThat(orderDetail.getOrder()).isEqualTo(order);
         }
     }
 

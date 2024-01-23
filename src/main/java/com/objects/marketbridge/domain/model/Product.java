@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,7 +25,7 @@ public class Product extends BaseEntity{
     private Category category;
 
     @OneToMany(mappedBy = "product")
-    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "product")
 //    private List<ProdOption> prodOptions = new ArrayList<>();
@@ -61,9 +61,9 @@ public class Product extends BaseEntity{
         this.stock = stock;
     }
 
-    public void addProdOrderDetail(ProdOrderDetail prodOrderDetail) {
-        prodOrderDetails.add(prodOrderDetail);
-        prodOrderDetail.setProduct(this);
+    public void addProdOrderDetail(OrderDetail orderDetail) {
+        orderDetails.add(orderDetail);
+        orderDetail.setProduct(this);
     }
 
     public void increase(Long quantity) {

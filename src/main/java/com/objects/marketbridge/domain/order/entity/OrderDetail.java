@@ -2,9 +2,7 @@ package com.objects.marketbridge.domain.order.entity;
 
 import com.objects.marketbridge.domain.model.BaseEntity;
 import com.objects.marketbridge.domain.model.Coupon;
-import com.objects.marketbridge.domain.model.ProdOption;
 import com.objects.marketbridge.domain.model.Product;
-import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,16 +14,16 @@ import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProdOrderDetail extends BaseEntity {
+public class OrderDetail extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "prod_order_detail_id")
+    @Column(name = "order_detail_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_order_id")
-    private ProdOrder prodOrder;
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -52,10 +50,10 @@ public class ProdOrderDetail extends BaseEntity {
     private LocalDateTime cancelledAt;
 
     @Builder
-    public ProdOrderDetail(ProdOrder prodOrder, String orderNo, String paymentKey, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
+    public OrderDetail(Order order, String orderNo, String paymentKey, Product product, Coupon coupon, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
         this.orderNo = orderNo;
         this.paymentKey = paymentKey;
-        this.prodOrder = prodOrder;
+        this.order = order;
         this.product = product;
         this.coupon = coupon;
         this.quantity = quantity;
@@ -66,8 +64,8 @@ public class ProdOrderDetail extends BaseEntity {
         this.cancelledAt = cancelledAt;
     }
 
-    public void setOrder(ProdOrder prodOrder) {
-        this.prodOrder = prodOrder;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public void changePaymentKey(String paymentKey) {
@@ -77,8 +75,8 @@ public class ProdOrderDetail extends BaseEntity {
         this.statusCode = statusCode;
     }
 
-    public static ProdOrderDetail create(Product product, String orderNo, Coupon coupon, Long quantity, Long price, String statusCode) {
-        return ProdOrderDetail.builder()
+    public static OrderDetail create(Product product, String orderNo, Coupon coupon, Long quantity, Long price, String statusCode) {
+        return OrderDetail.builder()
                 .orderNo(orderNo)
                 .product(product)
                 .coupon(coupon)

@@ -7,8 +7,8 @@ import com.objects.marketbridge.domain.order.controller.response.*;
 import com.objects.marketbridge.domain.order.dto.OrderCancelServiceDto;
 import com.objects.marketbridge.domain.order.dto.OrderReturnResponse;
 import com.objects.marketbridge.domain.order.dto.ReturnRefundInfoResponse;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.service.OrderCancelReturnService;
 import com.objects.marketbridge.domain.payment.dto.RefundDto;
 import org.junit.jupiter.api.DisplayName;
@@ -32,13 +32,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OrderCancelControllerTest extends RestDocsSupport {
+public class OrderCancelReturnControllerTest extends RestDocsSupport {
 
     private final OrderCancelReturnService orderCancelService = mock(OrderCancelReturnService.class);
 
     @Override
     protected Object initController() {
-        return new OrderCancelController(orderCancelService);
+        return new OrderCancelReturnController(orderCancelService);
     }
 
     @Test
@@ -161,23 +161,23 @@ public class OrderCancelControllerTest extends RestDocsSupport {
                 .thumbImg("썸네일3")
                 .build();
 
-        ProdOrderDetail orderDetail1 = ProdOrderDetail.builder()
+        OrderDetail orderDetail1 = OrderDetail.builder()
                 .product(product1)
                 .quantity(2L)
                 .price(product1.getPrice() * 2L)
                 .build();
-        ProdOrderDetail orderDetail2 = ProdOrderDetail.builder()
+        OrderDetail orderDetail2 = OrderDetail.builder()
                 .product(product2)
                 .quantity(3L)
                 .price(product2.getPrice() * 3L)
                 .build();
-        ProdOrderDetail orderDetail3 = ProdOrderDetail.builder()
+        OrderDetail orderDetail3 = OrderDetail.builder()
                 .product(product3)
                 .quantity(4L)
                 .price(product3.getPrice() * 4L)
                 .build();
 
-        ProdOrder order = ProdOrder.builder().build();
+        Order order = Order.builder().build();
 
         given(orderCancelService.requestCancel(any(Long.class), any(List.class)))
                 .willReturn(OrderCancelResponse.builder()
@@ -272,23 +272,23 @@ public class OrderCancelControllerTest extends RestDocsSupport {
                 .thumbImg("썸네일3")
                 .build();
 
-        ProdOrderDetail orderDetail1 = ProdOrderDetail.builder()
+        OrderDetail orderDetail1 = OrderDetail.builder()
                 .product(product1)
                 .quantity(2L)
                 .price(product1.getPrice() * 2L)
                 .build();
-        ProdOrderDetail orderDetail2 = ProdOrderDetail.builder()
+        OrderDetail orderDetail2 = OrderDetail.builder()
                 .product(product2)
                 .quantity(3L)
                 .price(product2.getPrice() * 3L)
                 .build();
-        ProdOrderDetail orderDetail3 = ProdOrderDetail.builder()
+        OrderDetail orderDetail3 = OrderDetail.builder()
                 .product(product3)
                 .quantity(4L)
                 .price(product3.getPrice() * 4L)
                 .build();
 
-        ProdOrder order = ProdOrder.builder().build();
+        Order order = Order.builder().build();
 
         given(orderCancelService.requestReturn(any(Long.class), any(List.class)))
                 .willReturn(OrderReturnResponse.builder()

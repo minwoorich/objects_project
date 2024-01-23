@@ -1,8 +1,8 @@
 package com.objects.marketbridge.domain.payment.service;
 
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.domain.BankCode;
@@ -36,23 +36,23 @@ class CreatePaymentServiceTest {
     @BeforeEach
     void init() {
 
-        ProdOrder order = ProdOrder.builder()
+        Order order = Order.builder()
                 .orderNo("aaaa-aaaa-aaaa")
                 .totalPrice(10000L)
                 .orderName("홍길동")
                 .build();
         orderRepository.save(order);
 
-        ProdOrderDetail orderDetail1 = ProdOrderDetail.builder()
+        OrderDetail orderDetail1 = OrderDetail.builder()
                 .orderNo("aaaa-aaaa-aaaa")
                 .build();
 
-        ProdOrderDetail orderDetail2 = ProdOrderDetail.builder()
+        OrderDetail orderDetail2 = OrderDetail.builder()
                 .orderNo("aaaa-aaaa-aaaa")
                 .build();
-        List<ProdOrderDetail> orderDetails = List.of(orderDetail1, orderDetail2);
+        List<OrderDetail> orderDetails = List.of(orderDetail1, orderDetail2);
 
-        for (ProdOrderDetail orderDetail : orderDetails) {
+        for (OrderDetail orderDetail : orderDetails) {
             order.addOrderDetail(orderDetail);
         }
 
@@ -65,7 +65,7 @@ class CreatePaymentServiceTest {
     void createPayment(){
 
         //given
-        ProdOrder order = orderRepository.findByOrderNo("aaaa-aaaa-aaaa");
+        Order order = orderRepository.findByOrderNo("aaaa-aaaa-aaaa");
         Card card = getCard("1234-5678", BankCode.HANA.getCode());
         TossPaymentsResponse tossPaymentsResponse =
                 getTossPaymentResponse(order.getOrderNo(), "페이먼트키", card);
@@ -102,7 +102,7 @@ class CreatePaymentServiceTest {
     @Test
     void mappingPaymentWithProdOrder(){
         //given
-        ProdOrder order = orderRepository.findByOrderNo("aaaa-aaaa-aaaa");
+        Order order = orderRepository.findByOrderNo("aaaa-aaaa-aaaa");
         Card card = getCard("1234-5678", BankCode.HANA.getCode());
         TossPaymentsResponse tossPaymentsResponse =
                 getTossPaymentResponse(order.getOrderNo(), "페이먼트키", card);
@@ -113,7 +113,7 @@ class CreatePaymentServiceTest {
 
         //then
         Payment payment = paymentRepository.findByOrderNo("aaaa-aaaa-aaaa");
-        assertThat(payment.getProdOrder()).isEqualTo(order);
+        assertThat(payment.getOrder()).isEqualTo(order);
     }
     
     @DisplayName("ProdOrderDetail 에 paymentKey를 할당해줘야한다.")
@@ -121,8 +121,8 @@ class CreatePaymentServiceTest {
     void changePaymentKey(){
 
         //given
-        ProdOrder order = orderRepository.findByOrderNo("aaaa-aaaa-aaaa");
-        List<ProdOrderDetail> prodOrderDetails = order.getProdOrderDetails();
+        Order order = orderRepository.findByOrderNo("aaaa-aaaa-aaaa");
+        List<OrderDetail> orderDetails = order.getOrderDetails();
 
         Card card = getCard("1234-5678", BankCode.HANA.getCode());
         TossPaymentsResponse tossPaymentsResponse =
@@ -133,9 +133,9 @@ class CreatePaymentServiceTest {
         createPaymentService.create(tossPaymentsResponse);
         
         //then
-        assertThat(prodOrderDetails).hasSize(2);
-        for (ProdOrderDetail prodOrderDetail : prodOrderDetails) {
-            assertThat(prodOrderDetail.getPaymentKey()).isEqualTo(tossPaymentsResponse.getPaymentKey());
+        assertThat(orderDetails).hasSize(2);
+        for (OrderDetail orderDetail : orderDetails) {
+            assertThat(orderDetail.getPaymentKey()).isEqualTo(tossPaymentsResponse.getPaymentKey());
         }
     }
 }

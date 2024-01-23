@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.Order;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,8 +18,8 @@ public class HelpDesk extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_order_id")
-    private ProdOrder prodOrderId;
+    @JoinColumn(name = "order_id")
+    private Order orderId;
     //private Long orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,8 +36,8 @@ public class HelpDesk extends BaseEntity {
     private String content;
 
     @Builder
-    private HelpDesk(ProdOrder prodOrderId, Member memberId, Product productId, ContentType contentType, String content) {
-        this.prodOrderId = prodOrderId;
+    private HelpDesk(Order orderId, Member memberId, Product productId, ContentType contentType, String content) {
+        this.orderId = orderId;
         this.memberId = memberId;
         this.productId = productId;
         this.contentType = contentType;

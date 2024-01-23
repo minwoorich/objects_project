@@ -1,19 +1,15 @@
 package com.objects.marketbridge.domain.model;
 
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
-import com.objects.marketbridge.domain.order.entity.QProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import jakarta.persistence.Access;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.annotation.AccessType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +21,7 @@ import static org.assertj.core.api.Assertions.*;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
-class ProdOrderTest {
+class OrderTest {
 
     @Autowired
     private OrderRepository orderRepository;
@@ -41,7 +37,7 @@ class ProdOrderTest {
         // given
         LocalDateTime useDate = LocalDateTime.of(2024, 1, 16, 7, 14);
 
-        ProdOrder prodOrder = ProdOrder.builder()
+        Order order = Order.builder()
                 .build();
 
         Product product1 = Product.builder()
@@ -60,13 +56,13 @@ class ProdOrderTest {
                 .count(20L)
                 .build();
 
-        ProdOrderDetail prodOrderDetail1 = ProdOrderDetail.builder()
-                .prodOrder(prodOrder)
+        OrderDetail orderDetail1 = OrderDetail.builder()
+                .order(order)
                 .coupon(coupon1)
                 .product(product1)
                 .build();
-        ProdOrderDetail prodOrderDetail2 = ProdOrderDetail.builder()
-                .prodOrder(prodOrder)
+        OrderDetail orderDetail2 = OrderDetail.builder()
+                .order(order)
                 .coupon(coupon2)
                 .product(product2)
                 .build();
@@ -82,11 +78,11 @@ class ProdOrderTest {
                 .usedDate(useDate)
                 .build();
 
-        orderRepository.save(prodOrder);
-        orderDetailRepository.saveAll(List.of(prodOrderDetail1, prodOrderDetail2));
+        orderRepository.save(order);
+        orderDetailRepository.saveAll(List.of(orderDetail1, orderDetail2));
         productRepository.saveAll(List.of(product1, product2));
-        prodOrder.addOrderDetail(prodOrderDetail1);
-        prodOrder.addOrderDetail(prodOrderDetail2);
+        order.addOrderDetail(orderDetail1);
+        order.addOrderDetail(orderDetail2);
         em.persist(coupon1);
         em.persist(coupon2);
         em.persist(memberCoupon1);
@@ -94,7 +90,7 @@ class ProdOrderTest {
         coupon1.addMemberCoupon(memberCoupon1);
         coupon2.addMemberCoupon(memberCoupon2);
 
-        ProdOrder findOrder = orderRepository.findById(prodOrder.getId()).get();
+        Order findOrder = orderRepository.findById(order.getId()).get();
 
         // when
         findOrder.returnCoupon();

@@ -86,19 +86,19 @@ VALUES
     ('Order', '1001', 'Pending', NOW(), NOW(), NULL),
     ('Order', '1002', 'Shipped', NOW(), NOW(), NULL);
 
--- Insert statements for prod_order table
-INSERT INTO marketbridge.prod_order (member_id, address_id, order_name, order_no,  total_used_coupon_price,  total_price, real_price, used_point, created_at, updated_at, deleted_at)
+-- Insert statements for orders table
+INSERT INTO marketbridge.orders (member_id, address_id, order_name, order_no,  total_used_coupon_price,  total_price, real_price, used_point, created_at, updated_at, deleted_at)
 VALUES (1, 101, 'First Order', 'ORD001',  20,  300, 280, 5, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
 (2, 102, 'Second Order', 'ORD002',  15,  200, 185, 3, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
 
--- Insert statements for prod_order_detail table
-INSERT INTO marketbridge.prod_order_detail (prod_order_id, product_id, coupon_id, reward_type, quantity, price, status_code, delivered_date,  reason, cancelled_at, created_at, updated_at, deleted_at)
+-- Insert statements for prod_order table
+INSERT INTO marketbridge.order_detail (order_detail_id, order_id, product_id, coupon_id, reward_type, quantity, price, status_code, delivered_date,  reason, cancelled_at, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, 1, 'Cashback', 2, 200, '1001', NULL,  NULL, NULL, NOW(), NOW(), NULL),
-    (2, 2, 2, 'Discount', 1, 150, '1002', NOW(),  'Out of stock', NULL, NOW(), NOW(), NULL);
+    (1, 1, 1, 1, 'Cashback', 2, 200, '1001', NULL,  NULL, NULL, NOW(), NOW(), NULL),
+    (2, 2, 2, 2, 'Discount', 1, 150, '1002', NOW(),  'Out of stock', NULL, NOW(), NOW(), NULL);
 
 -- Insert statements for payment table
-INSERT INTO payment (prod_order_id, order_no, payment_type, payment_method, payment_key, payment_status, refund_status, card_issuer_code, card_no, card_installment_plan_months, card_approve_no, v_account_no, v_due_date, v_expired, v_bank, tr_bank_code, deleted_at, updated_at, created_at)
+INSERT INTO payment (order_id, order_no, payment_type, payment_method, payment_key, payment_status, refund_status, card_issuer_code, card_no, card_installment_plan_months, card_approve_no, v_account_no, v_due_date, v_expired, v_bank, tr_bank_code, deleted_at, updated_at, created_at)
 VALUES (1, 'ORDER001', 'Online', 'Credit Card', 'ABC123', 'Completed', 'Not Refunded', 'VISA', '************1234', 6, '987654', 'V987654', '2024-12-31', 0, 'XYZ Bank', 'XYZ123', NULL, '2024-01-19 12:34:56', '2024-01-19 12:34:56'),
        (2, 'ORDER002', 'In-store', 'Debit Card', 'XYZ789', 'Pending', 'Not Refunded', 'MasterCard', '************5678', 3, '456789', 'V456789', '2024-12-31', 0, 'ABC Bank', 'ABC456', NULL, '2024-01-19 12:45:00', '2024-01-19 12:45:00');
 
@@ -146,13 +146,13 @@ VALUES
     (2, 2, 'Shipping', 'When will my order be delivered?', NOW(), NOW(), NULL);
 
 -- Insert statements for help_desk table
-INSERT INTO marketbridge.help_desk (member_id, product_id, prod_order_id, contents_type, content, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.help_desk (member_id, product_id, order_id, contents_type, content, created_at, updated_at, deleted_at)
 VALUES
     (1, 1, 1, 'Product Inquiry', 'I have a question about this product.', NOW(), NOW(), NULL),
     (2, 2, 2, 'Order Issue', 'I need assistance with my order.', NOW(), NOW(), NULL);
 
 -- Insert statements for delivery table
-INSERT INTO marketbridge.delivery (seller_id, address_id, prod_order_detail_id, type, carrier, tracking_no, status, ship_date, delivered_date, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.delivery (seller_id, address_id, order_detail_id, type, carrier, tracking_no, status, ship_date, delivered_date, created_at, updated_at, deleted_at)
 VALUES
     (1, 1, 1, 'Standard', 'UPS', '1234567890', 'In Transit', NOW(), NULL, NOW(), NOW(), NULL),
     (2, 2, 2, 'Express', 'FedEx', '9876543210', 'Delivered', NOW(), NOW(), NOW(), NOW(), NULL);

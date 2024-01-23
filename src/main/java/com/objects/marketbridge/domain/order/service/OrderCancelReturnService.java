@@ -2,11 +2,12 @@ package com.objects.marketbridge.domain.order.service;
 
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelResponse;
+import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnListResponse;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnResponse;
 import com.objects.marketbridge.domain.order.dto.OrderCancelServiceDto;
 import com.objects.marketbridge.domain.order.dto.OrderReturnResponse;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.domain.Payment;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -43,7 +45,7 @@ public class OrderCancelReturnService {
     public OrderCancelReturnResponse cancelReturnOrder(OrderCancelServiceDto orderCancelServiceDto, LocalDateTime cancelDateTime) {
         InnerService innerService = new InnerService();
 
-        ProdOrder order = innerService.cancelReturn(
+        Order order = innerService.cancelReturn(
                 orderCancelServiceDto.getOrderId(),
                 orderCancelServiceDto.getCancelReason(),
                 cancelDateTime
@@ -62,33 +64,38 @@ public class OrderCancelReturnService {
 
     @Transactional(readOnly = true)
     public OrderCancelResponse requestCancel(Long orderId, List<Long> productIds) {
-        ProdOrder prodOrder = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("조회한 주문이 없습니다."));
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("조회한 주문이 없습니다."));
         List<Product> products = validProducts(productIds);
 
-        List<ProdOrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(orderId, products);
+        List<OrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(orderId, products);
 
-        return OrderCancelResponse.of(orderDetails, prodOrder);
+        return OrderCancelResponse.of(orderDetails, order);
     }
 
     @Transactional(readOnly = true)
     public OrderReturnResponse requestReturn(Long orderId, List<Long> productIds) {
         List<Product> products = validProducts(productIds);
-        List<ProdOrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(orderId, products);
+        List<OrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(orderId, products);
 
         return OrderReturnResponse.of(orderDetails);
     }
 
+    public OrderCancelReturnListResponse findCancelReturnList(Long memberId, Pageable pageable) {
+        List<Order> orders = orderRepository.findDistinctWithDetailsByMemberId(memberId);
+        return null;
+    }
+
     // TODO 객체로 따로 빼야함(임시로 사용)
     class InnerService {
-        public ProdOrder cancelReturn(Long orderId, String reason, LocalDateTime cancelDateTime) {
-            ProdOrder prodOrder = orderRepository.findProdOrderWithDetailsAndProduct(orderId)
+        public Order cancelReturn(Long orderId, String reason, LocalDateTime cancelDateTime) {
+            Order order = orderRepository.findProdOrderWithDetailsAndProduct(orderId)
                     .orElseThrow(() -> new IllegalArgumentException("해당하는 주문이 없습니다."));
 
-            prodOrder.cancelReturn(reason, ORDER_CANCEL.getCode(), cancelDateTime);
+            order.cancelReturn(reason, ORDER_CANCEL.getCode(), cancelDateTime);
 
-            prodOrder.returnCoupon();
+            order.returnCoupon();
 
-            return prodOrder;
+            return order;
         }
 
 

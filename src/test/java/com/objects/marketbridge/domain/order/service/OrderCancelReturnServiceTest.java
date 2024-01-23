@@ -6,8 +6,8 @@ import com.objects.marketbridge.domain.order.controller.response.ProductInfoResp
 import com.objects.marketbridge.domain.order.controller.response.CancelRefundInfoResponse;
 import com.objects.marketbridge.domain.order.dto.OrderReturnResponse;
 import com.objects.marketbridge.domain.order.dto.ReturnRefundInfoResponse;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
@@ -61,23 +61,23 @@ class OrderCancelReturnServiceTest {
                 .thumbImg("썸네일3")
                 .build();
 
-        ProdOrderDetail orderDetail1 = ProdOrderDetail.builder()
+        OrderDetail orderDetail1 = OrderDetail.builder()
                 .product(product1)
                 .quantity(2L)
                 .price(product1.getPrice() * 2L)
                 .build();
-        ProdOrderDetail orderDetail2 = ProdOrderDetail.builder()
+        OrderDetail orderDetail2 = OrderDetail.builder()
                 .product(product2)
                 .quantity(3L)
                 .price(product2.getPrice() * 3L)
                 .build();
-        ProdOrderDetail orderDetail3 = ProdOrderDetail.builder()
+        OrderDetail orderDetail3 = OrderDetail.builder()
                 .product(product3)
                 .quantity(4L)
                 .price(product3.getPrice() * 4L)
                 .build();
 
-        ProdOrder order = ProdOrder.builder().build();
+        Order order = Order.builder().build();
         order.addOrderDetail(orderDetail1);
         order.addOrderDetail(orderDetail2);
         order.addOrderDetail(orderDetail3);
@@ -113,12 +113,12 @@ class OrderCancelReturnServiceTest {
                 .thumbImg("썸네일1")
                 .name("옷")
                 .build();
-        ProdOrderDetail orderDetail1 = ProdOrderDetail.builder()
+        OrderDetail orderDetail1 = OrderDetail.builder()
                 .product(product1)
                 .quantity(2L)
                 .price(product1.getPrice() * 2L)
                 .build();
-        ProdOrder order = ProdOrder.builder().build();
+        Order order = Order.builder().build();
         order.addOrderDetail(orderDetail1);
 
         List<Product> products = List.of(product1);
