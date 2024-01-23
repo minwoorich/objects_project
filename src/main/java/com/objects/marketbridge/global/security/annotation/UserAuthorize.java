@@ -1,4 +1,4 @@
-package com.objects.marketbridge.global.security.mock;
+package com.objects.marketbridge.global.security.annotation;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

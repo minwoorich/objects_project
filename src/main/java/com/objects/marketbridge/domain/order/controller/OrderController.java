@@ -10,7 +10,7 @@ import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
 import com.objects.marketbridge.global.common.ApiResponse;
 import com.objects.marketbridge.global.error.CustomLogicException;
-import com.objects.marketbridge.global.security.mock.AuthMemberId;
+import com.objects.marketbridge.global.security.annotation.AuthMemberId;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
