@@ -1,11 +1,10 @@
 package com.objects.marketbridge.domain.order.service.port;
 
+import com.objects.marketbridge.model.Member;
 import com.objects.marketbridge.model.Product;
 import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.domain.model.Member;
-import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;

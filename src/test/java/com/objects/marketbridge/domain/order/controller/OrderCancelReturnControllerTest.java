@@ -1,6 +1,5 @@
 package com.objects.marketbridge.domain.order.controller;
 
-import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.RestDocsSupport;
 import com.objects.marketbridge.domain.order.controller.request.OrderCancelRequest;
 import com.objects.marketbridge.domain.order.controller.response.*;
@@ -11,6 +10,7 @@ import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.service.OrderCancelReturnService;
 import com.objects.marketbridge.domain.payment.dto.RefundDto;
+import com.objects.marketbridge.model.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
