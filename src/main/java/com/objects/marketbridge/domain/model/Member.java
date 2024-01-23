@@ -43,7 +43,8 @@ public class Member extends BaseEntity {
     private Point point;
 
     @Builder
-    private Member(String socialType, String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
+    public Member(Long id, String socialType, String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
+        this.id = id;
         this.socialType = socialType;
         this.membership = membership;
         this.email = email;

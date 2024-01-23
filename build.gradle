@@ -116,6 +116,7 @@ def querydslDir = "src/main/generated"
 
 tasks.withType(JavaCompile) {
 	options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
+//	options.compilerArgs.add("parameters")
 }
 
 clean.doLast {
