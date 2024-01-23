@@ -23,7 +23,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
 
     @Override
     public Payment findByOrderId(Long orderId) {
-        return paymentJpaRepository.findByProdOrderId(orderId);
+        return paymentJpaRepository.findByOrderId(orderId);
     }
 
     @Override

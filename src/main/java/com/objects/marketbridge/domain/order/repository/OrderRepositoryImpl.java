@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domain.order.repository;
 
 import com.objects.marketbridge.domain.order.entity.OrderTemp;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.objects.marketbridge.domain.model.QProduct.product;
-import static com.objects.marketbridge.domain.order.entity.QProdOrder.prodOrder;
-import static com.objects.marketbridge.domain.order.entity.QProdOrderDetail.prodOrderDetail;
+import static com.objects.marketbridge.domain.order.entity.QOrder.order;
+import static com.objects.marketbridge.domain.order.entity.QOrderDetail.orderDetail;
 
 
 @Repository
@@ -32,22 +32,22 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Optional<ProdOrder> findById(Long orderId) {
+    public Optional<Order> findById(Long orderId) {
         return orderJpaRepository.findById(orderId);
     }
 
     @Override
-    public ProdOrder findByOrderNo(String orderNo) {
+    public Order findByOrderNo(String orderNo) {
         return orderJpaRepository.findByOrderNo(orderNo).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
     }
 
     @Override
-    public ProdOrder save(ProdOrder order) {
+    public Order save(Order order) {
         return orderJpaRepository.save(order);
     }
 
     @Override
-    public Optional<ProdOrder> findWithOrderDetailsAndProduct(Long orderId) {
+    public Optional<Order> findWithOrderDetailsAndProduct(Long orderId) {
         return orderJpaRepository.findWithOrderDetailsAndProduct(orderId);
     }
 
@@ -57,13 +57,13 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Optional<ProdOrder> findProdOrderWithDetailsAndProduct(Long orderId) {
+    public Optional<Order> findOrderWithDetailsAndProduct(Long orderId) {
         return Optional.ofNullable(
                 queryFactory
-                .selectFrom(prodOrder)
-                .join(prodOrder.prodOrderDetails, prodOrderDetail).fetchJoin()
-                .join(prodOrderDetail.product, product).fetchJoin()
-                .where(prodOrder.id.eq(orderId))
+                .selectFrom(order)
+                .join(order.orderDetails, orderDetail).fetchJoin()
+                .join(orderDetail.product, product).fetchJoin()
+                .where(order.id.eq(orderId))
                 .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetchOne()
         );
@@ -71,7 +71,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
 
     @Override
-    public Optional<ProdOrder> findByIdWithOrderDetail(Long orderId) {
+    public Optional<Order> findByIdWithOrderDetail(Long orderId) {
         return null;
     }
 
@@ -86,7 +86,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public void saveAll(List<ProdOrder> orders) {
+    public void saveAll(List<Order> orders) {
         orderJpaRepository.saveAll(orders);
     }
 

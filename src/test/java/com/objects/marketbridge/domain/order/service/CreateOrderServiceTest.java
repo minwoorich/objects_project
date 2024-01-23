@@ -8,8 +8,8 @@ import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
@@ -89,9 +89,9 @@ class CreateOrderServiceTest {
 
         couponRepository.saveAll(List.of(coupon1, coupon2));
     }
-    @DisplayName("주문 생성시 ProdOrder 를 생성 한다.")
+    @DisplayName("주문 생성시 Order 를 생성 한다.")
     @Test
-    void CreateProdOrder(){
+    void CreateOrder(){
 
         //given
         Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
@@ -100,7 +100,7 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        ProdOrder order = orderRepository.findByOrderNo(createOrderDto.getOrderNo());
+        Order order = orderRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(order.getMember().getId()).isEqualTo(member.getId());
@@ -123,9 +123,9 @@ class CreateOrderServiceTest {
         ).sum();
     }
 
-    @DisplayName("주문 생성시 ProdOrderDetail 을 생성 한다.")
+    @DisplayName("주문 생성시 OrderDetail 을 생성 한다.")
     @Test
-    void CreateProdOrderDetail(){
+    void CreateOrderDetail(){
 
         //given
         Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
@@ -134,7 +134,7 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        List<ProdOrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(orderDetails).hasSize(3);
@@ -148,9 +148,9 @@ class CreateOrderServiceTest {
         }
     }
 
-    @DisplayName("ProdOrder 와 ProdOrderDetail 이 서로 연관관계를 맺어야한다")
+    @DisplayName("Order 와 OrderDetail 이 서로 연관관계를 맺어야한다")
     @Test
-    void mappingProdOrderWithProdOrderDetail(){
+    void mappingOrderWithOrderDetail(){
 
         //given
         Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
@@ -159,15 +159,15 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        List<ProdOrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
-        ProdOrder order = orderRepository.findByOrderNo(createOrderDto.getOrderNo());
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
+        Order order = orderRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
-        List<ProdOrderDetail> actualList = order.getProdOrderDetails();
+        List<OrderDetail> actualList = order.getOrderDetails();
         Assertions.assertThat(actualList).containsExactlyInAnyOrderElementsOf(orderDetails);
 
-        for (ProdOrderDetail orderDetail : actualList) {
-            assertThat(orderDetail.getProdOrder()).isEqualTo(order);
+        for (OrderDetail orderDetail : actualList) {
+            assertThat(orderDetail.getOrder()).isEqualTo(order);
         }
     }
 

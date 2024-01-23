@@ -18,7 +18,7 @@ public class ProductRequestDto {
 
     @NotNull
     private Long categoryId;
-    //    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
+    //    private List<OrderDetail> orderDetails = new ArrayList<>();
 
     @NotNull
     private Boolean isOwn; // 로켓 true , 오픈 마켓 false

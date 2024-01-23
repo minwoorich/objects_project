@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.order.service.port;
 
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 
 import java.util.List;
 
@@ -8,21 +8,21 @@ public interface OrderDetailRepository  {
 
     int changeAllType(Long orderId, String type);
 
-    List<ProdOrderDetail> saveAll(List<ProdOrderDetail> orderDetail);
+    List<OrderDetail> saveAll(List<OrderDetail> orderDetail);
 
     void addReason(Long orderId, String reason);
 
     void deleteAllInBatch();
 
-    void save(ProdOrderDetail prodOrderDetail);
+    void save(OrderDetail orderDetail);
 
-    ProdOrderDetail findById(Long id);
+    OrderDetail findById(Long id);
 
-    List<ProdOrderDetail> findByProductId(Long id);
+    List<OrderDetail> findByProductId(Long id);
 
-    List<ProdOrderDetail> findAll();
+    List<OrderDetail> findAll();
 
-    List<ProdOrderDetail> findByOrderNo(String orderNo);
+    List<OrderDetail> findByOrderNo(String orderNo);
 
-//    ProdOrderDetail findByStockIdAndOrderId(Long stockId, Long orderId);
+//    OrderDetail findByStockIdAndOrderId(Long stockId, Long orderId);
 }

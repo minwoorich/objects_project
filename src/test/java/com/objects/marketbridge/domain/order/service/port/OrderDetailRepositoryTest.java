@@ -1,8 +1,8 @@
 package com.objects.marketbridge.domain.order.service.port;
 
 import com.objects.marketbridge.domain.model.*;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -38,16 +38,16 @@ class OrderDetailRepositoryTest {
         String givenCodeType = StatusCodeType.PAYMENT_COMPLETED.getCode();
         String changeCodeType = StatusCodeType.ORDER_CANCEL.getCode();
 
-        ProdOrderDetail orderDetail1 = createOrderDetail_type(givenCodeType);
-        ProdOrderDetail orderDetail2 = createOrderDetail_type(givenCodeType);
-        ProdOrderDetail orderDetail3 = createOrderDetail_type(givenCodeType);
+        OrderDetail orderDetail1 = createOrderDetail_type(givenCodeType);
+        OrderDetail orderDetail2 = createOrderDetail_type(givenCodeType);
+        OrderDetail orderDetail3 = createOrderDetail_type(givenCodeType);
 
-        ProdOrder order = ProdOrder.builder().build();
+        Order order = Order.builder().build();
         order.addOrderDetail(orderDetail1);
         order.addOrderDetail(orderDetail2);
         order.addOrderDetail(orderDetail3);
 
-        ProdOrder savedOrder = orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
         Long orderId = savedOrder.getId();
 
         // when
@@ -62,13 +62,13 @@ class OrderDetailRepositoryTest {
     public void saveAll() {
         // given
         String givenType = StatusCodeType.PAYMENT_COMPLETED.getCode();
-        ProdOrderDetail orderDetail1 = createOrderDetail_type(givenType);
-        ProdOrderDetail orderDetail2 = createOrderDetail_type(givenType);
-        ProdOrderDetail orderDetail3 = createOrderDetail_type(givenType);
-        List<ProdOrderDetail> orderDetails = List.of(orderDetail1, orderDetail2, orderDetail3);
+        OrderDetail orderDetail1 = createOrderDetail_type(givenType);
+        OrderDetail orderDetail2 = createOrderDetail_type(givenType);
+        OrderDetail orderDetail3 = createOrderDetail_type(givenType);
+        List<OrderDetail> orderDetails = List.of(orderDetail1, orderDetail2, orderDetail3);
 
         // when
-        List<ProdOrderDetail> savedOrderDetails = orderDetailRepository.saveAll(orderDetails);
+        List<OrderDetail> savedOrderDetails = orderDetailRepository.saveAll(orderDetails);
 
         // then
         assertThat(savedOrderDetails.size()).isEqualTo(3);
@@ -79,16 +79,16 @@ class OrderDetailRepositoryTest {
     public void addReason() {
         // given
         String reason = "상품이 맘에들지 않아요";
-        ProdOrderDetail orderDetail1 = ProdOrderDetail.builder().build();
-        ProdOrderDetail orderDetail2 = ProdOrderDetail.builder().build();
-        ProdOrderDetail orderDetail3 = ProdOrderDetail.builder().build();
+        OrderDetail orderDetail1 = OrderDetail.builder().build();
+        OrderDetail orderDetail2 = OrderDetail.builder().build();
+        OrderDetail orderDetail3 = OrderDetail.builder().build();
 
-        ProdOrder order = ProdOrder.builder().build();
+        Order order = Order.builder().build();
         order.addOrderDetail(orderDetail1);
         order.addOrderDetail(orderDetail2);
         order.addOrderDetail(orderDetail3);
 
-        ProdOrder savedOrder = orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
         Long orderId = savedOrder.getId();
 
         // when
@@ -216,36 +216,36 @@ class OrderDetailRepositoryTest {
 //        em.persist(point);
 //
 //        // given
-//        ProdOrder prodOrder = ProdOrder.builder()
+//        Order order = Order.builder()
 //                .member(member)
 //                .build();
 //
 //        // 상품 옵션 추가
-//        ProdOrderDetail prodOrderDetail1 = ProdOrderDetail.builder()
-//                .prodOrder(prodOrder)
+//        OrderDetail orderDetail1 = OrderDetail.builder()
+//                .order(order)
 //                .product(prodOption1)
 //                .quantity(10L)
 //                .build();
-//        ProdOrderDetail prodOrderDetail2 = ProdOrderDetail.builder()
-//                .prodOrder(prodOrder)
+//        OrderDetail orderDetail2 = OrderDetail.builder()
+//                .order(order)
 //                .product(prodOption4)
 //                .quantity(20L)
 //                .build();
-//        em.persist(prodOrderDetail1);
-//        em.persist(prodOrderDetail2);
+//        em.persist(orderDetail1);
+//        em.persist(orderDetail2);
 //
 //        Delivery delivery1 = Delivery.builder()
-//                .prodOrderDetail(prodOrderDetail1)
+//                .orderDetail(orderDetail1)
 //                .statusCode(StatusCodeType.DELIVERY_PENDING.getCode())
 //                .build();
 //        Delivery delivery2 = Delivery.builder()
-//                .prodOrderDetail(prodOrderDetail2)
+//                .orderDetail(orderDetail2)
 //                .statusCode(StatusCodeType.DELIVERY_PENDING.getCode())
 //                .build();
 //        em.persist(delivery1);
 //        em.persist(delivery2);
 //
-//        orderRepository.save(prodOrder);
+//        orderRepository.save(order);
 //
 //        // when
 //
@@ -253,12 +253,12 @@ class OrderDetailRepositoryTest {
 //    }
 
     private String getReason(Long orderId) {
-        List<ProdOrderDetail> prodOrderDetails = orderRepository.findById(orderId).get().getProdOrderDetails();
-        return prodOrderDetails.get(0).getReason();
+        List<OrderDetail> orderDetails = orderRepository.findById(orderId).get().getOrderDetails();
+        return orderDetails.get(0).getReason();
     }
 
-    private ProdOrderDetail createOrderDetail_type(String code) {
-        return ProdOrderDetail.builder()
+    private OrderDetail createOrderDetail_type(String code) {
+        return OrderDetail.builder()
                 .statusCode(code)
                 .build();
     }

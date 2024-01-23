@@ -1,8 +1,8 @@
 package com.objects.marketbridge.domain.payment.service;
 
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.domain.*;
@@ -28,9 +28,9 @@ public class CreatePaymentService {
         Payment payment = createPayment(tossPaymentsResponse);
 
         // 2. 연관관계 매핑
-        List<ProdOrderDetail> orderDetails = orderDetailRepository.findByOrderNo(tossPaymentsResponse.getOrderId());
-        ProdOrder order = orderRepository.findByOrderNo(tossPaymentsResponse.getOrderId());
-        payment.linkProdOrder(order);
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNo(tossPaymentsResponse.getOrderId());
+        Order order = orderRepository.findByOrderNo(tossPaymentsResponse.getOrderId());
+        payment.linkOrder(order);
 
         // 3. orderDetail 에 paymentKey 집어넣어주기
         orderDetails.forEach(o -> o.changePaymentKey(tossPaymentsResponse.getPaymentKey()));

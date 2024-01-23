@@ -3,7 +3,7 @@ package com.objects.marketbridge.domain.order.service;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelResponse;
 import com.objects.marketbridge.domain.order.dto.OrderCancelServiceDto;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.domain.Payment;
 import com.objects.marketbridge.domain.payment.dto.RefundDto;
@@ -33,7 +33,7 @@ public class OrderCancelService {
     public OrderCancelResponse orderCancel(OrderCancelServiceDto orderCancelServiceDto, LocalDateTime cancelDateTime) {
         InnerService innerService = new InnerService();
 
-        ProdOrder order = innerService.cancel(
+        Order order = innerService.cancel(
                 orderCancelServiceDto.getOrderId(),
                 orderCancelServiceDto.getCancelReason(),
                 cancelDateTime
@@ -54,15 +54,15 @@ public class OrderCancelService {
     // TODO 객체로 따로 빼야함(임시로 사용)
     class InnerService {
 
-        public ProdOrder cancel(Long orderId, String reason, LocalDateTime cancelDateTime) {
-            ProdOrder prodOrder = orderRepository.findProdOrderWithDetailsAndProduct(orderId)
+        public Order cancel(Long orderId, String reason, LocalDateTime cancelDateTime) {
+            Order order = orderRepository.findOrderWithDetailsAndProduct(orderId)
                     .orElseThrow(() -> new IllegalArgumentException("해당하는 주문이 없습니다."));
 
-            prodOrder.cancel(reason, ORDER_CANCEL.getCode(), cancelDateTime);
+            order.cancel(reason, ORDER_CANCEL.getCode(), cancelDateTime);
 
-            prodOrder.returnCoupon();
+            order.returnCoupon();
 
-            return prodOrder;
+            return order;
         }
 
     }

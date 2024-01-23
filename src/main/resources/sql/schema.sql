@@ -180,7 +180,7 @@ create table if not exists MarketBridge.help_desk
 
     member_id     bigint       not null,
     product_id    bigint       not null,
-    prod_order_id bigint       not null,
+    order_id bigint       not null,
     content_type  varchar(255) not null,
     content       varchar(255) not null,
 
@@ -242,7 +242,7 @@ create table if not exists MarketBridge.payment
     payment_id    bigint auto_increment
         primary key,
 
-    prod_order_id bigint       not null,
+    order_id bigint       not null,
     pay_num       varchar(255) not null,
     pg            varchar(255) not null,
     receipt_id    varchar(255) not null,
@@ -286,9 +286,9 @@ create table if not exists MarketBridge.prod_option
     deleted_at         datetime(6)  null
 );
 
-create table if not exists MarketBridge.prod_order
+create table if not exists MarketBridge.order
 (
-    prod_order_id  bigint auto_increment
+    order_id  bigint auto_increment
         primary key,
 
     order_name     varchar(255)     null,
@@ -305,13 +305,13 @@ create table if not exists MarketBridge.prod_order
     deleted_at     datetime(6)  null
 );
 
-create table if not exists MarketBridge.prod_order_detail
+create table if not exists MarketBridge.order_detail
 (
-    prod_order_detail_id bigint auto_increment
+    order_detail_id bigint auto_increment
         primary key,
 
     product_id           bigint       not null,
-    prod_order_id        bigint       not null,
+    order_id        bigint       not null,
     coupon_id            bigint       not null,
     status_code          varchar(255) not null,
     price                int          not null,

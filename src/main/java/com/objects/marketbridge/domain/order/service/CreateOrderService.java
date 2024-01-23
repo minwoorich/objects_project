@@ -8,8 +8,8 @@ import com.objects.marketbridge.domain.model.Coupon;
 import com.objects.marketbridge.domain.model.Member;
 import com.objects.marketbridge.domain.model.Product;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
@@ -41,22 +41,22 @@ public class CreateOrderService {
     @Transactional
     public void create(CreateOrderDto createOrderDto) {
 
-        // 1. ProdOrder 생성
-        ProdOrder prodOrder = createProdOrder(createOrderDto);
-        orderRepository.save(prodOrder);
+        // 1. Order 생성
+        Order order = createOrder(createOrderDto);
+        orderRepository.save(order);
 
-        // 2. ProdOrderDetail 생성
-        List<ProdOrderDetail> prodOrderDetails = createProdOrderDetail(createOrderDto);
+        // 2. OrderDetail 생성
+        List<OrderDetail> orderDetails = createOrderDetail(createOrderDto);
 
-        // 3. ProdOrder - ProdOrderDetail 연관관계 매핑
-        for (ProdOrderDetail orderDetail : prodOrderDetails) {
-            prodOrder.addOrderDetail(orderDetail);
+        // 3. Order - OrderDetail 연관관계 매핑
+        for (OrderDetail orderDetail : orderDetails) {
+            order.addOrderDetail(orderDetail);
         }
         // 4. 영속성 저장
-        orderDetailRepository.saveAll(prodOrderDetails);
+        orderDetailRepository.saveAll(orderDetails);
     }
 
-    private ProdOrder createProdOrder(CreateOrderDto createOrderDto) {
+    private Order createOrder(CreateOrderDto createOrderDto) {
 
         Member member = memberRepository.findById(createOrderDto.getMemberId()).orElseThrow(EntityNotFoundException::new);
         Address address = addressRepository.findById(createOrderDto.getAddressId());
@@ -66,7 +66,7 @@ public class CreateOrderService {
         Long realOrderPrice = createOrderDto.getRealOrderPrice();
         Long totalUsedCouponPrice = geTotalCouponPrice(createOrderDto);
 
-        return ProdOrder.create(member, address, orderName, orderNo, totalOrderPrice, realOrderPrice, totalUsedCouponPrice);
+        return Order.create(member, address, orderName, orderNo, totalOrderPrice, realOrderPrice, totalUsedCouponPrice);
     }
 
     private Long geTotalCouponPrice(CreateOrderDto createOrderDto) {
@@ -76,9 +76,9 @@ public class CreateOrderService {
         return coupons.stream().mapToLong(Coupon::getPrice).sum();
     }
 
-    private List<ProdOrderDetail> createProdOrderDetail(CreateOrderDto createOrderDto) {
+    private List<OrderDetail> createOrderDetail(CreateOrderDto createOrderDto) {
 
-        List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
+        List<OrderDetail> orderDetails = new ArrayList<>();
 
         for (ProductValue productValue : createOrderDto.getProductValues()) {
 
@@ -89,14 +89,14 @@ public class CreateOrderService {
             Long quantity = productValue.getQuantity();
             Long price = product.getPrice();
 
-            // ProdOrderDetail 엔티티 생성
-            ProdOrderDetail prodOrderDetail =
-                    ProdOrderDetail.create(product, orderNo, coupon, quantity, price, StatusCodeType.ORDER_INIT.getCode());
+            // OrderDetail 엔티티 생성
+            OrderDetail orderDetail =
+                    OrderDetail.create(product, orderNo, coupon, quantity, price, StatusCodeType.ORDER_INIT.getCode());
 
-            // prodOrderDetails 에 추가
-            prodOrderDetails.add(prodOrderDetail);
+            // orderDetails 에 추가
+            orderDetails.add(orderDetail);
         }
 
-        return prodOrderDetails;
+        return orderDetails;
     }
 }
