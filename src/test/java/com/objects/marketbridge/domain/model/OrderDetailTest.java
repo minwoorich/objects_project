@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domain.model;
 
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
+import com.objects.marketbridge.model.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

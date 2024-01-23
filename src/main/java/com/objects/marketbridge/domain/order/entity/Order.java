@@ -1,8 +1,8 @@
 package com.objects.marketbridge.domain.order.entity;
 
-import com.objects.marketbridge.domain.model.Address;
-import com.objects.marketbridge.domain.model.BaseEntity;
-import com.objects.marketbridge.domain.model.Member;
+import com.objects.marketbridge.model.Address;
+import com.objects.marketbridge.model.BaseEntity;
+import com.objects.marketbridge.model.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,8 +15,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseEntity {
 
     @Id
@@ -79,7 +79,7 @@ public class Order extends BaseEntity {
     //== 비즈니스 로직==//
     public void cancelReturn(String reason, String statusCode, LocalDateTime cancelDateTime) {
         changeUpdateAt(cancelDateTime);
-        orderDetails.forEach(prodOrderDetail -> prodOrderDetail.cancel(reason, statusCode));
+        orderDetails.forEach(orderDetail -> orderDetail.cancel(reason, statusCode));
     }
 
     public void returnCoupon() {

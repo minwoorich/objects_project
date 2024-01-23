@@ -5,6 +5,7 @@ import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
+import com.objects.marketbridge.model.Product;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -111,7 +112,7 @@ class OrderDetailRepositoryTest {
         Product product1 = Product.builder().name("옷").build();
         Product product2 = Product.builder().name("바지").build();
         Product product3 = Product.builder().name("신발").build();
-        
+
         OrderDetail orderDetail1 = OrderDetail.builder().product(product1).build();
         OrderDetail orderDetail2 = OrderDetail.builder().product(product2).build();
         OrderDetail orderDetail3 = OrderDetail.builder().product(product3).build();

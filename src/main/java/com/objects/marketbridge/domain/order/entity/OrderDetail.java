@@ -1,8 +1,8 @@
 package com.objects.marketbridge.domain.order.entity;
 
-import com.objects.marketbridge.domain.model.BaseEntity;
-import com.objects.marketbridge.domain.model.Coupon;
-import com.objects.marketbridge.domain.model.Product;
+import com.objects.marketbridge.model.BaseEntity;
+import com.objects.marketbridge.model.Coupon;
+import com.objects.marketbridge.model.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,7 +50,7 @@ public class OrderDetail extends BaseEntity {
     private LocalDateTime cancelledAt;
 
     @Builder
-    public OrderDetail(Order order, String orderNo, String paymentKey, Product product, Coupon coupon, Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
+    public OrderDetail(Order order, String orderNo, String paymentKey, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
         this.orderNo = orderNo;
         this.paymentKey = paymentKey;
         this.order = order;

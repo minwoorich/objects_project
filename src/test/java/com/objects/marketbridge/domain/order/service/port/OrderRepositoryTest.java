@@ -1,10 +1,10 @@
 package com.objects.marketbridge.domain.order.service.port;
 
-import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.domain.model.Member;
-import com.objects.marketbridge.domain.model.Product;
+import com.objects.marketbridge.model.Member;
+import com.objects.marketbridge.model.Product;
 import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
+import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -82,7 +82,7 @@ class OrderRepositoryTest {
 
     @Test
     @DisplayName("주문 아이디로 주문, 주문상세, 상품을 한번에 조회 할 수 있다.")
-    public void findProdOrderWithDetailsAndProduct() {
+    public void findOrderWithDetailsAndProduct() {
         // given
         Order order = Order.builder().build();
         Product product = Product.builder().build();
@@ -95,7 +95,7 @@ class OrderRepositoryTest {
         orderRepository.save(order);
 
         // when
-        Order findOrder = orderRepository.findProdOrderWithDetailsAndProduct(order.getId()).get();
+        Order findOrder = orderRepository.findOrderWithDetailsAndProduct(order.getId()).get();
 
         // then
         assertThat(findOrder.getId()).isEqualTo(order.getId());

@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domain.order.controller.request;
 
-import com.objects.marketbridge.domain.order.dto.CreateProdOrderDetailDto;
-import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
+import com.objects.marketbridge.domain.order.dto.CreateOrderDetailDto;
+import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import com.objects.marketbridge.domain.order.dto.ProductInfoDto;
 import com.objects.marketbridge.global.error.CustomLogicException;
 import com.objects.marketbridge.global.error.ErrorCode;
@@ -58,8 +58,8 @@ public class CreateOrderRequest {
         }
     }
 
-    public CreateProdOrderDto toProdOrderDto(Long memberId, String orderNo){
-        return CreateProdOrderDto.builder()
+    public CreateOrderDto toOrderDto(Long memberId, String orderNo){
+        return CreateOrderDto.builder()
                 .orderNo(orderNo)
                 .memberId(memberId)
                 .addressId(selectedAddressId)
@@ -68,9 +68,9 @@ public class CreateOrderRequest {
                 .build();
     }
 
-    public List<CreateProdOrderDetailDto> toProdOrderDetailDtos() {
+    public List<CreateOrderDetailDto> toOrderDetailDtos() {
         return productInfos.stream()
-                .map(p -> CreateProdOrderDetailDto.builder()
+                .map(p -> CreateOrderDetailDto.builder()
                         .productId(p.getProductId())
                         .usedCouponId(p.getUsedCouponId())
                         .quantity(p.getQuantity())

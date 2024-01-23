@@ -27,7 +27,7 @@ public interface OrderRepository {
 
     void saveOrderTempAll(List<OrderTemp> orderTempList);
 
-    Optional<Order> findProdOrderWithDetailsAndProduct(Long orderId);
+    Optional<Order> findOrderWithDetailsAndProduct(Long orderId);
 
     List<Order> findDistinctWithDetailsByMemberId(Long memberId);
 }

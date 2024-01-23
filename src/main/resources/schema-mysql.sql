@@ -216,24 +216,24 @@ CREATE TABLE orders (
 DROP TABLE IF EXISTS order_detail;
 
 CREATE TABLE order_detail (
-                               order_detail_id	bigint auto_increment
+                                   order_detail_id	bigint auto_increment
                                        primary key,
 
-                               order_id	bigint	,
-                               product_id	bigint	,
-                               order_no varchar(255),
-                               coupon_id	bigint	,
-                               reward_type	varchar(255)	,
-                               quantity	bigint	,
-                               price	bigint	,
-                               status_code	varchar(255)	,
-                               delivered_date	datetime(6)	,
-                               reason	text	,
-                               payment_key varchar(255),
-                               cancelled_at	datetime(6)	,
-                               created_at	datetime(6)	,
-                               updated_at	datetime(6)	,
-                               deleted_at	datetime(6)
+                                   order_id	bigint	,
+                                   product_id	bigint	,
+                                   order_no varchar(255),
+                                   coupon_id	bigint	,
+                                   reward_type	varchar(255)	,
+                                   quantity	bigint	,
+                                   price	bigint	,
+                                   status_code	varchar(255)	,
+                                   delivered_date	datetime(6)	,
+                                   reason	text	,
+                                   payment_key varchar(255),
+                                   cancelled_at	datetime(6)	,
+                                   created_at	datetime(6)	,
+                                   updated_at	datetime(6)	,
+                                   deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS payment;
