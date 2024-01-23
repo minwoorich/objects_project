@@ -194,9 +194,9 @@ CREATE TABLE status_code (
                              deleted_at	datetime(6)
 );
 
-DROP TABLE IF EXISTS order;
+DROP TABLE IF EXISTS orders;
 
-CREATE TABLE order (
+CREATE TABLE orders (
                             order_id	bigint auto_increment
                                 primary key,
 

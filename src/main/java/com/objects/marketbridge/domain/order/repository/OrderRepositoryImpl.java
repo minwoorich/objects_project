@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.objects.marketbridge.domain.model.QProduct.product;
 import static com.objects.marketbridge.domain.order.entity.QOrder.order;
 import static com.objects.marketbridge.domain.order.entity.QOrderDetail.orderDetail;
+import static com.objects.marketbridge.model.QProduct.product;
 
 
 @Repository

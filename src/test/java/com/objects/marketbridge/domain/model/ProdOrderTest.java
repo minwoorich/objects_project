@@ -2,18 +2,17 @@ package com.objects.marketbridge.domain.model;
 
 import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
-import com.objects.marketbridge.domain.order.entity.QOrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import jakarta.persistence.Access;
+import com.objects.marketbridge.model.Coupon;
+import com.objects.marketbridge.model.MemberCoupon;
+import com.objects.marketbridge.model.Product;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.annotation.AccessType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 

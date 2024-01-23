@@ -1,8 +1,8 @@
 package com.objects.marketbridge.domain.order.controller;
 
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.domain.model.Address;
-import com.objects.marketbridge.domain.model.Member;
+import com.objects.marketbridge.model.Address;
+import com.objects.marketbridge.model.Member;
 import com.objects.marketbridge.domain.order.controller.request.CheckoutRequest;
 import com.objects.marketbridge.domain.order.controller.response.CheckoutResponse;
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
@@ -11,7 +11,6 @@ import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import com.objects.marketbridge.domain.order.service.TossApiService;
 import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
 import com.objects.marketbridge.domain.payment.dto.TossConfirmRequest;
-import com.objects.marketbridge.domain.payment.service.CreatePaymentService;
 import com.objects.marketbridge.global.common.ApiResponse;
 import com.objects.marketbridge.global.error.CustomLogicException;
 import com.objects.marketbridge.global.security.mock.AuthMemberId;
@@ -31,7 +30,6 @@ public class OrderController {
     private final MemberRepository memberRepository;
     private final TossPaymentConfig tossPaymentConfig;
     private final CreateOrderService createOrderService;
-    private final CreatePaymentService createPaymentService;
     private final TossApiService tossApiService;
 
     @GetMapping("/orders/checkout")
@@ -68,13 +66,13 @@ public class OrderController {
         request.setSuccessUrl(tossPaymentConfig.getSuccessUrl());
         request.setFailUrl(tossPaymentConfig.getFailUrl());
 
+        // TODO : request 정보를 레디스에 담아놔야함
         CreateOrderDto createOrderDto = request.toDto(memberId);
-        createOrderService.create(createOrderDto);
 
         return ApiResponse.ok(request);
     }
 
-    @GetMapping("/payments/toss/success")
+    @GetMapping("/orders/toss-payments/success")
     public ApiResponse<TossPaymentsResponse> tossPaymentSuccess(
             @AuthMemberId Long memberId,
             @RequestParam String paymentKey,
@@ -86,8 +84,9 @@ public class OrderController {
         TossPaymentsResponse tossPaymentsResponse =
                 tossApiService.requestPaymentAccept(new TossConfirmRequest(paymentKey, orderNo, totalOrderPrice));
 
-        // 2. Payment 생성
-        createPaymentService.create(tossPaymentsResponse);
+        // 2. Order, OrderDetail, Payment 생성
+        // TODO : 레디스에서 임시 데이터 불러온다음, createOrderDto 만들어줘야함
+//        createOrderService.create(createOrderDto, tossPaymentsResponse);
 
         // 3.
         // TODO : 1) 판매자 금액 추가(실제입금은 배치로 들어가겠지만, 우선 어딘가에 판매자의 돈이 올라갔음을 저장해놔야함)
@@ -98,15 +97,13 @@ public class OrderController {
         // TODO : 6) 결제 실패시 어떻게 처리?
 
         return ApiResponse.ok(tossPaymentsResponse);
-
     }
 
-    @GetMapping("/payments/toss/fail")
+    @GetMapping("/orders/toss-payments/fail")
     public ApiResponse<TossPaymentsResponse> tossPaymentFail(
             @RequestParam String paymentKey,
             @RequestParam(name = "orderId") String orderNo,
             @RequestParam Long amount) {
-
 
         return null;
     }

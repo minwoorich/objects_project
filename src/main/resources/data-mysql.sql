@@ -86,8 +86,8 @@ VALUES
     ('Order', '1001', 'Pending', NOW(), NOW(), NULL),
     ('Order', '1002', 'Shipped', NOW(), NOW(), NULL);
 
--- Insert statements for order table
-INSERT INTO marketbridge.order (member_id, address_id, order_name, order_no,  total_used_coupon_price,  total_price, real_price, used_point, created_at, updated_at, deleted_at)
+-- Insert statements for orders table
+INSERT INTO marketbridge.orders (member_id, address_id, order_name, order_no,  total_used_coupon_price,  total_price, real_price, used_point, created_at, updated_at, deleted_at)
 VALUES (1, 101, 'First Order', 'ORD001',  20,  300, 280, 5, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
 (2, 102, 'Second Order', 'ORD002',  15,  200, 185, 3, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
 
