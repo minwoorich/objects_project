@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,7 +45,6 @@ public class CreateOrderService {
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
     private final AddressRepository addressRepository;
-
 
     @Transactional
     public CreateOrderResponse create(CreateOrderDto createOrderDto) {
@@ -68,8 +66,6 @@ public class CreateOrderService {
 
         return createOrderResponse(createOrderDto);
     }
-
-
 
     private Order createOrder(CreateOrderDto createOrderDto) {
 
@@ -123,35 +119,5 @@ public class CreateOrderService {
                 member.getEmail(),
                 tossPaymentConfig.getSuccessUrl(),
                 tossPaymentConfig.getFailUrl());
-    }
-
-    // TODO : 이거 UpdateOrderSevice 로 옮겨야함
-//    public void updatePayment(TossPaymentsResponse tossPaymentsResponse) {
-//        // 3. Payment 엔티티 생성
-//        Payment payment = createPayment(tossPaymentsResponse);
-//
-//        // 5. Order - Payment 연관관계 매핑
-//        payment.linkOrder(order);
-//
-//        // 6. orderDetail 에 paymentKey 집어넣어주기
-//        orderDetails.forEach(o -> o.changePaymentKey(tossPaymentsResponse.getPaymentKey()));
-//
-//        // 4. 영속성 저장
-//        paymentRepository.save(payment);
-//    }
-
-    private Payment createPayment(TossPaymentsResponse tossPaymentsResponse) {
-
-        String orderNo = tossPaymentsResponse.getOrderId();
-        String paymentType = tossPaymentsResponse.getPaymentType();
-        String paymentMethod = tossPaymentsResponse.getPaymentMethod();
-        String paymentKey = tossPaymentsResponse.getPaymentKey();
-        String paymentStatus = tossPaymentsResponse.getPaymentStatus();
-        String refundStatus = tossPaymentsResponse.getRefundStatus();
-        Card card = tossPaymentsResponse.getCard();
-        VirtualAccount virtualAccount = tossPaymentsResponse.getVirtualAccount();
-        Transfer transfer = tossPaymentsResponse.getTransfer();
-
-        return Payment.create(orderNo, paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,  card, virtualAccount, transfer);
     }
 }
