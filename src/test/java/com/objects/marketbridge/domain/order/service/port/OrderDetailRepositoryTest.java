@@ -1,17 +1,17 @@
 package com.objects.marketbridge.domain.order.service.port;
 
 import com.objects.marketbridge.domain.model.*;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
+import com.objects.marketbridge.model.Product;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,16 +44,16 @@ class OrderDetailRepositoryTest {
         String givenCodeType = StatusCodeType.PAYMENT_COMPLETED.getCode();
         String changeCodeType = StatusCodeType.ORDER_CANCEL.getCode();
 
-        ProdOrderDetail orderDetail1 = createOrderDetail_type(givenCodeType);
-        ProdOrderDetail orderDetail2 = createOrderDetail_type(givenCodeType);
-        ProdOrderDetail orderDetail3 = createOrderDetail_type(givenCodeType);
+        OrderDetail orderDetail1 = createOrderDetail_type(givenCodeType);
+        OrderDetail orderDetail2 = createOrderDetail_type(givenCodeType);
+        OrderDetail orderDetail3 = createOrderDetail_type(givenCodeType);
 
-        ProdOrder order = ProdOrder.builder().build();
+        Order order = Order.builder().build();
         order.addOrderDetail(orderDetail1);
         order.addOrderDetail(orderDetail2);
         order.addOrderDetail(orderDetail3);
 
-        ProdOrder savedOrder = orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
         Long orderId = savedOrder.getId();
 
         // when
@@ -68,13 +68,13 @@ class OrderDetailRepositoryTest {
     public void saveAll() {
         // given
         String givenType = StatusCodeType.PAYMENT_COMPLETED.getCode();
-        ProdOrderDetail orderDetail1 = createOrderDetail_type(givenType);
-        ProdOrderDetail orderDetail2 = createOrderDetail_type(givenType);
-        ProdOrderDetail orderDetail3 = createOrderDetail_type(givenType);
-        List<ProdOrderDetail> orderDetails = List.of(orderDetail1, orderDetail2, orderDetail3);
+        OrderDetail orderDetail1 = createOrderDetail_type(givenType);
+        OrderDetail orderDetail2 = createOrderDetail_type(givenType);
+        OrderDetail orderDetail3 = createOrderDetail_type(givenType);
+        List<OrderDetail> orderDetails = List.of(orderDetail1, orderDetail2, orderDetail3);
 
         // when
-        List<ProdOrderDetail> savedOrderDetails = orderDetailRepository.saveAll(orderDetails);
+        List<OrderDetail> savedOrderDetails = orderDetailRepository.saveAll(orderDetails);
 
         // then
         assertThat(savedOrderDetails.size()).isEqualTo(3);
@@ -85,16 +85,16 @@ class OrderDetailRepositoryTest {
     public void addReason() {
         // given
         String reason = "상품이 맘에들지 않아요";
-        ProdOrderDetail orderDetail1 = ProdOrderDetail.builder().build();
-        ProdOrderDetail orderDetail2 = ProdOrderDetail.builder().build();
-        ProdOrderDetail orderDetail3 = ProdOrderDetail.builder().build();
+        OrderDetail orderDetail1 = OrderDetail.builder().build();
+        OrderDetail orderDetail2 = OrderDetail.builder().build();
+        OrderDetail orderDetail3 = OrderDetail.builder().build();
 
-        ProdOrder order = ProdOrder.builder().build();
+        Order order = Order.builder().build();
         order.addOrderDetail(orderDetail1);
         order.addOrderDetail(orderDetail2);
         order.addOrderDetail(orderDetail3);
 
-        ProdOrder savedOrder = orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
         Long orderId = savedOrder.getId();
 
         // when
@@ -112,12 +112,12 @@ class OrderDetailRepositoryTest {
         Product product1 = Product.builder().name("옷").build();
         Product product2 = Product.builder().name("바지").build();
         Product product3 = Product.builder().name("신발").build();
-        
-        ProdOrderDetail orderDetail1 = ProdOrderDetail.builder().product(product1).build();
-        ProdOrderDetail orderDetail2 = ProdOrderDetail.builder().product(product2).build();
-        ProdOrderDetail orderDetail3 = ProdOrderDetail.builder().product(product3).build();
 
-        ProdOrder order = ProdOrder.builder().build();
+        OrderDetail orderDetail1 = OrderDetail.builder().product(product1).build();
+        OrderDetail orderDetail2 = OrderDetail.builder().product(product2).build();
+        OrderDetail orderDetail3 = OrderDetail.builder().product(product3).build();
+
+        Order order = Order.builder().build();
         order.addOrderDetail(orderDetail1);
         order.addOrderDetail(orderDetail2);
         order.addOrderDetail(orderDetail3);
@@ -127,11 +127,11 @@ class OrderDetailRepositoryTest {
         orderRepository.save(order);
 
         // when
-        List<ProdOrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(order.getId(), products);
+        List<OrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(order.getId(), products);
 
         // then
         Assertions.assertThat(orderDetails).hasSize(3)
-                .extracting("product", "prodOrder")
+                .extracting("product", "order")
                 .contains(
                         tuple(product1, order),
                         tuple(product2, order),
@@ -140,12 +140,12 @@ class OrderDetailRepositoryTest {
     }
 
     private String getReason(Long orderId) {
-        List<ProdOrderDetail> prodOrderDetails = orderRepository.findById(orderId).get().getProdOrderDetails();
-        return prodOrderDetails.get(0).getReason();
+        List<OrderDetail> orderDetails = orderRepository.findById(orderId).get().getOrderDetails();
+        return orderDetails.get(0).getReason();
     }
 
-    private ProdOrderDetail createOrderDetail_type(String code) {
-        return ProdOrderDetail.builder()
+    private OrderDetail createOrderDetail_type(String code) {
+        return OrderDetail.builder()
                 .statusCode(code)
                 .build();
     }

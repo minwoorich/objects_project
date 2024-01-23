@@ -1,9 +1,5 @@
 package com.objects.marketbridge.domain.product.dto;
 
-import com.objects.marketbridge.domain.model.Category;
-import com.objects.marketbridge.domain.model.Image;
-import com.objects.marketbridge.domain.model.Option;
-import com.objects.marketbridge.domain.model.OptionCategory;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +14,7 @@ public class ProductRequestDto {
 
     @NotNull
     private Long categoryId;
-    //    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
+    //    private List<OrderDetail> orderDetails = new ArrayList<>();
 
     @NotNull
     private Boolean isOwn; // 로켓 true , 오픈 마켓 false

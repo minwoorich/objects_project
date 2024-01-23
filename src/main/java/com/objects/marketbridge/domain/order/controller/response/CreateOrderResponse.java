@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.order.controller.response;
 
-import com.objects.marketbridge.domain.order.dto.CreateProdOrderDto;
+import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -25,12 +25,12 @@ public class CreateOrderResponse {
         this.failUrl = failUrl;
     }
 
-    public static CreateOrderResponse from(CreateProdOrderDto prodOrderDto, String email, String successUrl, String failUrl){
+    public static CreateOrderResponse from(CreateOrderDto orderDto, String email, String successUrl, String failUrl){
         return CreateOrderResponse.builder()
                 .email(email)
-                .orderName(prodOrderDto.getOrderName())
-                .totalOrderPrice(prodOrderDto.getTotalOrderPrice())
-                .orderNo(prodOrderDto.getOrderNo())
+                .orderName(orderDto.getOrderName())
+                .totalOrderPrice(orderDto.getTotalOrderPrice())
+                .orderNo(orderDto.getOrderNo())
                 .successUrl(successUrl)
                 .failUrl(failUrl)
                 .build();

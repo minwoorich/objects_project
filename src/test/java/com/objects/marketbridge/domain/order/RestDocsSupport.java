@@ -18,9 +18,19 @@ public abstract class RestDocsSupport {
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider provider) {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
+        this.mockMvc =
+                configureMockMvc(provider) ;
+    }
+
+    private MockMvc configureMockMvc(RestDocumentationContextProvider provider) {
+        return MockMvcBuilders.standaloneSetup(initController())
                 .apply(documentationConfiguration(provider))
                 .build();
+    }
+
+    // 기본 값은 true 이고 만일 webApplicationContext 이 필요하면 오버라이드해서 false로 바꾸세요
+    protected boolean useStandaloneSetup() {
+        return true;
     }
 
     protected abstract Object initController();

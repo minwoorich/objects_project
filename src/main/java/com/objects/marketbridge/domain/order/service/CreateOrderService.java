@@ -3,17 +3,23 @@ package com.objects.marketbridge.domain.order.service;
 import com.objects.marketbridge.domain.address.repository.AddressRepository;
 import com.objects.marketbridge.domain.coupon.repository.CouponRepository;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.domain.model.Address;
-import com.objects.marketbridge.domain.model.Coupon;
-import com.objects.marketbridge.domain.model.Member;
-import com.objects.marketbridge.domain.model.Product;
+import com.objects.marketbridge.model.Address;
+import com.objects.marketbridge.model.Coupon;
+import com.objects.marketbridge.model.Member;
+import com.objects.marketbridge.model.Product;
+import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
+import com.objects.marketbridge.domain.payment.domain.Card;
+import com.objects.marketbridge.domain.payment.domain.Payment;
+import com.objects.marketbridge.domain.payment.domain.Transfer;
+import com.objects.marketbridge.domain.payment.domain.VirtualAccount;
+import com.objects.marketbridge.domain.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -36,27 +42,39 @@ public class CreateOrderService {
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
     private final AddressRepository addressRepository;
+    private final PaymentRepository paymentRepository;
 
 
     @Transactional
-    public void create(CreateOrderDto createOrderDto) {
+    public void create(CreateOrderDto createOrderDto, TossPaymentsResponse tossPaymentsResponse) {
 
-        // 1. ProdOrder 생성
-        ProdOrder prodOrder = createProdOrder(createOrderDto);
-        orderRepository.save(prodOrder);
+        // 1. Order 생성
+        Order order = createOrder(createOrderDto);
+        orderRepository.save(order);
 
-        // 2. ProdOrderDetail 생성
-        List<ProdOrderDetail> prodOrderDetails = createProdOrderDetail(createOrderDto);
+        // 2. OrderDetail 생성
+        List<OrderDetail> orderDetails = createOrderDetail(createOrderDto);
 
-        // 3. ProdOrder - ProdOrderDetail 연관관계 매핑
-        for (ProdOrderDetail orderDetail : prodOrderDetails) {
-            prodOrder.addOrderDetail(orderDetail);
+        // 3. Payment 엔티티 생성
+        Payment payment = createPayment(tossPaymentsResponse);
+
+        // 4. Order - OrderDetail 연관관계 매핑
+        for (OrderDetail orderDetail : orderDetails) {
+            order.addOrderDetail(orderDetail);
         }
+
+        // 5. Order - Payment 연관관계 매핑
+        payment.linkOrder(order);
+
+        // 6. orderDetail 에 paymentKey 집어넣어주기
+        orderDetails.forEach(o -> o.changePaymentKey(tossPaymentsResponse.getPaymentKey()));
+
         // 4. 영속성 저장
-        orderDetailRepository.saveAll(prodOrderDetails);
+        orderDetailRepository.saveAll(orderDetails);
+        paymentRepository.save(payment);
     }
 
-    private ProdOrder createProdOrder(CreateOrderDto createOrderDto) {
+    private Order createOrder(CreateOrderDto createOrderDto) {
 
         Member member = memberRepository.findById(createOrderDto.getMemberId()).orElseThrow(EntityNotFoundException::new);
         Address address = addressRepository.findById(createOrderDto.getAddressId());
@@ -66,7 +84,7 @@ public class CreateOrderService {
         Long realOrderPrice = createOrderDto.getRealOrderPrice();
         Long totalUsedCouponPrice = geTotalCouponPrice(createOrderDto);
 
-        return ProdOrder.create(member, address, orderName, orderNo, totalOrderPrice, realOrderPrice, totalUsedCouponPrice);
+        return Order.create(member, address, orderName, orderNo, totalOrderPrice, realOrderPrice, totalUsedCouponPrice);
     }
 
     private Long geTotalCouponPrice(CreateOrderDto createOrderDto) {
@@ -76,9 +94,9 @@ public class CreateOrderService {
         return coupons.stream().mapToLong(Coupon::getPrice).sum();
     }
 
-    private List<ProdOrderDetail> createProdOrderDetail(CreateOrderDto createOrderDto) {
+    private List<OrderDetail> createOrderDetail(CreateOrderDto createOrderDto) {
 
-        List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
+        List<OrderDetail> orderDetails = new ArrayList<>();
 
         for (ProductValue productValue : createOrderDto.getProductValues()) {
 
@@ -89,14 +107,29 @@ public class CreateOrderService {
             Long quantity = productValue.getQuantity();
             Long price = product.getPrice();
 
-            // ProdOrderDetail 엔티티 생성
-            ProdOrderDetail prodOrderDetail =
-                    ProdOrderDetail.create(product, orderNo, coupon, quantity, price, StatusCodeType.ORDER_INIT.getCode());
+            // OrderDetail 엔티티 생성
+            OrderDetail orderDetail =
+                    OrderDetail.create(product, orderNo, coupon, quantity, price, StatusCodeType.ORDER_INIT.getCode());
 
-            // prodOrderDetails 에 추가
-            prodOrderDetails.add(prodOrderDetail);
+            // orderDetails 에 추가
+            orderDetails.add(orderDetail);
         }
 
-        return prodOrderDetails;
+        return orderDetails;
+    }
+
+    private Payment createPayment(TossPaymentsResponse tossPaymentsResponse) {
+
+        String orderNo = tossPaymentsResponse.getOrderId();
+        String paymentType = tossPaymentsResponse.getPaymentType();
+        String paymentMethod = tossPaymentsResponse.getPaymentMethod();
+        String paymentKey = tossPaymentsResponse.getPaymentKey();
+        String paymentStatus = tossPaymentsResponse.getPaymentStatus();
+        String refundStatus = tossPaymentsResponse.getRefundStatus();
+        Card card = tossPaymentsResponse.getCard();
+        VirtualAccount virtualAccount = tossPaymentsResponse.getVirtualAccount();
+        Transfer transfer = tossPaymentsResponse.getTransfer();
+
+        return Payment.create(orderNo, paymentType, paymentMethod, paymentKey, paymentStatus, refundStatus,  card, virtualAccount, transfer);
     }
 }
