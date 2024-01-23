@@ -51,7 +51,7 @@ public class JwtTokenProvider {
      * AccessToken과 RefreshToken을 생성함.
      */
     public JwtTokenDto generateToken(CustomUserDetails principal) {
-        Long userId = principal.id();
+        Long userId = principal.getId();
         String role = getRole(principal.getAuthorities());
 
         String accessToken = issueToken(userId, role, ACCESS_TOKEN_EXPIRE_TIME);
