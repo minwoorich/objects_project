@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domain.payment.domain;
 
 import com.objects.marketbridge.domain.model.BaseEntity;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.Order;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,8 +19,8 @@ public class Payment extends BaseEntity {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "prod_order_id")
-    private ProdOrder prodOrder;
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     private String orderNo;
     private String paymentType;
@@ -42,8 +42,8 @@ public class Payment extends BaseEntity {
     private Transfer transfer;
 
     @Builder
-    public Payment(ProdOrder prodOrder, String orderNo, String paymentType, String paymentMethod, String paymentKey, String paymentStatus, String refundStatus,  Card card, VirtualAccount virtualAccount, Transfer transfer) {
-        this.prodOrder = prodOrder;
+    public Payment(Order order, String orderNo, String paymentType, String paymentMethod, String paymentKey, String paymentStatus, String refundStatus, Card card, VirtualAccount virtualAccount, Transfer transfer) {
+        this.order = order;
         this.orderNo = orderNo;
         this.paymentType = paymentType;
         this.paymentMethod = paymentMethod;
@@ -70,7 +70,7 @@ public class Payment extends BaseEntity {
     }
 
     // ProdOrder와 연관관계 매핑 해주는 메서드 (단방향)
-    public void linkProdOrder(ProdOrder prodOrder) {
-        this.prodOrder = prodOrder;
+    public void linkProdOrder(Order order) {
+        this.order = order;
     }
 }

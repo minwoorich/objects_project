@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.model;
 
-import com.objects.marketbridge.domain.order.entity.ProdOrderDetail;
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -22,8 +22,8 @@ public class Delivery extends BaseEntity {
     private String deliveryType; // NORMAL, EXCHANGE, RETURN // column이름이랑 다름
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_order_detail_id")
-    private ProdOrderDetail prodOrderDetail;
+    @JoinColumn(name = "order_detail_id")
+    private OrderDetail orderDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
@@ -44,9 +44,9 @@ public class Delivery extends BaseEntity {
     private LocalDateTime deliveredDate;
 
     @Builder
-    private Delivery(String deliveryType, ProdOrderDetail prodOrderDetail, Seller seller, Address address, String carrier, String trackingNo, String statusCode, LocalDateTime shipDate, LocalDateTime deliveredDate) {
+    private Delivery(String deliveryType, OrderDetail orderDetail, Seller seller, Address address, String carrier, String trackingNo, String statusCode, LocalDateTime shipDate, LocalDateTime deliveredDate) {
         this.deliveryType = deliveryType;
-        this.prodOrderDetail = prodOrderDetail;
+        this.orderDetail = orderDetail;
         this.seller = seller;
         this.address = address;
         this.carrier = carrier;

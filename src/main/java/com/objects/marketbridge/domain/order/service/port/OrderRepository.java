@@ -1,25 +1,25 @@
 package com.objects.marketbridge.domain.order.service.port;
 
 
+import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.entity.OrderTemp;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface OrderRepository {
 
-    Optional<ProdOrder> findById(Long orderId);
-    ProdOrder findByOrderNo(String orderNo);
+    Optional<Order> findById(Long orderId);
+    Order findByOrderNo(String orderNo);
 
-    ProdOrder save(ProdOrder order);
+    Order save(Order order);
 
-    void saveAll(List<ProdOrder> orders);
-    Optional<ProdOrder> findWithOrderDetailsAndProduct(Long orderId);
+    void saveAll(List<Order> orders);
+    Optional<Order> findWithOrderDetailsAndProduct(Long orderId);
 
     void deleteAllInBatch();
 
-    Optional<ProdOrder> findByIdWithOrderDetail(Long orderId);
+    Optional<Order> findByIdWithOrderDetail(Long orderId);
 
     OrderTemp findOrderTempByOrderNo(String orderNo);
 
@@ -27,5 +27,7 @@ public interface OrderRepository {
 
     void saveOrderTempAll(List<OrderTemp> orderTempList);
 
-    Optional<ProdOrder> findProdOrderWithDetailsAndProduct(Long orderId);
+    Optional<Order> findProdOrderWithDetailsAndProduct(Long orderId);
+
+    List<Order> findDistinctWithDetailsByMemberId(Long memberId);
 }

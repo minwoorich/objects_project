@@ -2,8 +2,7 @@ package com.objects.marketbridge.domain.order.service;
 
 import com.objects.marketbridge.domain.order.controller.response.TossErrorResponse;
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
-import com.objects.marketbridge.domain.order.entity.OrderTemp;
-import com.objects.marketbridge.domain.order.entity.ProdOrder;
+import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.global.error.CustomLogicException;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
@@ -68,7 +67,7 @@ public class TossApiService {
 
     private void validPayment(String orderNo, Long totalOrderPrice) {
 
-        ProdOrder order = orderRepository.findByOrderNo(orderNo);
+        Order order = orderRepository.findByOrderNo(orderNo);
         if (!orderNo.equals(order.getOrderNo()) || !totalOrderPrice.equals(order.getTotalPrice())) {
             throw new CustomLogicException("결제정보가 맞지 않습니다", ErrorCode.MISMATCHED_PAYMENT_DATA.toString());
         }

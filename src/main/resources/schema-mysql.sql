@@ -194,10 +194,10 @@ CREATE TABLE status_code (
                              deleted_at	datetime(6)
 );
 
-DROP TABLE IF EXISTS prod_order;
+DROP TABLE IF EXISTS orders;
 
-CREATE TABLE prod_order (
-                            prod_order_id	bigint auto_increment
+CREATE TABLE orders (
+                            order_id	bigint auto_increment
                                 primary key,
 
                             member_id	bigint	,
@@ -213,27 +213,27 @@ CREATE TABLE prod_order (
                             deleted_at	datetime(6)
 );
 
-DROP TABLE IF EXISTS prod_order_detail;
+DROP TABLE IF EXISTS order_detail;
 
-CREATE TABLE prod_order_detail (
-                                   prod_order_detail_id	bigint auto_increment
+CREATE TABLE order_detail (
+                               order_detail_id	bigint auto_increment
                                        primary key,
 
-                                   prod_order_id	bigint	,
-                                   product_id	bigint	,
-                                   order_no varchar(255),
-                                   coupon_id	bigint	,
-                                   reward_type	varchar(255)	,
-                                   quantity	bigint	,
-                                   price	bigint	,
-                                   status_code	varchar(255)	,
-                                   delivered_date	datetime(6)	,
-                                   reason	text	,
-                                   payment_key varchar(255),
-                                   cancelled_at	datetime(6)	,
-                                   created_at	datetime(6)	,
-                                   updated_at	datetime(6)	,
-                                   deleted_at	datetime(6)
+                               order_id	bigint	,
+                               product_id	bigint	,
+                               order_no varchar(255),
+                               coupon_id	bigint	,
+                               reward_type	varchar(255)	,
+                               quantity	bigint	,
+                               price	bigint	,
+                               status_code	varchar(255)	,
+                               delivered_date	datetime(6)	,
+                               reason	text	,
+                               payment_key varchar(255),
+                               cancelled_at	datetime(6)	,
+                               created_at	datetime(6)	,
+                               updated_at	datetime(6)	,
+                               deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS payment;
@@ -242,7 +242,7 @@ CREATE TABLE payment (
                          payment_id	bigint auto_increment
                              primary key,
 
-                         prod_order_id	bigint	,
+                         order_id	bigint	,
                          order_no	varchar(255)	,
                          payment_type	varchar(255)	,
                          payment_method	varchar(255)	,
@@ -370,7 +370,7 @@ CREATE TABLE help_desk (
 
                            member_id	bigint	,
                            product_id	bigint	,
-                           prod_order_id	bigint	,
+                           order_id	bigint	,
                            contents_type	varchar(255)	,
                            content	text	,
                            created_at	datetime(6)	,
@@ -386,7 +386,7 @@ CREATE TABLE delivery (
 
                           seller_id	bigint	,
                           address_id	bigint	,
-                          prod_order_detail_id	bigint	,
+                          order_detail_id	bigint	,
                           type	varchar(255)	,
                           carrier	varchar(255)	,
                           tracking_no	varchar(255)	,

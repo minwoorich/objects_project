@@ -16,11 +16,12 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProdOrder extends BaseEntity {
+@Table(name = "orders")
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "prod_order_id")
+    @Column(name = "order_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,11 +44,11 @@ public class ProdOrder extends BaseEntity {
 
     private Long usedPoint; // 구매하는데 사용한 포인트
 
-    @OneToMany(mappedBy = "prodOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 
     @Builder
-    public ProdOrder(Member member, Address address, String orderName, String orderNo, Long realPrice, Long totalPrice, Long totalUsedCouponPrice, Long usedPoint) {
+    public Order(Member member, Address address, String orderName, String orderNo, Long realPrice, Long totalPrice, Long totalUsedCouponPrice, Long usedPoint) {
         this.member = member;
         this.address = address;
         this.orderName = orderName;
@@ -58,13 +59,13 @@ public class ProdOrder extends BaseEntity {
         this.usedPoint = usedPoint;
     }
 
-    public void addOrderDetail(ProdOrderDetail prodOrderDetail) {
-        prodOrderDetails.add(prodOrderDetail);
-        prodOrderDetail.setOrder(this);
+    public void addOrderDetail(OrderDetail orderDetail) {
+        orderDetails.add(orderDetail);
+        orderDetail.setOrder(this);
     }
 
-    public static ProdOrder create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice, Long totalUsedCouponPrice){
-        return ProdOrder.builder()
+    public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice, Long totalUsedCouponPrice){
+        return Order.builder()
                 .member(member)
                 .address(address)
                 .orderName(orderName)
@@ -76,12 +77,12 @@ public class ProdOrder extends BaseEntity {
     }
 
     //== 비즈니스 로직==//
-    public void cancel(String reason, String statusCode, LocalDateTime cancelDateTime) {
+    public void cancelReturn(String reason, String statusCode, LocalDateTime cancelDateTime) {
         changeUpdateAt(cancelDateTime);
-        prodOrderDetails.forEach(prodOrderDetail -> prodOrderDetail.cancel(reason, statusCode));
+        orderDetails.forEach(prodOrderDetail -> prodOrderDetail.cancel(reason, statusCode));
     }
 
     public void returnCoupon() {
-        prodOrderDetails.forEach(ProdOrderDetail::returnCoupon);
+        orderDetails.forEach(OrderDetail::returnCoupon);
     }
 }
