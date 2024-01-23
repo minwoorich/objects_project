@@ -31,7 +31,7 @@ public class MemberController {
     }
 
     @PostMapping("/sign-up")
-    public ApiResponse<Void> registerUser(@Valid @RequestBody SignUpDto signUpDto) throws BadRequestException {
+    public ApiResponse<Void> signUp(@Valid @RequestBody SignUpDto signUpDto) throws BadRequestException {
         memberService.save(signUpDto);
         return ApiResponse.create();
     }
