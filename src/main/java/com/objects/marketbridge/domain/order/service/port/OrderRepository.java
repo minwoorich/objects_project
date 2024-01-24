@@ -29,5 +29,6 @@ public interface OrderRepository {
 
     Optional<Order> findOrderWithDetailsAndProduct(Long orderId);
 
-    List<Order> findDistinctWithDetailsByMemberId(Long memberId);
+    // TODO 영속성 문제? 있는 쿼리
+//    List<Order> findDistinctWithDetailsByMemberId(Long memberId);
 }

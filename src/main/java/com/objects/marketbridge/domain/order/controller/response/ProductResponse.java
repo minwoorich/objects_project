@@ -13,20 +13,23 @@ public class ProductResponse {
     private String productNo;
     private String name;
     private Long price;
+    private Long quantity;
 
     @Builder
-    public ProductResponse(Long productId, String productNo, String name, Long price) {
+    private ProductResponse(Long productId, String productNo, String name, Long price,Long quantity) {
         this.productId = productId;
         this.productNo = productNo;
         this.name = name;
         this.price = price;
+        this.quantity = quantity;
     }
 
-    public static ProductResponse of(Product product) {
+    public static ProductResponse of(Product product, Long quantity) {
         return ProductResponse.builder()
                 .productId(product.getId())
                 .name(product.getName())
                 .price(product.getPrice())
+                .quantity(quantity)
                 .build();
     }
 }
