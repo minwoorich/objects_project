@@ -16,4 +16,10 @@ public class SignInDto {
 
     @NotBlank()
     private String password;
+
+    @Builder
+    public SignInDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
