@@ -66,12 +66,14 @@ public class JwtTokenProvider {
      * 사용자의 권한 문자열을 가져오는 메서드.
      */
     public String getRole(Collection<? extends GrantedAuthority> authorities) {
-        // authorities는 부여된 권한 목록을 반환. GrantedAuthority의 컬렉션.
-        // GrantedAuthority는 권한 정보를 나타내는 인터페이스
-        // getAuthority() 메서드는 권한을 나타내는 문자열을 반환.
-        // --> Spring security의 User객체(UserDetails의 구현체)의 roles 메서드에 의해 ROLE_ prefix가 없을 경우 붙여 줌. "USER -> ROLE_USER"
-        // ----> UserDetails는 사용자정보를 나타내는 인터페이스
-        // ----> User는 UserDetails의 구현체로 사용자의 계정, 비밀번호 만료나, 계정이 잠겨있는지에 대한 정보를 가지고 있음.
+        /*
+         * authorities는 부여된 권한 목록을 반환. GrantedAuthority의 컬렉션.
+         * GrantedAuthority는 권한 정보를 나타내는 인터페이스
+         * getAuthority() 메서드는 권한을 나타내는 문자열을 반환.
+         * --> Spring security의 User객체(UserDetails의 구현체)의 roles 메서드에 의해 ROLE_ prefix가 없을 경우 붙여 줌. "USER -> ROLE_USER"
+         * ----> UserDetails는 사용자정보를 나타내는 인터페이스
+         * ----> User는 UserDetails의 구현체로 사용자의 계정, 비밀번호 만료나, 계정이 잠겨있는지에 대한 정보를 가지고 있음.
+         */
         return authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -111,21 +113,15 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
 
-        } catch (SecurityException | MalformedJwtException e) {
-            log.info(SecurityErrConst.INVALID_TOKEN_ERR, e.getMessage());
-            throw new BadRequestException(SecurityErrConst.INVALID_TOKEN_ERR);
-
-        } catch (ExpiredJwtException e) {
-            log.info(SecurityErrConst.EXPIRED_TOKEN_ERR, e.getMessage());
-            throw new BadRequestException(SecurityErrConst.EXPIRED_TOKEN_ERR);
-
-        } catch (UnsupportedJwtException e) {
-            log.info(SecurityErrConst.UNSUPPORTED_TOKEN_ERR, e.getMessage());
-            throw new BadRequestException(SecurityErrConst.UNSUPPORTED_TOKEN_ERR);
-
-        } catch (IllegalStateException e) {
-            log.info(SecurityErrConst.EMPTY_TOKEN_ERR, e.getMessage());
-            throw new BadRequestException(SecurityErrConst.EMPTY_TOKEN_ERR);
+        } catch (
+                 SecurityException |
+                 MalformedJwtException |
+                 ExpiredJwtException |
+                 UnsupportedJwtException |
+                 IllegalStateException e
+        ) {
+            log.info(e.getMessage());
+            throw new BadRequestException(e.getMessage());
         }
     }
 
@@ -133,12 +129,15 @@ public class JwtTokenProvider {
      * 토근을 발급하는 메서드
      */
     public String issueToken(Long userId, String role, Long expiration) {
-        // .setSubject() jwt의 주제(주로 name)
-        // .claim() token 안에 포함되는 정보 - iss(발급자), exp(만료시간), sub(주제) 등등... 이외에도 name, role 등이 있음.
-        // .setIssuedAt 발급시간
-        // .setExpiration() 만료시간
-        // .signWith() JWT 서명에 사용되는 비밀키
-        // .compact() JWT를 문자열로 반환
+        /*
+         * .setSubject() jwt의 주제(주로 name)
+         * .claim() token 안에 포함되는 정보 - iss(발급자), exp(만료시간), sub(주제) 등등... 이외에도 name, role 등이 있음.
+         * .setIssuedAt 발급시간
+         * .setExpiration() 만료시간
+         * .signWith() JWT 서명에 사용되는 비밀키
+         * .compact() JWT를 문자열로 반환
+         */
+
 
         long expirationTime = Instant.now().toEpochMilli() + expiration;
         return Jwts.builder()
