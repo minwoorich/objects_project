@@ -103,8 +103,8 @@ class OrderTest {
         assertThat(coupon2.getCount()).isEqualTo(21L);
         assertThat(memberCoupon1.getUsedDate()).isNull();
         assertThat(memberCoupon2.getUsedDate()).isNull();
-        assertThat(memberCoupon1.isUsed()).isFalse();
-        assertThat(memberCoupon2.isUsed()).isFalse();
+        assertThat(memberCoupon1.getIsUsed()).isFalse();
+        assertThat(memberCoupon2.getIsUsed()).isFalse();
     }
 
 }

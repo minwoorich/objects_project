@@ -17,7 +17,12 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     }
 
     @Override
-    public MemberCoupon findByMemberIdAndCouponId(Long memberId, Long couponId) {
-        return memberCouponJpaRepository.findByMemberIdAndCouponId(memberId, couponId);
+    public MemberCoupon findByMember_IdAndCoupon_Id(Long memberId, Long couponId) {
+        return memberCouponJpaRepository.findByMember_IdAndCoupon_Id(memberId, couponId);
+    }
+
+    @Override
+    public MemberCoupon save(MemberCoupon memberCoupon) {
+        return memberCouponJpaRepository.save(memberCoupon);
     }
 }

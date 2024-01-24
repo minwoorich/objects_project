@@ -14,7 +14,7 @@ public class CouponUsageService {
         orderDetails.stream()
                 .filter(o -> o.getCoupon() != null)
                 .map(o ->
-                        memberCouponRepository.findByMemberIdAndCouponId(
+                        memberCouponRepository.findByMember_IdAndCoupon_Id(
                                 memberId,
                                 o.getCoupon().getId())
                 )

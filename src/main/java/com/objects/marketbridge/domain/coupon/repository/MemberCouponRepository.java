@@ -5,5 +5,7 @@ import com.objects.marketbridge.model.MemberCoupon;
 public interface MemberCouponRepository {
     MemberCoupon findById(Long id);
 
-    MemberCoupon findByMemberIdAndCouponId(Long MemberId, Long CouponId);
+    MemberCoupon findByMember_IdAndCoupon_Id(Long MemberId, Long CouponId);
+
+    MemberCoupon save(MemberCoupon memberCoupon);
 }
