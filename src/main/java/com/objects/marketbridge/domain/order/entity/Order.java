@@ -84,7 +84,7 @@ public class Order extends BaseEntity {
                 .realPrice(realPrice)
                 .build();
     }
-    public void calculateTotalUsedCouponPrice(Long totalUsedCouponPrice) {
+    public void setTotalUsedCouponPrice(Long totalUsedCouponPrice) {
         this.totalUsedCouponPrice = totalUsedCouponPrice;
     }
 }

@@ -32,4 +32,9 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     public List<MemberCoupon> saveAll(List<MemberCoupon> memberCoupons) {
         return memberCouponJpaRepository.saveAll(memberCoupons);
     }
+
+    @Override
+    public List<MemberCoupon> findAll() {
+        return memberCouponJpaRepository.findAll();
+    }
 }

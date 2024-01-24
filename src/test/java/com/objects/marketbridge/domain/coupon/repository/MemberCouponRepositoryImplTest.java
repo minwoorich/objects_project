@@ -36,7 +36,7 @@ class MemberCouponRepositoryImplTest {
 
     @DisplayName("멤버아이디와 쿠폰아이디로 멤버쿠폰을 가져올수 있다.")
     @Test
-    void findByMemberIdAndCouponId(){
+    void findByMember_IdAndCoupon_Id(){
         //given
         Member member = memberRepository.findByEmail("test@email.com").orElseThrow(EntityNotFoundException::new);
         Coupon coupon = couponRepository.findAll().get(0);
