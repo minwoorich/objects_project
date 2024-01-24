@@ -14,7 +14,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import static com.objects.marketbridge.domain.member.constant.MemberConst.LOGGED_OUT_SUCCESSFULLY;
+import static com.objects.marketbridge.domain.member.constant.MemberConst.*;
 
 @Slf4j
 @RestController
@@ -31,6 +31,7 @@ public class MemberController {
     }
 
     @PostMapping("/sign-up")
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Void> signUp(@Valid @RequestBody SignUpDto signUpDto) throws BadRequestException {
         memberService.save(signUpDto);
         return ApiResponse.create();
@@ -52,12 +53,6 @@ public class MemberController {
     public ApiResponse<JwtTokenDto> reIssueToken(@GetAuthentication CustomUserDetails principal) {
         JwtTokenDto jwtTokenDto = memberService.reIssueToken(principal);
         return ApiResponse.ok(jwtTokenDto);
-    }
-
-    @GetMapping("/test")
-    public  ApiResponse<MemberIdDto> authTest(@AuthMemberId Long id) {
-        MemberIdDto memberId = MemberIdDto.builder().memberId(id).build();
-        return ApiResponse.ok(memberId);
     }
 
     @GetMapping("/membership/{id}")
