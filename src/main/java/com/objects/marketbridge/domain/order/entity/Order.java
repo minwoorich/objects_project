@@ -64,18 +64,6 @@ public class Order extends BaseEntity {
         orderDetail.setOrder(this);
     }
 
-    public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice, Long totalUsedCouponPrice){
-        return Order.builder()
-                .member(member)
-                .address(address)
-                .orderName(orderName)
-                .orderNo(orderNo)
-                .totalPrice(totalPrice)
-                .realPrice(realPrice)
-                .totalUsedCouponPrice(totalUsedCouponPrice)
-                .build();
-    }
-
     //== 비즈니스 로직==//
     public void cancelReturn(String reason, String statusCode, LocalDateTime cancelDateTime) {
         changeUpdateAt(cancelDateTime);
@@ -84,5 +72,19 @@ public class Order extends BaseEntity {
 
     public void returnCoupon() {
         orderDetails.forEach(OrderDetail::returnCoupon);
+    }
+
+    public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice){
+        return Order.builder()
+                .member(member)
+                .address(address)
+                .orderName(orderName)
+                .orderNo(orderNo)
+                .totalPrice(totalPrice)
+                .realPrice(realPrice)
+                .build();
+    }
+    public void calculateTotalUsedCouponPrice(Long totalUsedCouponPrice) {
+        this.totalUsedCouponPrice = totalUsedCouponPrice;
     }
 }
