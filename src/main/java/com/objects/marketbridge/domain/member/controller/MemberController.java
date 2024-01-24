@@ -1,10 +1,6 @@
 package com.objects.marketbridge.domain.member.controller;
 
-
-import com.objects.marketbridge.domain.member.dto.IsCheckedDto;
-import com.objects.marketbridge.domain.member.dto.SignUpDto;
-import com.objects.marketbridge.domain.member.dto.SignInDto;
-import com.objects.marketbridge.domain.member.dto.FindPointDto;
+import com.objects.marketbridge.domain.member.dto.*;
 import com.objects.marketbridge.domain.member.service.MemberService;
 import com.objects.marketbridge.global.security.annotation.AuthMemberId;
 import com.objects.marketbridge.global.security.annotation.GetAuthentication;
@@ -18,6 +14,8 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import static com.objects.marketbridge.domain.member.constant.MemberConst.*;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -27,35 +25,34 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/check-email")
-    public ApiResponse<IsCheckedDto> checkDuplicateEmail(@RequestParam(name="email") String email) {
-        return ApiResponse.ok(memberService.isDuplicateEmail(email));
+    public ApiResponse<CheckedResultDto> checkDuplicateEmail(@RequestParam(name="email") String email) {
+        CheckedResultDto checked = memberService.isDuplicateEmail(email);
+        return ApiResponse.ok(checked);
     }
 
     @PostMapping("/sign-up")
-    public ApiResponse<Void> registerUser(@Valid @RequestBody SignUpDto signUpDto) throws BadRequestException {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<Void> signUp(@Valid @RequestBody SignUpDto signUpDto) throws BadRequestException {
         memberService.save(signUpDto);
         return ApiResponse.create();
     }
 
     @PostMapping("/sign-in")
     public ApiResponse<JwtTokenDto> signIn(@Valid @RequestBody SignInDto signInDto) {
-        return ApiResponse.ok(memberService.signIn(signInDto));
+        JwtTokenDto jwtTokenDto = memberService.signIn(signInDto);
+        return ApiResponse.ok(jwtTokenDto);
     }
 
     @DeleteMapping("/sign-out")
     public ApiResponse<Void> signOut(@AuthMemberId Long memberId) {
         memberService.signOut(memberId);
-        return ApiResponse.of(HttpStatus.OK, "Logged out successfully.", null);
+        return ApiResponse.of(HttpStatus.OK, LOGGED_OUT_SUCCESSFULLY, null);
     }
 
     @PutMapping("/re-issue")
     public ApiResponse<JwtTokenDto> reIssueToken(@GetAuthentication CustomUserDetails principal) {
-        return ApiResponse.ok(memberService.reIssueToken(principal));
-    }
-
-    @GetMapping("/test")
-    public Long authTest(@AuthMemberId Long id) {
-        return id;
+        JwtTokenDto jwtTokenDto = memberService.reIssueToken(principal);
+        return ApiResponse.ok(jwtTokenDto);
     }
 
     @GetMapping("/membership/{id}")
@@ -67,6 +64,6 @@ public class MemberController {
     public ApiResponse<FindPointDto> findPointById(@PathVariable Long id){
 
         FindPointDto memberPoint = memberService.findPointById(id);
-        return ApiResponse.of(HttpStatus.OK,"completed",memberPoint);
+        return ApiResponse.of(HttpStatus.OK, memberPoint);
     }
 }
