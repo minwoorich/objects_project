@@ -447,7 +447,7 @@ DROP TABLE IF EXISTS point;
 CREATE TABLE point (
                          point_id	bigint auto_increment
                              primary key,
-
+                         member_id  bigint  ,
                          user_id	bigint	,
                          in_point	bigint	,
                          out_point	bigint	,
