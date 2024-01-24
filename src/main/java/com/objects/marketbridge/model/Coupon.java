@@ -41,7 +41,6 @@ public class Coupon extends BaseEntity {
     private LocalDateTime endDate;
 
     @Builder
-
     public Coupon(Product product, String name, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
         this.product = product;
         this.name = name;

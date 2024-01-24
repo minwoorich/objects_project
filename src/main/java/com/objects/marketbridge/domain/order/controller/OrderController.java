@@ -1,19 +1,23 @@
 package com.objects.marketbridge.domain.order.controller;
 
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
+import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
+import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
+import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
+import com.objects.marketbridge.domain.order.entity.StatusCodeType;
+import com.objects.marketbridge.domain.order.service.UpdateOrderService;
+import com.objects.marketbridge.domain.order.service.port.OrderRepository;
+import com.objects.marketbridge.global.security.annotation.UserAuthorize;
 import com.objects.marketbridge.model.Address;
 import com.objects.marketbridge.model.Member;
-import com.objects.marketbridge.domain.order.controller.request.CheckoutRequest;
 import com.objects.marketbridge.domain.order.controller.response.CheckoutResponse;
 import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
-import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
 import com.objects.marketbridge.domain.order.service.CreateOrderService;
 import com.objects.marketbridge.domain.order.service.TossApiService;
-import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
 import com.objects.marketbridge.domain.payment.dto.TossConfirmRequest;
 import com.objects.marketbridge.global.common.ApiResponse;
 import com.objects.marketbridge.global.error.CustomLogicException;
-import com.objects.marketbridge.global.security.mock.AuthMemberId;
+import com.objects.marketbridge.global.security.annotation.AuthMemberId;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,22 +32,22 @@ import static com.objects.marketbridge.global.error.ErrorCode.SHIPPING_ADDRESS_N
 public class OrderController {
 
     private final MemberRepository memberRepository;
-    private final TossPaymentConfig tossPaymentConfig;
     private final CreateOrderService createOrderService;
+    private final UpdateOrderService updateOrderService;
     private final TossApiService tossApiService;
+    private final OrderRepository orderRepository;
 
     @GetMapping("/orders/checkout")
     public ApiResponse<CheckoutResponse> getCheckout(
             @AuthMemberId Long memberId) {
 
-//        Long id = memberId;
         Member member = memberRepository.findByIdWithAddresses(memberId).orElseThrow(EntityNotFoundException::new);
-        CheckoutResponse checkoutResponse = createOrderResponse(member);
+        CheckoutResponse checkoutResponse = createCheckoutResponse(member);
 
         return ApiResponse.ok(checkoutResponse);
     }
 
-    private CheckoutResponse createOrderResponse(Member member) {
+    private CheckoutResponse createCheckoutResponse(Member member) {
 
         Address address = filterDefaultAddress(member.getAddresses());
 
@@ -59,17 +63,22 @@ public class OrderController {
     }
 
     @PostMapping("/orders/checkout")
-    public ApiResponse<CheckoutRequest> saveOrderTemp(
+    public ApiResponse<CreateOrderResponse> saveOrder(
             @AuthMemberId Long memberId,
-            @Valid @RequestBody CheckoutRequest request) {
+            @Valid @RequestBody CreateOrderRequest request) {
 
-        request.setSuccessUrl(tossPaymentConfig.getSuccessUrl());
-        request.setFailUrl(tossPaymentConfig.getFailUrl());
+        CreateOrderDto createOrderDto = CreateOrderDto.fromRequest(request, memberId);
 
-        // TODO : request 정보를 레디스에 담아놔야함
-        CreateOrderDto createOrderDto = request.toDto(memberId);
+        return ApiResponse.ok(createOrderService.create(createOrderDto));
+    }
 
-        return ApiResponse.ok(request);
+    @UserAuthorize
+    @DeleteMapping("/orders/checkout")
+    public ApiResponse<String> saveOrderRollback(@RequestParam String orderNo) {
+
+        orderRepository.deleteByOrderNo(orderNo);
+
+        return ApiResponse.ok(StatusCodeType.PAYMENT_CANCEL.toString());
     }
 
     @GetMapping("/orders/toss-payments/success")
@@ -84,9 +93,8 @@ public class OrderController {
         TossPaymentsResponse tossPaymentsResponse =
                 tossApiService.requestPaymentAccept(new TossConfirmRequest(paymentKey, orderNo, totalOrderPrice));
 
-        // 2. Order, OrderDetail, Payment 생성
-        // TODO : 레디스에서 임시 데이터 불러온다음, createOrderDto 만들어줘야함
-//        createOrderService.create(createOrderDto, tossPaymentsResponse);
+        // 2. Payment 생성 및 OrderDetails 업데이트
+        updateOrderService.update(tossPaymentsResponse);
 
         // 3.
         // TODO : 1) 판매자 금액 추가(실제입금은 배치로 들어가겠지만, 우선 어딘가에 판매자의 돈이 올라갔음을 저장해놔야함)
