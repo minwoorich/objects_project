@@ -23,6 +23,7 @@ import com.objects.marketbridge.domain.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class CreateOrderService {
 
     private final TossPaymentConfig tossPaymentConfig;
@@ -52,15 +54,13 @@ public class CreateOrderService {
     public CreateOrderResponse create(CreateOrderDto createOrderDto) {
 
         // 1. Order 생성
-        Order order = createOrder(createOrderDto);
-        orderRepository.save(order);
+        Order order = orderRepository.save(createOrder(createOrderDto));
 
         // 2. OrderDetail 생성 (연관관계 매핑 여기서 해결)
-        List<OrderDetail> orderDetails = createOrderDetail(createOrderDto.getProductValues(), order);
-        orderDetailRepository.saveAll(orderDetails);
+        List<OrderDetail> orderDetails = orderDetailRepository.saveAll(createOrderDetails(createOrderDto.getProductValues(), order));
 
         // 3. Order 에 최종쿠폰사용 금액 집어넣기
-        order.calculateTotalUsedCouponPrice(getTotalCouponPrice(orderDetails));
+        order.setTotalUsedCouponPrice(getTotalCouponPrice(orderDetails));
 
         // 4. MemberCoupon 의 isUsed 변경
         List<MemberCoupon> memberCoupons = getMemberCoupons(orderDetails, createOrderDto.getMemberId());
@@ -73,6 +73,7 @@ public class CreateOrderService {
     }
 
     private List<MemberCoupon> getMemberCoupons(List<OrderDetail> orderDetails, Long memberId) {
+
         return orderDetails.stream()
                 .filter(o -> o.getCoupon() != null)
                 .map(o ->
@@ -82,10 +83,10 @@ public class CreateOrderService {
                 ).collect(Collectors.toList());
     }
     private Long getTotalCouponPrice(List<OrderDetail> orderDetails) {
+
         return orderDetails.stream()
-                .map(OrderDetail::getCoupon)
-                .filter(Objects::nonNull)
-                .mapToLong(Coupon::getPrice)
+                .filter(o -> o.getCoupon() != null)
+                .mapToLong(o -> o.getCoupon().getPrice())
                 .sum();
     }
 
@@ -101,7 +102,7 @@ public class CreateOrderService {
         return Order.create(member, address, orderName, orderNo, totalOrderPrice, realOrderPrice);
     }
 
-    private List<OrderDetail> createOrderDetail(List<ProductValue> productValues, Order order) {
+    private List<OrderDetail> createOrderDetails(List<ProductValue> productValues, Order order) {
 
         List<OrderDetail> orderDetails = new ArrayList<>();
 
@@ -119,6 +120,9 @@ public class CreateOrderService {
                     OrderDetail.create(order, product, orderNo, coupon, quantity, price, StatusCodeType.ORDER_INIT.getCode());
 
             // orderDetails 에 추가
+            orderDetails.add(orderDetail);
+
+            // 연관관계 매핑
             order.addOrderDetail(orderDetail);
         }
 

@@ -4,10 +4,13 @@ import org.springframework.security.test.context.support.WithSecurityContext;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
 @Retention(RetentionPolicy.RUNTIME)
 @WithSecurityContext(factory = WithMockCustomUserSecurityContextFactory.class)
 public @interface WithMockCustomUser {
-    String username() default "member@example.com";
-    String role() default "USER";
+
+    long id() default 1L;
+    String email() default "member1@example.com";
+
 }
