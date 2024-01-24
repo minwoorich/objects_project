@@ -1,6 +1,8 @@
 package com.objects.marketbridge.model;
 
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
+import com.objects.marketbridge.global.error.CustomLogicException;
+import com.objects.marketbridge.global.error.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,6 +11,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.objects.marketbridge.global.error.ErrorCode.*;
+import static com.objects.marketbridge.global.error.ErrorCode.OUT_OF_STOCK;
 
 @Entity
 @Getter
@@ -71,6 +76,17 @@ public class Product extends BaseEntity{
     }
 
     public void decrease(Long quantity) {
+        verifyStockAvailable(quantity);
         stock -= quantity;
+    }
+
+    private void verifyStockAvailable(Long quantity) {
+        if (stock - quantity < 0) {
+            throw new CustomLogicException(OUT_OF_STOCK.getMessage());
+        }
+    }
+
+    public void changeStock(Long stock) {
+        this.stock = stock;
     }
 }

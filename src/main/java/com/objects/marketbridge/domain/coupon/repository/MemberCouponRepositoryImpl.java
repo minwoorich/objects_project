@@ -5,6 +5,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class MemberCouponRepositoryImpl implements MemberCouponRepository {
@@ -24,5 +26,10 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     @Override
     public MemberCoupon save(MemberCoupon memberCoupon) {
         return memberCouponJpaRepository.save(memberCoupon);
+    }
+
+    @Override
+    public List<MemberCoupon> saveAll(List<MemberCoupon> memberCoupons) {
+        return memberCouponJpaRepository.saveAll(memberCoupons);
     }
 }

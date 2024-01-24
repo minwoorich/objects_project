@@ -63,7 +63,8 @@ public class CreateOrderService {
         order.calculateTotalUsedCouponPrice(getTotalCouponPrice(orderDetails));
 
         // 4. MemberCoupon 의 isUsed 변경
-        couponUsageService.applyCouponUsage(memberCouponRepository, orderDetails, createOrderDto.getMemberId());
+        List<MemberCoupon> memberCoupons = getMemberCoupons(orderDetails, createOrderDto.getMemberId());
+        couponUsageService.applyCouponUsage(memberCoupons, true, LocalDateTime.now());
 
         // 5. Product 의 stock 감소
         productStockService.decrease(orderDetails);
@@ -71,6 +72,15 @@ public class CreateOrderService {
         return createOrderResponse(createOrderDto);
     }
 
+    private List<MemberCoupon> getMemberCoupons(List<OrderDetail> orderDetails, Long memberId) {
+        return orderDetails.stream()
+                .filter(o -> o.getCoupon() != null)
+                .map(o ->
+                        memberCouponRepository.findByMember_IdAndCoupon_Id(
+                                memberId,
+                                o.getCoupon().getId())
+                ).collect(Collectors.toList());
+    }
     private Long getTotalCouponPrice(List<OrderDetail> orderDetails) {
         return orderDetails.stream()
                 .map(OrderDetail::getCoupon)
