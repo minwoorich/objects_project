@@ -1,5 +1,6 @@
 package com.objects.marketbridge.global.security.user;
 
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +17,7 @@ public class CustomUserDetails implements UserDetails {
     private final String password;
     private final List<String> roles;
 
+    @Builder
     public CustomUserDetails(Long id, String email, String password, List<String> roles) {
         this.id = id;
         this.email = email;
