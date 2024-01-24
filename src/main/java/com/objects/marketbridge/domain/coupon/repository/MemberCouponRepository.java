@@ -12,4 +12,8 @@ public interface MemberCouponRepository {
     MemberCoupon save(MemberCoupon memberCoupon);
 
     List<MemberCoupon> saveAll(List<MemberCoupon> memberCoupons);
+
+    List<MemberCoupon> findAll();
+
+
 }
