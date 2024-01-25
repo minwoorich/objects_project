@@ -28,13 +28,11 @@ import static com.objects.marketbridge.model.QProduct.product;
 public class OrderDtoRepositoryImpl implements OrderDtoRepository {
 
     private final OrderJpaRepository orderJpaRepository;
-    private final OrderTempJpaRepository orderTempJpaRepository;
 
     private final JPAQueryFactory queryFactory;
 
-    public OrderDtoRepositoryImpl(OrderJpaRepository orderJpaRepository, OrderTempJpaRepository orderTempJpaRepository, EntityManager em) {
+    public OrderDtoRepositoryImpl(OrderJpaRepository orderJpaRepository, EntityManager em) {
         this.orderJpaRepository = orderJpaRepository;
-        this.orderTempJpaRepository = orderTempJpaRepository;
         this.queryFactory = new JPAQueryFactory(em);
     }
 

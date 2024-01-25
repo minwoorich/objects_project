@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.order.controller.response;
 
+import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.model.Product;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +31,16 @@ public class ProductResponse {
                 .name(product.getName())
                 .price(product.getPrice())
                 .quantity(quantity)
+                .build();
+    }
+
+    public static ProductResponse of(OrderDetail orderDetail) {
+        return ProductResponse.builder()
+                .productId(orderDetail.getProduct().getId())
+                .productNo(orderDetail.getProduct().getProductNo())
+                .name(orderDetail.getProduct().getName())
+                .price(orderDetail.getProduct().getPrice())
+                .quantity(orderDetail.getQuantity())
                 .build();
     }
 }
