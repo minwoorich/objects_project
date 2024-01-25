@@ -80,13 +80,14 @@ spring:
 
   datasource:
     url: jdbc:h2:mem:~/Marketbridge
+#    url: jdbc:h2:tcp://localhost/~/Marketbridge
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:

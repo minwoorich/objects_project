@@ -7,12 +7,13 @@ import com.objects.marketbridge.domain.order.controller.response.OrderCancelRetu
 import com.objects.marketbridge.domain.order.dto.OrderReturnResponse;
 import com.objects.marketbridge.domain.order.service.OrderCancelReturnService;
 import com.objects.marketbridge.global.common.ApiResponse;
-import com.objects.marketbridge.global.security.annotation.AuthMemberId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -43,8 +44,13 @@ public class OrderCancelReturnController {
         return ApiResponse.ok(orderCancelReturnService.requestReturn(orderId, productIds));
     }
 
-    @GetMapping("orders/cancel-return/list")
-    public ApiResponse<OrderCancelReturnListResponse> getCancelReturnList(@AuthMemberId Long memberId, Pageable pageable) {
-        return ApiResponse.ok(orderCancelReturnService.findCancelReturnList(memberId, pageable));
+    @GetMapping("/orders/cancel-return/list")
+    public ApiResponse<Page<OrderCancelReturnListResponse>> getCancelReturnList(
+            @RequestParam(name = "memberId") Long memberId,
+            @RequestParam(name = "page") Integer page,
+            @RequestParam(name = "size") Integer size) {
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return ApiResponse.ok(orderCancelReturnService.findCancelReturnList(memberId, pageRequest));
     }
 }

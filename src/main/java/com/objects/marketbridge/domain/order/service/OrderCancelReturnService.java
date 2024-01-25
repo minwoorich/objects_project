@@ -8,6 +8,7 @@ import com.objects.marketbridge.domain.order.dto.OrderReturnResponse;
 import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
+import com.objects.marketbridge.domain.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 import com.objects.marketbridge.domain.payment.domain.Payment;
 import com.objects.marketbridge.domain.payment.dto.RefundDto;
@@ -19,10 +20,11 @@ import com.objects.marketbridge.global.error.ErrorCode;
 import com.objects.marketbridge.model.Product;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -37,6 +39,7 @@ public class OrderCancelReturnService {
     private final PaymentRepository paymentRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final ProductRepository productRepository;
+    private final OrderDtoRepository orderDtoRepository;
 
     private final RefundService refundService;
 
@@ -80,9 +83,9 @@ public class OrderCancelReturnService {
         return OrderReturnResponse.of(orderDetails);
     }
 
-    public OrderCancelReturnListResponse findCancelReturnList(Long memberId, Pageable pageable) {
-        List<Order> orders = orderRepository.findDistinctWithDetailsByMemberId(memberId);
-        return null;
+    @Transactional(readOnly = true)
+    public Page<OrderCancelReturnListResponse> findCancelReturnList(Long memberId, Pageable pageable) {
+        return orderDtoRepository.findOrdersByMemberId(memberId, pageable);
     }
 
     // TODO 객체로 따로 빼야함(임시로 사용)
