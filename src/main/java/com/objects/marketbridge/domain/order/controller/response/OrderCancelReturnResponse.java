@@ -41,8 +41,7 @@ public class OrderCancelReturnResponse {
                 .refundInfo(RefundInfo.of(refundDto))
                 .cancelledItems(
                         order.getOrderDetails().stream()
-                                .map(OrderDetail::getProduct)
-                                .map(ProductResponse::of)
+                                .map(orderDetail -> ProductResponse.of(orderDetail.getProduct(), orderDetail.getQuantity()))
                                 .collect(Collectors.toList())
                 )
                 .build();
