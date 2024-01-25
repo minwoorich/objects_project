@@ -65,6 +65,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    public Order findByTid(String tid) {
+        return orderJpaRepository.findByTid(tid);
+    }
+
+    @Override
     public List<Order> findDistinctWithDetailsByMemberId(Long memberId) {
         return null;
     }

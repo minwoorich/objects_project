@@ -1,4 +1,4 @@
-package com.objects.marketbridge.model;
+package com.objects.marketbridge.domain.seller.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,6 +14,10 @@ public class SellerAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seller_account_id")
     Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="seller_id")
+    Seller seller;
 
     Long balance;
     Long incoming;

@@ -1,24 +1,14 @@
 package com.objects.marketbridge.domain.payment.client;
 
-import com.objects.marketbridge.domain.order.controller.response.TossErrorResponse;
-import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
-import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
 import com.objects.marketbridge.domain.payment.domain.Payment;
 import com.objects.marketbridge.domain.payment.dto.RefundInfoDto;
 import com.objects.marketbridge.global.error.CustomLogicException;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.BindParam;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Optional;
 
 import static com.objects.marketbridge.domain.payment.config.TossPaymentConfig.TOSS_BASE_URL;
 

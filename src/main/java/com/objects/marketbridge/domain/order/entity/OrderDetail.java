@@ -45,14 +45,14 @@ public class OrderDetail extends BaseEntity {
 
     private String reason;
 
-    private String paymentKey;
+    private String tid;
 
     private LocalDateTime cancelledAt;
 
     @Builder
-    public OrderDetail(Order order, String orderNo, String paymentKey, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
+    public OrderDetail(Order order, String orderNo, String tid, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
         this.orderNo = orderNo;
-        this.paymentKey = paymentKey;
+        this.tid = tid;
         this.order = order;
         this.product = product;
         this.coupon = coupon;
@@ -68,9 +68,6 @@ public class OrderDetail extends BaseEntity {
         this.order = order;
     }
 
-    public void changePaymentKey(String paymentKey) {
-        this.paymentKey = paymentKey;
-    }
     public void changeStatusCode(String statusCode) {
         this.statusCode = statusCode;
     }
