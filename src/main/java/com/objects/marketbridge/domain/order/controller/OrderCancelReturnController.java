@@ -2,6 +2,7 @@ package com.objects.marketbridge.domain.order.controller;
 
 import com.objects.marketbridge.domain.order.controller.request.OrderCancelRequest;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelResponse;
+import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnDetailResponse;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnListResponse;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnResponse;
 import com.objects.marketbridge.domain.order.dto.OrderReturnResponse;
@@ -52,5 +53,15 @@ public class OrderCancelReturnController {
 
         PageRequest pageRequest = PageRequest.of(page, size);
         return ApiResponse.ok(orderCancelReturnService.findCancelReturnList(memberId, pageRequest));
+    }
+
+    @GetMapping("/orders/cancel-return/{orderNo}")
+    public ApiResponse<OrderCancelReturnDetailResponse> getCancelReturnDetail(
+            @PathVariable(name = "orderNo") String orderNo,
+            @RequestParam(name = "paymentId") Long paymentId,
+            @RequestParam(name = "receiptType") String receiptType,
+            @RequestParam(name = "productIds") List<Long> productIds
+    ) {
+        return ApiResponse.ok(orderCancelReturnService.findCancelReturnDetail(orderNo, paymentId, productIds));
     }
 }

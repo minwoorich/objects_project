@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domain.order.service;
 
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelResponse;
+import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnDetailResponse;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnListResponse;
 import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnResponse;
 import com.objects.marketbridge.domain.order.dto.OrderCancelServiceDto;
@@ -70,7 +71,7 @@ public class OrderCancelReturnService {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("조회한 주문이 없습니다."));
         List<Product> products = validProducts(productIds);
 
-        List<OrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(orderId, products);
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_IdAndProductIn(orderId, products);
 
         return OrderCancelResponse.of(orderDetails, order);
     }
@@ -78,7 +79,7 @@ public class OrderCancelReturnService {
     @Transactional(readOnly = true)
     public OrderReturnResponse requestReturn(Long orderId, List<Long> productIds) {
         List<Product> products = validProducts(productIds);
-        List<OrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(orderId, products);
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_IdAndProductIn(orderId, products);
 
         return OrderReturnResponse.of(orderDetails);
     }
@@ -86,6 +87,15 @@ public class OrderCancelReturnService {
     @Transactional(readOnly = true)
     public Page<OrderCancelReturnListResponse> findCancelReturnList(Long memberId, Pageable pageable) {
         return orderDtoRepository.findOrdersByMemberId(memberId, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderCancelReturnDetailResponse findCancelReturnDetail(String orderNo, Long paymentId, List<Long> productIds) {
+        Order order = validOrder(orderNo);
+        List<OrderDetail> orderDetails = validOrderDetails(orderNo, productIds);
+        Payment payment = vaildPayment(paymentId);
+
+        return OrderCancelReturnDetailResponse.of(order, orderDetails, payment);
     }
 
     // TODO 객체로 따로 빼야함(임시로 사용)
@@ -100,8 +110,21 @@ public class OrderCancelReturnService {
 
             return order;
         }
+    }
+    private List<OrderDetail> validOrderDetails(String orderNo, List<Long> productIds) {
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
+        if (orderDetails.isEmpty()) {
+            throw new EntityNotFoundException("조회된 주문 상세가 없습니다.");
+        }
+        return orderDetails;
+    }
 
-
+    private Payment vaildPayment(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId);
+        if (payment == null) {
+            throw new EntityNotFoundException("조회된 결재가 없습니다.");
+        }
+        return payment;
     }
 
     private Payment validPayment(Long orderId) {
@@ -118,6 +141,13 @@ public class OrderCancelReturnService {
             throw new NoSuchElementException("조회된 상품이 없습니다.");
         }
         return products;
+    }
+
+    private Order validOrder(String orderNo) {
+        Order order = orderRepository.findByOrderNo(orderNo);
+        if (order == null) {
+            throw new EntityNotFoundException("조회된 주문이 없습니다.");
+        } return order;
     }
 
 }
