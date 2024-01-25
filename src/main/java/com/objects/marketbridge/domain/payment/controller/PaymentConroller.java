@@ -1,7 +1,6 @@
 package com.objects.marketbridge.domain.payment.controller;
 
-import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.objects.marketbridge.domain.payment.config.KakaoPaymentConfig;
+import com.objects.marketbridge.domain.payment.config.KakaoPayConfig;
 import com.objects.marketbridge.domain.payment.controller.response.KakaoPayApproveResponse;
 import com.objects.marketbridge.domain.payment.service.KakaoPaymentApproveService;
 import com.objects.marketbridge.domain.payment.service.PaymentService;
@@ -19,7 +18,7 @@ public class PaymentConroller {
 
     private final PaymentService paymentService;
     private final KakaoPaymentApproveService kakaoPaymentApproveService;
-    private final KakaoPaymentConfig kakaoPaymentConfig;
+    private final KakaoPayConfig kakaoPayConfig;
 
     @GetMapping("/payments/kakao/approval")
     public ApiResponse<KakaoPayApproveResponse> kakaoPaymentApproved(
@@ -36,7 +35,7 @@ public class PaymentConroller {
                 pgToken,
                 memberId,
                 (String) session.getAttribute("tid"),
-                kakaoPaymentConfig.getCid());
+                kakaoPayConfig.getCid());
         session.invalidate();
 
         // 2. Payment 생성 및 OrderDetails 업데이트

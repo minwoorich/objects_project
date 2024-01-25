@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Getter
-public class KakaoPaymentConfig {
+public class KakaoPayConfig {
 
     public static final String KAKAO_BASE_URL = "https://kapi.kakao.com/v1/payment";
 

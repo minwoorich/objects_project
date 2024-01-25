@@ -3,26 +3,25 @@ package com.objects.marketbridge.domain.order.controller;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
 import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
 import com.objects.marketbridge.domain.order.controller.response.CheckoutResponse;
-import com.objects.marketbridge.domain.order.controller.response.KakaoPaymentReadyResponse;
+import com.objects.marketbridge.domain.order.controller.response.KakaoPayReadyResponse;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.dto.KakaoPaymentReadyRequest;
-import com.objects.marketbridge.domain.order.entity.StatusCodeType;
+import com.objects.marketbridge.domain.order.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.domain.order.service.CreateOrderService;
-import com.objects.marketbridge.domain.order.service.KakaoPaymentReadyService;
-import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.objects.marketbridge.domain.payment.config.KakaoPaymentConfig;
-import com.objects.marketbridge.domain.payment.service.PaymentService;
+import com.objects.marketbridge.domain.order.service.KakaoPayReadyService;
+import com.objects.marketbridge.domain.payment.config.KakaoPayConfig;
 import com.objects.marketbridge.global.common.ApiResponse;
 import com.objects.marketbridge.global.error.CustomLogicException;
 import com.objects.marketbridge.global.security.annotation.AuthMemberId;
-import com.objects.marketbridge.global.security.annotation.UserAuthorize;
 import com.objects.marketbridge.model.Address;
 import com.objects.marketbridge.model.Member;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -34,9 +33,8 @@ public class OrderController {
 
     private final MemberRepository memberRepository;
     private final CreateOrderService createOrderService;
-    private final KakaoPaymentConfig kakaoPaymentConfig;
-    private final OrderRepository orderRepository;
-    private final KakaoPaymentReadyService kakaoPaymentReadyService;
+    private final KakaoPayConfig kakaoPayConfig;
+    private final KakaoPayReadyService kakaoPayReadyService;
 
     @GetMapping("/orders/checkout")
     public ApiResponse<CheckoutResponse> getCheckout(
@@ -64,13 +62,13 @@ public class OrderController {
     }
 
     @PostMapping("/orders/checkout")
-    public ApiResponse<KakaoPaymentReadyResponse> saveOrder(
+    public ApiResponse<KakaoPayReadyResponse> saveOrder(
             @AuthMemberId Long memberId,
             HttpSession session,
             @Valid @RequestBody CreateOrderRequest request) {
 
         // 1. kakaoPaymentReadyService 호출
-        KakaoPaymentReadyResponse response = kakaoPaymentReadyService.execute(createKakaoReadyRequest(request, memberId));
+        KakaoPayReadyResponse response = kakaoPayReadyService.execute(createKakaoReadyRequest(request, memberId));
         String tid = response.getTid();
 
         // 2. 주문 생성
@@ -86,11 +84,12 @@ public class OrderController {
 
         return CreateOrderDto.fromRequest(request, memberId, tid);
     }
-    private KakaoPaymentReadyRequest createKakaoReadyRequest(CreateOrderRequest request, Long memberId) {
-        String cid = kakaoPaymentConfig.getCid();
-        String cancelUrl = kakaoPaymentConfig.getCancelUrl();
-        String failUrl = kakaoPaymentConfig.getFailUrl();
-        String approvalUrl = kakaoPaymentConfig.getApprovalUrl();
+    private KakaoPayReadyRequest createKakaoReadyRequest(CreateOrderRequest request, Long memberId) {
+
+        String cid = kakaoPayConfig.getCid();
+        String cancelUrl = kakaoPayConfig.getCancelUrl();
+        String failUrl = kakaoPayConfig.getFailUrl();
+        String approvalUrl = kakaoPayConfig.getApprovalUrl();
 
         return request.toKakaoReadyRequest(memberId, cid, approvalUrl, failUrl, cancelUrl);
     }

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class KakaoPaymentReadyResponse {
+public class KakaoPayReadyResponse {
 
     private String tid; // 결제 고유 번호
 
@@ -28,7 +28,7 @@ public class KakaoPaymentReadyResponse {
     private String createdAt; // 결제 준비 요청 시간
 
     @Builder
-    public KakaoPaymentReadyResponse(String tid, String nextRedirectPcUrl, String nextRedirectAppUrl, String nextRedirectMobileUrl, String androidAppScheme, String iosAppScheme, String createdAt) {
+    public KakaoPayReadyResponse(String tid, String nextRedirectPcUrl, String nextRedirectAppUrl, String nextRedirectMobileUrl, String androidAppScheme, String iosAppScheme, String createdAt) {
         this.tid = tid;
         this.nextRedirectPcUrl = nextRedirectPcUrl;
         this.nextRedirectAppUrl = nextRedirectAppUrl;

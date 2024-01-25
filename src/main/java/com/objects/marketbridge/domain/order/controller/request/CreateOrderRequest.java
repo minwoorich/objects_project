@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domain.order.controller.request;
 
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.dto.KakaoPaymentReadyRequest;
+import com.objects.marketbridge.domain.order.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import lombok.*;
 
@@ -47,8 +47,8 @@ public class CreateOrderRequest {
                 .build();
     }
 
-    public KakaoPaymentReadyRequest toKakaoReadyRequest(Long memberId, String cid, String approvalUrl, String failUrl, String cancelUrl) {
-        return KakaoPaymentReadyRequest.builder()
+    public KakaoPayReadyRequest toKakaoReadyRequest(Long memberId, String cid, String approvalUrl, String failUrl, String cancelUrl) {
+        return KakaoPayReadyRequest.builder()
                 .cid(cid)
                 .approvalUrl(approvalUrl)
                 .failUrl(failUrl)

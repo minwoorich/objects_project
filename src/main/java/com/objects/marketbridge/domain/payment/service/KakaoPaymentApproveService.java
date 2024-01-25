@@ -1,10 +1,8 @@
 package com.objects.marketbridge.domain.payment.service;
 
-import com.objects.marketbridge.domain.order.controller.response.KakaoPaymentReadyResponse;
-import com.objects.marketbridge.domain.order.dto.KakaoPaymentReadyRequest;
 import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.objects.marketbridge.domain.payment.config.KakaoPaymentConfig;
+import com.objects.marketbridge.domain.payment.config.KakaoPayConfig;
 import com.objects.marketbridge.domain.payment.controller.request.KakaoPayApproveRequest;
 import com.objects.marketbridge.domain.payment.controller.response.KakaoPayApproveResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,13 +10,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import static com.objects.marketbridge.domain.payment.config.KakaoPaymentConfig.KAKAO_BASE_URL;
+import static com.objects.marketbridge.domain.payment.config.KakaoPayConfig.KAKAO_BASE_URL;
 
 @Service
 @RequiredArgsConstructor
 public class KakaoPaymentApproveService {
 
-    private final KakaoPaymentConfig kakaoPaymentConfig;
+    private final KakaoPayConfig kakaoPayConfig;
     private final OrderRepository orderRepository;
     public KakaoPayApproveResponse execute(String pgToken, Long memberId, String tid, String cid) {
 
@@ -27,7 +25,7 @@ public class KakaoPaymentApproveService {
 
         RestClient restClient = RestClient.builder()
                 .baseUrl(KAKAO_BASE_URL)
-                .defaultHeader("Authorization", "KaKaoAK "+kakaoPaymentConfig.getAdminKey())
+                .defaultHeader("Authorization", "KaKaoAK "+ kakaoPayConfig.getAdminKey())
                 .build();
 
         return restClient.post()

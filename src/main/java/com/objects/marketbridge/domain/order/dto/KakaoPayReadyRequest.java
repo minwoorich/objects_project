@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class KakaoPaymentReadyRequest {
+public class KakaoPayReadyRequest {
 
     private String cid;
 
@@ -33,7 +33,7 @@ public class KakaoPaymentReadyRequest {
     private String failUrl;
 
     @Builder
-    public KakaoPaymentReadyRequest(String cid, String partnerOrderId, String partnerUserId, Long quantity, Long totalAmount, Long taxFreeAmount, String approvalUrl, String cancelUrl, String failUrl) {
+    public KakaoPayReadyRequest(String cid, String partnerOrderId, String partnerUserId, Long quantity, Long totalAmount, Long taxFreeAmount, String approvalUrl, String cancelUrl, String failUrl) {
         this.cid = cid;
         this.partnerOrderId = partnerOrderId;
         this.partnerUserId = partnerUserId;
