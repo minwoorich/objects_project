@@ -16,6 +16,7 @@ include::api/order/ordercancelreturn.adoc[]
 include::api/order/ordercancel.adoc[]
 include::api/order/orderreturn.adoc[]
 include::api/order/ordercancelreturnlist.adoc[]
+include::api/order/ordercancelreturndetail.adoc[]
 
 [[OrderCreate-API]]
 == OrderCreate API
