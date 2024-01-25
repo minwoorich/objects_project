@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -41,8 +42,8 @@ class OrderDetailRepositoryTest {
     @DisplayName("특정 주문에 해당하는 주문 상세의 상태 코드를 한번에 바꾼다.")
     public void changeAllType() {
         // given
-        String givenCodeType = StatusCodeType.PAYMENT_COMPLETED.getCode();
-        String changeCodeType = StatusCodeType.ORDER_CANCEL.getCode();
+        String givenCodeType = PAYMENT_COMPLETED.getCode();
+        String changeCodeType = ORDER_CANCEL.getCode();
 
         OrderDetail orderDetail1 = createOrderDetail_type(givenCodeType);
         OrderDetail orderDetail2 = createOrderDetail_type(givenCodeType);
@@ -67,7 +68,7 @@ class OrderDetailRepositoryTest {
     @DisplayName("주문 상세 리스트를 모두 저장한다.")
     public void saveAll() {
         // given
-        String givenType = StatusCodeType.PAYMENT_COMPLETED.getCode();
+        String givenType = PAYMENT_COMPLETED.getCode();
         OrderDetail orderDetail1 = createOrderDetail_type(givenType);
         OrderDetail orderDetail2 = createOrderDetail_type(givenType);
         OrderDetail orderDetail3 = createOrderDetail_type(givenType);
@@ -127,7 +128,7 @@ class OrderDetailRepositoryTest {
         orderRepository.save(order);
 
         // when
-        List<OrderDetail> orderDetails = orderDetailRepository.findByProdOrder_IdAndProductIn(order.getId(), products);
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_IdAndProductIn(order.getId(), products);
 
         // then
         Assertions.assertThat(orderDetails).hasSize(3)
@@ -138,6 +139,77 @@ class OrderDetailRepositoryTest {
                         tuple(product3, order)
                 );
     }
+
+    @Test
+    @DisplayName("주문 번호와 상품 ID 리스트가 주어지면 상품 상세 리스트를 조회할 수 있다.")
+    public void findByOrderNoAndProduct_IdIn() {
+        // given
+        Product product1 = Product.builder()
+                .price(1000L)
+                .thumbImg("썸네일1")
+                .name("옷")
+                .build();
+        Product product2 = Product.builder()
+                .name("바지")
+                .price(2000L)
+                .thumbImg("썸네일2")
+                .build();
+        Product product3 = Product.builder()
+                .name("신발")
+                .price(3000L)
+                .thumbImg("썸네일3")
+                .build();
+
+        OrderDetail orderDetail1 = OrderDetail.builder()
+                .product(product1)
+                .quantity(2L)
+                .price(product1.getPrice() * 2L)
+                .orderNo("123")
+                .statusCode(ORDER_CANCEL.getCode())
+                .reason("빵빵이")
+                .build();
+        OrderDetail orderDetail2 = OrderDetail.builder()
+                .product(product2)
+                .quantity(3L)
+                .price(product2.getPrice() * 3L)
+                .orderNo("123")
+                .statusCode(ORDER_CANCEL.getCode())
+                .reason("옥지얌")
+                .build();
+        OrderDetail orderDetail3 = OrderDetail.builder()
+                .product(product3)
+                .quantity(4L)
+                .price(product3.getPrice() * 4L)
+                .orderNo("123")
+                .statusCode(RETURN_COMPLETED.getCode())
+                .reason("멍청이")
+                .build();
+
+        Order order = Order.builder()
+                .orderNo("123")
+                .build();
+        order.addOrderDetail(orderDetail1);
+        order.addOrderDetail(orderDetail2);
+        order.addOrderDetail(orderDetail3);
+
+        List<Product> products = List.of(product1, product2, product3);
+        productRepository.saveAll(products);
+        orderRepository.save(order);
+        List<Long> productIds = products.stream().map(Product::getId).toList();
+
+        // when
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNoAndProduct_IdIn(order.getOrderNo(), productIds);
+
+        // then
+        assertThat(orderDetails).hasSize(3)
+                .extracting("orderNo", "product", "quantity", "price", "statusCode", "reason")
+                .contains(
+                        tuple("123", product1, 2L, 2000L, ORDER_CANCEL.getCode(), "빵빵이"),
+                        tuple("123", product2, 3L, 6000L, ORDER_CANCEL.getCode(), "옥지얌"),
+                        tuple("123", product3, 4L, 12000L, RETURN_COMPLETED.getCode(), "멍청이")
+                );
+    }
+
 
     private String getReason(Long orderId) {
         List<OrderDetail> orderDetails = orderRepository.findById(orderId).get().getOrderDetails();
