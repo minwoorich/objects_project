@@ -3,7 +3,7 @@ package com.objects.marketbridge.domain.delivery.domain;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.model.Address;
 import com.objects.marketbridge.model.BaseEntity;
-import com.objects.marketbridge.model.Seller;
+import com.objects.marketbridge.domain.seller.domain.Seller;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

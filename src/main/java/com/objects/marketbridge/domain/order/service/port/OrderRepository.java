@@ -24,6 +24,8 @@ public interface OrderRepository {
 
     List<Order> findDistinctWithDetailsByMemberId(Long memberId);
 
+    Order findByTid(String tid);
+
     void deleteByOrderNo(String orderNo);
     // TODO 영속성 문제? 있는 쿼리
 //    List<Order> findDistinctWithDetailsByMemberId(Long memberId);

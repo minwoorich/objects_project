@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domain.order.controller.request;
 
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
+import com.objects.marketbridge.domain.order.dto.KakaoPaymentReadyRequest;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import lombok.*;
 
@@ -43,6 +44,20 @@ public class CreateOrderRequest {
                 .orderNo(orderId)
                 .totalOrderPrice(amount)
                 .productValues(productValues)
+                .build();
+    }
+
+    public KakaoPaymentReadyRequest toKakaoReadyRequest(Long memberId, String cid, String approvalUrl, String failUrl, String cancelUrl) {
+        return KakaoPaymentReadyRequest.builder()
+                .cid(cid)
+                .approvalUrl(approvalUrl)
+                .failUrl(failUrl)
+                .cancelUrl(cancelUrl)
+                .quantity(productValues.stream().mapToLong(ProductValue::getQuantity).sum())
+                .partnerOrderId(orderId)
+                .partnerUserId(memberId.toString())
+                .taxFreeAmount(0L)
+                .totalAmount(amount)
                 .build();
     }
 }

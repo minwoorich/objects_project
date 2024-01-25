@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domain.order.repository;
 
 import com.objects.marketbridge.domain.order.entity.Order;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,8 @@ public interface OrderJpaRepository extends JpaRepository<Order, Long> {
     Optional<Order> findWithOrderDetailsAndProduct(@Param("orderId") Long orderId);
 
     Optional<Order> findByOrderNo(String orderNo);
+
+    Order findByTid(String tid);
 
     void deleteByOrderNo(String orderNo);
 

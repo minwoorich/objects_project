@@ -56,8 +56,17 @@ payment:
   toss:
     test_client_api_key : "test_ck_GePWvyJnrK2PmxlyQWMqVgLzN97E"
     test_secret_api_key : "test_sk_QbgMGZzorzyG7E6ZkybPVl5E1em4:"
-    success_url : "http://localhost:8080/orders/toss-payments/success"
-    fail_url : "http://localhost:8080/orders/toss-payments/fail"
+    success_url : "http://localhost:8080/payments/toss/success"
+    fail_url : "http://localhost:8080/payments/toss/fail"
+
+  kakao:
+    admin_key : "13d26c106e60b48a0ae5d8280e0ceb10"
+    test_api_key : "13d26c106e60b48a0ae5d8280e0ceb10"
+    approval_url : "http://localhost:8080/payments/kakao/approval"
+    cancel_url : "http://localhost:8080/payments/kakao/cancel"
+    fail_url : "http://localhost:8080/payments/kakao/fail"
+    one_time: # 단건 결제
+      cid : "TC0ONETIME"
 ---
 
 spring:
@@ -109,3 +118,12 @@ payment:
     test_secret_api_key: "test_sk_QbgMGZzorzyG7E6ZkybPVl5E1em4:"
     success_url: "http://localhost:8080/payments/toss/success"
     fail_url: "http://localhost:8080/payments/toss/fail"
+
+  kakao:
+    admin_key: "13d26c106e60b48a0ae5d8280e0ceb10"
+    test_api_key: "13d26c106e60b48a0ae5d8280e0ceb10"
+    approval_url: "http://localhost:8080/payments/kakao/approval"
+    cancel_url: "http://localhost:8080/payments/kakao/cancel"
+    fail_url: "http://localhost:8080/payments/kakao/fail"
+    one_time: # 단건 결제
+      cid: "TC0ONETIME"

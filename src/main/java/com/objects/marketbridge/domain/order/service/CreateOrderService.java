@@ -4,23 +4,16 @@ import com.objects.marketbridge.domain.address.repository.AddressRepository;
 import com.objects.marketbridge.domain.coupon.repository.CouponRepository;
 import com.objects.marketbridge.domain.coupon.repository.MemberCouponRepository;
 import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
 import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
-import com.objects.marketbridge.model.*;
-import com.objects.marketbridge.domain.order.controller.response.TossPaymentsResponse;
 import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.entity.OrderDetail;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.objects.marketbridge.domain.payment.domain.Card;
-import com.objects.marketbridge.domain.payment.domain.Payment;
-import com.objects.marketbridge.domain.payment.domain.Transfer;
-import com.objects.marketbridge.domain.payment.domain.VirtualAccount;
-import com.objects.marketbridge.domain.payment.service.port.PaymentRepository;
+import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
+import com.objects.marketbridge.model.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +43,7 @@ public class CreateOrderService {
     private final ProductStockService productStockService;
 
     @Transactional
-    public CreateOrderResponse create(CreateOrderDto createOrderDto) {
+    public void create(CreateOrderDto createOrderDto) {
 
         // 1. Order 생성
         Order order = orderRepository.save(createOrder(createOrderDto));
@@ -68,8 +60,6 @@ public class CreateOrderService {
 
         // 5. Product 의 stock 감소
         productStockService.decrease(orderDetails);
-
-        return createOrderResponse(createOrderDto);
     }
 
     private List<MemberCoupon> getMemberCoupons(List<OrderDetail> orderDetails, Long memberId) {
@@ -98,8 +88,9 @@ public class CreateOrderService {
         String orderNo = createOrderDto.getOrderNo();
         Long totalOrderPrice = createOrderDto.getTotalOrderPrice();
         Long realOrderPrice = createOrderDto.getRealOrderPrice();
+        String tid = createOrderDto.getTid();
 
-        return Order.create(member, address, orderName, orderNo, totalOrderPrice, realOrderPrice);
+        return Order.create(member, address, orderName, orderNo, totalOrderPrice, realOrderPrice, tid);
     }
 
     private List<OrderDetail> createOrderDetails(List<ProductValue> productValues, Order order) {
@@ -127,15 +118,5 @@ public class CreateOrderService {
         }
 
         return orderDetails;
-    }
-
-    private CreateOrderResponse createOrderResponse(CreateOrderDto createOrderDto) {
-
-        Member member = memberRepository.findById(createOrderDto.getMemberId()).orElseThrow(EntityNotFoundException::new);
-
-        return createOrderDto.toResponse(
-                member.getEmail(),
-                tossPaymentConfig.getSuccessUrl(),
-                tossPaymentConfig.getFailUrl());
     }
 }

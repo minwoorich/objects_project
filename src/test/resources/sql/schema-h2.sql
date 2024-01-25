@@ -208,6 +208,7 @@ CREATE TABLE orders (
                               total_price	bigint	,
                               real_price	bigint	,
                               used_point    bigint  ,
+                              tid         varchar(255),
                               created_at	timestamp	,
                               updated_at	timestamp	,
                               deleted_at	timestamp	
@@ -229,7 +230,6 @@ CREATE TABLE order_detail (
                                      status_code	varchar(255)	,
                                      delivered_date	timestamp	,
                                      reason	text	,
-                                     payment_key varchar(255),
                                      cancelled_at	timestamp	,
                                      created_at	timestamp	,
                                      updated_at	timestamp	,

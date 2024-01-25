@@ -23,49 +23,34 @@ public class Payment extends BaseEntity {
     private Order order;
 
     private String orderNo;
-    private String paymentType;
-    private String paymentMethod; // CARD, TRANSFER, VIRTUAL
-    private String paymentKey;
-    private String paymentStatus;
-    private String refundStatus;
+    private String paymentMethod; // CARD, MONEY
+    private String tid;
 
     // 카드 결제
     @Embedded
-    private Card card;
+    private CardInfo cardInfo;
 
-    //가상 계좌 결제
+    // 결제 금액 정보
     @Embedded
-    private VirtualAccount virtualAccount;
-
-    //계좌 이체 결제
-    @Embedded
-    private Transfer transfer;
+    private Amount amount;
 
     @Builder
-    public Payment(Order order, String orderNo, String paymentType, String paymentMethod, String paymentKey, String paymentStatus, String refundStatus,  Card card, VirtualAccount virtualAccount, Transfer transfer) {
+    public Payment(Order order, String orderNo, String paymentMethod, String tid, CardInfo cardInfo, Amount amount) {
         this.order = order;
         this.orderNo = orderNo;
-        this.paymentType = paymentType;
         this.paymentMethod = paymentMethod;
-        this.paymentKey = paymentKey;
-        this.paymentStatus = paymentStatus;
-        this.refundStatus = refundStatus;
-        this.card = card;
-        this.virtualAccount = virtualAccount;
-        this.transfer = transfer;
+        this.tid = tid;
+        this.cardInfo = cardInfo;
+        this.amount = amount;
     }
 
-    public static Payment create(String orderNo, String paymentType, String paymentMethod, String paymentKey, String paymentStatus, String refundStatus,  Card card, VirtualAccount virtualAccount, Transfer transfer) {
+    public static Payment create(String orderNo, String paymentMethod, String tid, CardInfo cardInfo, Amount amount) {
         return Payment.builder()
                 .orderNo(orderNo)
-                .paymentType(paymentType)
                 .paymentMethod(paymentMethod)
-                .paymentKey(paymentKey)
-                .paymentStatus(paymentStatus)
-                .refundStatus(refundStatus)
-                .card(card)
-                .virtualAccount(virtualAccount)
-                .transfer(transfer)
+                .tid(tid)
+                .cardInfo(cardInfo)
+                .amount(amount)
                 .build();
     }
 

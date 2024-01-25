@@ -1,5 +1,7 @@
-package com.objects.marketbridge.model;
+package com.objects.marketbridge.domain.seller.domain;
 
+import com.objects.marketbridge.model.BaseEntity;
+import com.objects.marketbridge.model.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SellerProduct extends BaseEntity{
+public class SellerProduct extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
