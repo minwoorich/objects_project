@@ -68,8 +68,13 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     }
 
     @Override
-    public List<OrderDetail> findByProdOrder_IdAndProductIn(Long orderId, List<Product> products) {
+    public List<OrderDetail> findByOrder_IdAndProductIn(Long orderId, List<Product> products) {
         return orderDetailJpaRepository.findByOrder_IdAndProductIn(orderId, products);
+    }
+
+    @Override
+    public List<OrderDetail> findByOrderNoAndProduct_IdIn(String orderNo, List<Long> productIds) {
+        return orderDetailJpaRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
     }
 
 }
