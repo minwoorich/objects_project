@@ -1,0 +1,10 @@
+==== *로그 인*
+
+image:image/signin.png[]
+
+.*HTTP Request*
+include::{snippets}/member-sign-in/http-request.adoc[]
+
+.*HTTP Response*
+include::{snippets}/member-sign-in/http-response.adoc[]
+include::{snippets}/member-sign-in/response-fields.adoc[]
