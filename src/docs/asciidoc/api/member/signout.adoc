@@ -1,0 +1,8 @@
+==== *로그 아웃*
+
+.*HTTP Request*
+include::{snippets}/member-sign-out/http-request.adoc[]
+
+.*HTTP Response*
+include::{snippets}/member-sign-out/http-response.adoc[]
+include::{snippets}/member-sign-out/response-fields.adoc[]

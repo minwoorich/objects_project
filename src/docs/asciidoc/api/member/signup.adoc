@@ -1,0 +1,10 @@
+==== *회원 가입*
+
+image:image/signup.png[]
+
+.*HTTP Request*
+include::{snippets}/member-sign-up/http-request.adoc[]
+
+.*HTTP Response*
+include::{snippets}/member-sign-up/http-response.adoc[]
+include::{snippets}/member-sign-up/response-fields.adoc[]
