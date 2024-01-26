@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domain.payment.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Embeddable;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,12 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Amount {
 
-    private Long total;
-    private Long discount;
+    @JsonProperty("total")
+    private Long totalAmount;
+
+    @JsonProperty("discount")
+    private Long discountAmount;
 
     @Builder
-    public Amount(Long total, Long discount) {
-        this.total = total;
-        this.discount = discount;
+    public Amount(Long totalAmount, Long discountAmount) {
+        this.totalAmount = totalAmount;
+        this.discountAmount = discountAmount;
     }
 }

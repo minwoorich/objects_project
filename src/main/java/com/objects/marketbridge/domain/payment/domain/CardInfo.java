@@ -11,19 +11,19 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class CardInfo {
 
-    @JsonProperty("kakaopay_purchase_corp")
-    private String kakaopayPurchaseCorp;
-
     @JsonProperty("kakaopay_issuer_corp")
-    private String kakaopayIssuerCorp;
+    private String cardIssuerName;
+
+    @JsonProperty("kakaopay_purchase_corp")
+    private String cardPurchaseName;
 
     @JsonProperty("install_month")
-    private String installMonth;
+    private String cardInstallMonth;
 
     @Builder
-    public CardInfo(String kakaopayPurchaseCorp, String kakaopayIssuerCorp, String installMonth) {
-        this.kakaopayPurchaseCorp = kakaopayPurchaseCorp;
-        this.kakaopayIssuerCorp = kakaopayIssuerCorp;
-        this.installMonth = installMonth;
+    public CardInfo(String cardIssuerName, String cardPurchaseName, String cardInstallMonth) {
+        this.cardIssuerName = cardIssuerName;
+        this.cardPurchaseName = cardPurchaseName;
+        this.cardInstallMonth = cardInstallMonth;
     }
 }
