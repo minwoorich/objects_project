@@ -63,33 +63,17 @@ public class OrderController {
                 .orElseThrow(() -> new CustomLogicException(SHIPPING_ADDRESS_NOT_REGISTERED.getMessage(), SHIPPING_ADDRESS_NOT_REGISTERED));
     }
 
-//    @PostMapping("/orders/checkout")
-//    public ApiResponse<KakaoPayReadyResponse> saveOrder(
-//            @AuthMemberId Long memberId,
-//            HttpSession session,
-//            @Valid @RequestBody CreateOrderRequest request) {
-//
-//        // 1. kakaoPaymentReadyService 호출
-//        KakaoPayReadyResponse response = kakaoPayReadyService.execute(createKakaoReadyRequest(request, memberId));
-//        String tid = response.getTid();
-//
-//        // 2. 주문 생성
-//        createOrderService.create(getCreateOrderDto(request, memberId, tid));
-//
-//        // 3. session 에 tid 저장
-//        session.setAttribute("tid", tid);
-//
-//        return ApiResponse.ok(response);
-//    }
-
     @PostMapping("/orders/checkout")
-    public ApiResponse<KakaoPayReadyResponse> test(
+    public ApiResponse<KakaoPayReadyResponse> saveOrder(
             @AuthMemberId Long memberId,
             @Valid @RequestBody CreateOrderRequest request) {
 
         // 1. kakaoPaymentReadyService 호출
         KakaoPayReadyResponse response = kakaoPayReadyService.execute(createKakaoReadyRequest(request, memberId));
-        log.info("tid : {}", response.getTid());
+        String tid = response.getTid();
+
+        // 2. 주문 생성
+        createOrderService.create(getCreateOrderDto(request, memberId, tid));
 
         return ApiResponse.ok(response);
     }

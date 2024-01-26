@@ -228,6 +228,7 @@ CREATE TABLE order_detail (
                                    quantity	bigint	,
                                    price	bigint	,
                                    status_code	varchar(255)	,
+                                   tid	varchar(255)	,
                                    delivered_date	datetime(6)	,
                                    reason	text	,
                                    cancelled_at	datetime(6)	,
@@ -246,7 +247,6 @@ CREATE TABLE payment (
                          order_no	varchar(255)	,
                          payment_method	varchar(255)	,
                          tid	varchar(255)	,
-
                          card_issuer_name	varchar(255)	,
                          card_purchase_name	varchar(255)	,
                          card_no	varchar(255)	,
