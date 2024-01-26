@@ -128,4 +128,4 @@ payment:
     one_time: # 단건 결제
       cid: "TC0ONETIME"
     subs : # 정기 결제
-      sid :
+      cid :
