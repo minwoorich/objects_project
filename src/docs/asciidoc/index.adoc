@@ -1,30 +1,65 @@
 ifndef::snippets[]
 :snippets: ../../build/generated-snippets
 endif::[]
-= MARKETBRIDGE REST API 문서
+= *MarketBridge REST API 문서*
+:stylesheet: css/custom-css-style.css
+:sectnums:
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
 :toc: left
-:toclevels: 2
+:toclevels: 3
 :sectlinks:
+:hardbreaks:
+Doc Writer <Team Objects Backend>
+v1.0, 2024-01-25
 
-[[OrderCancel-API]]
-== OrderCancel API
+== *회원*
+
+=== *인증*
+
+include::api/member/checkemail.adoc[]
+{empty}
+{empty}
+
+include::api/member/signup.adoc[]
+{empty}
+{empty}
+
+include::api/member/signin.adoc[]
+{empty}
+{empty}
+
+include::api/member/signout.adoc[]
+{empty}
+{empty}
+
+include::api/member/reissue.adoc[]
+{empty}
+{empty}
+{empty}
+{empty}
+
+== *상품*
+{empty}
+{empty}
+{empty}
+{empty}
+
+== *주문/결제*
 
 include::api/order/ordercancelreturn.adoc[]
+{empty}
+{empty}
+
 include::api/order/ordercancel.adoc[]
+{empty}
+{empty}
+
 include::api/order/orderreturn.adoc[]
+{empty}
+{empty}
 
-[[OrderCreate-API]]
-== OrderCreate API
-
-include::api/order/ordercreate.adoc[]
-
-[[OrderCheckout-API]]
-== OrderCheckout API
-
-include::api/order/ordercheckout.adoc[]
 // [[Order-API]]
 // == Order API
 //

@@ -68,21 +68,18 @@ ext { // 전역 변수
 	snippetsDir = file('build/generated-snippets')
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
 test {
 	outputs.dir snippetsDir
+	useJUnitPlatform()
 }
 
 asciidoctor {
 	inputs.dir snippetsDir
 	configurations 'asciidoctorExt'
 
-	sources{ // 특정 파일만 html 로 만든다
-		include("**/index.adoc")
-	}
+	sourceDir('src/docs/asciidoc')
+	sources('index.adoc')
+	outputDir('src/main/resources/static/docs')
 
 	baseDirFollowsSourceDir() // 다른 adoc 파일을 include 할 때 경로를 baseDir로 맞춘다
 	dependsOn test

@@ -20,7 +20,7 @@ spring:
     username: objects
     password: 1234
 
-  #  datasource:
+#  datasource:
 #    url: jdbc:h2:tcp://localhost/~/Marketbridge
 #    username: sa
 #    password:
@@ -50,14 +50,14 @@ logging:
     org.hibernate.sql: debug
 
 
-
-
 payment:
   toss:
     test_client_api_key : "test_ck_GePWvyJnrK2PmxlyQWMqVgLzN97E"
     test_secret_api_key : "test_sk_QbgMGZzorzyG7E6ZkybPVl5E1em4:"
     success_url : "http://localhost:8080/orders/toss-payments/success"
     fail_url : "http://localhost:8080/orders/toss-payments/fail"
+
+
 ---
 
 spring:

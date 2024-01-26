@@ -1,10 +1,9 @@
-[[order-checkout]]
-=== 주문서 출력
+==== *주문서 출력*
 
-==== HTTP Request
-include::{snippets}/order-checkout/http-request.adoc[]
-include::{snippets}/order-checkout/request-fields.adoc[]
+.*HTTP Request*
+// include::{snippets}/order-checkout/http-request.adoc[]
+// include::{snippets}/order-checkout/request-fields.adoc[]
 
-==== HTTP Response
-include::{snippets}/order-checkout/http-response.adoc[]
-include::{snippets}/order-checkout/response-fields.adoc[]
+.*HTTP Response*
+// include::{snippets}/order-checkout/http-response.adoc[]
+// include::{snippets}/order-checkout/response-fields.adoc[]
