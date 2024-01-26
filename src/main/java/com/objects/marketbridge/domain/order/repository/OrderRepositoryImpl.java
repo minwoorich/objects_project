@@ -2,7 +2,6 @@ package com.objects.marketbridge.domain.order.repository;
 
 import com.objects.marketbridge.domain.order.entity.Order;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,8 +13,6 @@ import java.util.Optional;
 
 import static com.objects.marketbridge.domain.order.entity.QOrder.order;
 import static com.objects.marketbridge.domain.order.entity.QOrderDetail.orderDetail;
-import static com.objects.marketbridge.domain.order.entity.StatusCodeType.ORDER_CANCEL;
-import static com.objects.marketbridge.domain.order.entity.StatusCodeType.RETURN_COMPLETED;
 import static com.objects.marketbridge.model.QProduct.product;
 
 @Repository
@@ -58,33 +55,24 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Optional<Order> findOrderWithDetailsAndProduct(Long orderId) {
         return Optional.ofNullable(
                 queryFactory
-                .selectFrom(order)
-                .join(order.orderDetails, orderDetail).fetchJoin()
-                .join(orderDetail.product, product).fetchJoin()
-                .where(order.id.eq(orderId))
-                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
-                .fetchOne()
+                        .selectFrom(order)
+                        .join(order.orderDetails, orderDetail).fetchJoin()
+                        .join(orderDetail.product, product).fetchJoin()
+                        .where(order.id.eq(orderId))
+                        .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                        .fetchOne()
         );
     }
 
+    @Override
+    public Order findByTid(String tid) {
+        return orderJpaRepository.findByTid(tid);
+    }
 
     @Override
     public List<Order> findDistinctWithDetailsByMemberId(Long memberId) {
-
-        BooleanExpression statusCondition = orderDetail.statusCode.eq(ORDER_CANCEL.getCode());
-        BooleanExpression orCondition = statusCondition.or(orderDetail.statusCode.eq(RETURN_COMPLETED.getCode()));
-
-        return queryFactory
-                .selectDistinct(order)
-                .from(order)
-                .join(order.orderDetails, orderDetail).fetchJoin()
-                .where(
-                        order.member.id.eq(memberId),
-                        orCondition
-                )
-                .fetch();
+        return null;
     }
-
 
     @Override
     public Order findByIdWithOrderDetail(Long orderId) {
@@ -101,4 +89,24 @@ public class OrderRepositoryImpl implements OrderRepository {
     public void deleteByOrderNo(String orderNo) {
         orderJpaRepository.deleteByOrderNo(orderNo);
     }
+
+
+
+    //    @Override
+//    public List<Order> findDistinctWithDetailsByMemberId(Long memberId) {
+//
+//        BooleanExpression statusCondition = orderDetail.statusCode.eq(ORDER_CANCEL.getCode());
+//        BooleanExpression orCondition = statusCondition.or(orderDetail.statusCode.eq(RETURN_COMPLETED.getCode()));
+//
+//        return queryFactory
+//                .selectDistinct(order)
+//                .from(order)
+//                .join(order.orderDetails, orderDetail).fetchJoin()
+//                .where(
+//                        order.member.id.eq(memberId),
+//                        orCondition
+//                )
+//                .fetch();
+//    }
+
 }

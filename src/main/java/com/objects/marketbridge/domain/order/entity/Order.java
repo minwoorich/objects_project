@@ -44,11 +44,13 @@ public class Order extends BaseEntity {
 
     private Long usedPoint; // 구매하는데 사용한 포인트
 
+    private String tid;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
     @Builder
-    public Order(Member member, Address address, String orderName, String orderNo, Long realPrice, Long totalPrice, Long totalUsedCouponPrice, Long usedPoint) {
+    public Order(Member member, Address address, String orderName, String orderNo, Long realPrice, Long totalPrice, Long totalUsedCouponPrice, Long usedPoint, String tid) {
         this.member = member;
         this.address = address;
         this.orderName = orderName;
@@ -57,6 +59,7 @@ public class Order extends BaseEntity {
         this.totalPrice = totalPrice;
         this.totalUsedCouponPrice = totalUsedCouponPrice;
         this.usedPoint = usedPoint;
+        this.tid = tid;
     }
 
     public void addOrderDetail(OrderDetail orderDetail) {
@@ -74,7 +77,7 @@ public class Order extends BaseEntity {
         orderDetails.forEach(OrderDetail::returnCoupon);
     }
 
-    public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice){
+    public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice, String tid){
         return Order.builder()
                 .member(member)
                 .address(address)
@@ -82,6 +85,7 @@ public class Order extends BaseEntity {
                 .orderNo(orderNo)
                 .totalPrice(totalPrice)
                 .realPrice(realPrice)
+                .tid(tid)
                 .build();
     }
     public void setTotalUsedCouponPrice(Long totalUsedCouponPrice) {

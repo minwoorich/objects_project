@@ -1,7 +1,6 @@
 package com.objects.marketbridge.domain.order.dto;
 
 import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
-import com.objects.marketbridge.domain.order.controller.response.CreateOrderResponse;
 import com.objects.marketbridge.domain.order.entity.ProductValue;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +9,7 @@ import java.util.List;
 
 @Getter
 public class CreateOrderDto {
+    private String tid;
     private Long memberId;
     private Long addressId;
     private String orderName;
@@ -19,7 +19,8 @@ public class CreateOrderDto {
     private List<ProductValue> productValues;
 
     @Builder
-    public CreateOrderDto(Long memberId, Long addressId, String orderName, String orderNo, Long totalOrderPrice, Long realOrderPrice,   List<ProductValue> productValues) {
+    public CreateOrderDto(String tid, Long memberId, Long addressId, String orderName, String orderNo, Long totalOrderPrice, Long realOrderPrice, List<ProductValue> productValues) {
+        this.tid = tid;
         this.memberId = memberId;
         this.addressId = addressId;
         this.orderName = orderName;
@@ -29,7 +30,7 @@ public class CreateOrderDto {
         this.productValues = productValues;
     }
 
-    public static CreateOrderDto fromRequest(CreateOrderRequest request, Long memberId) {
+    public static CreateOrderDto fromRequest(CreateOrderRequest request, Long memberId, String tid) {
         return CreateOrderDto.builder()
                 .memberId(memberId)
                 .addressId(request.getAddressId())
@@ -37,17 +38,7 @@ public class CreateOrderDto {
                 .orderNo(request.getOrderId())
                 .totalOrderPrice(request.getAmount())
                 .productValues(request.getProductValues())
-                .build();
-    }
-
-    public CreateOrderResponse toResponse(String email, String successUrl, String failUrl) {
-        return CreateOrderResponse.builder()
-                .totalOrderPrice(totalOrderPrice)
-                .orderName(orderName)
-                .orderNo(orderNo)
-                .email(email)
-                .successUrl(successUrl)
-                .failUrl(failUrl)
+                .tid(tid)
                 .build();
     }
 }

@@ -25,7 +25,9 @@ public interface OrderDetailRepository  {
 
     List<OrderDetail> findByOrderNo(String orderNo);
 
-    List<OrderDetail> findByProdOrder_IdAndProductIn(Long orderId, List<Product> products);
+    List<OrderDetail> findByOrder_IdAndProductIn(Long orderId, List<Product> products);
+
+    List<OrderDetail> findByOrderNoAndProduct_IdIn(String orderNo, List<Long> productIds);
 
 //    OrderDetail findByStockIdAndOrderId(Long stockId, Long orderId);
 }
