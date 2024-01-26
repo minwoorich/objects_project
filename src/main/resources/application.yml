@@ -127,3 +127,5 @@ payment:
     fail_url: "http://localhost:8080/payments/kakao/fail"
     one_time: # 단건 결제
       cid: "TC0ONETIME"
+    subs : # 정기 결제
+      sid :

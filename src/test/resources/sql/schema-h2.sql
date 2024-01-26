@@ -239,29 +239,23 @@ CREATE TABLE order_detail (
 DROP TABLE IF EXISTS payment;
 
 CREATE TABLE payment (
-                           payment_id	bigint auto_increment
-                               primary key,
+                         payment_id	bigint auto_increment
+                             primary key,
 
-                           order_id	bigint	,
-                           order_no	varchar(255)	,
-                           payment_type	varchar(255)	,
-                           payment_method	varchar(255)	,
-                           payment_key	varchar(255)	,
-                           payment_status	varchar(255)	,
-                           refund_status	varchar(255)	,
+                         order_id	bigint	,
+                         order_no	varchar(255)	,
+                         payment_method	varchar(255)	,
+                         tid	varchar(255)	,
 
-                           card_issuer_code	varchar(255)	,
-                           card_no	varchar(255)	,
-                           card_installment_plan_months	BIGINT	,
-                           card_approve_no	varchar(255)	,
-                           v_account_no	varchar(255)	,
-                           v_due_date	varchar(255)	,
-                           v_expired	bit	,
-                           v_bank	varchar(255)	,
-                           tr_bank_code	varchar(255)	,
-                           deleted_at	timestamp	,
-                           updated_at	timestamp	,
-                           created_at	timestamp
+                         card_issuer_name	varchar(255)	,
+                         card_purchase_name	varchar(255)	,
+                         card_no	varchar(255)	,
+                         card_install_month	BIGINT	,
+                         total_amount BIGINT,
+                         discount_amount BIGINT,
+                         deleted_at	datetime(6)	,
+                         updated_at	datetime(6)	,
+                         created_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS review;
