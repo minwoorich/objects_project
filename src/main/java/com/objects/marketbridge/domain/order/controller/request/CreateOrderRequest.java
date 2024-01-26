@@ -56,6 +56,7 @@ public class CreateOrderRequest {
                 .quantity(productValues.stream().mapToLong(ProductValue::getQuantity).sum())
                 .partnerOrderId(orderId)
                 .partnerUserId(memberId.toString())
+                .itemName(orderName)
                 .taxFreeAmount(0L)
                 .totalAmount(amount)
                 .build();

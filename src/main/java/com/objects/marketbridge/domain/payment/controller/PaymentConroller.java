@@ -20,7 +20,7 @@ public class PaymentConroller {
     private final KakaoPaymentApproveService kakaoPaymentApproveService;
     private final KakaoPayConfig kakaoPayConfig;
 
-    @GetMapping("/payments/kakao/approval")
+    @PostMapping("/payments/kakao/approval")
     public ApiResponse<KakaoPayApproveResponse> kakaoPaymentApproved(
             @AuthMemberId Long memberId,
             @RequestParam(name = "pg_token") String pgToken,
@@ -48,7 +48,9 @@ public class PaymentConroller {
         return ApiResponse.ok(response);
     }
 
-    @GetMapping("/payments/kakao/fail")
+
+
+    @PostMapping("/payments/kakao/fail")
     public ApiResponse<?> kakaoPaymentFail(
             @RequestParam String paymentKey,
             @RequestParam(name = "orderId") String orderNo,
