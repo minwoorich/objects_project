@@ -46,7 +46,7 @@ public class KakaoPayReadyRequest {
         this.quantity = quantity;
         this.totalAmount = totalAmount;
         this.taxFreeAmount = taxFreeAmount;
-        this.approvalUrl = approvalUrl;
+        this.approvalUrl = approvalUrl+"/"+partnerOrderId;
         this.cancelUrl = cancelUrl;
         this.failUrl = failUrl;
     }

@@ -11,7 +11,6 @@ import com.objects.marketbridge.domain.order.entity.ProductValue;
 import com.objects.marketbridge.domain.order.entity.StatusCodeType;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.objects.marketbridge.domain.payment.config.TossPaymentConfig;
 import com.objects.marketbridge.domain.product.repository.ProductRepository;
 import com.objects.marketbridge.model.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,7 +30,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CreateOrderService {
 
-    private final TossPaymentConfig tossPaymentConfig;
     private final OrderDetailRepository orderDetailRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
@@ -105,10 +103,11 @@ public class CreateOrderService {
             String orderNo = order.getOrderNo();
             Long quantity = productValue.getQuantity();
             Long price = product.getPrice();
+            String tid = order.getTid();
 
             // OrderDetail 엔티티 생성
             OrderDetail orderDetail =
-                    OrderDetail.create(order, product, orderNo, coupon, quantity, price, StatusCodeType.ORDER_INIT.getCode());
+                    OrderDetail.create(tid, order, product, orderNo, coupon, quantity, price, StatusCodeType.ORDER_INIT.getCode());
 
             // orderDetails 에 추가
             orderDetails.add(orderDetail);
