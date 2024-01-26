@@ -18,6 +18,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,7 @@ import static com.objects.marketbridge.global.error.ErrorCode.SHIPPING_ADDRESS_N
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class OrderController {
 
     private final MemberRepository memberRepository;
@@ -64,7 +66,6 @@ public class OrderController {
     @PostMapping("/orders/checkout")
     public ApiResponse<KakaoPayReadyResponse> saveOrder(
             @AuthMemberId Long memberId,
-            HttpSession session,
             @Valid @RequestBody CreateOrderRequest request) {
 
         // 1. kakaoPaymentReadyService 호출
@@ -73,9 +74,6 @@ public class OrderController {
 
         // 2. 주문 생성
         createOrderService.create(getCreateOrderDto(request, memberId, tid));
-
-        // 3. session 에 tid 저장
-        session.setAttribute("tid", tid);
 
         return ApiResponse.ok(response);
     }

@@ -3,6 +3,8 @@ package com.objects.marketbridge.domain.payment.controller.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @Getter
 public class KakaoPayApproveRequest {
@@ -32,4 +34,20 @@ public class KakaoPayApproveRequest {
         this.pgToken = pgToken;
         this.totalAmount = totalAmount;
     }
+
+    public MultiValueMap<String, String> toMultiValueMap() {
+
+        MultiValueMap<String, String> requestMap
+                = new LinkedMultiValueMap<>();
+
+        requestMap.add("cid", cid);
+        requestMap.add("tid", tid);
+        requestMap.add("partner_order_id", partnerOrderId);
+        requestMap.add("partner_user_id",  partnerUserId);
+        requestMap.add("pg_token",  pgToken);
+        requestMap.add("total_amount",  totalAmount);
+
+        return requestMap;
+    }
+
 }

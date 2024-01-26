@@ -199,11 +199,6 @@ VALUES
     (1, 1, 0, 2),
     (2, 2, 1, 1);
 
--- Insert statements for order_temp table
-INSERT INTO marketbridge.order_temp (order_no, amount, address_id, product)
-VALUES
-    ('TEMP123', 300, 1, 'Product A'),
-    ('TEMP456', 150, 2, 'Product B');
 
 -- Insert statements for prod_option table
 INSERT INTO marketbridge.prod_option (product_id, option_id, created_at, updated_at, deleted_at)

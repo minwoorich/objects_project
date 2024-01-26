@@ -1,9 +1,8 @@
-[[order-return]]
-=== 반품 요청
+==== *반품 요청*
 
-==== HTTP Request
+.*HTTP Request*
 include::{snippets}/order-return-request/http-request.adoc[]
 
-==== HTTP Response
+.*HTTP Response*
 include::{snippets}/order-return-request/http-response.adoc[]
 include::{snippets}/order-return-request/response-fields.adoc[]
