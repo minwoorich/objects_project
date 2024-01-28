@@ -17,7 +17,7 @@
 //import com.objects.marketbridge.domain.product.repository.ProductRepository;
 //import com.objects.marketbridge.global.error.CustomLogicException;
 //import com.objects.marketbridge.global.error.ErrorCode;
-//import com.objects.marketbridge.model.Product;
+//import com.objects.marketbridge.common.domain.Product;
 //import jakarta.persistence.EntityNotFoundException;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.data.domain.Page;

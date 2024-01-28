@@ -1,10 +1,10 @@
 package com.objects.marketbridge.domain.payment.service;
 
-import com.objects.marketbridge.domain.order.entity.Order;
-import com.objects.marketbridge.domain.order.entity.OrderDetail;
-import com.objects.marketbridge.domain.order.entity.StatusCodeType;
+import com.objects.marketbridge.domain.order.domain.Order;
+import com.objects.marketbridge.domain.order.domain.OrderDetail;
+import com.objects.marketbridge.domain.order.domain.StatusCodeType;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.objects.marketbridge.domain.payment.controller.response.KakaoPayApproveResponse;
+import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
 import com.objects.marketbridge.domain.payment.domain.Amount;
 import com.objects.marketbridge.domain.payment.domain.CardInfo;
 import com.objects.marketbridge.domain.payment.domain.Payment;

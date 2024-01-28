@@ -1,9 +1,9 @@
 //package com.objects.marketbridge.domain.order.controller;
 //
 //import com.objects.marketbridge.domain.member.repository.MemberRepository;
-//import com.objects.marketbridge.model.Address;
-//import com.objects.marketbridge.model.AddressValue;
-//import com.objects.marketbridge.model.Member;
+//import com.objects.marketbridge.common.domain.Address;
+//import com.objects.marketbridge.common.domain.AddressValue;
+//import com.objects.marketbridge.common.domain.Member;
 //import com.objects.marketbridge.domain.order.RestDocsSupport;
 //import com.objects.marketbridge.domain.order.controller.request.CheckoutRequest;
 //import com.objects.marketbridge.domain.order.entity.ProductValue;

@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domain.order.service.port;
 
 
-import com.objects.marketbridge.domain.order.entity.Order;
+import com.objects.marketbridge.domain.order.domain.Order;
 
 import java.util.List;
 import java.util.Optional;

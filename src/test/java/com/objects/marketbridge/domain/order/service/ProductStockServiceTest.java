@@ -1,12 +1,11 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.order.entity.OrderDetail;
+import com.objects.marketbridge.domain.order.domain.OrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import com.objects.marketbridge.global.error.CustomLogicException;
-import com.objects.marketbridge.global.error.ErrorCode;
-import com.objects.marketbridge.model.Product;
-import org.assertj.core.api.Assertions;
+import com.objects.marketbridge.domain.product.infra.ProductRepository;
+import com.objects.marketbridge.common.exception.error.CustomLogicException;
+import com.objects.marketbridge.common.exception.error.ErrorCode;
+import com.objects.marketbridge.common.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.*;

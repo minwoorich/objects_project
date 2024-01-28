@@ -7,7 +7,7 @@
 //import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnResponse;
 //import com.objects.marketbridge.domain.order.dto.OrderReturnResponse;
 //import com.objects.marketbridge.domain.order.service.OrderCancelReturnService;
-//import com.objects.marketbridge.global.common.ApiResponse;
+//import com.objects.marketbridge.common.interceptor.ApiResponse;
 //import jakarta.validation.Valid;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.data.domain.Page;

@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.order.mock;
 
-import com.objects.marketbridge.global.security.user.CustomUserDetails;
+import com.objects.marketbridge.common.security.user.CustomUserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

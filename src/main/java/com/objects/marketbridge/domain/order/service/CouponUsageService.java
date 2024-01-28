@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.model.MemberCoupon;
+import com.objects.marketbridge.common.domain.MemberCoupon;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,21 +1,18 @@
 package com.objects.marketbridge.domain.order.controller;
 
-import com.objects.marketbridge.domain.member.repository.MemberRepository;
+import com.objects.marketbridge.common.domain.Address;
+import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
+import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
+import com.objects.marketbridge.common.exception.error.CustomLogicException;
+import com.objects.marketbridge.common.interceptor.ApiResponse;
+import com.objects.marketbridge.common.security.annotation.AuthMemberId;
+import com.objects.marketbridge.domain.member.infra.MemberRepository;
 import com.objects.marketbridge.domain.order.controller.request.CreateOrderRequest;
 import com.objects.marketbridge.domain.order.controller.response.CheckoutResponse;
-import com.objects.marketbridge.domain.order.controller.response.KakaoPayReadyResponse;
-import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.domain.order.service.CreateOrderService;
-import com.objects.marketbridge.domain.order.service.KakaoPayReadyService;
-import com.objects.marketbridge.domain.payment.config.KakaoPayConfig;
-import com.objects.marketbridge.global.common.ApiResponse;
-import com.objects.marketbridge.global.error.CustomLogicException;
-import com.objects.marketbridge.global.security.annotation.AuthMemberId;
-import com.objects.marketbridge.model.Address;
-import com.objects.marketbridge.model.Member;
+import com.objects.marketbridge.domain.order.service.dto.CreateOrderDto;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.objects.marketbridge.global.error.ErrorCode.SHIPPING_ADDRESS_NOT_REGISTERED;
+import static com.objects.marketbridge.common.exception.error.ErrorCode.SHIPPING_ADDRESS_NOT_REGISTERED;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,8 +32,6 @@ public class OrderController {
 
     private final MemberRepository memberRepository;
     private final CreateOrderService createOrderService;
-    private final KakaoPayConfig kakaoPayConfig;
-    private final KakaoPayReadyService kakaoPayReadyService;
 
     @GetMapping("/orders/checkout")
     public ApiResponse<CheckoutResponse> getCheckout(

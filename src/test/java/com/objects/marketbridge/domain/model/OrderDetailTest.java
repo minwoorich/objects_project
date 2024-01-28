@@ -1,11 +1,11 @@
 package com.objects.marketbridge.domain.model;
 
-import com.objects.marketbridge.domain.order.entity.OrderDetail;
-import com.objects.marketbridge.model.Product;
+import com.objects.marketbridge.domain.order.domain.OrderDetail;
+import com.objects.marketbridge.common.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
+import static com.objects.marketbridge.domain.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.*;
 
 class OrderDetailTest {

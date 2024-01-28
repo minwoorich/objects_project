@@ -1,8 +1,8 @@
 package com.objects.marketbridge.domain.order.controller.request;
 
-import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.dto.KakaoPayReadyRequest;
-import com.objects.marketbridge.domain.order.entity.ProductValue;
+import com.objects.marketbridge.domain.order.service.dto.CreateOrderDto;
+import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
+import com.objects.marketbridge.domain.order.domain.ProductValue;
 import lombok.*;
 
 import java.util.List;
