@@ -1,6 +1,6 @@
 package com.objects.marketbridge.common.domain;
 
-import com.objects.marketbridge.domain.member.dto.FindPointDto;
+import com.objects.marketbridge.member.dto.FindPointDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

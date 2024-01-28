@@ -1,6 +1,6 @@
 package com.objects.marketbridge.common.domain;
 
-import com.objects.marketbridge.domain.order.domain.Order;
+import com.objects.marketbridge.order.domain.Order;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

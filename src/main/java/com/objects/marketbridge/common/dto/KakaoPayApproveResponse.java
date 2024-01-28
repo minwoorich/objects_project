@@ -1,8 +1,8 @@
 package com.objects.marketbridge.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.objects.marketbridge.domain.payment.domain.Amount;
-import com.objects.marketbridge.domain.payment.domain.CardInfo;
+import com.objects.marketbridge.payment.domain.Amount;
+import com.objects.marketbridge.payment.domain.CardInfo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
