@@ -53,7 +53,7 @@ class CouponUsageServiceTest {
         LocalDateTime dateTime = LocalDateTime.now();
 
         List<Coupon> coupons = couponRepository.findAll();
-        Long memberId = memberRepository.findByEmail("test@email.com").orElseThrow(EntityNotFoundException::new).getId();
+        Long memberId = memberRepository.findByEmail("test@email.com").getId();
 
         List<MemberCoupon> memberCoupons = getMemberCoupons(coupons, memberId);
 

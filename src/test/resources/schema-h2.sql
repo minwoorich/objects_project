@@ -229,6 +229,7 @@ CREATE TABLE order_detail (
                                      price	bigint	,
                                      status_code	varchar(255)	,
                                      delivered_date	timestamp	,
+                                     tid	varchar(255)	,
                                      reason	text	,
                                      cancelled_at	timestamp	,
                                      created_at	timestamp	,

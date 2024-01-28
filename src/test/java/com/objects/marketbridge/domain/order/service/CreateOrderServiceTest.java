@@ -140,7 +140,7 @@ class CreateOrderServiceTest {
     void CreateOrder(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -175,7 +175,7 @@ class CreateOrderServiceTest {
     void CreateOrderDetail(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -201,7 +201,7 @@ class CreateOrderServiceTest {
     void OrderDetailWithCoupon(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -222,7 +222,7 @@ class CreateOrderServiceTest {
     void mappingOrderWithOrderDetail(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -245,7 +245,7 @@ class CreateOrderServiceTest {
     void calcualteTotalUsedCouponPrice(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -265,7 +265,7 @@ class CreateOrderServiceTest {
     void memberCouponUsage(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -287,7 +287,7 @@ class CreateOrderServiceTest {
     void productStockDecrease(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -310,7 +310,7 @@ class CreateOrderServiceTest {
     void productStockDecrease_error(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long maxQuantity = 100L;
         CreateOrderDto createOrderDto = createDto(member, address, maxQuantity);
