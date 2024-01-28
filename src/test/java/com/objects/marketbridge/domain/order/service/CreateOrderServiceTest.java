@@ -5,7 +5,7 @@ import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.MemberCouponRepository;
-import com.objects.marketbridge.member.infra.MemberRepository;
+import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.common.exception.error.CustomLogicException;
 import com.objects.marketbridge.common.exception.error.ErrorCode;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;

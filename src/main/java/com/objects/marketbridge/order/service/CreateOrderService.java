@@ -4,7 +4,7 @@ import com.objects.marketbridge.common.domain.*;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.MemberCouponRepository;
-import com.objects.marketbridge.member.infra.MemberRepository;
+import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
@@ -80,7 +80,7 @@ public class CreateOrderService {
 
     private Order createOrder(CreateOrderDto createOrderDto) {
 
-        Member member = memberRepository.findById(createOrderDto.getMemberId()).orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findById(createOrderDto.getMemberId());
         Address address = addressRepository.findById(createOrderDto.getAddressId());
         String orderName = createOrderDto.getOrderName();
         String orderNo = createOrderDto.getOrderNo();

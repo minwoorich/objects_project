@@ -2,8 +2,9 @@ package com.objects.marketbridge.order.infra;
 
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnListResponse;
 import com.objects.marketbridge.order.controller.response.OrderDetailResponse;
-import com.objects.marketbridge.domain.order.controller.response.QOrderCancelReturnListResponse;
-import com.objects.marketbridge.domain.order.controller.response.QOrderDetailResponse;
+import com.objects.marketbridge.order.controller.response.QOrderCancelReturnListResponse;
+import com.objects.marketbridge.order.controller.response.QOrderDetailResponse;
+import com.objects.marketbridge.order.domain.QOrder;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -13,13 +14,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.objects.marketbridge.domain.order.domain.QOrder.order;
-import static com.objects.marketbridge.domain.order.domain.QOrderDetail.orderDetail;
+import static com.objects.marketbridge.common.domain.QProduct.product;
+import static com.objects.marketbridge.order.domain.QOrder.order;
+import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
+
 
 @Repository
 public class OrderDtoRepositoryImpl implements OrderDtoRepository {
@@ -47,7 +49,7 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     private List<OrderCancelReturnListResponse> getOrderCancelReturnListResponses(Long memberId) {
         List<OrderCancelReturnListResponse> content = queryFactory
                 .select(new QOrderCancelReturnListResponse(
-                                order.updatedAt,
+                        order.updatedAt,
                                 order.createdAt,
                                 order.orderNo
                         )

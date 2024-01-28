@@ -27,11 +27,11 @@ public class KakaoPayConfig {
     @Value("${host}")
     private String host;
 
-    private final String cancelUrl = "/payments/kakao/cancel";
+    private final String cancelUrl = "/kakao-pay/cancel";
 
-    private final String failUrl = "/payments/kakao/fail";
+    private final String failUrl = "/kakao-pay/fail";
 
-    private final String approvalUrl = "/payments/kakao/approval";
+    private final String approvalUrl = "/kakao-pay/approval";
 
 
     public String getRedirectCancelUrl() {

@@ -1,16 +1,14 @@
 package com.objects.marketbridge.member.service;
 
-import com.objects.marketbridge.member.dto.CheckedResultDto;
-import com.objects.marketbridge.member.dto.FindPointDto;
-import com.objects.marketbridge.member.dto.SignInDto;
-import com.objects.marketbridge.member.dto.SignUpDto;
 import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.member.infra.MemberRepository;
+import com.objects.marketbridge.common.domain.Membership;
 import com.objects.marketbridge.common.security.dto.JwtTokenDto;
 import com.objects.marketbridge.common.security.jwt.JwtTokenProvider;
-import com.objects.marketbridge.common.domain.Membership;
-import com.objects.marketbridge.common.domain.Point;
 import com.objects.marketbridge.common.security.user.CustomUserDetails;
+import com.objects.marketbridge.member.dto.CheckedResultDto;
+import com.objects.marketbridge.member.dto.SignInDto;
+import com.objects.marketbridge.member.dto.SignUpDto;
+import com.objects.marketbridge.member.service.port.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -33,7 +31,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     public CheckedResultDto isDuplicateEmail(String email){
-        boolean isDuplicateEmail = memberRepository.findByEmail(email).isPresent();
+        boolean isDuplicateEmail = memberRepository.findOptionalByEmail(email).isPresent();
         return CheckedResultDto.builder().checked(isDuplicateEmail).build();
     }
 
@@ -69,8 +67,12 @@ public class MemberService {
 
     @Transactional
     public void changeMemberShip(Long id){
-        Member findMember = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id)); // id 를 통한 조회실패 예외발생
+
+        // 이제 orElseThrow 는 전부 MemberRepositoryImpl 에서 처리하기로 했습니다. by 정민우
+//        Member findMember = memberRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id)); // id 를 통한 조회실패 예외발생
+
+        Member findMember = memberRepository.findById(id);
 
         if(findMember.getMembership().equals("BASIC")){//멤버십 WOW 등록
             findMember.setMembership(Membership.WOW.toString());
@@ -81,10 +83,11 @@ public class MemberService {
         }
     }
 
-    public FindPointDto findPointById(Long id){
-        Member findMemberWithPoint=memberRepository.findByIdWithPoint(id)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id));
-
-        return Point.toDto(findMemberWithPoint);
-    }
+    // Point 도입 하지 않기로해서 해당 내용은 주석 처리 하였습니다 by 정민우
+//    public FindPointDto findPointById(Long id){
+//        Member findMemberWithPoint=memberRepository.findByIdWithPoint(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id));
+//
+//        return Point.toDto(findMemberWithPoint);
+//    }
 }

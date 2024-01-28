@@ -1,6 +1,9 @@
 package com.objects.marketbridge.member.infra;
 
 import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.common.domain.QAddress;
+import com.objects.marketbridge.common.domain.QMember;
+import com.objects.marketbridge.member.service.port.MemberCustomRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +16,13 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Member findByIdWithPointAndAddresses(Long id) {
+    public Member findByIdWithAddresses(Long id) {
         QMember member = new QMember("member");
-        QPoint point = new QPoint("point");
         QAddress address = new QAddress("address");
 
         Member findMember = queryFactory
                 .select(member)
                 .from(member)
-                .leftJoin(member.point, point).fetchJoin() // 일대일 관계 fetchJoin
                 .leftJoin(member.addresses, address).fetchJoin() // 일대다 관계 fetchJoin
                 .where(member.id.eq(id))
                 .fetchOne();

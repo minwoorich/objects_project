@@ -1,6 +1,5 @@
 package com.objects.marketbridge.member.controller;
 
-import com.objects.marketbridge.domain.member.dto.*;
 import com.objects.marketbridge.member.service.MemberService;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.common.security.annotation.GetAuthentication;
@@ -63,10 +62,10 @@ public class MemberController {
         memberService.changeMemberShip(id);
     }
 
-    @GetMapping("/point/{id}")
-    public ApiResponse<FindPointDto> findPointById(@PathVariable Long id){
-
-        FindPointDto memberPoint = memberService.findPointById(id);
-        return ApiResponse.of(HttpStatus.OK, memberPoint);
-    }
+//    @GetMapping("/point/{id}")
+//    public ApiResponse<FindPointDto> findPointById(@PathVariable Long id){
+//
+//        FindPointDto memberPoint = memberService.findPointById(id);
+//        return ApiResponse.of(HttpStatus.OK, memberPoint);
+//    }
 }

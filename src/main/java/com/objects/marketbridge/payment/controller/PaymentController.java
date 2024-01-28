@@ -1,7 +1,11 @@
 package com.objects.marketbridge.payment.controller;
 
 import com.objects.marketbridge.common.config.KakaoPayConfig;
+import com.objects.marketbridge.common.dto.KakaoPayApproveRequest;
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
+import com.objects.marketbridge.common.infra.KakaoPayService;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.service.port.OrderRepository;
 import com.objects.marketbridge.payment.service.PaymentService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,25 +16,16 @@ import org.springframework.web.bind.annotation.*;
 public class PaymentController {
 
     private final PaymentService paymentService;
-    private final KakaoPayConfig kakaoPayConfig;
+    private final KakaoPayService kakaoPayService;
+    private final OrderRepository orderRepository;
 
-//    @PostMapping("/payments/kakao/approval")
+//    @PostMapping("/kakao-pay/approval/{orderNo}")
 //    public ApiResponse<KakaoPayApproveResponse> kakaoPaymentApproved(
-//            @AuthMemberId Long memberId,
 //            @RequestParam(name = "pg_token") String pgToken,
-//            HttpSession session) {
+//            @PathVariable String orderNo) {
 //
-//        // 1. 결제 승인 요청
-//        if (session == null) {
-//            throw new CustomLogicException(ErrorCode.SESSION_EXPIRED.getMessage());
-//        }
-//
-//        KakaoPayApproveResponse response = kakaoPaymentApproveService.execute(
-//                pgToken,
-//                memberId,
-//                (String) session.getAttribute("tid"),
-//                kakaoPayConfig.getCid());
-//        session.invalidate();
+//        Order order = orderRepository.findByOrderNo(orderNo);
+//        KakaoPayApproveResponse response = kakaoPayService.approve(createKakaoRequest(order));
 //
 //        // 2. Payment 생성 및 OrderDetails 업데이트
 //        paymentService.create(response);
@@ -42,18 +37,16 @@ public class PaymentController {
 //        return ApiResponse.ok(response);
 //    }
 
-    @PostMapping("/payments/kakao/approval/{orderNo}")
+    @PostMapping("/kakao-pay/approval/{orderNo}")
     public ApiResponse<KakaoPayApproveResponse> kakaoPaymentApproved(
             @RequestParam(name = "pg_token") String pgToken,
             @PathVariable String orderNo) {
 
-        KakaoPayApproveResponse response = kakaoPaymentApproveService.execute(
-                pgToken,
-                orderNo,
-                kakaoPayConfig.getCid());
+        Order order = orderRepository.findByOrderNo(orderNo);
+        KakaoPayApproveResponse response = kakaoPayService.approve(createKakaoRequest(order));
 
-//        // 2. Payment 생성 및 OrderDetails 업데이트
-//        paymentService.create(response);
+        // 2. Payment 생성 및 OrderDetails 업데이트
+        paymentService.create(response);
 
         // 3.
         // TODO : 1) 판매자 금액 추가(실제입금은 배치로 들어가겠지만, 우선 어딘가에 판매자의 돈이 올라갔음을 저장해놔야함)
@@ -62,9 +55,17 @@ public class PaymentController {
         return ApiResponse.ok(response);
     }
 
+    private  KakaoPayApproveRequest createKakaoRequest(Order order) {
+        return KakaoPayApproveRequest.builder()
+                .partnerOrderId(order.getOrderNo())
+                .tid(order.getTid())
+                .totalAmount(order.getTotalPrice().toString())
+                .cid(KakaoPayConfig.ONE_TIME_CID)
+                .build();
+    }
 
 
-    @PostMapping("/payments/kakao/fail")
+    @PostMapping("/kakao-pay/fail")
     public ApiResponse<?> kakaoPaymentFail(
             @RequestParam String paymentKey,
             @RequestParam(name = "orderId") String orderNo,

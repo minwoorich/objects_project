@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domain.address.repository;
 
 import com.objects.marketbridge.order.service.port.AddressRepository;
-import com.objects.marketbridge.member.infra.MemberRepository;
+import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.common.domain.Address;
 import com.objects.marketbridge.common.domain.Member;
 import org.junit.jupiter.api.AfterEach;
@@ -39,7 +39,7 @@ class AddressRepositoryImplTest {
         addressRepository.save(address);
 
         //when
-        Member findMember = memberRepository.findByEmail(testEmail).orElseThrow(IllegalArgumentException::new);
+        Member findMember = memberRepository.findByEmail(testEmail);
         Address findAddress = addressRepository.findByMemberId(findMember.getId()).get(0);
 
         //then

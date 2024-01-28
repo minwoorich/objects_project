@@ -5,6 +5,7 @@ import com.objects.marketbridge.common.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.*;
 
 class OrderDetailTest {

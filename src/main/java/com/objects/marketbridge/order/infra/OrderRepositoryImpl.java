@@ -1,6 +1,7 @@
 package com.objects.marketbridge.order.infra;
 
 import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.QOrder;
 import com.objects.marketbridge.order.service.port.OrderRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -11,8 +12,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.objects.marketbridge.domain.order.domain.QOrder.order;
-import static com.objects.marketbridge.domain.order.domain.QOrderDetail.orderDetail;
+import static com.objects.marketbridge.common.domain.QProduct.product;
+import static com.objects.marketbridge.order.domain.QOrder.order;
+import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {

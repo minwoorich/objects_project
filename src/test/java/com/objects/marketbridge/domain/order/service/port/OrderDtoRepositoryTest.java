@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.order.service.port;
 
-import com.objects.marketbridge.member.infra.MemberRepository;
+import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnListResponse;
 import com.objects.marketbridge.order.controller.response.OrderDetailResponse;
 import com.objects.marketbridge.order.domain.Order;
@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.*;
 
 @ActiveProfiles("test")
