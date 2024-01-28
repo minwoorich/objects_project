@@ -1,24 +1,19 @@
 package com.objects.marketbridge.domain.order.service.port;
 
-import com.objects.marketbridge.model.Member;
-import com.objects.marketbridge.model.Product;
-import com.objects.marketbridge.domain.order.entity.Order;
-import com.objects.marketbridge.domain.order.entity.OrderDetail;
-import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.domain.order.entity.StatusCodeType;
-import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import jakarta.persistence.EntityManager;
+import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.product.infra.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;

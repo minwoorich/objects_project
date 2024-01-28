@@ -1,11 +1,12 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.coupon.repository.CouponRepository;
-import com.objects.marketbridge.domain.coupon.repository.MemberCouponRepository;
-import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.model.Coupon;
-import com.objects.marketbridge.model.Member;
-import com.objects.marketbridge.model.MemberCoupon;
+import com.objects.marketbridge.order.service.CouponUsageService;
+import com.objects.marketbridge.product.infra.CouponRepository;
+import com.objects.marketbridge.product.infra.MemberCouponRepository;
+import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.common.domain.Coupon;
+import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.common.domain.MemberCoupon;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +29,8 @@ class CouponUsageServiceTest {
     MemberCouponRepository memberCouponRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired CouponRepository couponRepository;
-    @Autowired CouponUsageService couponUsageService;
+    @Autowired
+    CouponUsageService couponUsageService;
 
     @BeforeEach
     void init() {
@@ -51,7 +53,7 @@ class CouponUsageServiceTest {
         LocalDateTime dateTime = LocalDateTime.now();
 
         List<Coupon> coupons = couponRepository.findAll();
-        Long memberId = memberRepository.findByEmail("test@email.com").orElseThrow(EntityNotFoundException::new).getId();
+        Long memberId = memberRepository.findByEmail("test@email.com").getId();
 
         List<MemberCoupon> memberCoupons = getMemberCoupons(coupons, memberId);
 

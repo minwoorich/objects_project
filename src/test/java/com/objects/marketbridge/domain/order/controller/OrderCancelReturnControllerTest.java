@@ -14,8 +14,8 @@
 //import com.objects.marketbridge.domain.order.service.port.OrderRepository;
 //import com.objects.marketbridge.domain.payment.dto.RefundDto;
 //import com.objects.marketbridge.domain.product.repository.ProductRepository;
-//import com.objects.marketbridge.model.Member;
-//import com.objects.marketbridge.model.Product;
+//import com.objects.marketbridge.common.domain.Member;
+//import com.objects.marketbridge.common.domain.Product;
 //import jakarta.persistence.EntityManager;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;

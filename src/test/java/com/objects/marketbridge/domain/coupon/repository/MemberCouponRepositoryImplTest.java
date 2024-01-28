@@ -1,10 +1,11 @@
 package com.objects.marketbridge.domain.coupon.repository;
 
-import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.model.Coupon;
-import com.objects.marketbridge.model.Member;
-import com.objects.marketbridge.model.MemberCoupon;
-import jakarta.persistence.EntityNotFoundException;
+import com.objects.marketbridge.common.domain.Coupon;
+import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.common.domain.MemberCoupon;
+import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.product.infra.CouponRepository;
+import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,9 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class MemberCouponRepositoryImplTest {
 
-    @Autowired MemberCouponRepository memberCouponRepository;
+    @Autowired
+    MemberCouponRepository memberCouponRepository;
     @Autowired MemberRepository memberRepository;
-    @Autowired CouponRepository couponRepository;
+    @Autowired
+    CouponRepository couponRepository;
 
     @BeforeEach
     void init() {
@@ -38,7 +41,7 @@ class MemberCouponRepositoryImplTest {
     @Test
     void findByMember_IdAndCoupon_Id(){
         //given
-        Member member = memberRepository.findByEmail("test@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("test@email.com");
         Coupon coupon = couponRepository.findAll().get(0);
 
         //when

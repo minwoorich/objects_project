@@ -1,16 +1,16 @@
 package com.objects.marketbridge.domain.order.service.port;
 
-import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnListResponse;
-import com.objects.marketbridge.domain.order.controller.response.OrderDetailResponse;
-import com.objects.marketbridge.domain.order.entity.Order;
-import com.objects.marketbridge.domain.order.entity.OrderDetail;
-import com.objects.marketbridge.domain.order.entity.StatusCodeType;
-import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import com.objects.marketbridge.model.Member;
-import com.objects.marketbridge.model.Product;
+import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.order.controller.response.OrderCancelReturnListResponse;
+import com.objects.marketbridge.order.controller.response.OrderDetailResponse;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.service.port.OrderDtoRepository;
+import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.common.domain.Product;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,9 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
+import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @Transactional

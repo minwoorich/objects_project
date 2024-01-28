@@ -1,21 +1,22 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.address.repository.AddressRepository;
-import com.objects.marketbridge.domain.coupon.repository.CouponRepository;
-import com.objects.marketbridge.domain.coupon.repository.MemberCouponRepository;
-import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.global.error.CustomLogicException;
-import com.objects.marketbridge.global.error.ErrorCode;
-import com.objects.marketbridge.model.*;
-import com.objects.marketbridge.domain.order.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.entity.Order;
-import com.objects.marketbridge.domain.order.entity.OrderDetail;
-import com.objects.marketbridge.domain.order.entity.ProductValue;
-import com.objects.marketbridge.domain.order.entity.StatusCodeType;
-import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.objects.marketbridge.domain.product.repository.ProductJpaRepository;
-import com.objects.marketbridge.domain.product.repository.ProductRepository;
+import com.objects.marketbridge.common.domain.*;
+import com.objects.marketbridge.order.service.CreateOrderService;
+import com.objects.marketbridge.order.service.port.AddressRepository;
+import com.objects.marketbridge.product.infra.CouponRepository;
+import com.objects.marketbridge.product.infra.MemberCouponRepository;
+import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.common.exception.error.CustomLogicException;
+import com.objects.marketbridge.common.exception.error.ErrorCode;
+import com.objects.marketbridge.order.service.dto.CreateOrderDto;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.domain.ProductValue;
+import com.objects.marketbridge.order.domain.StatusCodeType;
+import com.objects.marketbridge.order.service.port.OrderDetailRepository;
+import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.product.infra.ProductJpaRepository;
+import com.objects.marketbridge.product.infra.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,7 +37,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 class CreateOrderServiceTest {
 
-    @Autowired CreateOrderService createOrderService;
+    @Autowired
+    CreateOrderService createOrderService;
     @Autowired ProductRepository productRepository;
     @Autowired ProductJpaRepository productJpaRepository;
     @Autowired CouponRepository couponRepository;
@@ -139,7 +140,7 @@ class CreateOrderServiceTest {
     void CreateOrder(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -174,7 +175,7 @@ class CreateOrderServiceTest {
     void CreateOrderDetail(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -200,7 +201,7 @@ class CreateOrderServiceTest {
     void OrderDetailWithCoupon(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -221,7 +222,7 @@ class CreateOrderServiceTest {
     void mappingOrderWithOrderDetail(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -244,7 +245,7 @@ class CreateOrderServiceTest {
     void calcualteTotalUsedCouponPrice(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -264,7 +265,7 @@ class CreateOrderServiceTest {
     void memberCouponUsage(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -286,7 +287,7 @@ class CreateOrderServiceTest {
     void productStockDecrease(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
@@ -309,7 +310,7 @@ class CreateOrderServiceTest {
     void productStockDecrease_error(){
 
         //given
-        Member member = memberRepository.findByEmail("hong@email.com").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long maxQuantity = 100L;
         CreateOrderDto createOrderDto = createDto(member, address, maxQuantity);

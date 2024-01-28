@@ -1,20 +1,13 @@
 package com.objects.marketbridge.global.security.jwt;
 
-import com.objects.marketbridge.global.security.user.CustomUserDetails;
-import io.jsonwebtoken.Claims;
+import com.objects.marketbridge.common.security.jwt.JwtTokenProvider;
+import com.objects.marketbridge.common.security.jwt.JwtTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -22,8 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 class JwtTokenProviderTest {
 
-    @Autowired JwtTokenProvider jwtTokenProvider;
-    @Autowired JwtTokenService jwtTokenService;
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    JwtTokenService jwtTokenService;
 
     @Test
     public void generatedToken() {
