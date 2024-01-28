@@ -1,8 +1,9 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.order.domain.OrderDetail;
-import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.domain.product.infra.ProductRepository;
+import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.service.ProductStockService;
+import com.objects.marketbridge.order.service.port.OrderDetailRepository;
+import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.common.exception.error.CustomLogicException;
 import com.objects.marketbridge.common.exception.error.ErrorCode;
 import com.objects.marketbridge.common.domain.Product;
@@ -27,7 +28,8 @@ class ProductStockServiceTest {
 
     @Autowired OrderDetailRepository orderDetailRepository;
     @Autowired ProductRepository productRepository;
-    @Autowired ProductStockService productStockService;
+    @Autowired
+    ProductStockService productStockService;
     @BeforeEach
     void init() {
 

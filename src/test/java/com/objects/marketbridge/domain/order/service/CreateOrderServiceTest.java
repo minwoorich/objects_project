@@ -1,21 +1,22 @@
 package com.objects.marketbridge.domain.order.service;
 
 import com.objects.marketbridge.common.domain.*;
-import com.objects.marketbridge.domain.order.service.port.AddressRepository;
-import com.objects.marketbridge.domain.product.infra.CouponRepository;
-import com.objects.marketbridge.domain.product.infra.MemberCouponRepository;
-import com.objects.marketbridge.domain.member.infra.MemberRepository;
+import com.objects.marketbridge.order.service.CreateOrderService;
+import com.objects.marketbridge.order.service.port.AddressRepository;
+import com.objects.marketbridge.product.infra.CouponRepository;
+import com.objects.marketbridge.product.infra.MemberCouponRepository;
+import com.objects.marketbridge.member.infra.MemberRepository;
 import com.objects.marketbridge.common.exception.error.CustomLogicException;
 import com.objects.marketbridge.common.exception.error.ErrorCode;
-import com.objects.marketbridge.domain.order.service.dto.CreateOrderDto;
-import com.objects.marketbridge.domain.order.domain.Order;
-import com.objects.marketbridge.domain.order.domain.OrderDetail;
-import com.objects.marketbridge.domain.order.domain.ProductValue;
-import com.objects.marketbridge.domain.order.domain.StatusCodeType;
-import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.objects.marketbridge.domain.product.infra.ProductJpaRepository;
-import com.objects.marketbridge.domain.product.infra.ProductRepository;
+import com.objects.marketbridge.order.service.dto.CreateOrderDto;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.domain.ProductValue;
+import com.objects.marketbridge.order.domain.StatusCodeType;
+import com.objects.marketbridge.order.service.port.OrderDetailRepository;
+import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.product.infra.ProductJpaRepository;
+import com.objects.marketbridge.product.infra.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 class CreateOrderServiceTest {
 
-    @Autowired CreateOrderService createOrderService;
+    @Autowired
+    CreateOrderService createOrderService;
     @Autowired ProductRepository productRepository;
     @Autowired ProductJpaRepository productJpaRepository;
     @Autowired CouponRepository couponRepository;

@@ -1,11 +1,11 @@
 package com.objects.marketbridge.domain.coupon.repository;
 
-import com.objects.marketbridge.domain.member.infra.MemberRepository;
+import com.objects.marketbridge.member.infra.MemberRepository;
 import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.domain.MemberCoupon;
-import com.objects.marketbridge.domain.product.infra.CouponRepository;
-import com.objects.marketbridge.domain.product.infra.MemberCouponRepository;
+import com.objects.marketbridge.product.infra.CouponRepository;
+import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

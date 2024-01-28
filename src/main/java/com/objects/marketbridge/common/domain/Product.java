@@ -1,6 +1,6 @@
 package com.objects.marketbridge.common.domain;
 
-import com.objects.marketbridge.domain.order.domain.OrderDetail;
+import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.common.exception.error.CustomLogicException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

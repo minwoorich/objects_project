@@ -1,11 +1,13 @@
 package com.objects.marketbridge.domain.order.service.port;
 
-import com.objects.marketbridge.domain.member.infra.MemberRepository;
-import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnListResponse;
-import com.objects.marketbridge.domain.order.controller.response.OrderDetailResponse;
-import com.objects.marketbridge.domain.order.domain.Order;
-import com.objects.marketbridge.domain.order.domain.OrderDetail;
-import com.objects.marketbridge.domain.product.infra.ProductRepository;
+import com.objects.marketbridge.member.infra.MemberRepository;
+import com.objects.marketbridge.order.controller.response.OrderCancelReturnListResponse;
+import com.objects.marketbridge.order.controller.response.OrderDetailResponse;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.service.port.OrderDtoRepository;
+import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.domain.Product;
 import jakarta.persistence.EntityManager;
@@ -21,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.objects.marketbridge.domain.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.*;
 
 @ActiveProfiles("test")

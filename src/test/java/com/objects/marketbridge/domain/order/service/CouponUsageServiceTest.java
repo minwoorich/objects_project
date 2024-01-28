@@ -1,8 +1,9 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.product.infra.CouponRepository;
-import com.objects.marketbridge.domain.product.infra.MemberCouponRepository;
-import com.objects.marketbridge.domain.member.infra.MemberRepository;
+import com.objects.marketbridge.order.service.CouponUsageService;
+import com.objects.marketbridge.product.infra.CouponRepository;
+import com.objects.marketbridge.product.infra.MemberCouponRepository;
+import com.objects.marketbridge.member.infra.MemberRepository;
 import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.domain.MemberCoupon;
@@ -28,7 +29,8 @@ class CouponUsageServiceTest {
     MemberCouponRepository memberCouponRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired CouponRepository couponRepository;
-    @Autowired CouponUsageService couponUsageService;
+    @Autowired
+    CouponUsageService couponUsageService;
 
     @BeforeEach
     void init() {
