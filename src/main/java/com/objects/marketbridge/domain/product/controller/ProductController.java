@@ -1,11 +1,11 @@
 package com.objects.marketbridge.domain.product.controller;
 
-import com.objects.marketbridge.domain.product.dto.ProductRequestDto;
-import com.objects.marketbridge.domain.product.dto.ProductResponseDto;
-import com.objects.marketbridge.domain.product.repository.ProductRepository;
+import com.objects.marketbridge.domain.product.controller.dto.ProductRequestDto;
+import com.objects.marketbridge.domain.product.controller.dto.ProductResponseDto;
+import com.objects.marketbridge.domain.product.infra.ProductRepository;
 import com.objects.marketbridge.domain.product.service.ProductService;
-import com.objects.marketbridge.global.common.ApiResponse;
-import com.objects.marketbridge.global.security.annotation.UserAuthorize;
+import com.objects.marketbridge.common.interceptor.ApiResponse;
+import com.objects.marketbridge.common.security.annotation.UserAuthorize;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

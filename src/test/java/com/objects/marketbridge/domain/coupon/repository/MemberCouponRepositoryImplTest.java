@@ -1,9 +1,11 @@
 package com.objects.marketbridge.domain.coupon.repository;
 
-import com.objects.marketbridge.domain.member.repository.MemberRepository;
-import com.objects.marketbridge.model.Coupon;
-import com.objects.marketbridge.model.Member;
-import com.objects.marketbridge.model.MemberCoupon;
+import com.objects.marketbridge.domain.member.infra.MemberRepository;
+import com.objects.marketbridge.common.domain.Coupon;
+import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.common.domain.MemberCoupon;
+import com.objects.marketbridge.domain.product.infra.CouponRepository;
+import com.objects.marketbridge.domain.product.infra.MemberCouponRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class MemberCouponRepositoryImplTest {
 
-    @Autowired MemberCouponRepository memberCouponRepository;
+    @Autowired
+    MemberCouponRepository memberCouponRepository;
     @Autowired MemberRepository memberRepository;
-    @Autowired CouponRepository couponRepository;
+    @Autowired
+    CouponRepository couponRepository;
 
     @BeforeEach
     void init() {

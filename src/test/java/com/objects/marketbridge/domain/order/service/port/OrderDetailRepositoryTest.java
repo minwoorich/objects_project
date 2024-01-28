@@ -1,11 +1,9 @@
 package com.objects.marketbridge.domain.order.service.port;
 
-import com.objects.marketbridge.domain.model.*;
-import com.objects.marketbridge.domain.order.entity.Order;
-import com.objects.marketbridge.domain.order.entity.OrderDetail;
-import com.objects.marketbridge.domain.order.entity.StatusCodeType;
-import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import com.objects.marketbridge.model.Product;
+import com.objects.marketbridge.domain.order.domain.Order;
+import com.objects.marketbridge.domain.order.domain.OrderDetail;
+import com.objects.marketbridge.domain.product.infra.ProductRepository;
+import com.objects.marketbridge.common.domain.Product;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.objects.marketbridge.domain.order.entity.StatusCodeType.*;
+import static com.objects.marketbridge.domain.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 

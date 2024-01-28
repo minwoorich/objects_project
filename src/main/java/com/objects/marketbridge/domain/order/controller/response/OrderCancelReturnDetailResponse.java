@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domain.order.controller.response;
 
-import com.objects.marketbridge.domain.order.entity.Order;
-import com.objects.marketbridge.domain.order.entity.OrderDetail;
+import com.objects.marketbridge.domain.order.domain.Order;
+import com.objects.marketbridge.domain.order.domain.OrderDetail;
 import com.objects.marketbridge.domain.payment.domain.Payment;
 import lombok.Builder;
 import lombok.Getter;

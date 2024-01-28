@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.order.controller.response;
 
-import com.objects.marketbridge.model.AddressValue;
+import com.objects.marketbridge.common.domain.AddressValue;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

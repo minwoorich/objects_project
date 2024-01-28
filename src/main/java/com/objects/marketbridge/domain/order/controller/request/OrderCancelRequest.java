@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domain.order.controller.request;
 
-import com.objects.marketbridge.domain.order.dto.OrderCancelServiceDto;
+import com.objects.marketbridge.domain.order.service.dto.OrderCancelServiceDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;

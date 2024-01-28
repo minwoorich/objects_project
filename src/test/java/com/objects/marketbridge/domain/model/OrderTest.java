@@ -1,13 +1,13 @@
 package com.objects.marketbridge.domain.model;
 
-import com.objects.marketbridge.domain.order.entity.Order;
-import com.objects.marketbridge.domain.order.entity.OrderDetail;
+import com.objects.marketbridge.domain.order.domain.Order;
+import com.objects.marketbridge.domain.order.domain.OrderDetail;
 import com.objects.marketbridge.domain.order.service.port.OrderDetailRepository;
 import com.objects.marketbridge.domain.order.service.port.OrderRepository;
-import com.objects.marketbridge.domain.product.repository.ProductRepository;
-import com.objects.marketbridge.model.Coupon;
-import com.objects.marketbridge.model.MemberCoupon;
-import com.objects.marketbridge.model.Product;
+import com.objects.marketbridge.domain.product.infra.ProductRepository;
+import com.objects.marketbridge.common.domain.Coupon;
+import com.objects.marketbridge.common.domain.MemberCoupon;
+import com.objects.marketbridge.common.domain.Product;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

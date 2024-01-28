@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domain.order.service;
 
-import com.objects.marketbridge.domain.order.entity.OrderDetail;
-import com.objects.marketbridge.global.error.CustomLogicException;
+import com.objects.marketbridge.domain.order.domain.OrderDetail;
+import com.objects.marketbridge.common.exception.error.CustomLogicException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
