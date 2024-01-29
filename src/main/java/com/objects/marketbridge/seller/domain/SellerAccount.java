@@ -24,7 +24,8 @@ public class SellerAccount {
     Long outgoing;
 
     @Builder
-    public SellerAccount(Long balance, Long incoming, Long outgoing) {
+    public SellerAccount(Long balance, Long incoming, Long outgoing, Seller seller) {
+        this.seller = seller;
         this.balance = balance;
         this.incoming = incoming;
         this.outgoing = outgoing;

@@ -18,6 +18,7 @@ import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.product.infra.ProductJpaRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
+@Slf4j
 class CreateOrderServiceTest {
 
     @Autowired CreateOrderService createOrderService;
@@ -155,12 +157,6 @@ class CreateOrderServiceTest {
         assertThat(order.getOrderName()).isEqualTo("가방 외 2건");
         assertThat(order.getOrderNo()).isEqualTo("aaaa-aaaa-aaaa");
         assertThat(order.getTotalPrice()).isEqualTo(createOrderDto.getTotalOrderPrice());
-        assertThat(order.getRealPrice()).isEqualTo(createOrderDto.getRealOrderPrice());
-    }
-
-    private long getTotalCouponPrice(List<Coupon> coupons) {
-
-        return coupons.stream().mapToLong(Coupon::getPrice).sum();
     }
 
     private long getTotalOrderPrice(List<ProductValue> productValues) {
@@ -214,6 +210,23 @@ class CreateOrderServiceTest {
         //then
         assertThat(orderDetails.get(0).getCoupon().getName()).isEqualTo(coupons.get(0).getName());
         assertThat(orderDetails.get(1).getCoupon().getName()).isEqualTo(coupons.get(1).getName());
+    }
+
+    @DisplayName("쿠폰을 사용하지 않은 OrderDetail 들은 orderDetail.coupon 에 null 이 들어간다")
+    @Test
+    void OrderDetailWithoutCoupon(){
+
+        //given
+        Member member = memberRepository.findByEmail("hong@email.com");
+        Address address = addressRepository.findByMemberId(member.getId()).get(0);
+        Long defaultQuantity = 3L;
+        CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
+
+        //when
+        createOrderService.create(createOrderDto);
+        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
+
+        //then
         assertThat(orderDetails.get(2).getCoupon()).isNull();
     }
 
@@ -239,27 +252,6 @@ class CreateOrderServiceTest {
             assertThat(orderDetail.getOrder()).isEqualTo(order);
         }
     }
-
-    @DisplayName("Order에 최종 쿠폰 사용금액이 저장되어야 한다")
-    @Test
-    void calcualteTotalUsedCouponPrice(){
-
-        //given
-        Member member = memberRepository.findByEmail("hong@email.com");
-        Address address = addressRepository.findByMemberId(member.getId()).get(0);
-        Long defaultQuantity = 3L;
-        CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
-        Long totalCouponPrice = couponRepository.findAll().stream().mapToLong(Coupon::getPrice).sum();
-
-
-        //when
-        createOrderService.create(createOrderDto);
-        Order order = orderQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
-
-        //then
-        assertThat(order.getTotalUsedCouponPrice()).isEqualTo(totalCouponPrice);
-    }
-
     @DisplayName("MemberCoupon의 사용상태와 사용날짜를 기록해야한다.")
     @Test
     void memberCouponUsage(){
@@ -270,15 +262,17 @@ class CreateOrderServiceTest {
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
         List<MemberCoupon> memberCoupons = memberCouponRepository.findAll();
+        log.info("memberCoupon1 {}", memberCoupons.get(0).getUsedDate());
 
         //when
         createOrderService.create(createOrderDto);
+        Order order = orderQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(memberCoupons).hasSize(2);
         assertThat(memberCoupons.get(0).getIsUsed()).isTrue();
         assertThat(memberCoupons.get(1).getIsUsed()).isTrue();
-        assertThat(memberCoupons.get(0).getUsedDate()).isNotNull();
+        assertThat(memberCoupons.get(0).getUsedDate()).isEqualTo(order.getCreatedAt());
         assertThat(memberCoupons.get(1).getUsedDate()).isNotNull();
     }
 
@@ -348,9 +342,6 @@ class CreateOrderServiceTest {
         List<ProductValue> productValues = List.of(productValue1, productValue2, productValue3);
 
         Long totalOrderPrice = getTotalOrderPrice(productValues);
-        Long totalCouponPrice = getTotalCouponPrice(coupons);
-
-        Long realOrderPrice = totalOrderPrice - totalCouponPrice;
 
         return CreateOrderDto.builder()
                 .memberId(member.getId())
@@ -358,7 +349,6 @@ class CreateOrderServiceTest {
                 .orderName("가방 외 2건")
                 .orderNo("aaaa-aaaa-aaaa")
                 .totalOrderPrice(totalOrderPrice)
-                .realOrderPrice(realOrderPrice)
                 .productValues(productValues)
                 .build();
     }

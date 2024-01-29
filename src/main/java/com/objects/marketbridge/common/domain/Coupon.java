@@ -64,4 +64,8 @@ public class Coupon extends BaseEntity {
     public void returnCoupon() {
         memberCoupons.forEach(MemberCoupon::returnCoupon);
     }
+
+    public void useCoupon(LocalDateTime useDate) {
+        memberCoupons.forEach(memberCoupon -> memberCoupon.useCoupon(useDate));
+    }
 }

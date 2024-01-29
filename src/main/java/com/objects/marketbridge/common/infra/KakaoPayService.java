@@ -1,16 +1,15 @@
 package com.objects.marketbridge.common.infra;
 
 import com.objects.marketbridge.common.config.KakaoPayConfig;
-import com.objects.marketbridge.common.dto.KakaoPayApproveRequest;
-import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
-import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
-import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
+import com.objects.marketbridge.common.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import static com.objects.marketbridge.common.config.KakaoPayConfig.*;
 import static com.objects.marketbridge.common.security.constants.SecurityConst.AUTHORIZATION;
@@ -61,9 +60,26 @@ public class KakaoPayService {
     // 정기결제 상태조회
 
     // 주문조회
+    public KakaoPayOrderResponse getOrders(String cid, String tid) {
+
+        String orderUri = UriComponentsBuilder.fromUriString(ORDER_END_POINT)
+                .queryParam("cid", cid)
+                .queryParam("tid", tid)
+                .build()
+                .toUriString();
+
+        RestClient restClient = setup();
+
+        return restClient.get()
+                .uri(orderUri)
+                .retrieve()
+                .body(KakaoPayOrderResponse.class);
+    }
+
+
 
     private RestClient setup() {
-        log.info("ADMIN_KEY {} ", kakaoPayConfig.getAdminKey());
+
         return RestClient.builder()
                 .baseUrl(KAKAO_BASE_URL)
                 .messageConverters((converters) ->

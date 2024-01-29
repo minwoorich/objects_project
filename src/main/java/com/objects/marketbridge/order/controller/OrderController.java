@@ -72,15 +72,11 @@ public class OrderController {
         String tid = response.getTid();
 
         // 2. 주문 생성
-        createOrderService.create(getCreateOrderDto(request, memberId, tid));
+        createOrderService.create(request.toDto(memberId, tid));
 
         return ApiResponse.ok(response);
     }
 
-    private CreateOrderDto getCreateOrderDto(CreateOrderRequest request, Long memberId, String tid) {
-
-        return CreateOrderDto.fromRequest(request, memberId, tid);
-    }
     private KakaoPayReadyRequest createKakaoReadyRequest(CreateOrderRequest request, Long memberId) {
 
         String cid = ONE_TIME_CID;

@@ -14,31 +14,20 @@ import java.util.List;
 public class SellerRepositoryImpl implements SellerRepository {
 
     private final SellerJpaRepository sellerJpaRepository;
-    private final SellerAccountJpaRepository sellerAccountJpaRepository;
 
     @Override
-    public Seller findSellerById(Long id) {
+    public Seller findById(Long id) {
         return sellerJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
-    public List<SellerAccount> findAllSellerAccount() {
-        return sellerAccountJpaRepository.findAll();
+    public Seller findWithSellerAccountById(Long id) {
+        return null;
     }
 
     @Override
     public List<Seller> findAllSeller() {
         return sellerJpaRepository.findAll();
-    }
-
-    @Override
-    public SellerAccount findSellerAccountBySellerId(Long sellerId) {
-        return sellerAccountJpaRepository.findBySellerId(sellerId);
-    }
-
-    @Override
-    public SellerAccount save(SellerAccount sellerAccount) {
-        return sellerAccountJpaRepository.save(sellerAccount);
     }
 
     @Override

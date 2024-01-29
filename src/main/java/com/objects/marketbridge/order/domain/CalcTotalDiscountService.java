@@ -1,7 +1,5 @@
 package com.objects.marketbridge.order.domain;
 
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +12,9 @@ public class CalcTotalDiscountService{
         Long totalCouponPrice = calcUsedCoupon(order.getOrderDetails());
         Long totalUsedPoint = calcUsedPoint(order.getOrderDetails());
         Long memberShipDiscount = calcMembershipDiscount();
+        Long additionalDiscount = calcAdditionalDiscount();
 
-        return totalCouponPrice + totalUsedPoint + memberShipDiscount;
+        return totalCouponPrice + totalUsedPoint + memberShipDiscount + additionalDiscount;
     }
 
     private Long calcUsedCoupon(List<OrderDetail> orderDetails) {
@@ -32,6 +31,11 @@ public class CalcTotalDiscountService{
 
     // 추후에 membership 할인 서비스 도입하면 이것도 구현 필요
     private Long calcMembershipDiscount() {
+        return 0L;
+    }
+
+    // 추후에 기타 할인 서비스 도입하면 이것도 구현 필요
+    private Long calcAdditionalDiscount() {
         return 0L;
     }
 

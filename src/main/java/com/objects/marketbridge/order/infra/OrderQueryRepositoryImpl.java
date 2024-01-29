@@ -35,27 +35,39 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
     }
 
     @Override
+    public Order findWithOrderDetails(String orderNo) {
+        return orderJpaRepository.findWithOrderDetailsByOrderNo(orderNo).orElseThrow(EntityNotFoundException::new);
+    }
+
+    // orderId 로 가져오기
+    @Override
     public Order findWithOrderDetailsAndProduct(Long orderId) {
         return orderJpaRepository.findWithOrderDetailsAndProduct(orderId).orElseThrow(EntityNotFoundException::new);
     }
 
+    // orderNo 로 가져오기
     @Override
-    public Optional<Order> findOrderWithDetailsAndProduct(Long orderId) {
-//        return Optional.ofNullable(
-//                queryFactory
-//                        .selectFrom(order)
-//                        .join(order.orderDetails, orderDetail).fetchJoin()
-//                        .join(orderDetail.product, product).fetchJoin()
-//                        .where(order.id.eq(orderId))
-//                        .setLockMode(LockModeType.PESSIMISTIC_WRITE)
-//                        .fetchOne()
-//        );
-        return null;
+    public Order findWithOrderDetailsAndProduct(String orderNo) {
+        return orderJpaRepository.findWithOrderDetailsAndProduct(orderNo).orElseThrow(EntityNotFoundException::new);
     }
+
+//    @Override
+//    public Optional<Order> findOrderWithDetailsAndProduct(Long orderId) {
+////        return Optional.ofNullable(
+////                queryFactory
+////                        .selectFrom(order)
+////                        .join(order.orderDetails, orderDetail).fetchJoin()
+////                        .join(orderDetail.product, product).fetchJoin()
+////                        .where(order.id.eq(orderId))
+////                        .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+////                        .fetchOne()
+////        );
+//        return null;
+//    }
 
     @Override
     public Order findByTid(String tid) {
-        return orderJpaRepository.findByTid(tid);
+        return orderJpaRepository.findByTid(tid).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

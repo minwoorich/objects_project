@@ -113,4 +113,71 @@ class OrderTest {
         assertThat(memberCoupon2.getIsUsed()).isFalse();
     }
 
+    @DisplayName("주문생성시 사용한 쿠폰들의 사용여부와 사용날짜가 세팅되어야한다.")
+    @Test
+    void useCoupon(){
+        LocalDateTime useDate = LocalDateTime.of(2024, 1, 16, 7, 14);
+
+        Order order = Order.builder()
+                .build();
+
+        Product product1 = Product.builder()
+                .build();
+        Product product2 = Product.builder()
+                .build();
+
+        Coupon coupon1 = Coupon.builder()
+                .product(product1)
+                .price(1000L)
+                .build();
+        Coupon coupon2 = Coupon.builder()
+                .product(product2)
+                .price(2000L)
+                .build();
+
+        OrderDetail orderDetail1 = OrderDetail.builder()
+                .order(order)
+                .coupon(coupon1)
+                .product(product1)
+                .build();
+        OrderDetail orderDetail2 = OrderDetail.builder()
+                .order(order)
+                .coupon(coupon2)
+                .product(product2)
+                .build();
+
+        MemberCoupon memberCoupon1 = MemberCoupon.builder()
+                .coupon(coupon1)
+                .isUsed(false)
+                .usedDate(null)
+                .build();
+        MemberCoupon memberCoupon2 = MemberCoupon.builder()
+                .coupon(coupon2)
+                .isUsed(false)
+                .usedDate(null)
+                .build();
+
+        Order savedOrder = orderCommendRepository.save(order);
+        orderDetailCommendRepository.saveAll(List.of(orderDetail1, orderDetail2));
+        productRepository.saveAll(List.of(product1, product2));
+        order.addOrderDetail(orderDetail1);
+        order.addOrderDetail(orderDetail2);
+        em.persist(coupon1);
+        em.persist(coupon2);
+        em.persist(memberCoupon1);
+        em.persist(memberCoupon2);
+        coupon1.addMemberCoupon(memberCoupon1);
+        coupon2.addMemberCoupon(memberCoupon2);
+
+
+        // when
+        savedOrder.useCoupon(useDate);
+
+        // then
+        assertThat(memberCoupon1.getUsedDate()).isEqualTo(useDate);
+        assertThat(memberCoupon2.getUsedDate()).isEqualTo(useDate);
+        assertThat(memberCoupon1.getIsUsed()).isTrue();
+        assertThat(memberCoupon2.getIsUsed()).isTrue();
+    }
+
 }

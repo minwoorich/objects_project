@@ -45,7 +45,7 @@ public class Order extends BaseEntity {
     private String tid;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderDetail> orderDetails = new ArrayList<>();
+    private final List<OrderDetail> orderDetails = new ArrayList<>();
 
     @Builder
     public Order(Member member, Address address, String orderName, String orderNo, Long realPrice, Long totalPrice, Long totalDiscount, String tid) {
@@ -77,7 +77,19 @@ public class Order extends BaseEntity {
                 .forEach(OrderDetail::returnCoupon);
     }
 
+    public void useCoupon(LocalDateTime useDate) {
+
+        orderDetails.stream()
+                .filter(o -> o.getCoupon() != null)
+                .forEach(o -> o.useCoupon(useDate));
+    }
+
+    public void changeStatusCode(String statusCode) {
+        orderDetails.forEach(orderDetail -> orderDetail.changeStatusCode(statusCode));
+    }
+
     public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, String tid){
+
         return Order.builder()
                 .member(member)
                 .address(address)
@@ -91,5 +103,9 @@ public class Order extends BaseEntity {
 
         totalDiscount = service.calculate(this);
         realPrice = totalPrice - totalDiscount;
+    }
+
+    public void stockDecrease() {
+        orderDetails.forEach(o -> o.getProduct().decrease(o.getQuantity()));
     }
 }

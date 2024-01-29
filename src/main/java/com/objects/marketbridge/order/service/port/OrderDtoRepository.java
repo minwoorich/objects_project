@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 public interface OrderDtoRepository {
 
     Page<OrderCancelReturnListResponse> findOrdersByMemberId(Long memberId, Pageable pageable);
+
 }

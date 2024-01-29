@@ -5,7 +5,6 @@ import com.objects.marketbridge.order.domain.*;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.product.infra.CouponRepository;
-import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
@@ -15,10 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,9 +29,6 @@ public class CreateOrderService {
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
     private final AddressRepository addressRepository;
-    private final MemberCouponRepository memberCouponRepository;
-    private final CouponUsageService couponUsageService;
-    private final ProductStockService productStockService;
     private final CalcTotalDiscountService calcTotalDiscountService;
 
     @Transactional
@@ -44,36 +38,16 @@ public class CreateOrderService {
         Order order = orderCommendRepository.save(createOrder(createOrderDto));
 
         // 2. OrderDetail 생성 (연관관계 매핑 여기서 해결)
-        List<OrderDetail> orderDetails = orderDetailCommendRepository.saveAll(createOrderDetails(createOrderDto.getProductValues(), order));
+        orderDetailCommendRepository.saveAll(createOrderDetails(createOrderDto.getProductValues(), order));
 
-        // 3. 총 할인 금액(totalDiscount) 저장 및 실 결제 금액(realPrice) 저장
+        // 3. 총 할인 금액(totalDiscount) , 실제 결제 금액(realPrice) 저장
         order.calcTotalDiscount(calcTotalDiscountService);
 
-        // 4. MemberCoupon 의 isUsed 변경
-        order.returnCoupon();
-        List<MemberCoupon> memberCoupons = getMemberCoupons(orderDetails, createOrderDto.getMemberId());
-        couponUsageService.applyCouponUsage(memberCoupons, true, LocalDateTime.now());
+        // 4. MemberCoupon 의 isUsed 변경, 사용날짜 저장
+        order.useCoupon(order.getCreatedAt());
 
         // 5. Product 의 stock 감소
-        productStockService.decrease(orderDetails);
-    }
-
-    private List<MemberCoupon> getMemberCoupons(List<OrderDetail> orderDetails, Long memberId) {
-
-        return orderDetails.stream()
-                .filter(o -> o.getCoupon() != null)
-                .map(o ->
-                        memberCouponRepository.findByMember_IdAndCoupon_Id(
-                                memberId,
-                                o.getCoupon().getId())
-                ).collect(Collectors.toList());
-    }
-    private Long getTotalCouponPrice(List<OrderDetail> orderDetails) {
-
-        return orderDetails.stream()
-                .filter(o -> o.getCoupon() != null)
-                .mapToLong(o -> o.getCoupon().getPrice())
-                .sum();
+        order.stockDecrease();
     }
 
     private Order createOrder(CreateOrderDto createOrderDto) {
