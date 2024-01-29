@@ -6,7 +6,7 @@ import com.objects.marketbridge.order.controller.response.OrderDetailResponse;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
-import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.domain.Product;
@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.*;
 class OrderDtoRepositoryTest {
 
     @Autowired
-    OrderRepository orderRepository;
+    OrderCommendRepository orderCommendRepository;
     @Autowired
     ProductRepository productRepository;
     @Autowired
@@ -114,8 +114,8 @@ class OrderDtoRepositoryTest {
 
         productRepository.saveAll(List.of(product1, product2, product3));
         memberRepository.save(member);
-        orderRepository.save(order1);
-        orderRepository.save(order2);
+        orderCommendRepository.save(order1);
+        orderCommendRepository.save(order2);
 
         // when
         Page<OrderCancelReturnListResponse> orderCancelReturnListResponsePage = orderDtoRepository.findOrdersByMemberId(member.getId(), PageRequest.of(0, 3));

@@ -2,8 +2,10 @@ package com.objects.marketbridge.domain.order.service.port;
 
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
+import com.objects.marketbridge.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.common.domain.Product;
 import jakarta.persistence.EntityManager;
@@ -24,13 +26,19 @@ import static org.assertj.core.api.Assertions.tuple;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
-class OrderDetailRepositoryTest {
+class OrderDetailQueryRepositoryTest {
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderCommendRepository orderCommendRepository;
 
     @Autowired
-    private OrderDetailRepository orderDetailRepository;
+    private OrderQueryRepository orderQueryRepository;
+
+    @Autowired
+    private OrderDetailQueryRepository orderDetailQueryRepository;
+
+    @Autowired
+    private OrderDetailCommendRepository orderDetailCommendRepository;
 
     @Autowired
     ProductRepository productRepository;
@@ -54,11 +62,11 @@ class OrderDetailRepositoryTest {
         order.addOrderDetail(orderDetail2);
         order.addOrderDetail(orderDetail3);
 
-        Order savedOrder = orderRepository.save(order);
+        Order savedOrder = orderCommendRepository.save(order);
         Long orderId = savedOrder.getId();
 
         // when
-        int result = orderDetailRepository.changeAllType(orderId, changeCodeType);
+        int result = orderDetailCommendRepository.changeAllType(orderId, changeCodeType);
 
         // then
         assertThat(result).isEqualTo(3);
@@ -75,7 +83,7 @@ class OrderDetailRepositoryTest {
         List<OrderDetail> orderDetails = List.of(orderDetail1, orderDetail2, orderDetail3);
 
         // when
-        List<OrderDetail> savedOrderDetails = orderDetailRepository.saveAll(orderDetails);
+        List<OrderDetail> savedOrderDetails = orderDetailCommendRepository.saveAll(orderDetails);
 
         // then
         assertThat(savedOrderDetails.size()).isEqualTo(3);
@@ -95,11 +103,11 @@ class OrderDetailRepositoryTest {
         order.addOrderDetail(orderDetail2);
         order.addOrderDetail(orderDetail3);
 
-        Order savedOrder = orderRepository.save(order);
+        Order savedOrder = orderCommendRepository.save(order);
         Long orderId = savedOrder.getId();
 
         // when
-        orderDetailRepository.addReason(orderId, reason);
+        orderDetailCommendRepository.addReason(orderId, reason);
 
         // then
         String savedReason = getReason(orderId);
@@ -125,10 +133,10 @@ class OrderDetailRepositoryTest {
 
         List<Product> products = List.of(product1, product2, product3);
         productRepository.saveAll(products);
-        orderRepository.save(order);
+        orderCommendRepository.save(order);
 
         // when
-        List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_IdAndProductIn(order.getId(), products);
+        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrder_IdAndProductIn(order.getId(), products);
 
         // then
         Assertions.assertThat(orderDetails).hasSize(3)
@@ -194,11 +202,11 @@ class OrderDetailRepositoryTest {
 
         List<Product> products = List.of(product1, product2, product3);
         productRepository.saveAll(products);
-        orderRepository.save(order);
+        orderCommendRepository.save(order);
         List<Long> productIds = products.stream().map(Product::getId).toList();
 
         // when
-        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNoAndProduct_IdIn(order.getOrderNo(), productIds);
+        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(order.getOrderNo(), productIds);
 
         // then
         assertThat(orderDetails).hasSize(3)
@@ -212,7 +220,7 @@ class OrderDetailRepositoryTest {
 
 
     private String getReason(Long orderId) {
-        List<OrderDetail> orderDetails = orderRepository.findById(orderId).get().getOrderDetails();
+        List<OrderDetail> orderDetails = orderQueryRepository.findById(orderId).get().getOrderDetails();
         return orderDetails.get(0).getReason();
     }
 

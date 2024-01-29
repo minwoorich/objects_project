@@ -37,8 +37,7 @@ public class KakaoPayApproveRequest {
 
     public MultiValueMap<String, String> toMultiValueMap() {
 
-        MultiValueMap<String, String> requestMap
-                = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
 
         requestMap.add("cid", cid);
         requestMap.add("tid", tid);

@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.infra;
 
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.service.port.OrderDetailRepository;
+import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.common.domain.Product;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -12,39 +12,14 @@ import java.util.List;
 
 
 @Repository
-public class OrderDetailRepositoryImpl implements OrderDetailRepository {
+public class OrderDetailQueryRepositoryImpl implements OrderDetailQueryRepository {
 
     private final OrderDetailJpaRepository orderDetailJpaRepository;
     private final JPAQueryFactory queryFactory;
 
-    public OrderDetailRepositoryImpl(OrderDetailJpaRepository orderDetailJpaRepository, EntityManager em) {
+    public OrderDetailQueryRepositoryImpl(OrderDetailJpaRepository orderDetailJpaRepository, EntityManager em) {
         this.orderDetailJpaRepository = orderDetailJpaRepository;
         this.queryFactory = new JPAQueryFactory(em);
-    }
-
-    @Override
-    public int changeAllType(Long orderId, String type) {
-        return orderDetailJpaRepository.changeAllType(orderId, type);
-    }
-
-    @Override
-    public List<OrderDetail> saveAll(List<OrderDetail> orderDetail) {
-        return orderDetailJpaRepository.saveAll(orderDetail);
-    }
-
-    @Override
-    public void addReason(Long orderId, String reason) {
-        orderDetailJpaRepository.addReason(orderId, reason);
-    }
-
-    @Override
-    public void save(OrderDetail orderDetail) {
-        orderDetailJpaRepository.save(orderDetail);
-    }
-
-    @Override
-    public void deleteAllInBatch() {
-        orderDetailJpaRepository.deleteAllInBatch();
     }
 
     @Override
