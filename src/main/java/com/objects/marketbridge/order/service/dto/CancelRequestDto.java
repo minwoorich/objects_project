@@ -1,17 +1,16 @@
 package com.objects.marketbridge.order.service.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class OrderCancelServiceDto {
+public class CancelRequestDto {
 
     private Long orderId;
     private String cancelReason;
 
     @Builder
-    public OrderCancelServiceDto(Long orderId, String cancelReason) {
+    private CancelRequestDto(Long orderId, String cancelReason) {
         this.orderId = orderId;
         this.cancelReason = cancelReason;
     }

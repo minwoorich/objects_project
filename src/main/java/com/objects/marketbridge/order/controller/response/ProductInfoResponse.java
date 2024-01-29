@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.controller.response;
 
-import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.service.dto.ProductInfoResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +12,7 @@ public class ProductInfoResponse {
     private Long quantity;
     private String name;
     private Long price;
-    // TODO 주문 취소 요청 이미지 반환
-    private String image;
+    private String image; // TODO 주문 취소 요청 이미지 반환
 
     @Builder
     private ProductInfoResponse(Long quantity, String name, Long price, String image) {
@@ -23,12 +22,12 @@ public class ProductInfoResponse {
         this.image = image;
     }
 
-    public static ProductInfoResponse of(OrderDetail orderDetail) {
+    public static ProductInfoResponse of(ProductInfoResponseDto serviceDto) {
         return ProductInfoResponse.builder()
-                .quantity(orderDetail.getQuantity())
-                .name(orderDetail.getProduct().getName())
-                .price(orderDetail.getProduct().getPrice())
-                .image(orderDetail.getProduct().getThumbImg())
+                .quantity(serviceDto.getQuantity())
+                .name(serviceDto.getName())
+                .price(serviceDto.getPrice())
+                .image(serviceDto.getImage())
                 .build();
     }
 
