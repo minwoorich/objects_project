@@ -14,7 +14,7 @@ public class KakaoPayConfig {
 
     public static final String SUBS_CID = "TCSUBSCRIP";
 
-    public static final String KAKAO_AK = "kakaoAK ";
+    public static final String KAKAO_AK = "KakaoAK ";
 
     public static final String READY_END_POINT = "/ready";
 
