@@ -3,6 +3,7 @@ package com.objects.marketbridge.domain.order.service;
 import com.objects.marketbridge.common.domain.*;
 import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.port.AddressRepository;
+import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import com.objects.marketbridge.member.service.port.MemberRepository;
@@ -13,7 +14,7 @@ import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.domain.StatusCodeType;
-import com.objects.marketbridge.order.service.port.OrderDetailRepository;
+import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.product.infra.ProductJpaRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
@@ -36,16 +37,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 class CreateOrderServiceTest {
 
-    @Autowired
-    CreateOrderService createOrderService;
+    @Autowired CreateOrderService createOrderService;
     @Autowired ProductRepository productRepository;
     @Autowired ProductJpaRepository productJpaRepository;
     @Autowired CouponRepository couponRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired AddressRepository addressRepository;
-    @Autowired OrderDetailRepository orderDetailRepository;
-    @Autowired
-    OrderCommendRepository orderCommendRepository;
+    @Autowired OrderDetailQueryRepository orderDetailQueryRepository;
+    @Autowired OrderCommendRepository orderCommendRepository;
+    @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired MemberCouponRepository memberCouponRepository;
 
     @BeforeEach
@@ -147,7 +147,7 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        Order order = orderCommendRepository.findByOrderNo(createOrderDto.getOrderNo());
+        Order order = orderQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(order.getMember().getId()).isEqualTo(member.getId());
@@ -182,7 +182,7 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
+        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(orderDetails).hasSize(3);
@@ -209,7 +209,7 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
+        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(orderDetails.get(0).getCoupon().getName()).isEqualTo(coupons.get(0).getName());
@@ -229,8 +229,8 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
-        Order order = orderCommendRepository.findByOrderNo(createOrderDto.getOrderNo());
+        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
+        Order order = orderQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         Assertions.assertThat(order.getOrderDetails()).containsExactlyInAnyOrderElementsOf(orderDetails);
@@ -254,7 +254,7 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        Order order = orderCommendRepository.findByOrderNo(createOrderDto.getOrderNo());
+        Order order = orderQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(order.getTotalUsedCouponPrice()).isEqualTo(totalCouponPrice);
@@ -296,7 +296,7 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        List<Long> quantities = orderDetailRepository.findAll().stream().map(OrderDetail::getQuantity).toList();
+        List<Long> quantities = orderDetailQueryRepository.findAll().stream().map(OrderDetail::getQuantity).toList();
 
         //then
         assertThat(products).hasSize(3);
