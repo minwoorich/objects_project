@@ -4,9 +4,8 @@ import com.objects.marketbridge.order.controller.response.OrderCancelReturnListR
 import com.objects.marketbridge.order.controller.response.OrderDetailResponse;
 import com.objects.marketbridge.order.controller.response.QOrderCancelReturnListResponse;
 import com.objects.marketbridge.order.controller.response.QOrderDetailResponse;
-import com.objects.marketbridge.order.domain.QOrder;
-import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.order.domain.StatusCodeType;
+import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -14,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,6 +37,7 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<OrderCancelReturnListResponse> findOrdersByMemberId(Long memberId, Pageable pageable) {
         List<OrderCancelReturnListResponse> content = getOrderCancelReturnListResponses(memberId);
         Map<String, List<OrderDetailResponse>> orderDetailResponseMap = getOrderDetailResponseMap(findOrderIds(content));

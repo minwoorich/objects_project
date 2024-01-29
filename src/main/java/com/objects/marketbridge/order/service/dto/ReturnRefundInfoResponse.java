@@ -18,4 +18,12 @@ public class ReturnRefundInfoResponse {
         this.returnFee = returnFee;
         this.productPrice = productPrice;
     }
+
+    public static ReturnRefundInfoResponse of(ReturnRefundInfoResponseDto serviceDto) {
+        return ReturnRefundInfoResponse.builder()
+                .deliveryFee(serviceDto.getDeliveryFee())
+                .returnFee(serviceDto.getReturnFee())
+                .productPrice(serviceDto.getProductPrice())
+                .build();
+    }
 }

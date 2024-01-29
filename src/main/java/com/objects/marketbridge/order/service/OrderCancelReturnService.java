@@ -1,19 +1,13 @@
 package com.objects.marketbridge.order.service;
 
 
-
 import com.objects.marketbridge.common.domain.Product;
 import com.objects.marketbridge.common.exception.error.CustomLogicException;
 import com.objects.marketbridge.common.exception.error.ErrorCode;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.order.controller.response.OrderCancelReturnDetailResponse;
-import com.objects.marketbridge.order.controller.response.OrderCancelReturnListResponse;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.service.dto.CancelResponseDto;
-import com.objects.marketbridge.order.service.dto.CancelReturnResponseDto;
-import com.objects.marketbridge.order.service.dto.CancelRequestDto;
-import com.objects.marketbridge.order.service.dto.OrderReturnResponse;
+import com.objects.marketbridge.order.service.dto.*;
 import com.objects.marketbridge.order.service.port.*;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
@@ -21,8 +15,6 @@ import com.objects.marketbridge.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,25 +75,20 @@ public class OrderCancelReturnService {
     }
 
     @Transactional(readOnly = true)
-    public OrderReturnResponse requestReturn(Long orderId, List<Long> productIds) {
+    public OrderReturnResponseDto requestReturn(Long orderId, List<Long> productIds) {
         List<Product> products = validProducts(productIds);
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrder_IdAndProductIn(orderId, products);
 
-        return OrderReturnResponse.of(orderDetails);
+        return OrderReturnResponseDto.of(orderDetails);
     }
 
     @Transactional(readOnly = true)
-    public Page<OrderCancelReturnListResponse> findCancelReturnList(Long memberId, Pageable pageable) {
-        return orderDtoRepository.findOrdersByMemberId(memberId, pageable);
-    }
-
-    @Transactional(readOnly = true)
-    public OrderCancelReturnDetailResponse findCancelReturnDetail(String orderNo, Long paymentId, List<Long> productIds) {
+    public OrderCancelReturnDetailResponseDto findCancelReturnDetail(String orderNo, Long paymentId, List<Long> productIds) {
         Order order = validOrder(orderNo);
         List<OrderDetail> orderDetails = validOrderDetails(orderNo, productIds);
         Payment payment = vaildPayment(paymentId);
 
-        return OrderCancelReturnDetailResponse.of(order, orderDetails, payment);
+        return OrderCancelReturnDetailResponseDto.of(order, orderDetails, payment);
     }
 
     // TODO 객체로 따로 빼야함(임시로 사용)

@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class CancelResponseDto {
@@ -24,11 +23,12 @@ public class CancelResponseDto {
         return CancelResponseDto.builder()
                 .productInfoResponseDtos(orderDetails.stream()
                         .map(ProductInfoResponseDto::of)
-                        .collect(Collectors.toList())
+                        .toList()
                 )
                 .cancelRefundInfoResponseDto(
                         CancelRefundInfoResponseDto.of(orderDetails, order)
                 )
                 .build();
     }
+
 }

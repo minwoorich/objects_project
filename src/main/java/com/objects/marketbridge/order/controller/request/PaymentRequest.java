@@ -2,7 +2,6 @@ package com.objects.marketbridge.order.controller.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.client.RestTemplate;
 
 @Getter
 @NoArgsConstructor

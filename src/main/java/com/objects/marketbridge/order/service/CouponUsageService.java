@@ -12,7 +12,6 @@ import java.util.List;
 public class CouponUsageService {
 
     public void applyCouponUsage(List<MemberCoupon> memberCoupons, Boolean isUsed, LocalDateTime usedDate) {
-
         memberCoupons.forEach(mc -> mc.applyCouponUsage(isUsed, usedDate));
     }
 

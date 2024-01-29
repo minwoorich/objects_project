@@ -5,13 +5,10 @@ import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.LockModeType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-
-import static com.objects.marketbridge.common.domain.QProduct.product;
 
 @Repository
 public class OrderQueryRepositoryImpl implements OrderQueryRepository {

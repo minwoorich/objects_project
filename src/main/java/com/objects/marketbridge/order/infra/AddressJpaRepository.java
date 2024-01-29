@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.infra;
 
-import com.objects.marketbridge.common.domain.Address;
+import com.objects.marketbridge.order.domain.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
