@@ -3,8 +3,9 @@ package com.objects.marketbridge.payment.service;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.StatusCodeType;
-import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
+import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import com.objects.marketbridge.payment.domain.Payment;
@@ -20,7 +21,8 @@ import java.util.List;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final OrderRepository orderRepository;
+    private final OrderCommendRepository orderCommendRepository;
+    private final OrderQueryRepository orderQueryRepository;
 
     @Transactional
     public void create(KakaoPayApproveResponse response) {
@@ -29,7 +31,7 @@ public class PaymentService {
         Payment payment = createPayment(response);
 
         // 2. Order - Payment 연관관계 매핑
-        Order order = orderRepository.findByOrderNo(response.getPartnerOrderId());
+        Order order = orderQueryRepository.findByOrderNo(response.getPartnerOrderId());
         payment.linkOrder(order);
 
         // 3. orderDetail 의 statusCode 업데이트

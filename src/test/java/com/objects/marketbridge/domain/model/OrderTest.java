@@ -2,8 +2,10 @@ package com.objects.marketbridge.domain.model;
 
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
+import com.objects.marketbridge.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.MemberCoupon;
@@ -27,9 +29,13 @@ import static org.assertj.core.api.Assertions.*;
 class OrderTest {
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderCommendRepository orderCommendRepository;
     @Autowired
-    private OrderDetailRepository orderDetailRepository;
+    private OrderQueryRepository orderQueryRepository;
+    @Autowired
+    private OrderDetailQueryRepository orderDetailQueryRepository;
+    @Autowired
+    private OrderDetailCommendRepository orderDetailCommendRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -81,8 +87,8 @@ class OrderTest {
                 .usedDate(useDate)
                 .build();
 
-        orderRepository.save(order);
-        orderDetailRepository.saveAll(List.of(orderDetail1, orderDetail2));
+        orderCommendRepository.save(order);
+        orderDetailCommendRepository.saveAll(List.of(orderDetail1, orderDetail2));
         productRepository.saveAll(List.of(product1, product2));
         order.addOrderDetail(orderDetail1);
         order.addOrderDetail(orderDetail2);
@@ -93,7 +99,7 @@ class OrderTest {
         coupon1.addMemberCoupon(memberCoupon1);
         coupon2.addMemberCoupon(memberCoupon2);
 
-        Order findOrder = orderRepository.findById(order.getId()).get();
+        Order findOrder = orderQueryRepository.findById(order.getId()).get();
 
         // when
         findOrder.returnCoupon();

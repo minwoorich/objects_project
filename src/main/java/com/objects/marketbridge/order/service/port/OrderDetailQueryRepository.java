@@ -5,17 +5,7 @@ import com.objects.marketbridge.common.domain.Product;
 
 import java.util.List;
 
-public interface OrderDetailRepository  {
-
-    int changeAllType(Long orderId, String type);
-
-    List<OrderDetail> saveAll(List<OrderDetail> orderDetail);
-
-    void addReason(Long orderId, String reason);
-
-    void deleteAllInBatch();
-
-    void save(OrderDetail orderDetail);
+public interface OrderDetailQueryRepository {
 
     OrderDetail findById(Long id);
 
@@ -29,5 +19,4 @@ public interface OrderDetailRepository  {
 
     List<OrderDetail> findByOrderNoAndProduct_IdIn(String orderNo, List<Long> productIds);
 
-//    OrderDetail findByStockIdAndOrderId(Long stockId, Long orderId);
 }
