@@ -64,10 +64,12 @@ public class OrderDetail extends BaseEntity {
         this.cancelledAt = cancelledAt;
     }
 
+    // 연관관계 메서드
     public void setOrder(Order order) {
         this.order = order;
     }
 
+    // 비즈니스 로직
     public void changeStatusCode(String statusCode) {
         this.statusCode = statusCode;
     }
