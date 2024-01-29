@@ -10,13 +10,18 @@ public class KakaoPayConfig {
 
     public static final String KAKAO_BASE_URL = "https://kapi.kakao.com/v1/payment";
 
+    public static final String READY_END_POINT = "/ready";
+
+    public static final String APPROVE_END_POINT = "/approve";
+
+    public static final String CANCEL_END_POINT = "/cancel";
+
     public static final String ONE_TIME_CID = "TC0ONETIME";
 
     public static final String SUBS_CID = "TCSUBSCRIP";
 
-    public static final String KAKAO_AK = "kakaoAK ";
+    public static final String KAKAO_AK = "KakaoAK ";
 
-    public static final String READY_END_POINT = "/ready";
 
     @Value("${payment.kakao.admin_key}")
     public static String ADMIN_KEY;

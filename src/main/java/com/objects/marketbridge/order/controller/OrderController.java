@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.objects.marketbridge.common.config.KakaoPayConfig.*;
+import static com.objects.marketbridge.common.config.KakaoPayConfig.ONE_TIME_CID;
 import static com.objects.marketbridge.common.exception.error.ErrorCode.SHIPPING_ADDRESS_NOT_REGISTERED;
 
 @RestController
@@ -86,7 +86,7 @@ public class OrderController {
         String cid = ONE_TIME_CID;
         String cancelUrl = kakaoPayConfig.getRedirectCancelUrl();
         String failUrl = kakaoPayConfig.getRedirectFailUrl();
-        String approvalUrl = kakaoPayConfig.createApprovalUrl("/ready");
+        String approvalUrl = kakaoPayConfig.createApprovalUrl("/payment");
 
         return request.toKakaoReadyRequest(memberId, cid, approvalUrl, failUrl, cancelUrl);
     }

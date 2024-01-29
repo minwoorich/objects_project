@@ -43,7 +43,7 @@ public class KakaoPayService {
         RestClient restClient = setup();
 
         return restClient.post()
-                .uri("/approve")
+                .uri(APPROVE_END_POINT)
                 .body(requestMap)
                 .retrieve()
                 .body(KakaoPayApproveResponse.class);
