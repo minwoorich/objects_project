@@ -1,8 +1,11 @@
 package com.objects.marketbridge.product.controller;
 
-import com.objects.marketbridge.product.controller.dto.ProductRequestDto;
-import com.objects.marketbridge.product.controller.dto.ProductResponseDto;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.controller.request.ProductCreateRequestDto;
+import com.objects.marketbridge.product.controller.request.ProductUpdateRequestDto;
+import com.objects.marketbridge.product.controller.response.ProductCreateResponseDto;
+import com.objects.marketbridge.product.controller.response.ProductDeleteResponseDto;
+import com.objects.marketbridge.product.controller.response.ProductReadResponseDto;
+import com.objects.marketbridge.product.controller.response.ProductUpdateResponseDto;
 import com.objects.marketbridge.product.service.ProductService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.UserAuthorize;
@@ -15,61 +18,52 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductRepository productRepository;
 
 
     //상품등록
     @UserAuthorize
     @PostMapping("/products")
-    public ApiResponse<ProductResponseDto> registerProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
-        Long productId = productService.registerProduct(productRequestDto);
-        ProductResponseDto productResponseDto = new ProductResponseDto(productId);
-        return ApiResponse.ok(productResponseDto);
+    public ApiResponse<ProductCreateResponseDto> createProduct
+    (@Valid @RequestBody ProductCreateRequestDto productCreateRequestDto) {
+        Long productId = productService.createProduct(productCreateRequestDto);
+        ProductCreateResponseDto createProductResponseDto = new ProductCreateResponseDto(productId);
+        return ApiResponse.ok(createProductResponseDto);
     }
 
 
 
     //상품조회
-    @GetMapping("/products")
-    public ProductResponseDto getProductList(@Valid @RequestBody ProductRequestDto request){
-
-        // 담을거 가져오기
-        // 현재 임시로 기본생성자 사용.
-        return new ProductResponseDto();
+    @UserAuthorize
+    @GetMapping("/products/{id}")
+    public ApiResponse<ProductReadResponseDto> readProduct
+    (@PathVariable("id") Long id){
+        ProductReadResponseDto productReadResponseDto = productService.readProduct(id);
+        return ApiResponse.ok(productReadResponseDto);
     }
 
 
 
-//    //상품수정
-//    @UserAuthorize
-//    @PatchMapping("/products/{id}")
-//    public ApiResponse<ProductResponseDto> UpdateProduct
-//        (@PathVariable Long id, @RequestBody ProductRequestDto productRequestDto) {
-//
-//        ProductResponseDto productResponseDto = new ProductResponseDto(
-//                productRequestDto.getCategoryId(),
-//                productRequestDto.getIsOwn(),
-//                productRequestDto.getName(),
-//                productRequestDto.getPrice(),
-//                productRequestDto.getIsSubs(),
-//                productRequestDto.getStock(),
-//                productRequestDto.getThumbImg(),
-//                productRequestDto.getItemImgUrls(),
-//                productRequestDto.getDetailImgUrls(),
-//                productRequestDto.getDiscountRate(),
-//                productRequestDto.getOptionNames());
-//
-//        productService.updateProduct(id, productRequestDto);
-//        return ApiResponse.ok(productResponseDto);
-//    }
-
-
-
-
+    //상품수정
+    @UserAuthorize
+    @PatchMapping("/products/{id}")
+    public ApiResponse<ProductUpdateResponseDto> updateProduct
+    (@PathVariable("id") Long id, @RequestBody @Valid ProductUpdateRequestDto updateProductRequestDto) {
+        ProductUpdateResponseDto productUpdateResponseDto
+                = productService.updateProduct(id, updateProductRequestDto);
+        return ApiResponse.ok(productUpdateResponseDto);
+    }
 
 
 
     //상품삭제
+    @UserAuthorize
+    @DeleteMapping("/products/{id}")
+    public ApiResponse<ProductDeleteResponseDto> deleteProduct
+    (@PathVariable("id") Long id) {
+        productService.deleteProduct(id);
+        ProductDeleteResponseDto productDeleteResponseDto = new ProductDeleteResponseDto();
+        return ApiResponse.ok(productDeleteResponseDto);
+    }
 
 
 

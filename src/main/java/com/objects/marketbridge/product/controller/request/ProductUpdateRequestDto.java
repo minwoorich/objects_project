@@ -1,20 +1,23 @@
-package com.objects.marketbridge.product.controller.dto;
+package com.objects.marketbridge.product.controller.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
-public class ProductRequestDto {
+public class ProductUpdateRequestDto {
+    //    private Long productId;
 
     @NotNull
     private Long categoryId;
-    //    private List<OrderDetail> orderDetails = new ArrayList<>();
+    //    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
 
     @NotNull
     private Boolean isOwn; // 로켓 true , 오픈 마켓 false
@@ -38,23 +41,9 @@ public class ProductRequestDto {
     @NotNull
     private List<String> optionNames = new ArrayList<>();
 
-//    @Builder
-//    public ProductRequestDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, List<String> itemImgUrls, List<String> detailImgUrls, Long discountRate) {
-//        this.categoryId = categoryId;
-//        this.isOwn = isOwn;
-//        this.name = name;
-//        this.price = price;
-//        this.isSubs = isSubs;
-//        this.stock = stock;
-//        this.thumbImg = thumbImg;
-//        this.itemImgUrls = itemImgUrls;
-//        this.detailImgUrls = detailImgUrls;
-//        this.discountRate = discountRate;
-//    }
 
     @Builder
-
-    public ProductRequestDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, List<String> itemImgUrls, List<String> detailImgUrls, Long discountRate, List<String> optionNames) {
+    public ProductUpdateRequestDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, List<String> itemImgUrls, List<String> detailImgUrls, Long discountRate, List<String> optionNames) {
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
