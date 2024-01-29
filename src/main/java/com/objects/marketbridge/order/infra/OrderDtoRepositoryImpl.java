@@ -1,10 +1,10 @@
 package com.objects.marketbridge.order.infra;
 
-import com.objects.marketbridge.order.controller.response.OrderCancelReturnListResponse;
-import com.objects.marketbridge.order.controller.response.OrderDetailResponse;
-import com.objects.marketbridge.order.controller.response.QOrderCancelReturnListResponse;
-import com.objects.marketbridge.order.controller.response.QOrderDetailResponse;
 import com.objects.marketbridge.order.domain.StatusCodeType;
+import com.objects.marketbridge.order.infra.dao.CancelReturnResponseDao;
+import com.objects.marketbridge.order.infra.dao.DetailResponseDao;
+import com.objects.marketbridge.order.infra.dao.QCancelReturnResponseDao;
+import com.objects.marketbridge.order.infra.dao.QDetailResponseDao;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -38,19 +38,19 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<OrderCancelReturnListResponse> findOrdersByMemberId(Long memberId, Pageable pageable) {
-        List<OrderCancelReturnListResponse> content = getOrderCancelReturnListResponses(memberId);
-        Map<String, List<OrderDetailResponse>> orderDetailResponseMap = getOrderDetailResponseMap(findOrderIds(content));
+    public Page<CancelReturnResponseDao> findOrdersByMemberId(Long memberId, Pageable pageable) {
+        List<CancelReturnResponseDao> content = getOrderCancelReturnListResponses(memberId);
+        Map<String, List<DetailResponseDao>> orderDetailResponseMap = getOrderDetailResponseMap(findOrderIds(content));
         orderDetailResponseSetting(content, orderDetailResponseMap);
 
-        JPAQuery<OrderCancelReturnListResponse> countQuery = getCountQuery(memberId);
+        JPAQuery<CancelReturnResponseDao> countQuery = getCountQuery(memberId);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-    private List<OrderCancelReturnListResponse> getOrderCancelReturnListResponses(Long memberId) {
-        List<OrderCancelReturnListResponse> content = queryFactory
-                .select(new QOrderCancelReturnListResponse(
+    private List<CancelReturnResponseDao> getOrderCancelReturnListResponses(Long memberId) {
+        List<CancelReturnResponseDao> content = queryFactory
+                .select(new QCancelReturnResponseDao(
                         order.updatedAt,
                                 order.createdAt,
                                 order.orderNo
@@ -61,10 +61,10 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
         return content;
     }
 
-    private Map<String, List<OrderDetailResponse>> getOrderDetailResponseMap(List<String> toOrderIds) {
-        List<OrderDetailResponse> orderDetailResponseList = queryFactory
+    private Map<String, List<DetailResponseDao>> getOrderDetailResponseMap(List<String> toOrderIds) {
+        List<DetailResponseDao> detailResponseDaoList = queryFactory
                 .select(
-                        new QOrderDetailResponse(
+                        new QDetailResponseDao(
                                 orderDetail.orderNo,
                                 orderDetail.product.id,
                                 orderDetail.product.productNo,
@@ -82,17 +82,17 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                 ).fetch();
 
 
-        return orderDetailResponseList.stream()
-                .collect(Collectors.groupingBy(OrderDetailResponse::getOrderNo));
+        return detailResponseDaoList.stream()
+                .collect(Collectors.groupingBy(DetailResponseDao::getOrderNo));
     }
 
-    private void orderDetailResponseSetting(List<OrderCancelReturnListResponse> content, Map<String, List<OrderDetailResponse>> orderDetailResponseMap) {
-        content.forEach(o-> o.changeOrderDetailResponseList(orderDetailResponseMap.get(o.getOrderNo())));
+    private void orderDetailResponseSetting(List<CancelReturnResponseDao> content, Map<String, List<DetailResponseDao>> orderDetailResponseMap) {
+        content.forEach(o-> o.changeDetailResponsDaos(orderDetailResponseMap.get(o.getOrderNo())));
     }
 
-    private JPAQuery<OrderCancelReturnListResponse> getCountQuery(Long memberId) {
-        JPAQuery<OrderCancelReturnListResponse> countQuery = queryFactory
-                .select(new QOrderCancelReturnListResponse(
+    private JPAQuery<CancelReturnResponseDao> getCountQuery(Long memberId) {
+        JPAQuery<CancelReturnResponseDao> countQuery = queryFactory
+                .select(new QCancelReturnResponseDao(
                                 order.updatedAt,
                                 order.createdAt,
                                 order.orderNo
@@ -102,9 +102,9 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
         return countQuery;
     }
 
-    private List<String> findOrderIds(List<OrderCancelReturnListResponse> content) {
+    private List<String> findOrderIds(List<CancelReturnResponseDao> content) {
         List<String> toOrderIds = content.stream()
-                .map(OrderCancelReturnListResponse::getOrderNo)
+                .map(CancelReturnResponseDao::getOrderNo)
                 .toList();
         return toOrderIds;
     }

@@ -1,8 +1,8 @@
 package com.objects.marketbridge.domain.order.service.port;
 
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.controller.response.OrderCancelReturnListResponse;
-import com.objects.marketbridge.order.controller.response.OrderDetailResponse;
+import com.objects.marketbridge.order.infra.dao.CancelReturnResponseDao;
+import com.objects.marketbridge.order.infra.dao.DetailResponseDao;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
@@ -118,24 +118,24 @@ class OrderDtoRepositoryTest {
         orderCommendRepository.save(order2);
 
         // when
-        Page<OrderCancelReturnListResponse> orderCancelReturnListResponsePage = orderDtoRepository.findOrdersByMemberId(member.getId(), PageRequest.of(0, 3));
-        List<OrderCancelReturnListResponse> content = orderCancelReturnListResponsePage.getContent();
+        Page<CancelReturnResponseDao> orderCancelReturnListResponsePage = orderDtoRepository.findOrdersByMemberId(member.getId(), PageRequest.of(0, 3));
+        List<CancelReturnResponseDao> content = orderCancelReturnListResponsePage.getContent();
         // then
         assertThat(content).hasSize(2)
                 .extracting("orderNo")
                 .contains("123", "456");
 
-        List<OrderDetailResponse> orderDetailResponses1 = content.get(0).getOrderDetailResponses();
-        List<OrderDetailResponse> orderDetailResponses2 = content.get(1).getOrderDetailResponses();
+        List<DetailResponseDao> detailResponses1Dao = content.get(0).getDetailResponseDaos();
+        List<DetailResponseDao> detailResponses2Dao = content.get(1).getDetailResponseDaos();
 
-        assertThat(orderDetailResponses1).hasSize(2)
+        assertThat(detailResponses1Dao).hasSize(2)
                 .extracting("orderNo", "productId", "productNo", "name", "price", "quantity", "orderStatus")
                 .contains(
                         tuple("123", 1L, "1", "옷", 1000L, 1L, RETURN_COMPLETED.getCode()),
                         tuple("123", 2L, "2", "신발", 2000L, 2L, ORDER_CANCEL.getCode())
                 );
 
-        assertThat(orderDetailResponses2).hasSize(1)
+        assertThat(detailResponses2Dao).hasSize(1)
                 .extracting("orderNo", "productId", "productNo", "name", "price", "quantity", "orderStatus")
                 .contains(
                         tuple("456", 3L, "3", "바지", 3000L, 3L, ORDER_CANCEL.getCode())

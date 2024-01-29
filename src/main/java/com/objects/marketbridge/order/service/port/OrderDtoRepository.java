@@ -1,10 +1,10 @@
 package com.objects.marketbridge.order.service.port;
 
-import com.objects.marketbridge.order.controller.response.OrderCancelReturnListResponse;
+import com.objects.marketbridge.order.infra.dao.CancelReturnResponseDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface OrderDtoRepository {
 
-    Page<OrderCancelReturnListResponse> findOrdersByMemberId(Long memberId, Pageable pageable);
+    Page<CancelReturnResponseDao> findOrdersByMemberId(Long memberId, Pageable pageable);
 }
