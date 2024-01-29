@@ -37,7 +37,6 @@ public class ProductResponse {
     public static ProductResponse of(OrderDetail orderDetail) {
         return ProductResponse.builder()
                 .productId(orderDetail.getProduct().getId())
-                .productNo(orderDetail.getProduct().getProductNo())
                 .name(orderDetail.getProduct().getName())
                 .price(orderDetail.getProduct().getPrice())
                 .quantity(orderDetail.getQuantity())

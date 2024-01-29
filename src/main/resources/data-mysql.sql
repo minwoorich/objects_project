@@ -27,10 +27,10 @@ VALUES
     (2, 'token456', NOW(), NOW(), NULL);
 
 -- Insert statements for category table
-INSERT INTO marketbridge.category (prev_id, next_id, name, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.category (parent_id, level, name, created_at, updated_at, deleted_at)
 VALUES
-    (NULL, NULL, 'Electronics', NOW(), NOW(), NULL),
-    (NULL, NULL, 'Clothing', NOW(), NOW(), NULL);
+    (NULL, 0, 'Electronics', NOW(), NOW(), NULL),
+    (NULL, 0, 'Clothing', NOW(), NOW(), NULL);
 
 -- Insert statements for reward_policy table
 INSERT INTO marketbridge.reward_policy (type, rate, created_at, updated_at, deleted_at)
@@ -206,6 +206,6 @@ VALUES
     (1, 1, NOW(), NOW(), NULL),
     (2, 2, NOW(), NOW(), NULL);
 
-INSERT INTO marketbridge.product (category_id, product_no, is_own, name, price, is_subs, stock, thumb_img, discount_rate, created_at, updated_at, deleted_at)
-VALUES (1, 'P123456', 1, 'Product One', 5000, 0, 100, 'product1.jpg', 10, NOW(), NOW(), NULL),
-       (2, 'P789012', 0, 'Product Two', 8000, 1, 50, 'product2.jpg', 15, NOW(), NOW(), NULL);
+INSERT INTO marketbridge.product (category_id, is_own, name, price, is_subs, stock, thumb_img, discount_rate, created_at, updated_at, deleted_at)
+VALUES (1, 1, 'Product One', 5000, 0, 100, 'product1.jpg', 10, NOW(), NOW(), NULL),
+       (2, 0, 'Product Two', 8000, 1, 50, 'product2.jpg', 15, NOW(), NOW(), NULL);

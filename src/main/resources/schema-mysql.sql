@@ -73,8 +73,8 @@ DROP TABLE IF EXISTS category;
 CREATE TABLE category (
                           category_id	bigint auto_increment
                               primary key,
-                          prev_id	bigint	,
-                          next_id	bigint	,
+                          parent_id	bigint	,
+                          level	bigint	,
                           name	varchar(255)	,
                           created_at	datetime(6)	,
                           updated_at	datetime(6)	,
@@ -545,7 +545,6 @@ DROP TABLE IF EXISTS product;
 CREATE TABLE product (
                          product_id	bigint auto_increment primary key,
                          category_id	bigint	,
-                         product_no	varchar(255)	,
                          is_own	bit	,
                          name	varchar(255)	,
                          price	bigint	,
