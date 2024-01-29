@@ -3,7 +3,7 @@ package com.objects.marketbridge.domain.order.service.port;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.common.domain.Product;
 import jakarta.persistence.EntityManager;
@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.tuple;
 class OrderDetailRepositoryTest {
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderCommendRepository orderCommendRepository;
 
     @Autowired
     private OrderDetailRepository orderDetailRepository;
@@ -54,7 +54,7 @@ class OrderDetailRepositoryTest {
         order.addOrderDetail(orderDetail2);
         order.addOrderDetail(orderDetail3);
 
-        Order savedOrder = orderRepository.save(order);
+        Order savedOrder = orderCommendRepository.save(order);
         Long orderId = savedOrder.getId();
 
         // when
@@ -95,7 +95,7 @@ class OrderDetailRepositoryTest {
         order.addOrderDetail(orderDetail2);
         order.addOrderDetail(orderDetail3);
 
-        Order savedOrder = orderRepository.save(order);
+        Order savedOrder = orderCommendRepository.save(order);
         Long orderId = savedOrder.getId();
 
         // when
@@ -125,7 +125,7 @@ class OrderDetailRepositoryTest {
 
         List<Product> products = List.of(product1, product2, product3);
         productRepository.saveAll(products);
-        orderRepository.save(order);
+        orderCommendRepository.save(order);
 
         // when
         List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_IdAndProductIn(order.getId(), products);
@@ -194,7 +194,7 @@ class OrderDetailRepositoryTest {
 
         List<Product> products = List.of(product1, product2, product3);
         productRepository.saveAll(products);
-        orderRepository.save(order);
+        orderCommendRepository.save(order);
         List<Long> productIds = products.stream().map(Product::getId).toList();
 
         // when
@@ -212,7 +212,7 @@ class OrderDetailRepositoryTest {
 
 
     private String getReason(Long orderId) {
-        List<OrderDetail> orderDetails = orderRepository.findById(orderId).get().getOrderDetails();
+        List<OrderDetail> orderDetails = orderCommendRepository.findById(orderId).get().getOrderDetails();
         return orderDetails.get(0).getReason();
     }
 

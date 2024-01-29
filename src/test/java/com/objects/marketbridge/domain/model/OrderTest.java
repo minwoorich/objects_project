@@ -3,7 +3,7 @@ package com.objects.marketbridge.domain.model;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.MemberCoupon;
@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.*;
 class OrderTest {
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderCommendRepository orderCommendRepository;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
@@ -81,7 +81,7 @@ class OrderTest {
                 .usedDate(useDate)
                 .build();
 
-        orderRepository.save(order);
+        orderCommendRepository.save(order);
         orderDetailRepository.saveAll(List.of(orderDetail1, orderDetail2));
         productRepository.saveAll(List.of(product1, product2));
         order.addOrderDetail(orderDetail1);
@@ -93,7 +93,7 @@ class OrderTest {
         coupon1.addMemberCoupon(memberCoupon1);
         coupon2.addMemberCoupon(memberCoupon2);
 
-        Order findOrder = orderRepository.findById(order.getId()).get();
+        Order findOrder = orderCommendRepository.findById(order.getId()).get();
 
         // when
         findOrder.returnCoupon();

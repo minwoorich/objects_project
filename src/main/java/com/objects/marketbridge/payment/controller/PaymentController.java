@@ -5,7 +5,8 @@ import com.objects.marketbridge.common.dto.KakaoPayApproveRequest;
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.service.PaymentService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,8 @@ public class PaymentController {
 
     private final PaymentService paymentService;
     private final KakaoPayService kakaoPayService;
-    private final OrderRepository orderRepository;
+    private final OrderCommendRepository orderCommendRepository;
+    private final OrderQueryRepository orderQueryRepository;
 
 //    @PostMapping("/kakao-pay/approval/{orderNo}")
 //    public ApiResponse<KakaoPayApproveResponse> kakaoPaymentApproved(
@@ -42,7 +44,7 @@ public class PaymentController {
             @RequestParam(name = "pg_token") String pgToken,
             @PathVariable String orderNo) {
 
-        Order order = orderRepository.findByOrderNo(orderNo);
+        Order order = orderQueryRepository.findByOrderNo(orderNo);
         KakaoPayApproveResponse response = kakaoPayService.approve(createKakaoRequest(order));
 
         // 2. Payment 생성 및 OrderDetails 업데이트

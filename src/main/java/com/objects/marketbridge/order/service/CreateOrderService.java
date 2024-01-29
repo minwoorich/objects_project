@@ -11,9 +11,8 @@ import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
 public class CreateOrderService {
 
     private final OrderDetailRepository orderDetailRepository;
-    private final OrderRepository orderRepository;
+    private final OrderCommendRepository orderCommendRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
@@ -44,7 +43,7 @@ public class CreateOrderService {
     public void create(CreateOrderDto createOrderDto) {
 
         // 1. Order 생성
-        Order order = orderRepository.save(createOrder(createOrderDto));
+        Order order = orderCommendRepository.save(createOrder(createOrderDto));
 
         // 2. OrderDetail 생성 (연관관계 매핑 여기서 해결)
         List<OrderDetail> orderDetails = orderDetailRepository.saveAll(createOrderDetails(createOrderDto.getProductValues(), order));

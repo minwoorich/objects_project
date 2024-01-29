@@ -14,10 +14,9 @@ import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.service.port.OrderDetailRepository;
-import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.product.infra.ProductJpaRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +44,8 @@ class CreateOrderServiceTest {
     @Autowired MemberRepository memberRepository;
     @Autowired AddressRepository addressRepository;
     @Autowired OrderDetailRepository orderDetailRepository;
-    @Autowired OrderRepository orderRepository;
+    @Autowired
+    OrderCommendRepository orderCommendRepository;
     @Autowired MemberCouponRepository memberCouponRepository;
 
     @BeforeEach
@@ -147,7 +147,7 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        Order order = orderRepository.findByOrderNo(createOrderDto.getOrderNo());
+        Order order = orderCommendRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(order.getMember().getId()).isEqualTo(member.getId());
@@ -230,7 +230,7 @@ class CreateOrderServiceTest {
         //when
         createOrderService.create(createOrderDto);
         List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNo(createOrderDto.getOrderNo());
-        Order order = orderRepository.findByOrderNo(createOrderDto.getOrderNo());
+        Order order = orderCommendRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         Assertions.assertThat(order.getOrderDetails()).containsExactlyInAnyOrderElementsOf(orderDetails);
@@ -254,7 +254,7 @@ class CreateOrderServiceTest {
 
         //when
         createOrderService.create(createOrderDto);
-        Order order = orderRepository.findByOrderNo(createOrderDto.getOrderNo());
+        Order order = orderCommendRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(order.getTotalUsedCouponPrice()).isEqualTo(totalCouponPrice);
