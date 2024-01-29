@@ -45,7 +45,7 @@ public class PaymentController {
             @PathVariable String orderNo) {
 
         Order order = orderQueryRepository.findByOrderNo(orderNo);
-        KakaoPayApproveResponse response = kakaoPayService.approve(createKakaoRequest(order));
+        KakaoPayApproveResponse response = kakaoPayService.approve(createKakaoRequest(order, pgToken));
 
         // 2. Payment 생성 및 OrderDetails 업데이트
         paymentService.create(response);
@@ -57,8 +57,9 @@ public class PaymentController {
         return ApiResponse.ok(response);
     }
 
-    private  KakaoPayApproveRequest createKakaoRequest(Order order) {
+    private  KakaoPayApproveRequest createKakaoRequest(Order order, String pgToken) {
         return KakaoPayApproveRequest.builder()
+                .pgToken(pgToken)
                 .partnerOrderId(order.getOrderNo())
                 .tid(order.getTid())
                 .totalAmount(order.getTotalPrice().toString())
