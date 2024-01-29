@@ -56,8 +56,12 @@ public class Coupon extends BaseEntity {
         memberCoupon.setCoupon(this);
     }
 
+//    public void returnCoupon() {
+//        memberCoupons.forEach(MemberCoupon::returnCoupon);
+//        this.count += 1;
+//    }
+
     public void returnCoupon() {
         memberCoupons.forEach(MemberCoupon::returnCoupon);
-        this.count += 1;
     }
 }
