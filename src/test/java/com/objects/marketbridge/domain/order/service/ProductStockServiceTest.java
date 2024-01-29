@@ -2,7 +2,8 @@ package com.objects.marketbridge.domain.order.service;
 
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.ProductStockService;
-import com.objects.marketbridge.order.service.port.OrderDetailRepository;
+import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.common.exception.error.CustomLogicException;
 import com.objects.marketbridge.common.exception.error.ErrorCode;
@@ -26,10 +27,11 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional
 class ProductStockServiceTest {
 
-    @Autowired OrderDetailRepository orderDetailRepository;
+    @Autowired OrderDetailQueryRepository orderDetailQueryRepository;
+    @Autowired OrderDetailCommendRepository orderDetailCommendRepository;
     @Autowired ProductRepository productRepository;
-    @Autowired
-    ProductStockService productStockService;
+    @Autowired ProductStockService productStockService;
+
     @BeforeEach
     void init() {
 
@@ -39,14 +41,14 @@ class ProductStockServiceTest {
         productRepository.saveAll(products);
 
         List<OrderDetail> orderDetails = createOrderDetails(products, quantity);
-        orderDetailRepository.saveAll(orderDetails);
+        orderDetailCommendRepository.saveAll(orderDetails);
     }
     @Test
     @DisplayName("주문이 들어오면 재고가 주문수량만큼 빠져나가야한다")
     void decrease() {
 
         //given
-        List<OrderDetail> orderDetails = orderDetailRepository.findAll();
+        List<OrderDetail> orderDetails = orderDetailQueryRepository.findAll();
         List<Product> products = productRepository.findAll();
         List<Long> stocks = products.stream().map(Product::getStock).toList();
         List<Long> quantityList = orderDetails.stream().map(OrderDetail::getQuantity).toList();
@@ -78,7 +80,7 @@ class ProductStockServiceTest {
     void decrease_error() {
 
         //given
-        List<OrderDetail> orderDetails = orderDetailRepository.findAll();
+        List<OrderDetail> orderDetails = orderDetailQueryRepository.findAll();
         List<Product> products = productRepository.findAll();
         products.get(0).changeStock(0L); // 재고 0 으로 변경
         List<Long> stocks = products.stream().map(Product::getStock).toList();
