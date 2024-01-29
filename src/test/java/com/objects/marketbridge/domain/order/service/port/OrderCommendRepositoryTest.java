@@ -4,7 +4,8 @@ import com.objects.marketbridge.common.domain.Product;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.service.port.OrderRepository;
+import com.objects.marketbridge.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,10 +23,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
-class OrderRepositoryTest {
+class OrderCommendRepositoryTest {
 
     @Autowired
-    OrderRepository orderRepository;
+    OrderCommendRepository orderCommendRepository;
+
+    @Autowired
+    OrderQueryRepository orderQueryRepository;
 
     @Autowired
     ProductRepository productRepository;
@@ -38,10 +42,10 @@ class OrderRepositoryTest {
     public void findByOrderId() {
         // given
         Order order = Order.builder().build();
-        Order savedOrder = orderRepository.save(order);
+        Order savedOrder = orderCommendRepository.save(order);
 
         // when
-        Optional<Order> foundOrder = orderRepository.findById(savedOrder.getId());
+        Optional<Order> foundOrder = orderQueryRepository.findById(savedOrder.getId());
 
         // then
         assertTrue(foundOrder.isPresent());
@@ -55,7 +59,7 @@ class OrderRepositoryTest {
         Long NoId = 1L;
 
         // when
-        Optional<Order> empty = orderRepository.findById(NoId);
+        Optional<Order> empty = orderQueryRepository.findById(NoId);
 
         // then
         assertFalse(empty.isPresent());
@@ -69,12 +73,12 @@ class OrderRepositoryTest {
         Order order = Order.builder().build();
 
         // when
-        Order savedOrder = orderRepository.save(order);
+        Order savedOrder = orderCommendRepository.save(order);
 
         // then
         assertNotNull(savedOrder.getId());
 
-        Optional<Order> foundOrder = orderRepository.findById(savedOrder.getId());
+        Optional<Order> foundOrder = orderQueryRepository.findById(savedOrder.getId());
         assertTrue(foundOrder.isPresent());
         assertThat(savedOrder.getId()).isEqualTo(foundOrder.get().getId());
     }
@@ -92,10 +96,10 @@ class OrderRepositoryTest {
                 .build();
         order.addOrderDetail(orderDetail);
         productRepository.save(product);
-        orderRepository.save(order);
+        orderCommendRepository.save(order);
 
         // when
-        Order findOrder = orderRepository.findOrderWithDetailsAndProduct(order.getId()).get();
+        Order findOrder = orderQueryRepository.findOrderWithDetailsAndProduct(order.getId()).get();
 
         // then
         assertThat(findOrder.getId()).isEqualTo(order.getId());
