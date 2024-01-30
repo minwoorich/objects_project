@@ -118,16 +118,16 @@ public class ProductService {
 
         // 업데이트 요청의 내용을 상품에 저장
         // 끝에 productRepository.save(findProduct);를 안해도 변경감지에 의해 update되는듯함.
-        findProduct.updateProduct(
-                category,
-                productUpdateRequestDto.getIsOwn(),
-                productUpdateRequestDto.getName(),
-                productUpdateRequestDto.getPrice(),
-                productUpdateRequestDto.getIsSubs(),
-                productUpdateRequestDto.getStock(),
-                productUpdateRequestDto.getThumbImg(),
-                productUpdateRequestDto.getDiscountRate()
-        );
+//        findProduct.updateProduct(
+//                category,
+//                productUpdateRequestDto.getIsOwn(),
+//                productUpdateRequestDto.getName(),
+//                productUpdateRequestDto.getPrice(),
+//                productUpdateRequestDto.getIsSubs(),
+//                productUpdateRequestDto.getStock(),
+//                productUpdateRequestDto.getThumbImg(),
+//                productUpdateRequestDto.getDiscountRate()
+//        );
 
         ProductUpdateResponseDto productUpdateResponseDto =
                 new ProductUpdateResponseDto(
