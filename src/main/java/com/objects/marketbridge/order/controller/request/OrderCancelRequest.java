@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.controller.request;
 
-import com.objects.marketbridge.order.service.dto.OrderCancelServiceDto;
+import com.objects.marketbridge.order.service.dto.CancelRequestDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +12,6 @@ public class OrderCancelRequest {
 
     @NotNull
     private Long orderId;
-
     @NotNull
     private String cancelReason;
 
@@ -23,8 +22,8 @@ public class OrderCancelRequest {
         this.cancelReason = cancelReason;
     }
 
-    public OrderCancelServiceDto toServiceRequest() {
-        return OrderCancelServiceDto.builder()
+    public CancelRequestDto toServiceRequest() {
+        return CancelRequestDto.builder()
                 .orderId(orderId)
                 .cancelReason(cancelReason)
                 .build();

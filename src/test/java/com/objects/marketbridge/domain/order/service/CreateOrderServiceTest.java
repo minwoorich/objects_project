@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domain.order.service;
 
 import com.objects.marketbridge.common.domain.*;
+import com.objects.marketbridge.order.domain.*;
 import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
@@ -10,10 +11,6 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.common.exception.error.CustomLogicException;
 import com.objects.marketbridge.common.exception.error.ErrorCode;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.domain.ProductValue;
-import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.product.infra.ProductJpaRepository;
@@ -88,7 +85,7 @@ class CreateOrderServiceTest {
                 .name("홍길동").build();
     }
 
-    private  Address createAddress(Member member) {
+    private Address createAddress(Member member) {
 
         return Address.builder()
                 .member(member).build();

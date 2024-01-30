@@ -4,6 +4,7 @@ import com.objects.marketbridge.common.dto.KakaoPayApproveRequest;
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
 import com.objects.marketbridge.common.dto.KakaoPayOrderResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
+import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.service.QuitPaymentService;

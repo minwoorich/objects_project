@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 public abstract class BaseEntity {
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -19,7 +20,4 @@ public abstract class BaseEntity {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-    protected void changeUpdateAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }

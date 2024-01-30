@@ -50,7 +50,7 @@ public class OrderDetail extends BaseEntity {
     private LocalDateTime cancelledAt;
 
     @Builder
-    public OrderDetail(Order order, String orderNo, String tid, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
+    private OrderDetail(Order order, String orderNo, String tid, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
         this.orderNo = orderNo;
         this.tid = tid;
         this.order = order;

@@ -21,10 +21,10 @@ spring:
     username: objects
     password: 1234
 
-datasource:
-url: jdbc:h2:tcp://localhost/~/Marketbridge
-username: sa
-password:
+#datasource:
+#url: jdbc:h2:tcp://localhost/~/Marketbridge
+#username: sa
+#password:
   jpa:
     hibernate:
       ddl-auto: none
@@ -77,14 +77,15 @@ spring:
     secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
 
   datasource:
+#    url: jdbc:h2:tcp://localhost/~/Marketbridge
     url: jdbc:h2:mem:~/Marketbridge
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
   jpa:
-    hibernate:
-      ddl-auto: none
+  hibernate:
+    ddl-auto: none
     show-sql: true
     properties:
       hibernate:

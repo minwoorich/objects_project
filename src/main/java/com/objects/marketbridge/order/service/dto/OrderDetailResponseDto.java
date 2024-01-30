@@ -1,16 +1,13 @@
-package com.objects.marketbridge.order.controller.response;
+package com.objects.marketbridge.order.service.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
-public class OrderDetailResponse {
-
+public class OrderDetailResponseDto {
     private String orderNo;
     private Long productId;
     private String productNo;
@@ -21,7 +18,7 @@ public class OrderDetailResponse {
 
     @Builder
     @QueryProjection
-    public OrderDetailResponse(String orderNo, Long productId, String productNo, String name, Long price, Long quantity, String orderStatus) {
+    public OrderDetailResponseDto(String orderNo, Long productId, String productNo, String name, Long price, Long quantity, String orderStatus) {
         this.orderNo = orderNo;
         this.productId = productId;
         this.productNo = productNo;

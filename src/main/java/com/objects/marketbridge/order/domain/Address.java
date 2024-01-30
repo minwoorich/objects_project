@@ -1,5 +1,8 @@
-package com.objects.marketbridge.common.domain;
+package com.objects.marketbridge.order.domain;
 
+import com.objects.marketbridge.common.domain.AddressValue;
+import com.objects.marketbridge.common.domain.BaseEntity;
+import com.objects.marketbridge.common.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Address extends BaseEntity{
+public class Address extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

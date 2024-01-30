@@ -1,17 +1,12 @@
-package com.objects.marketbridge.order.infra;
+package com.objects.marketbridge.order.infra.order;
 
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.LockModeType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
-
-import static com.objects.marketbridge.common.domain.QProduct.product;
 
 @Repository
 public class OrderCommendRepositoryImpl implements OrderCommendRepository {

@@ -1,12 +1,9 @@
-package com.objects.marketbridge.order.infra;
+package com.objects.marketbridge.order.infra.orderdetail;
 
-import com.objects.marketbridge.common.domain.Product;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
-import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

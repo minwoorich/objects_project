@@ -1,6 +1,5 @@
 package com.objects.marketbridge.order.domain;
 
-import com.objects.marketbridge.common.domain.Address;
 import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.common.domain.Member;
 import jakarta.persistence.*;
@@ -65,8 +64,7 @@ public class Order extends BaseEntity {
     }
 
     //== 비즈니스 로직==//
-    public void cancelReturn(String reason, String statusCode, LocalDateTime cancelDateTime) {
-        changeUpdateAt(cancelDateTime);
+    public void cancelReturn(String reason, String statusCode) {
         orderDetails.forEach(orderDetail -> orderDetail.cancel(reason, statusCode));
     }
 
