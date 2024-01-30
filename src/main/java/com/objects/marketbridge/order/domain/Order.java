@@ -67,8 +67,7 @@ public class Order extends BaseEntity {
     }
 
     //== 비즈니스 로직==//
-    public void cancelReturn(String reason, String statusCode, LocalDateTime cancelDateTime) {
-        changeUpdateAt(cancelDateTime);
+    public void cancelReturn(String reason, String statusCode) {
         orderDetails.forEach(orderDetail -> orderDetail.cancel(reason, statusCode));
     }
 

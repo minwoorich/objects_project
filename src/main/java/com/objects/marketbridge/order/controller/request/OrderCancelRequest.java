@@ -12,7 +12,6 @@ public class OrderCancelRequest {
 
     @NotNull
     private Long orderId;
-
     @NotNull
     private String cancelReason;
 

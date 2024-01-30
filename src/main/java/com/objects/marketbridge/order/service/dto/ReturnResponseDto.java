@@ -7,27 +7,26 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class OrderReturnResponseDto {
+public class ReturnResponseDto {
     private List<ProductInfoResponseDto> productInfoResponseDtos;
     private ReturnRefundInfoResponseDto returnRefundInfoResponseDto;
 
     @Builder
-    private OrderReturnResponseDto(List<ProductInfoResponseDto> productInfoResponseDtos, ReturnRefundInfoResponseDto returnRefundInfoResponseDto) {
+    private ReturnResponseDto(List<ProductInfoResponseDto> productInfoResponseDtos, ReturnRefundInfoResponseDto returnRefundInfoResponseDto) {
         this.productInfoResponseDtos = productInfoResponseDtos;
         this.returnRefundInfoResponseDto = returnRefundInfoResponseDto;
     }
 
-    public static OrderReturnResponseDto of(List<OrderDetail> orderDetails) {
-        return OrderReturnResponseDto.builder()
+    public static ReturnResponseDto of(List<OrderDetail> orderDetails, String memberType) {
+        return ReturnResponseDto.builder()
                 .productInfoResponseDtos(
                         orderDetails.stream()
                         .map(ProductInfoResponseDto::of)
                         .toList()
                 )
                 .returnRefundInfoResponseDto(
-                        ReturnRefundInfoResponseDto.of(orderDetails)
+                        ReturnRefundInfoResponseDto.of(orderDetails, memberType)
                 )
                 .build();
-
     }
 }

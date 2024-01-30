@@ -19,14 +19,16 @@ public class CancelResponseDto {
         this.cancelRefundInfoResponseDto = cancelRefundInfoResponseDto;
     }
 
-    public static CancelResponseDto of(List<OrderDetail> orderDetails, Order order) {
+    public static CancelResponseDto of(List<OrderDetail> orderDetails, String memberShip) {
         return CancelResponseDto.builder()
                 .productInfoResponseDtos(orderDetails.stream()
+                        // TODO Product로 인해 N+1 문제 발생 예상 (of)
                         .map(ProductInfoResponseDto::of)
                         .toList()
                 )
                 .cancelRefundInfoResponseDto(
-                        CancelRefundInfoResponseDto.of(orderDetails, order)
+                        // TODO coupon 으로 인해 N+1문제 발생할 것으로 예상 (of) -> fetchJoin으로 쿠폰까지 조인후 해결
+                        CancelRefundInfoResponseDto.of(orderDetails, memberShip)
                 )
                 .build();
     }

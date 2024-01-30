@@ -23,7 +23,7 @@ public class ReturnRefundInfoResponse {
         return ReturnRefundInfoResponse.builder()
                 .deliveryFee(serviceDto.getDeliveryFee())
                 .returnFee(serviceDto.getReturnFee())
-                .productPrice(serviceDto.getProductPrice())
+                .productPrice(serviceDto.getProductTotalPrice())
                 .build();
     }
 }

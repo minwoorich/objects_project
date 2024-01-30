@@ -18,10 +18,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.objects.marketbridge.common.domain.Membership.WOW;
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;
 
 
@@ -49,8 +49,7 @@ public class OrderCancelReturnService {
 
         Order order = innerService.cancelReturn(
                 cancelRequestDto.getOrderId(),
-                cancelRequestDto.getCancelReason(),
-                dateTimeHolder.getTimeNow()
+                cancelRequestDto.getCancelReason()
         );
 
         Payment payment = validPayment(cancelRequestDto.getOrderId());
@@ -71,15 +70,15 @@ public class OrderCancelReturnService {
 
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrder_IdAndProductIn(orderId, products);
 
-        return CancelResponseDto.of(orderDetails, order);
+        return CancelResponseDto.of(orderDetails, WOW.getText()); // TODO 맴버 조회해서 타입 넣기
     }
 
     @Transactional(readOnly = true)
-    public OrderReturnResponseDto requestReturn(Long orderId, List<Long> productIds) {
+    public ReturnResponseDto requestReturn(Long orderId, List<Long> productIds) {
         List<Product> products = validProducts(productIds);
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrder_IdAndProductIn(orderId, products);
 
-        return OrderReturnResponseDto.of(orderDetails);
+        return ReturnResponseDto.of(orderDetails, WOW.getText()); // TODO 맴버 조회해서 타입 넣기
     }
 
     @Transactional(readOnly = true)
@@ -88,16 +87,16 @@ public class OrderCancelReturnService {
         List<OrderDetail> orderDetails = validOrderDetails(orderNo, productIds);
         Payment payment = vaildPayment(paymentId);
 
-        return OrderCancelReturnDetailResponseDto.of(order, orderDetails, payment);
+        return OrderCancelReturnDetailResponseDto.of(order, orderDetails, WOW.getText(), dateTimeHolder); // TODO 맴버 조회해서 타입 넣기
     }
 
     // TODO 객체로 따로 빼야함(임시로 사용)
     class InnerService {
-        public Order cancelReturn(Long orderId, String reason, LocalDateTime cancelDateTime) {
+        public Order cancelReturn(Long orderId, String reason) {
             Order order = orderQueryRepository.findOrderWithDetailsAndProduct(orderId)
                     .orElseThrow(() -> new IllegalArgumentException("해당하는 주문이 없습니다."));
 
-            order.cancelReturn(reason, ORDER_CANCEL.getCode(), cancelDateTime);
+            order.cancelReturn(reason, ORDER_CANCEL.getCode());
 
             order.returnCoupon();
 

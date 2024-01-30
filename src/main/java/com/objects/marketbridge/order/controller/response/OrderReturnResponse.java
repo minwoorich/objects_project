@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.controller.response;
 
-import com.objects.marketbridge.order.service.dto.OrderReturnResponseDto;
+import com.objects.marketbridge.order.service.dto.ReturnResponseDto;
 import com.objects.marketbridge.order.service.dto.ReturnRefundInfoResponse;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class OrderReturnResponse {
         this.returnRefundInfoResponse = returnRefundInfoResponse;
     }
 
-    public static OrderReturnResponse of(OrderReturnResponseDto serviceDto) {
+    public static OrderReturnResponse of(ReturnResponseDto serviceDto) {
         return OrderReturnResponse.builder()
                 .productResponses(
                         serviceDto.getProductInfoResponseDtos()

@@ -9,6 +9,7 @@ import java.util.List;
 
 @Getter
 public class CreateOrderDto {
+
     private String tid;
     private Long memberId;
     private Long addressId;

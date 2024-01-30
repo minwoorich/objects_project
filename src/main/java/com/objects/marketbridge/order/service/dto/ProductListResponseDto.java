@@ -26,6 +26,7 @@ public class ProductListResponseDto {
     public static ProductListResponseDto of(Product product, Long quantity) {
         return ProductListResponseDto.builder()
                 .productId(product.getId())
+                .productNo(product.getProductNo())
                 .name(product.getName())
                 .price(product.getPrice())
                 .quantity(quantity)

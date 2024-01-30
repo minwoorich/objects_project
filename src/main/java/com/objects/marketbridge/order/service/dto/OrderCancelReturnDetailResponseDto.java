@@ -1,8 +1,8 @@
 package com.objects.marketbridge.order.service.dto;
 
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.payment.domain.Payment;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -29,10 +29,10 @@ public class OrderCancelReturnDetailResponseDto {
         this.cancelRefundInfoResponseDto = cancelRefundInfoResponseDto;
     }
 
-    public static OrderCancelReturnDetailResponseDto of(Order order, List<OrderDetail> orderDetails, Payment payment) {
+    public static OrderCancelReturnDetailResponseDto of(Order order, List<OrderDetail> orderDetails, String memberShip, DateTimeHolder dateTimeHolder) {
         return OrderCancelReturnDetailResponseDto.builder()
-                .orderDate(order.getCreatedAt())
-                .cancelDate(order.getUpdatedAt())
+                .orderDate(dateTimeHolder.getCreateTime(order))
+                .cancelDate(dateTimeHolder.getUpdateTime(order))
                 .orderNo(order.getOrderNo())
                 .cancelReason(orderDetails.get(0).getReason())
                 .productListResponseDtos(
@@ -41,7 +41,7 @@ public class OrderCancelReturnDetailResponseDto {
                                 .toList()
                 )
                 .cancelRefundInfoResponseDto(
-                        CancelRefundInfoResponseDto.of(orderDetails, order)
+                        CancelRefundInfoResponseDto.of(orderDetails, memberShip)
                 )
                 .build();
     }
