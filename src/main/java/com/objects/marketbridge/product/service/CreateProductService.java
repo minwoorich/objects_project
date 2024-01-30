@@ -1,9 +1,7 @@
 package com.objects.marketbridge.product.service;
 
 import com.objects.marketbridge.category.service.port.CategoryRepository;
-import com.objects.marketbridge.common.domain.Category;
-import com.objects.marketbridge.common.domain.Product;
-import com.objects.marketbridge.common.domain.ProductImage;
+import com.objects.marketbridge.common.domain.*;
 import com.objects.marketbridge.product.controller.request.ProductCreateRequestDto;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.product.service.dto.CreateProductDto;
@@ -15,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,8 +33,12 @@ public class CreateProductService {
     public Long create(ProductCreateRequestDto request){
         //1. 상품 생성
         Product product = productRepository.save(createProduct(CreateProductDto.fromRequest(request)));
-        //2. image 추가
-//        createProductImages(request.getItemImgUrls(),request.getDetailImgUrls(),product);
+        //2. productImage 저장
+        // 2-1. imageurl -> ProductImage 화
+        List<ProductImage> productImages = createProductImages(request.getDetailImgUrls(), ImageType.DETAIL_IMG.toString(),product);
+        productImages.addAll(createProductImages(request.getItemImgUrls(), ImageType.ITEM_IMG.toString(),product));
+        productImageRepository.saveAll(productImages);
+
         //3. 옵션 추가
 
         //4. product id 반환
@@ -56,7 +59,25 @@ public class CreateProductService {
         return Product.create(category,isOwn,name,price,isSubs,stock,thumbImg,discountRate,productNo);
     }
 
-//    public List<ProductImage> createProductImages(){
-//
-//    }
+    public List<ProductImage> createProductImages(List<String> imgUrls,String type,Product product){
+        List<ProductImage> productImages = new ArrayList<>();
+        for (int i = 0; i < imgUrls.size(); i++) {
+            // 이미지 저장
+            Image image = Image.builder()
+                    .type(type)
+                    .url(imgUrls.get(i))
+                    .build();
+            imageRepository.save(image);
+
+            //ProductImage 엔티티 생성 (정렬 순서대로 seqNo 할당)
+            ProductImage productImage = ProductImage.create(product,imageRepository.findById(image.getId()),Long.valueOf(i));
+            productImages.add(productImage);
+
+            // 연관관계 추가
+            product.addProductImages(productImage);
+
+        }
+        return productImages;
+    }
+
 }

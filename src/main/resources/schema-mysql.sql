@@ -112,6 +112,7 @@ CREATE TABLE product_image (
                                    primary key,
                                product_id	bigint	,
                                image_id	bigint	,
+                               seq_no bigint    ,
                                created_at	datetime(6)	,
                                updated_at	datetime(6)	,
                                deleted_at	datetime(6)
