@@ -1,6 +1,6 @@
-package com.objects.marketbridge.common.security.jwt;
+package com.objects.marketbridge.common.security.service;
 
-import com.objects.marketbridge.common.security.entity.TokenType;
+import com.objects.marketbridge.common.security.domain.TokenType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

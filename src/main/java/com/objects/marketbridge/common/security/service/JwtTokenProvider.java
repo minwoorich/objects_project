@@ -1,9 +1,9 @@
-package com.objects.marketbridge.common.security.jwt;
+package com.objects.marketbridge.common.security.service;
 
 import com.objects.marketbridge.common.security.constants.SecurityConst;
-import com.objects.marketbridge.common.security.user.CustomUserDetails;
-import com.objects.marketbridge.common.security.dto.JwtTokenDto;
 import com.objects.marketbridge.common.security.constants.SecurityErrConst;
+import com.objects.marketbridge.common.security.domain.CustomUserDetails;
+import com.objects.marketbridge.common.security.dto.JwtTokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -133,8 +133,6 @@ public class JwtTokenProvider {
          * .signWith() JWT 서명에 사용되는 비밀키
          * .compact() JWT를 문자열로 반환
          */
-
-
         long expirationTime = Instant.now().toEpochMilli() + expiration;
         return Jwts.builder()
                 .setSubject(userId.toString())
