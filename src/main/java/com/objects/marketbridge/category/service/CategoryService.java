@@ -3,6 +3,7 @@ package com.objects.marketbridge.category.service;
 import com.objects.marketbridge.category.controller.response.CategoryReadResponseDto;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.common.domain.Category;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,11 +57,12 @@ public class CategoryService {
                 Category largeCategory;
                 if (categoryRepository.existsByName(largeCategoryName)) {
                     // 대분류가 이미 존재하는 경우 처리
-                    largeCategory = categoryRepository.findByName(largeCategoryName);
+                    largeCategory = categoryRepository.findByName(largeCategoryName).get();
                 } else {
                     // 대분류가 존재하지 않는 경우 처리
                     largeCategory = new Category(null, 0L, largeCategoryName);
                     categoryRepository.save(largeCategory);
+
                 }
             }
 
@@ -82,7 +85,12 @@ public class CategoryService {
                 largeCategoryName = largeCategoryName.replace("/", "_");
                 mediumCategoryName = mediumCategoryName.replace("/", "_");
 
-                Category largeCategory = categoryRepository.findByNameAndLevel(largeCategoryName, 0L);
+                Category largeCategory = categoryRepository.findByNameAndLevel(largeCategoryName, 0L).get();
+
+//                Optional<Category> optionalLargeCategory
+//                        = categoryRepository.findByNameAndLevel(largeCategoryName, 0L);
+//                Category largeCategory = optionalLargeCategory
+//                        .orElseThrow(() -> new EntityNotFoundException("해당하는 대분류 카테고리를 찾을 수 없습니다."));
 
                 // 중복 체크 및 중분류 등록
                 Category mediumCategory;
@@ -137,7 +145,7 @@ public class CategoryService {
                         = categoryRepository.findAllByNameAndLevel(mediumCategoryName, 1L);
                 for (Category mediumCategoryToBeCompared : mediumCategoriesToBeCompared) {
                     Category largeCategoryToBeCompared
-                            = categoryRepository.findById(mediumCategoryToBeCompared.getParentId());
+                            = categoryRepository.findById(mediumCategoryToBeCompared.getParentId()).get();
                     if (largeCategoryToBeCompared.getName().equals(largeCategoryName)) {
                         smallCategory = new Category(mediumCategoryToBeCompared.getId(), 2L, smallCategoryName);
                         categoryRepository.save(smallCategory);

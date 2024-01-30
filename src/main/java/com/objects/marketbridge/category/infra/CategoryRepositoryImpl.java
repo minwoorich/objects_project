@@ -1,4 +1,4 @@
-package com.objects.marketbridge.category.repository;
+package com.objects.marketbridge.category.infra;
 
 import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.common.domain.Category;
@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -17,8 +18,8 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     private final EntityManager em;
 
     @Override
-    public Category findById(Long id) {
-        return categoryJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public Optional<Category> findById(Long id) {
+        return categoryJpaRepository.findById(id);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public Category findByName(String name) {
+    public Optional<Category> findByName(String name) {
         return categoryJpaRepository.findByName(name);
     }
 
@@ -43,13 +44,13 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 //    }
 
     @Override
-    public Category findByNameAndLevel(String name, Long level) {
+    public Optional<Category> findByNameAndLevel(String name, Long level) {
 //        Category category = em.createQuery
 //                        ("select c from Category c where c.name = :name and c.level = :level", Category.class)
 //                .setParameter("name", name)
 //                .setParameter("level", level)
 //                .getSingleResult();
-        Category category = categoryJpaRepository.findByNameAndLevel(name, level);
+        Optional<Category> category = categoryJpaRepository.findByNameAndLevel(name, level);
         return category;
     }
 
