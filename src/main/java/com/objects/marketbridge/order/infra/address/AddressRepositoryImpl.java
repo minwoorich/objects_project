@@ -1,4 +1,4 @@
-package com.objects.marketbridge.order.infra;
+package com.objects.marketbridge.order.infra.address;
 
 import com.objects.marketbridge.order.domain.Address;
 import com.objects.marketbridge.order.service.port.AddressRepository;

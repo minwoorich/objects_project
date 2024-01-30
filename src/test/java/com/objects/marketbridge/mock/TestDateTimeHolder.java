@@ -3,9 +3,11 @@ package com.objects.marketbridge.mock;
 import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 public class TestDateTimeHolder implements DateTimeHolder {
 
     private LocalDateTime now;
@@ -14,7 +16,7 @@ public class TestDateTimeHolder implements DateTimeHolder {
     private LocalDateTime deleteTime;
 
     @Builder
-    private TestDateTimeHolder(LocalDateTime now, LocalDateTime createTime, LocalDateTime updateTime, LocalDateTime deleteTime) {
+    public TestDateTimeHolder(LocalDateTime now, LocalDateTime createTime, LocalDateTime updateTime, LocalDateTime deleteTime) {
         this.now = now;
         this.createTime = createTime;
         this.updateTime = updateTime;

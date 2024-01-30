@@ -75,6 +75,10 @@ public class Order extends BaseEntity {
         orderDetails.forEach(OrderDetail::returnCoupon);
     }
 
+    public void setTotalUsedCouponPrice(Long totalUsedCouponPrice) {
+        this.totalUsedCouponPrice = totalUsedCouponPrice;
+    }
+
     public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice, String tid){
         return Order.builder()
                 .member(member)
@@ -85,8 +89,5 @@ public class Order extends BaseEntity {
                 .realPrice(realPrice)
                 .tid(tid)
                 .build();
-    }
-    public void setTotalUsedCouponPrice(Long totalUsedCouponPrice) {
-        this.totalUsedCouponPrice = totalUsedCouponPrice;
     }
 }

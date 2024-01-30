@@ -3,6 +3,7 @@ package com.objects.marketbridge.order.service.dto;
 import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.Membership;
 import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
 import com.objects.marketbridge.order.domain.Order;
@@ -69,13 +70,15 @@ class OrderCancelReturnDetailResponseDtoTest {
 
         LocalDateTime createTime = LocalDateTime.of(2024, 1, 30, 2, 15);
         LocalDateTime updateTime = LocalDateTime.of(2024, 1, 30, 2, 20);
-        TestDateTimeHolder timeHolder = TestDateTimeHolder.builder()
-                .createTime(createTime)
-                .updateTime(updateTime)
-                .build();
+//        DateTimeHolder timeHolder = TestDateTimeHolder.builder()
+//                .createTime(createTime)
+//                .updateTime(updateTime)
+//                .build();
+
+        TestDateTimeHolder testDateTimeHolder = new TestDateTimeHolder(LocalDateTime.now(), createTime, updateTime, updateTime);
 
         // when
-        OrderCancelReturnDetailResponseDto result = OrderCancelReturnDetailResponseDto.of(order, orderDetails, WOW.getText(), timeHolder);
+        OrderCancelReturnDetailResponseDto result = OrderCancelReturnDetailResponseDto.of(order, orderDetails, WOW.getText(), testDateTimeHolder);
 
         // then
         assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "cancelReason")
@@ -142,13 +145,14 @@ class OrderCancelReturnDetailResponseDtoTest {
 
         LocalDateTime createTime = LocalDateTime.of(2024, 1, 30, 2, 15);
         LocalDateTime updateTime = LocalDateTime.of(2024, 1, 30, 2, 20);
-        TestDateTimeHolder timeHolder = TestDateTimeHolder.builder()
-                .createTime(createTime)
-                .updateTime(updateTime)
-                .build();
+//        TestDateTimeHolder timeHolder = TestDateTimeHolder.builder()
+//                .createTime(createTime)
+//                .updateTime(updateTime)
+//                .build();
+        TestDateTimeHolder testDateTimeHolder = new TestDateTimeHolder(LocalDateTime.now(), createTime, updateTime, updateTime);
 
         // when
-        OrderCancelReturnDetailResponseDto result = OrderCancelReturnDetailResponseDto.of(order, orderDetails, BASIC.getText(), timeHolder);
+        OrderCancelReturnDetailResponseDto result = OrderCancelReturnDetailResponseDto.of(order, orderDetails, BASIC.getText(), testDateTimeHolder);
 
         // then
         assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "cancelReason")

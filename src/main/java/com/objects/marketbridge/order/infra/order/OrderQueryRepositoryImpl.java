@@ -1,14 +1,20 @@
-package com.objects.marketbridge.order.infra;
+package com.objects.marketbridge.order.infra.order;
 
 import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.QOrder;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.LockModeType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.objects.marketbridge.common.domain.QProduct.product;
+import static com.objects.marketbridge.order.domain.QOrder.*;
+import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
 
 @Repository
 public class OrderQueryRepositoryImpl implements OrderQueryRepository {
@@ -38,16 +44,15 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
     @Override
     public Optional<Order> findOrderWithDetailsAndProduct(Long orderId) {
-//        return Optional.ofNullable(
-//                queryFactory
-//                        .selectFrom(order)
-//                        .join(order.orderDetails, orderDetail).fetchJoin()
-//                        .join(orderDetail.product, product).fetchJoin()
-//                        .where(order.id.eq(orderId))
-//                        .setLockMode(LockModeType.PESSIMISTIC_WRITE)
-//                        .fetchOne()
-//        );
-        return null;
+        return Optional.ofNullable(
+                queryFactory
+                        .selectFrom(order)
+                        .join(order.orderDetails, orderDetail).fetchJoin()
+                        .join(orderDetail.product, product).fetchJoin()
+                        .where(order.id.eq(orderId))
+                        .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                        .fetchOne()
+        );
     }
 
     @Override

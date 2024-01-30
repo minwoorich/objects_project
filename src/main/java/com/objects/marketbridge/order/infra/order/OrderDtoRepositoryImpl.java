@@ -1,4 +1,4 @@
-package com.objects.marketbridge.order.infra;
+package com.objects.marketbridge.order.infra.order;
 
 import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.infra.dao.CancelReturnResponseDao;

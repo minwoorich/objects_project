@@ -44,7 +44,7 @@ public class OrderCancelReturnService {
 
     // TODO 트랜잭션 위치 고려해야함
     @Transactional
-    public CancelReturnResponseDto cancelReturnOrder(CancelRequestDto cancelRequestDto) {
+    public CancelReturnResponseDto confirmCancelReturn(CancelRequestDto cancelRequestDto) {
         InnerService innerService = new InnerService();
 
         Order order = innerService.cancelReturn(

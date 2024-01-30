@@ -27,7 +27,7 @@ public class OrderCancelReturnController {
 
     @PostMapping("/orders/cancel-return-flow/thank-you")
     public ApiResponse<OrderCancelReturnResponse> cancelReturnOrder(@RequestBody @Valid OrderCancelRequest request) {
-        return ApiResponse.ok(OrderCancelReturnResponse.of(orderCancelReturnService.cancelReturnOrder(request.toServiceRequest())));
+        return ApiResponse.ok(OrderCancelReturnResponse.of(orderCancelReturnService.confirmCancelReturn(request.toServiceRequest())));
     }
 
     @GetMapping("/orders/cancel-flow")
