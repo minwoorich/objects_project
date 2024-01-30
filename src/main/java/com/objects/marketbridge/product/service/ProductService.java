@@ -170,7 +170,7 @@ public class ProductService {
         for (String optionName : optionNames) {
             ProdOption prodOption = ProdOption.builder()
                     .product(productRepository.findById(product.getId()).get())
-                    .option(optionRepository.findByName(optionName))
+                    .option(optionRepository.findByName(optionName).get())
                     .build();
 
             prodOptionRepository.save(prodOption);
