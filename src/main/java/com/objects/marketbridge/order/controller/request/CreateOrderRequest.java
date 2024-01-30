@@ -52,14 +52,14 @@ public class CreateOrderRequest {
                 .build();
     }
 
-    public KakaoPayReadyRequest toKakaoReadyRequest(String orderno, Long memberId, String cid, String approvalUrl, String failUrl, String cancelUrl) {
+    public KakaoPayReadyRequest toKakaoReadyRequest(String orderNo, Long memberId, String cid, String approvalUrl, String failUrl, String cancelUrl) {
         return KakaoPayReadyRequest.builder()
                 .cid(cid)
                 .approvalUrl(approvalUrl)
                 .failUrl(failUrl)
                 .cancelUrl(cancelUrl)
                 .quantity(productValues.stream().mapToLong(ProductValue::getQuantity).sum())
-                .partnerOrderId(orderno)
+                .partnerOrderId(orderNo)
                 .partnerUserId(memberId.toString())
                 .itemName(orderName)
                 .taxFreeAmount(0L)

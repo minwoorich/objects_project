@@ -1,34 +1,29 @@
 package com.objects.marketbridge.domain.order.controller;
 
 import com.objects.marketbridge.common.config.KakaoPayConfig;
-import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
+import com.objects.marketbridge.common.domain.AddressValue;
+import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
+import com.objects.marketbridge.domain.order.RestDocsSupport;
 import com.objects.marketbridge.global.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.OrderController;
 import com.objects.marketbridge.order.controller.request.CreateOrderRequest;
 import com.objects.marketbridge.order.domain.Address;
-import com.objects.marketbridge.common.domain.AddressValue;
-import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.domain.order.RestDocsSupport;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.mock;
@@ -147,20 +142,28 @@ public class OrderControllerRestDocsTest extends RestDocsSupport {
 
     @DisplayName("주문을 생성하는 API")
     @Test
+    @WithMockCustomUser(id = 2L)
     void createOrder() throws Exception {
 
         // given
-        List<ProductValue> productValues = createProductValues();
-        CreateOrderRequest request = getCreateOrderRequest(productValues);
+        CreateOrderRequest createOrderRequest = getCreateOrderRequest(createProductValues());
+//        KakaoPayReadyRequest kakaoPayReadyRequest = KakaoPayReadyRequest.builder()
+//                .cid("cid")
+//                .partnerUserId(String.valueOf(2L))
+//                .build();
+        KakaoPayReadyResponse response = KakaoPayReadyResponse.builder()
+                .tid("tid")
+                .nextRedirectPcUrl("nextRedirectUrl")
+                .createdAt("createdAt")
+                .build();
 
-        given(kakaoPayService.ready(any(KakaoPayReadyRequest.class))).willReturn(any(KakaoPayReadyResponse.class));
-        given(kakaoPayConfig.createApprovalUrl("/payment")).willReturn("http://localhost:8080/payment/kakao-pay/approval");
-        given(kakaoPayConfig.getRedirectFailUrl()).willReturn("http://localhost:8080/kakao-pay/fail");
-        willDoNothing().given(createOrderService).create(request.toDto(1L, anyString()));
+        given(kakaoPayService.ready(any())).willReturn(response);
+        willDoNothing().given(createOrderService).create(any(CreateOrderDto.class));
 
         // when, then
-        mockMvc.perform(post("/orders/checkout")
-                .content(objectMapper.writeValueAsString(request))
+        mockMvc.perform(
+                post("/orders/checkout")
+                .content(objectMapper.writeValueAsString(createOrderRequest))
                 .contentType(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isOk())
@@ -222,6 +225,19 @@ public class OrderControllerRestDocsTest extends RestDocsSupport {
                 .build();
     }
 
+    @DisplayName("test")
+    @Test
+    @WithMockCustomUser(id = 2L, email = "test@email.com")
+    void test() throws Exception {
+        // TODO : @WithMockCustomUser 테스팅 계속해야함
+        // given
+        // when
+        mockMvc.perform(post("/test"))
+                .andExpect(status().isOk())
+                .andDo(print());
+        //then
+
+    }
 
 
     private List<ProductValue> createProductValues() {

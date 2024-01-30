@@ -1,6 +1,7 @@
 package com.objects.marketbridge.order.controller;
 
 import com.objects.marketbridge.common.config.KakaoPayConfig;
+import com.objects.marketbridge.common.security.domain.CustomUserDetails;
 import com.objects.marketbridge.order.domain.Address;
 import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
@@ -16,11 +17,13 @@ import com.objects.marketbridge.order.service.CreateOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,7 +74,8 @@ public class OrderController {
         String orderNo = UUID.randomUUID().toString();
 
         // 1. kakaoPaymentReadyService 호출
-        KakaoPayReadyResponse response = kakaoPayService.ready(createKakaoReadyRequest(orderNo, request, memberId));
+        KakaoPayReadyRequest kakaoReadyRequest = createKakaoReadyRequest(orderNo, request, memberId);
+        KakaoPayReadyResponse response = kakaoPayService.ready(kakaoReadyRequest);
         String tid = response.getTid();
 
         // 2. 주문 생성
@@ -88,5 +92,12 @@ public class OrderController {
         String approvalUrl = kakaoPayConfig.createApprovalUrl("/payment");
 
         return request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
+    }
+
+    @PostMapping("/test")
+    public ApiResponse<String> test(
+            @AuthenticationPrincipal CustomUserDetails userDetail) {
+
+        return ApiResponse.ok(userDetail.getEmail());
     }
 }
