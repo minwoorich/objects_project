@@ -74,7 +74,6 @@ public class OrderDetail extends BaseEntity {
         this.statusCode = statusCode;
     }
 
-
     public static OrderDetail create(String tid, Order order, Product product, String orderNo, Coupon coupon, Long quantity, Long price, String statusCode) {
 
         return OrderDetail.builder()
@@ -89,13 +88,19 @@ public class OrderDetail extends BaseEntity {
                 .build();
     }
 
-    public void cancel(String reason, String statusCode) {
-        if (Objects.equals(statusCode, DELIVERY_COMPLETED.getCode())) {
+    public Integer changeReasonAndStatus(String reason, String statusCode) {
+        // TODO 정책 정해야 함
+        if (Objects.equals(this.statusCode, DELIVERY_COMPLETED.getCode())) {
             throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
         }
         this.statusCode = statusCode;
         this.reason = reason;
-        this.product.increase(quantity);
+        this.product.increaseQuantity(quantity);
+        return totalAmount();
+    }
+
+    public Integer totalAmount() {
+        return (int) (price * quantity);
     }
 
     public void returnCoupon() {
@@ -109,4 +114,5 @@ public class OrderDetail extends BaseEntity {
     public void setProduct(Product product) {
         this.product = product;
     }
+
 }

@@ -27,6 +27,7 @@ import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class OrderCancelReturnService {
 
     private final DateTimeHolder dateTimeHolder;
@@ -45,25 +46,18 @@ public class OrderCancelReturnService {
     // TODO 트랜잭션 위치 고려해야함
     @Transactional
     public CancelReturnResponseDto confirmCancelReturn(CancelRequestDto cancelRequestDto) {
-        InnerService innerService = new InnerService();
+        Order order = orderQueryRepository.findById(cancelRequestDto.getOrderId())
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 주문이 없습니다."));
 
-        Order order = innerService.cancelReturn(
-                cancelRequestDto.getOrderId(),
-                cancelRequestDto.getCancelReason()
-        );
+        Integer cancelAmount = order.changeDetailsReasonAndStatus(cancelRequestDto.getCancelReason(), ORDER_CANCEL.getCode());
 
-        Payment payment = validPayment(cancelRequestDto.getOrderId());
+        order.returnCoupon();
 
-        RefundDto refundDto = refundService.refund(
-                payment,
-                cancelRequestDto.getCancelReason(),
-                order.getRealPrice()
-        );
+        RefundDto refundDto = refundService.refund(order.getTid(), cancelAmount);
 
         return CancelReturnResponseDto.of(order, refundDto);
     }
 
-    @Transactional(readOnly = true)
     public CancelResponseDto requestCancel(Long orderId, List<Long> productIds) {
         Order order = orderQueryRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("조회한 주문이 없습니다."));
         List<Product> products = validProducts(productIds);
@@ -73,7 +67,6 @@ public class OrderCancelReturnService {
         return CancelResponseDto.of(orderDetails, WOW.getText()); // TODO 맴버 조회해서 타입 넣기
     }
 
-    @Transactional(readOnly = true)
     public ReturnResponseDto requestReturn(Long orderId, List<Long> productIds) {
         List<Product> products = validProducts(productIds);
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrder_IdAndProductIn(orderId, products);
@@ -81,34 +74,12 @@ public class OrderCancelReturnService {
         return ReturnResponseDto.of(orderDetails, WOW.getText()); // TODO 맴버 조회해서 타입 넣기
     }
 
-    @Transactional(readOnly = true)
     public OrderCancelReturnDetailResponseDto findCancelReturnDetail(String orderNo, Long paymentId, List<Long> productIds) {
         Order order = validOrder(orderNo);
         List<OrderDetail> orderDetails = validOrderDetails(orderNo, productIds);
         Payment payment = vaildPayment(paymentId);
 
         return OrderCancelReturnDetailResponseDto.of(order, orderDetails, WOW.getText(), dateTimeHolder); // TODO 맴버 조회해서 타입 넣기
-    }
-
-    // TODO 객체로 따로 빼야함(임시로 사용)
-    class InnerService {
-        public Order cancelReturn(Long orderId, String reason) {
-            Order order = orderQueryRepository.findOrderWithDetailsAndProduct(orderId)
-                    .orElseThrow(() -> new IllegalArgumentException("해당하는 주문이 없습니다."));
-
-            order.cancelReturn(reason, ORDER_CANCEL.getCode());
-
-            order.returnCoupon();
-
-            return order;
-        }
-    }
-    private List<OrderDetail> validOrderDetails(String orderNo, List<Long> productIds) {
-        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
-        if (orderDetails.isEmpty()) {
-            throw new EntityNotFoundException("조회된 주문 상세가 없습니다.");
-        }
-        return orderDetails;
     }
 
     private Payment vaildPayment(Long paymentId) {
@@ -141,5 +112,27 @@ public class OrderCancelReturnService {
             throw new EntityNotFoundException("조회된 주문이 없습니다.");
         } return order;
     }
+
+    private List<OrderDetail> validOrderDetails(String orderNo, List<Long> productIds) {
+        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
+        if (orderDetails.isEmpty()) {
+            throw new EntityNotFoundException("조회된 주문 상세가 없습니다.");
+        }
+        return orderDetails;
+    }
+
+    //    // TODO 객체로 따로 빼야함(임시로 사용)
+//    class InnerService {
+//        public Integer confirmCancelReturn(Long orderId, String reason) {
+//            Order order = orderQueryRepository.findById(orderId)
+//                    .orElseThrow(() -> new IllegalArgumentException("해당하는 주문이 없습니다."));
+//
+//            Integer cancelAmount = order.changeDetailsReasonAndStatus(reason, ORDER_CANCEL.getCode());
+//
+//            order.returnCoupon();
+//
+//            return cancelAmount;
+//        }
+//    }
 
 }
