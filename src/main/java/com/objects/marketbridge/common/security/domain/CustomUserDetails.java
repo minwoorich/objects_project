@@ -1,4 +1,4 @@
-package com.objects.marketbridge.common.security.user;
+package com.objects.marketbridge.common.security.domain;
 
 import lombok.Builder;
 import lombok.Getter;
