@@ -77,11 +77,11 @@ public class Order extends BaseEntity {
                 .forEach(OrderDetail::returnCoupon);
     }
 
-    public void useCoupon(LocalDateTime useDate) {
+    public void useCoupon(LocalDateTime dateTime) {
 
         orderDetails.stream()
                 .filter(o -> o.getCoupon() != null)
-                .forEach(o -> o.useCoupon(useDate));
+                .forEach(o -> o.useCoupon(dateTime));
     }
 
     public void changeStatusCode(String statusCode) {

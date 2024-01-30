@@ -35,20 +35,20 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
     }
 
     @Override
-    public Order findWithOrderDetails(String orderNo) {
-        return orderJpaRepository.findWithOrderDetailsByOrderNo(orderNo).orElseThrow(EntityNotFoundException::new);
+    public Order findByOrderNoWithOrderDetails(String orderNo) {
+        return orderJpaRepository.findByOrderNoWithOrderDetails(orderNo).orElseThrow(EntityNotFoundException::new);
     }
 
     // orderId 로 가져오기
     @Override
-    public Order findWithOrderDetailsAndProduct(Long orderId) {
-        return orderJpaRepository.findWithOrderDetailsAndProduct(orderId).orElseThrow(EntityNotFoundException::new);
+    public Order findByIdWithOrderDetailsAndProduct(Long orderId) {
+        return orderJpaRepository.findByIdWithOrderDetailsAndProduct(orderId).orElseThrow(EntityNotFoundException::new);
     }
 
     // orderNo 로 가져오기
     @Override
-    public Order findWithOrderDetailsAndProduct(String orderNo) {
-        return orderJpaRepository.findWithOrderDetailsAndProduct(orderNo).orElseThrow(EntityNotFoundException::new);
+    public Order findByOrderNoWithOrderDetailsAndProduct(String orderNo) {
+        return orderJpaRepository.findByOrderNoWithOrderDetailsAndProduct(orderNo).orElseThrow(EntityNotFoundException::new);
     }
 
 //    @Override

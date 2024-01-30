@@ -29,7 +29,7 @@ public class Coupon extends BaseEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(mappedBy = "coupon")
+    @OneToMany(mappedBy = "coupon", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberCoupon> memberCoupons = new ArrayList<>();
 
     private Long count;

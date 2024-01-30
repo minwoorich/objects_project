@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class CreateOrderService {
         order.calcTotalDiscount(calcTotalDiscountService);
 
         // 4. MemberCoupon 의 isUsed 변경, 사용날짜 저장
-        order.useCoupon(order.getCreatedAt());
+        order.useCoupon(LocalDateTime.now());
 
         // 5. Product 의 stock 감소
         order.stockDecrease();

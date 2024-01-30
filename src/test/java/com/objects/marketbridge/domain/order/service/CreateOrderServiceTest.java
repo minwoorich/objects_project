@@ -18,6 +18,7 @@ import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.product.infra.ProductJpaRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,6 +51,7 @@ class CreateOrderServiceTest {
     @Autowired OrderCommendRepository orderCommendRepository;
     @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired MemberCouponRepository memberCouponRepository;
+    @Autowired EntityManager em;
 
     @BeforeEach
     void init(){
@@ -67,11 +69,15 @@ class CreateOrderServiceTest {
 
         // coupon 생성
         List<Coupon> coupons = createCoupons(products);
-        couponRepository.saveAll(coupons);
 
         // memberCoupon 생성
-        List<MemberCoupon> memberCoupons = createMemberCoupons(member, coupons);
-        memberCouponRepository.saveAll(memberCoupons);
+        List<MemberCoupon> memberCoupons = createMemberCoupons(member);
+
+        // MemberCoupon <-> Coupon 양방향 연관관계
+        coupons.get(0).addMemberCoupon(memberCoupons.get(0));
+        coupons.get(1).addMemberCoupon(memberCoupons.get(1));
+
+        couponRepository.saveAll(coupons);
 
     }
 
@@ -123,17 +129,15 @@ class CreateOrderServiceTest {
         return List.of(coupon1, coupon2);
     }
 
-    private List<MemberCoupon> createMemberCoupons(Member member, List<Coupon> coupons) {
+    private List<MemberCoupon> createMemberCoupons(Member member) {
 
         MemberCoupon memberCoupon1 = MemberCoupon.builder()
                 .member(member)
-                .coupon(coupons.get(0))
                 .usedDate(LocalDateTime.now())
                 .isUsed(false).build();
 
         MemberCoupon memberCoupon2 = MemberCoupon.builder()
                 .member(member)
-                .coupon(coupons.get(1))
                 .usedDate(LocalDateTime.now())
                 .isUsed(false).build();
 
@@ -255,6 +259,36 @@ class CreateOrderServiceTest {
             assertThat(orderDetail.getOrder()).isEqualTo(order);
         }
     }
+
+    @DisplayName("주문 생성시 총 할인 금액과 실제 결제금액을 계산해서 저장해야한다.")
+    @Test
+    void calcTotalDiscount(){
+
+        //given
+        Member member = memberRepository.findByEmail("hong@email.com");
+        Address address = addressRepository.findByMemberId(member.getId()).get(0);
+        Long defaultQuantity = 3L;
+        CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
+
+
+
+        //when
+        createOrderService.create(createOrderDto);
+        Order order = orderQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
+        Long totalUsedCoupon = getTotalUsedCoupon(order);
+
+        //then
+        assertThat(order.getTotalDiscount()).isEqualTo(totalUsedCoupon);
+        assertThat(order.getRealPrice()).isEqualTo(createOrderDto.getTotalOrderPrice()-totalUsedCoupon);
+    }
+
+    private  long getTotalUsedCoupon(Order order) {
+        return order.getOrderDetails().stream().filter(o -> o.getCoupon() != null)
+                .mapToLong(o -> o.getCoupon().getPrice())
+                .sum();
+    }
+
+
     @DisplayName("MemberCoupon의 사용상태와 사용날짜를 기록해야한다.")
     @Test
     void memberCouponUsage(){
@@ -264,17 +298,17 @@ class CreateOrderServiceTest {
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAll();
+
 
         //when
         createOrderService.create(createOrderDto);
-        List<MemberCoupon> memberCoupons = memberCouponRepository.findAll();
-        Order order = orderQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
         assertThat(memberCoupons).hasSize(2);
         assertThat(memberCoupons.get(0).getIsUsed()).isTrue();
         assertThat(memberCoupons.get(1).getIsUsed()).isTrue();
-        assertThat(memberCoupons.get(0).getUsedDate()).isEqualTo(order.getCreatedAt());
+        assertThat(memberCoupons.get(0).getUsedDate()).isNotNull();
         assertThat(memberCoupons.get(1).getUsedDate()).isNotNull();
     }
 

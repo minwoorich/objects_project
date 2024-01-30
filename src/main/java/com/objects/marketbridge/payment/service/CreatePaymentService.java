@@ -28,7 +28,7 @@ public class CreatePaymentService {
         paymentRepository.save(payment);
 
         // 2. Order - Payment 연관관계 매핑
-        Order order = orderQueryRepository.findWithOrderDetailsAndProduct(response.getPartnerOrderId());
+        Order order = orderQueryRepository.findByOrderNoWithOrderDetailsAndProduct(response.getPartnerOrderId());
         payment.linkOrder(order);
 
         // 3. orderDetail 의 statusCode 업데이트
