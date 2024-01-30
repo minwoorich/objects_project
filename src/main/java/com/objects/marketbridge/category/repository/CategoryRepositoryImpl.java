@@ -74,4 +74,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         return categoryJpaRepository.findAllByLevelAndParentId(level, parentId);
     }
 
+    @Override
+    public List<Category> findAllByNameAndParentId(String name, Long parentId) {
+        return categoryJpaRepository.findAllByNameAndParentId(name, parentId);
+    }
+
 }

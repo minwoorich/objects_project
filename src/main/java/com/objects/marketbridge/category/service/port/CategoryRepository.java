@@ -3,6 +3,7 @@ package com.objects.marketbridge.category.service.port;
 import com.objects.marketbridge.common.domain.Category;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CategoryRepository {
 
@@ -23,4 +24,6 @@ public interface CategoryRepository {
     List<Category> findAllByLevelAndParentIdIsNull(Long level);
 
     List<Category> findAllByLevelAndParentId(Long level, Long parentId);
+
+    List<Category> findAllByNameAndParentId(String name, Long parentId);
 }
