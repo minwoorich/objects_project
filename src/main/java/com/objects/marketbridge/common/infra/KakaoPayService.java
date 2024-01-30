@@ -38,6 +38,32 @@ public class KakaoPayService {
                 .body(KakaoPayReadyResponse.class);
     }
 
+    public KakaoPayReadyResponse testReady() {
+
+        KakaoPayReadyRequest request = KakaoPayReadyRequest.builder()
+                .cid(ONE_TIME_CID)
+                .partnerOrderId("order1")
+                .partnerUserId("1")
+                .itemName("가방")
+                .quantity(1L)
+                .totalAmount(1000L)
+                .taxFreeAmount(0L)
+                .approvalUrl(kakaoPayConfig.createApprovalUrl("/payment"))
+                .cancelUrl(kakaoPayConfig.getRedirectCancelUrl())
+                .failUrl(kakaoPayConfig.getRedirectFailUrl())
+                .build();
+
+        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
+
+        RestClient restClient = setup();
+
+        return restClient.post()
+                .uri(READY_END_POINT)
+                .body(requestMap)
+                .retrieve()
+                .body(KakaoPayReadyResponse.class);
+    }
+
 
     //인터페이스 -> 정기구독 정기용, 단건용
     public KakaoPayApproveResponse approve(KakaoPayApproveRequest request) {

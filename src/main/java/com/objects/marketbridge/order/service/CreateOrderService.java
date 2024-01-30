@@ -70,6 +70,7 @@ public class CreateOrderService {
 
             Product product = productRepository.findById(productValue.getProductId());
             // 쿠폰이 적용안된 product 가 존재할 경우 그냥 null 저장
+            // TODO : coupon가져올때 memberCoupon 도 가져오게끔 수정해야함
             Coupon coupon = (productValue.getCouponId() != null) ? couponRepository.findById(productValue.getCouponId()) : null ;
             String orderNo = order.getOrderNo();
             Long quantity = productValue.getQuantity();

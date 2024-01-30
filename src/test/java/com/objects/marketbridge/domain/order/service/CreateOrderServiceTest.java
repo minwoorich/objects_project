@@ -28,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -127,11 +128,13 @@ class CreateOrderServiceTest {
         MemberCoupon memberCoupon1 = MemberCoupon.builder()
                 .member(member)
                 .coupon(coupons.get(0))
+                .usedDate(LocalDateTime.now())
                 .isUsed(false).build();
 
         MemberCoupon memberCoupon2 = MemberCoupon.builder()
                 .member(member)
                 .coupon(coupons.get(1))
+                .usedDate(LocalDateTime.now())
                 .isUsed(false).build();
 
         return List.of(memberCoupon1, memberCoupon2);
@@ -261,11 +264,10 @@ class CreateOrderServiceTest {
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
-        List<MemberCoupon> memberCoupons = memberCouponRepository.findAll();
-        log.info("memberCoupon1 {}", memberCoupons.get(0).getUsedDate());
 
         //when
         createOrderService.create(createOrderDto);
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAll();
         Order order = orderQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
