@@ -80,6 +80,11 @@ public class Product extends BaseEntity{
                 .build();
     }
 
+    public void addProductImages(ProductImage productImage){
+        productImages.add(productImage);
+        productImage.setProduct(this);
+    }
+
     public Product updateProduct(Category category, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate) {
         this.category = category;
         this.isOwn = isOwn; // 로켓 true , 오픈 마켓 false

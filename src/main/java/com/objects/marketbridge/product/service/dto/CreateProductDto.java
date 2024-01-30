@@ -1,9 +1,12 @@
 package com.objects.marketbridge.product.service.dto;
 
 import com.objects.marketbridge.common.domain.Category;
+import com.objects.marketbridge.common.domain.ProductImage;
 import com.objects.marketbridge.product.controller.request.ProductCreateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class CreateProductDto {
@@ -17,9 +20,10 @@ public class CreateProductDto {
     private String thumbImg;
     private Long discountRate;
     private String productNo;
+    private List<ProductImage> productImages;
 
     @Builder
-    public CreateProductDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate, String productNo) {
+    public CreateProductDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate, String productNo,List<ProductImage> productImages) {
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
@@ -29,6 +33,7 @@ public class CreateProductDto {
         this.thumbImg = thumbImg;
         this.discountRate = discountRate;
         this.productNo = productNo;
+        this.productImages = productImages;
     }
 
     public static CreateProductDto fromRequest(ProductCreateRequestDto request){

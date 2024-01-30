@@ -11,4 +11,6 @@ public interface ProductImageRepository {
     public List<ProductImage> findAllByProductId(Long productId);
 
     void delete(ProductImage productImage);
+
+    void saveAll(List<ProductImage> productImages);
 }

@@ -30,4 +30,9 @@ public class ProductImageRepositoryImpl implements ProductImageRepository{
     public void delete(ProductImage productImage) {
         productImageJpaRepository.delete(productImage);
     }
+
+    @Override
+    public void saveAll(List<ProductImage> productImages) {
+        productImageJpaRepository.saveAll(productImages);
+    }
 }
