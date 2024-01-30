@@ -47,4 +47,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     public void saveAll(List<Product> products) {
         productJpaRepository.saveAll(products);
     }
+
+    @Override
+    public void delete(Product product) {
+        productJpaRepository.delete(product);
+    }
 }

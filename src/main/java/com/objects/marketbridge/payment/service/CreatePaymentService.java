@@ -14,14 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentService {
+public class CreatePaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final OrderCommendRepository orderCommendRepository;
     private final OrderQueryRepository orderQueryRepository;
 
     @Transactional
@@ -29,19 +28,16 @@ public class PaymentService {
 
         // 1. Payment 엔티티 생성
         Payment payment = createPayment(response);
+        paymentRepository.save(payment);
 
         // 2. Order - Payment 연관관계 매핑
-        Order order = orderQueryRepository.findByOrderNo(response.getPartnerOrderId());
+        Order order = orderQueryRepository.findByOrderNoWithOrderDetailsAndProduct(response.getPartnerOrderId());
         payment.linkOrder(order);
 
         // 3. orderDetail 의 statusCode 업데이트
-        List<OrderDetail> orderDetails = order.getOrderDetails();
-        orderDetails.forEach(o -> o.changeStatusCode(StatusCodeType.PAYMENT_COMPLETED.getCode()));
+        payment.changeStatusCode(PAYMENT_COMPLETED.getCode());
 
-        // 4. 영속성 저장
-        paymentRepository.save(payment);
-
-        //TODO : 5. 판매자 계좌 변경
+        //TODO : 4. 판매자 계좌 변경
     }
 
     private Payment createPayment(KakaoPayApproveResponse response) {

@@ -11,10 +11,9 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class CardInfo {
 
-    @JsonProperty("kakaopay_issuer_corp")
+    @JsonProperty("card_corp_name")
     private String cardIssuerName;
 
-    @JsonProperty("kakaopay_purchase_corp")
     private String cardPurchaseName;
 
     @JsonProperty("install_month")

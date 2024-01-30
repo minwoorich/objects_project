@@ -47,6 +47,11 @@ public class MemberCoupon extends BaseEntity {
         usedDate = null;
     }
 
+    public void useCoupon(LocalDateTime useDate) {
+        isUsed = !isUsed;
+        usedDate = useDate;
+    }
+
     public void setCoupon(Coupon coupon) {
         this.coupon = coupon;
     }

@@ -7,6 +7,7 @@ spring:
   config:
     activate:
       on-profile: local
+
   sql:
     init:
       mode: always
@@ -53,7 +54,7 @@ payment:
     admin_key : "38ef7d9f7a2a2a43c93de1f5bb3ea2f5"
     test_api_key : "13d26c106e60b48a0ae5d8280e0ceb10"
 
-host: "http://localhost:8080/"
+host: "http://localhost:8080"
 
 ---
 

@@ -1,7 +1,8 @@
 package com.objects.marketbridge.common.security.filter;
 
 import com.objects.marketbridge.common.security.constants.SecurityConst;
-import com.objects.marketbridge.common.security.jwt.JwtTokenProvider;
+import com.objects.marketbridge.common.security.constants.SecurityErrConst;
+import com.objects.marketbridge.common.security.service.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,8 +17,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
-import static com.objects.marketbridge.common.security.constants.SecurityErrConst.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // 유효하지만 레디스에 저장이 되지 않은 토큰이면 에러(재발급 요청이면 refreshtoken을 검증);
             String requestURI = request.getRequestURI();
             if (!jwtTokenProvider.checkTokenRegistration(requestURI, token, authentication)) {
-                throw new BadRequestException(AUTHENTICATION_TOKEN_ERR);
+                throw new BadRequestException(SecurityErrConst.AUTHENTICATION_TOKEN_ERR);
             }
 
             // spring security에서 현재 스레드의 보안 컨텍스트에 새로운 인증 정보를 설정

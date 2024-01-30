@@ -1,7 +1,7 @@
 package com.objects.marketbridge.global.security.jwt;
 
-import com.objects.marketbridge.common.security.jwt.JwtTokenProvider;
-import com.objects.marketbridge.common.security.jwt.JwtTokenService;
+import com.objects.marketbridge.common.security.service.JwtTokenProvider;
+import com.objects.marketbridge.common.security.service.JwtTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

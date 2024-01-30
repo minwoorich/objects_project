@@ -11,11 +11,18 @@ public interface OrderJpaRepository extends JpaRepository<Order, Long> {
 
     @EntityGraph(attributePaths = "orderDetails.product")
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails od LEFT JOIN FETCH od.product WHERE o.id = :orderId")
-    Optional<Order> findWithOrderDetailsAndProduct(@Param("orderId") Long orderId);
+    Optional<Order> findByIdWithOrderDetailsAndProduct(@Param("orderId") Long orderId);
+
+    @EntityGraph(attributePaths = "orderDetails.product")
+    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails od LEFT JOIN FETCH od.product WHERE o.orderNo = :orderNo")
+    Optional<Order> findByOrderNoWithOrderDetailsAndProduct(@Param("orderNo") String orderNo);
+
+    @Query("SELECT distinct o FROM Order o JOIN FETCH o.orderDetails WHERE o.id = :orderNo")
+    Optional<Order> findByOrderNoWithOrderDetails(@Param("orderNo") String orderNo);
 
     Optional<Order> findByOrderNo(String orderNo);
 
-    Order findByTid(String tid);
+    Optional<Order> findByTid(String tid);
 
     void deleteByOrderNo(String orderNo);
 

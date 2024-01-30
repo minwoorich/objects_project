@@ -197,21 +197,20 @@ CREATE TABLE status_code (
 DROP TABLE IF EXISTS orders;
 
 CREATE TABLE orders (
-                              order_id	bigint auto_increment
-                                  primary key,
+                        order_id	bigint auto_increment
+                            primary key,
 
-                              member_id	bigint	,
-                              address_id bigint	,
-                              order_name	varchar(255)	,
-                              order_no	varchar(255)	,
-                              total_used_coupon_price	bigint	,
-                              total_price	bigint	,
-                              real_price	bigint	,
-                              used_point    bigint  ,
-                              tid         varchar(255),
-                              created_at	timestamp	,
-                              updated_at	timestamp	,
-                              deleted_at	timestamp	
+                        member_id	bigint	,
+                        address_id bigint	,
+                        order_name	varchar(255)	,
+                        order_no	varchar(255)	,
+                        total_discount	bigint	,
+                        total_price	bigint	,
+                        real_price	bigint	,
+                        tid         varchar(255),
+                        created_at	datetime(6)	,
+                        updated_at	datetime(6)	,
+                        deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS order_detail;
