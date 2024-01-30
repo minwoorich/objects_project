@@ -21,4 +21,5 @@ public interface CategoryJpaRepository extends JpaRepository<Category, Long> {
 
     List<Category> findAllByLevelAndParentId(Long level, Long parentId);
 
+    List<Category> findAllByNameAndParentId(String name, Long parentId);
 }

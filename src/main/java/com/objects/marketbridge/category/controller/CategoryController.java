@@ -21,11 +21,6 @@ public class CategoryController {
         return categoryService.uploadExcelFile(file);
     }
 
-//    @GetMapping("/categories/all")
-//    public List<Category> getAllCategories() {
-//        return categoryService.getAllCategories();
-//    }
-
     @GetMapping("/categories/largeCategories")
     public List<CategoryReadResponseDto> getLargeCategories() {
         return categoryService.getLargeCategories();
@@ -40,6 +35,5 @@ public class CategoryController {
     public List<CategoryReadResponseDto> getSmallCategories(@PathVariable("parentId") Long parentId) {
         return categoryService.getSmallCategories(parentId);
     }
-
 
 }

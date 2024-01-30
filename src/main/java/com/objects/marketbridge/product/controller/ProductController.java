@@ -12,12 +12,23 @@ import com.objects.marketbridge.common.security.annotation.UserAuthorize;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
+
+
+
+    //상품들 Excel파일로 대량등록
+    @UserAuthorize
+    @PostMapping("/products/uploadExcel")
+    public String uploadExcelFile(@RequestParam("file") MultipartFile file){
+        return productService.uploadExcelFile(file);
+    }
+
 
 
     //상품등록

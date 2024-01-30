@@ -47,6 +47,10 @@ public class CategoryService {
                 }
                 // 필요한 열의 데이터 추출
                 String largeCategoryName = row.getCell(0).getStringCellValue(); // 대분류 카테고리 이름
+
+                // '/'를 '_'로 변경
+                largeCategoryName = largeCategoryName.replace("/", "_");
+
                 //대분류 등록
                 Category largeCategory;
                 if (categoryRepository.existsByName(largeCategoryName)) {
@@ -73,6 +77,10 @@ public class CategoryService {
                 // 필요한 열의 데이터 추출
                 String largeCategoryName = row.getCell(0).getStringCellValue(); // 대분류 카테고리 이름
                 String mediumCategoryName = row.getCell(1).getStringCellValue(); // 중분류 카테고리 이름
+
+                // '/'를 '_'로 변경
+                largeCategoryName = largeCategoryName.replace("/", "_");
+                mediumCategoryName = mediumCategoryName.replace("/", "_");
 
                 Category largeCategory = categoryRepository.findByNameAndLevel(largeCategoryName, 0L);
 
@@ -117,6 +125,12 @@ public class CategoryService {
                 String largeCategoryName = row.getCell(0).getStringCellValue(); // 대분류 카테고리 이름
                 String mediumCategoryName = row.getCell(1).getStringCellValue(); // 중분류 카테고리 이름
                 String smallCategoryName = row.getCell(2).getStringCellValue(); // 소분류 카테고리 이름
+
+                // '/'를 '_'로 변경
+                largeCategoryName = largeCategoryName.replace("/", "_");
+                mediumCategoryName = mediumCategoryName.replace("/", "_");
+                smallCategoryName = smallCategoryName.replace("/", "_");
+
                 // 중복 체크 및 소분류 등록
                 Category smallCategory;
                 List<Category> mediumCategoriesToBeCompared
@@ -147,28 +161,16 @@ public class CategoryService {
 
 
 
-//    public List<Category> getAllCategories() {
-//    }
-
-    //    public List<Category> getLargeCategories() {
-//        return categoryRepository.findAllByLevelAndParentIdIsNull(0L);
-//    }
     public List<CategoryReadResponseDto> getLargeCategories() {
         List<Category> categories = categoryRepository.findAllByLevelAndParentIdIsNull(0L);
         return convertToDtoList(categories);
     }
 
-    //    public List<Category> getMediumCategories(Long parentId) {
-//        return categoryRepository.findAllByLevelAndParentId(1L, parentId);
-//    }
     public List<CategoryReadResponseDto> getMediumCategories(Long parentId) {
         List<Category> categories = categoryRepository.findAllByLevelAndParentId(1L, parentId);
         return convertToDtoList(categories);
     }
 
-    //    public List<Category> getSmallCategories(Long parentId) {
-//        return categoryRepository.findAllByLevelAndParentId(2L, parentId);
-//    }
     public List<CategoryReadResponseDto> getSmallCategories(Long parentId) {
         List<Category> categories = categoryRepository.findAllByLevelAndParentId(2L, parentId);
         return convertToDtoList(categories);
