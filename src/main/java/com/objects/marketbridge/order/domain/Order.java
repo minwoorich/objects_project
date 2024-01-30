@@ -64,8 +64,10 @@ public class Order extends BaseEntity {
     }
 
     //== 비즈니스 로직==//
-    public void cancelReturn(String reason, String statusCode) {
-        orderDetails.forEach(orderDetail -> orderDetail.cancel(reason, statusCode));
+    public Integer changeDetailsReasonAndStatus(String reason, String statusCode) {
+        return orderDetails.stream()
+                .mapToInt(od -> od.changeReasonAndStatus(reason, statusCode))
+                .sum();
     }
 
     public void returnCoupon() {
@@ -86,7 +88,7 @@ public class Order extends BaseEntity {
         orderDetails.forEach(orderDetail -> orderDetail.changeStatusCode(statusCode));
     }
 
-    public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, String tid){
+    public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, String tid) {
 
         return Order.builder()
                 .member(member)
@@ -97,6 +99,7 @@ public class Order extends BaseEntity {
                 .tid(tid)
                 .build();
     }
+
     public void calcTotalDiscount(CalcTotalDiscountService service) {
 
         totalDiscount = service.calculate(this);

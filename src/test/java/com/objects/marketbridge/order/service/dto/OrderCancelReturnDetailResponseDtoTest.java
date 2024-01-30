@@ -149,7 +149,7 @@ class OrderCancelReturnDetailResponseDtoTest {
 //                .createTime(createTime)
 //                .updateTime(updateTime)
 //                .build();
-        TestDateTimeHolder testDateTimeHolder = new TestDateTimeHolder(LocalDateTime.now(), createTime, updateTime, updateTime);
+        DateTimeHolder testDateTimeHolder = new TestDateTimeHolder(LocalDateTime.now(), createTime, updateTime, updateTime);
 
         // when
         OrderCancelReturnDetailResponseDto result = OrderCancelReturnDetailResponseDto.of(order, orderDetails, BASIC.getText(), testDateTimeHolder);

@@ -32,23 +32,18 @@ public class CancelReturnResponseDto {
     }
 
     public static CancelReturnResponseDto of(Order order, RefundDto refundDto) {
-        return null;
+        return CancelReturnResponseDto.builder()
+                .orderId(order.getId())
+                .orderNumber(order.getOrderNo())
+                .totalPrice(order.getTotalPrice())
+                .cancellationDate(order.getUpdatedAt())
+                .refundInfo(RefundInfo.of(refundDto))
+                .cancelledItems(
+                        order.getOrderDetails().stream()
+                                .map(orderDetail -> ProductResponse.of(orderDetail.getProduct(), orderDetail.getQuantity()))
+                                .toList()
+                )
+                .build();
     }
-    
-    // TODO 참고
-//    public static OrderCancelReturnResponse of(Order order, RefundDto refundDto) {
-//        return OrderCancelReturnResponse.builder()
-//                .orderId(order.getId())
-//                .orderNumber(order.getOrderNo())
-//                .totalPrice(order.getTotalPrice())
-//                .cancellationDate(order.getUpdatedAt())
-//                .refundInfo(RefundInfo.of(refundDto))
-//                .cancelledItems(
-//                        order.getOrderDetails().stream()
-//                                .map(orderDetail -> ProductResponse.of(orderDetail.getProduct(), orderDetail.getQuantity()))
-//                                .collect(Collectors.toList())
-//                )
-//                .build();
-//
-//    }
+
 }
