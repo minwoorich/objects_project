@@ -2,24 +2,21 @@ package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.common.domain.MemberCoupon;
 import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.*;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
-import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.product.infra.CouponRepository;
-import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +26,7 @@ import java.util.List;
 @Slf4j
 public class CreateOrderService {
 
+    private final DateTimeHolder dateTimeHolder;
     private final OrderDetailCommendRepository orderDetailCommendRepository;
     private final OrderCommendRepository orderCommendRepository;
     private final ProductRepository productRepository;
@@ -50,7 +48,7 @@ public class CreateOrderService {
         order.calcTotalDiscount(calcTotalDiscountService);
 
         // 4. MemberCoupon 의 isUsed 변경, 사용날짜 저장
-        order.useCoupon(LocalDateTime.now());
+        order.useCoupon(dateTimeHolder.getCreateTime(order));
 
         // 5. Product 의 stock 감소
         order.stockDecrease();
@@ -76,7 +74,6 @@ public class CreateOrderService {
 
             Product product = productRepository.findById(productValue.getProductId());
             // 쿠폰이 적용안된 product 가 존재할 경우 그냥 null 저장
-            // TODO : coupon가져올때 memberCoupon 도 가져오게끔 수정해야함
             Coupon coupon = (productValue.getCouponId() != null) ? couponRepository.findById(productValue.getCouponId()) : null ;
             String orderNo = order.getOrderNo();
             Long quantity = productValue.getQuantity();

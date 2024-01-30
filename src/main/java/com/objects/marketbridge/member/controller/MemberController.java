@@ -1,16 +1,15 @@
 package com.objects.marketbridge.member.controller;
 
-import com.objects.marketbridge.member.service.MemberService;
+import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.common.security.annotation.GetAuthentication;
+import com.objects.marketbridge.common.security.domain.CustomUserDetails;
 import com.objects.marketbridge.common.security.dto.JwtTokenDto;
-import com.objects.marketbridge.common.interceptor.ApiResponse;
-import com.objects.marketbridge.common.security.user.CustomUserDetails;
 import com.objects.marketbridge.member.constant.MemberConst;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
-import com.objects.marketbridge.member.dto.FindPointDto;
 import com.objects.marketbridge.member.dto.SignInDto;
 import com.objects.marketbridge.member.dto.SignUpDto;
+import com.objects.marketbridge.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

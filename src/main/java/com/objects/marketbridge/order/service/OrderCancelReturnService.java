@@ -93,8 +93,7 @@ public class OrderCancelReturnService {
     // TODO 객체로 따로 빼야함(임시로 사용)
     class InnerService {
         public Order cancelReturn(Long orderId, String reason) {
-            Order order = orderQueryRepository.findOrderWithDetailsAndProduct(orderId)
-                    .orElseThrow(() -> new IllegalArgumentException("해당하는 주문이 없습니다."));
+            Order order = orderQueryRepository.findByIdWithOrderDetailsAndProduct(orderId);
 
             order.cancelReturn(reason, ORDER_CANCEL.getCode());
 

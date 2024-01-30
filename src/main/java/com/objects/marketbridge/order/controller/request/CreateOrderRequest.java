@@ -13,9 +13,6 @@ import java.util.List;
 public class CreateOrderRequest {
 
 //    @NotNull
-    private String orderId;
-
-//    @NotNull
     private Long amount;
 
 //    @NotNull
@@ -28,8 +25,7 @@ public class CreateOrderRequest {
     private List<ProductValue> productValues;
 
     @Builder
-    public CreateOrderRequest(String orderId, Long amount, Long addressId, String orderName, @Singular List<ProductValue> productValues) {
-        this.orderId = orderId;
+    private CreateOrderRequest(Long amount, Long addressId, String orderName, @Singular List<ProductValue> productValues) {
         this.amount = amount;
         this.addressId = addressId;
         this.orderName = orderName;
@@ -42,7 +38,6 @@ public class CreateOrderRequest {
                 .tid(tid)
                 .addressId(addressId)
                 .orderName(orderName)
-                .orderNo(orderId)
                 .totalOrderPrice(amount)
                 .productValues(productValues)
                 .build();
@@ -51,21 +46,20 @@ public class CreateOrderRequest {
     public static CreateOrderRequest of(CreateOrderDto dto) {
         return CreateOrderRequest.builder()
                 .addressId(dto.getAddressId())
-                .orderId(dto.getOrderNo())
                 .orderName(dto.getOrderName())
                 .amount(dto.getTotalOrderPrice())
                 .productValues(dto.getProductValues())
                 .build();
     }
 
-    public KakaoPayReadyRequest toKakaoReadyRequest(Long memberId, String cid, String approvalUrl, String failUrl, String cancelUrl) {
+    public KakaoPayReadyRequest toKakaoReadyRequest(String orderno, Long memberId, String cid, String approvalUrl, String failUrl, String cancelUrl) {
         return KakaoPayReadyRequest.builder()
                 .cid(cid)
                 .approvalUrl(approvalUrl)
                 .failUrl(failUrl)
                 .cancelUrl(cancelUrl)
                 .quantity(productValues.stream().mapToLong(ProductValue::getQuantity).sum())
-                .partnerOrderId(orderId)
+                .partnerOrderId(orderno)
                 .partnerUserId(memberId.toString())
                 .itemName(orderName)
                 .taxFreeAmount(0L)

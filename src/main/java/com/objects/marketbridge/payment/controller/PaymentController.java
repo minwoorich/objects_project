@@ -7,14 +7,16 @@ import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
-import com.objects.marketbridge.payment.service.QuitPaymentService;
 import com.objects.marketbridge.payment.service.CreatePaymentService;
-import com.objects.marketbridge.common.interceptor.ApiResponse;
+import com.objects.marketbridge.payment.service.QuitPaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import static com.objects.marketbridge.common.config.KakaoPayConfig.*;
+import static com.objects.marketbridge.common.config.KakaoPayConfig.ONE_TIME_CID;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +33,6 @@ public class PaymentController {
             @RequestParam(name = "pg_token") String pgToken,
             @PathVariable String orderNo) {
 
-        log.info("pgToken 출력! {}", pgToken);
         // TODO : order와 memeber 둘다 가져오는 쿼리메서드로 변경해야함
         Order order = orderQueryRepository.findByOrderNo(orderNo);
         KakaoPayApproveResponse response = kakaoPayService.approve(createKakaoRequest(order, pgToken));
