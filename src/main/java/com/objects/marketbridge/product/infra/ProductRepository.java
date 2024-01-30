@@ -11,7 +11,7 @@ public interface ProductRepository {
     List<Product> findByName(String name);
 
     void deleteAllInBatch();
-    void save(Product product);
+    Product save(Product product);
 
     List<Product> findAll();
 

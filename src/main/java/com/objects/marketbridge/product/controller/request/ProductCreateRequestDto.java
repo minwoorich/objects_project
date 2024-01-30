@@ -40,9 +40,11 @@ public class ProductCreateRequestDto {
     @NotNull
     private List<String> optionNames = new ArrayList<>();
 
+    private String productNo;
+
 
     @Builder
-    public ProductCreateRequestDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, List<String> itemImgUrls, List<String> detailImgUrls, Long discountRate, List<String> optionNames) {
+    public ProductCreateRequestDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, List<String> itemImgUrls, List<String> detailImgUrls, Long discountRate, List<String> optionNames,String productNo) {
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
@@ -54,5 +56,6 @@ public class ProductCreateRequestDto {
         this.detailImgUrls = detailImgUrls;
         this.discountRate = discountRate;
         this.optionNames = optionNames;
+        this.productNo = productNo;
     }
 }
