@@ -73,8 +73,8 @@ DROP TABLE IF EXISTS category;
 CREATE TABLE category (
                             category_id	bigint auto_increment
                                 primary key,
-                            prev_id	bigint	,
-                            next_id	bigint	,
+                            parent_id	bigint	,
+                            level	bigint	,
                             name	varchar(255)	,
                             created_at	timestamp	,
                             updated_at	timestamp	,

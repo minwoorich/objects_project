@@ -25,10 +25,17 @@ public class ProductImage extends BaseEntity{
     private Image image;
 
     @Builder
-
     private ProductImage(Product product, Image image) {
         this.product = product;
         this.image = image;
     }
+
+    public static ProductImage create(Product product, Image image){
+        return ProductImage.builder()
+                .product(product)
+                .image(image)
+                .build();
+    }
+
 }
 

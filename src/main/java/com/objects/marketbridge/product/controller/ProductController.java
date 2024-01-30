@@ -6,6 +6,7 @@ import com.objects.marketbridge.product.controller.response.ProductCreateRespons
 import com.objects.marketbridge.product.controller.response.ProductDeleteResponseDto;
 import com.objects.marketbridge.product.controller.response.ProductReadResponseDto;
 import com.objects.marketbridge.product.controller.response.ProductUpdateResponseDto;
+import com.objects.marketbridge.product.service.CreateProductService;
 import com.objects.marketbridge.product.service.ProductService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.UserAuthorize;
@@ -19,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductController {
 
     private final ProductService productService;
-
+    private final CreateProductService createProductService;
 
 
     //상품들 Excel파일로 대량등록
