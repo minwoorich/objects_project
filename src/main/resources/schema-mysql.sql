@@ -552,6 +552,7 @@ CREATE TABLE product (
                          is_subs	bit	,
                          stock	bigint	,
                          thumb_img	varchar(255)	,
+                         productNo	varchar(255)	,
                          discount_rate	bigint	,
                          created_at	datetime(6)	,
                          updated_at	datetime(6)	,

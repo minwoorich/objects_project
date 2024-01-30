@@ -1,7 +1,7 @@
 package com.objects.marketbridge.common.config;
 
 import com.objects.marketbridge.common.security.filter.JwtAuthenticationFilter;
-import com.objects.marketbridge.common.security.jwt.JwtTokenProvider;
+import com.objects.marketbridge.common.security.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
