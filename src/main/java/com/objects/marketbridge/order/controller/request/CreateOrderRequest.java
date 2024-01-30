@@ -36,14 +36,25 @@ public class CreateOrderRequest {
         this.productValues = productValues;
     }
 
-    public CreateOrderDto toDto(Long memberId) {
+    public CreateOrderDto toDto(Long memberId, String tid) {
         return CreateOrderDto.builder()
                 .memberId(memberId)
+                .tid(tid)
                 .addressId(addressId)
                 .orderName(orderName)
                 .orderNo(orderId)
                 .totalOrderPrice(amount)
                 .productValues(productValues)
+                .build();
+    }
+
+    public static CreateOrderRequest of(CreateOrderDto dto) {
+        return CreateOrderRequest.builder()
+                .addressId(dto.getAddressId())
+                .orderId(dto.getOrderNo())
+                .orderName(dto.getOrderName())
+                .amount(dto.getTotalOrderPrice())
+                .productValues(dto.getProductValues())
                 .build();
     }
 

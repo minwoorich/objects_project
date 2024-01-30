@@ -54,8 +54,12 @@ public class Payment extends BaseEntity {
                 .build();
     }
 
-    // Order와 연관관계 매핑 해주는 메서드 (단방향)
+    // 연관관계 메서드 (단방향)
     public void linkOrder(Order order) {
         this.order = order;
+    }
+
+    public void changeStatusCode(String statusCode) {
+        order.changeStatusCode(statusCode);
     }
 }

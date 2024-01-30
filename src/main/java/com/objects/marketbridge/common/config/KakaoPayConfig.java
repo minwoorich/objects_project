@@ -14,6 +14,8 @@ public class KakaoPayConfig {
 
     public static final String CANCEL_END_POINT = "/cancel";
 
+    public static final String ORDER_END_POINT = "/order";
+
     public static final String ONE_TIME_CID = "TC0ONETIME";
 
     public static final String SUBS_CID = "TCSUBSCRIP";

@@ -3,8 +3,10 @@ package com.objects.marketbridge.common.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class KakaoPayReadyResponse {
 
     private String tid; // 결제 고유 번호

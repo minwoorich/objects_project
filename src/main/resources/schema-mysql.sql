@@ -204,10 +204,9 @@ CREATE TABLE orders (
                             address_id bigint	,
                             order_name	varchar(255)	,
                             order_no	varchar(255)	,
-                            total_used_coupon_price	bigint	,
+                            total_discount	bigint	,
                             total_price	bigint	,
                             real_price	bigint	,
-                            used_point    bigint  ,
                             tid         varchar(255),
                             created_at	datetime(6)	,
                             updated_at	datetime(6)	,
@@ -545,6 +544,7 @@ DROP TABLE IF EXISTS product;
 
 CREATE TABLE product (
                          product_id	bigint auto_increment primary key,
+                         product_no varchar(255),
                          category_id	bigint	,
                          is_own	bit	,
                          name	varchar(255)	,

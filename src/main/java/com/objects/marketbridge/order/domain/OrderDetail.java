@@ -64,13 +64,16 @@ public class OrderDetail extends BaseEntity {
         this.cancelledAt = cancelledAt;
     }
 
+    // 연관관계 메서드
     public void setOrder(Order order) {
         this.order = order;
     }
 
+    // 비즈니스 로직
     public void changeStatusCode(String statusCode) {
         this.statusCode = statusCode;
     }
+
 
     public static OrderDetail create(String tid, Order order, Product product, String orderNo, Coupon coupon, Long quantity, Long price, String statusCode) {
 
@@ -97,6 +100,10 @@ public class OrderDetail extends BaseEntity {
 
     public void returnCoupon() {
         coupon.returnCoupon();
+    }
+
+    public void useCoupon(LocalDateTime useDate) {
+        coupon.useCoupon(useDate);
     }
 
     public void setProduct(Product product) {
