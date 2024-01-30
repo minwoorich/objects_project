@@ -97,7 +97,7 @@ public class ProductService {
 
                         for (Category mediumCategoryToBeCompared : mediumCategoriesToBeCompared) {
                             if (mediumCategoryToBeCompared.getName().equals(mediumCategoryName) &&
-                                    categoryRepository.findById(mediumCategoryToBeCompared.getParentId()).getName()
+                                    categoryRepository.findById(mediumCategoryToBeCompared.getParentId()).get().getName()
                                             .equals(largeCategoryName)) {
                                 smallCategory = smallCategoryToBeCompared;
 //                                mediumCategory = mediumCategoryToBeCompared;
@@ -139,7 +139,7 @@ public class ProductService {
     public Long createProduct(ProductCreateRequestDto productCreateRequestDto) {
 
         // category가 DB에 등록되어있다고 가정.
-        Category category = categoryRepository.findById(productCreateRequestDto.getCategoryId());
+        Category category = categoryRepository.findById(productCreateRequestDto.getCategoryId()).get();
 
         // ProductRequestDto에서 필요한 정보 추출하여 Product 엔터티 생성
         Product product = Product.builder()
@@ -169,7 +169,7 @@ public class ProductService {
         List<String> optionNames = productCreateRequestDto.getOptionNames();
         for (String optionName : optionNames) {
             ProdOption prodOption = ProdOption.builder()
-                    .product(productRepository.findById(product.getId()))
+                    .product(productRepository.findById(product.getId()).get())
                     .option(optionRepository.findByName(optionName))
                     .build();
 
@@ -187,7 +187,7 @@ public class ProductService {
     //    상품조회
     @Transactional
     public ProductReadResponseDto readProduct(Long id){
-        Product findProduct = productRepository.findById(id);
+        Product findProduct = productRepository.findById(id).get();
         ProductReadResponseDto productReadResponseDto = new ProductReadResponseDto(
                 findProduct.getId(),
                 findProduct.getCategory().getId(),
@@ -210,8 +210,8 @@ public class ProductService {
     public ProductUpdateResponseDto updateProduct(Long id, ProductUpdateRequestDto productUpdateRequestDto) {
 
         // 상품 ID에 해당하는 상품을 찾음
-        Product findProduct = productRepository.findById(id);
-        Category category = categoryRepository.findById(productUpdateRequestDto.getCategoryId());
+        Product findProduct = productRepository.findById(id).get();
+        Category category = categoryRepository.findById(productUpdateRequestDto.getCategoryId()).get();
 
         if(findProduct == null){
             throw new EntityNotFoundException("[상품수정] 해당 id에 해당하는 상품이 없습니다.");
@@ -279,7 +279,7 @@ public class ProductService {
     @Transactional
     // 상품삭제
     public void deleteProduct(Long id){
-        Product findProduct = productRepository.findById(id);
+        Product findProduct = productRepository.findById(id).get();
         deleteImageAndProductImage(id);
         productRepository.delete(findProduct);
     } //상품삭제 끝
@@ -301,8 +301,8 @@ public class ProductService {
             imageRepository.save(itemImg);
 
             ProductImage productImage = ProductImage.builder()
-                    .image(imageRepository.findById(itemImg.getId()))
-                    .product(productRepository.findById(product.getId()))
+                    .image(imageRepository.findById(itemImg.getId()).get())
+                    .product(productRepository.findById(product.getId()).get())
                     .build();
 
             productImageRepository.save(productImage);
@@ -317,8 +317,8 @@ public class ProductService {
             imageRepository.save(detailImg);
 
             ProductImage productImage = ProductImage.builder()
-                    .image(imageRepository.findById(detailImg.getId()))
-                    .product(productRepository.findById(product.getId()))
+                    .image(imageRepository.findById(detailImg.getId()).get())
+                    .product(productRepository.findById(product.getId()).get())
                     .build();
 
             productImageRepository.save(productImage);
@@ -353,8 +353,8 @@ public class ProductService {
             imageRepository.save(itemImg);
 
             ProductImage productImage = ProductImage.builder()
-                    .image(imageRepository.findById(itemImg.getId()))
-                    .product(productRepository.findById(product.getId()))
+                    .image(imageRepository.findById(itemImg.getId()).get())
+                    .product(productRepository.findById(product.getId()).get())
                     .build();
 
             productImageRepository.save(productImage);
@@ -368,8 +368,8 @@ public class ProductService {
             imageRepository.save(detailImg);
 
             ProductImage productImage = ProductImage.builder()
-                    .image(imageRepository.findById(detailImg.getId()))
-                    .product(productRepository.findById(product.getId()))
+                    .image(imageRepository.findById(detailImg.getId()).get())
+                    .product(productRepository.findById(product.getId()).get())
                     .build();
 
             productImageRepository.save(productImage);
