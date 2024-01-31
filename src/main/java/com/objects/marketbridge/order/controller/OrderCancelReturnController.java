@@ -1,7 +1,9 @@
 package com.objects.marketbridge.order.controller;
 
 
+import com.objects.marketbridge.common.domain.Membership;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.order.controller.request.OrderCancelRequest;
 import com.objects.marketbridge.order.controller.response.OrderCancelResponse;
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnDetailResponse;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.objects.marketbridge.common.domain.Membership.WOW;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/orders")
@@ -25,26 +29,27 @@ public class OrderCancelReturnController {
 
     private final OrderCancelReturnService orderCancelReturnService;
     private final OrderDtoRepository orderDtoRepository;
+    private final DateTimeHolder dateTimeHolder;
 
     @PostMapping("/cancel-return-flow/thank-you")
     public ApiResponse<OrderCancelReturnResponse> cancelReturnOrder(@RequestBody @Valid OrderCancelRequest request) {
-        return ApiResponse.ok(OrderCancelReturnResponse.of(orderCancelReturnService.confirmCancelReturn(request.toServiceRequest())));
+        return ApiResponse.ok(OrderCancelReturnResponse.of(orderCancelReturnService.confirmCancelReturn(request.toServiceRequest(), dateTimeHolder)));
     }
 
     @GetMapping("/cancel-flow")
     public ApiResponse<OrderCancelResponse> requestCancelOrder(
-            @RequestParam(name = "orderId") Long orderId,
+            @RequestParam(name = "orderNo") String orderNo,
             @RequestParam(name = "productIds") List<Long> productIds
     ) {
-        return ApiResponse.ok(OrderCancelResponse.of(orderCancelReturnService.requestCancel(orderId, productIds)));
+        return ApiResponse.ok(OrderCancelResponse.of(orderCancelReturnService.requestCancel(orderNo, productIds, WOW.getText())));
     }
 
     @GetMapping("/return-flow")
     public ApiResponse<OrderReturnResponse> requestReturnOrder(
-            @RequestParam(name = "orderId") Long orderId,
+            @RequestParam(name = "orderNo") String orderNo,
             @RequestParam(name = "productIds") List<Long> productIds
     ) {
-        return ApiResponse.ok(OrderReturnResponse.of(orderCancelReturnService.requestReturn(orderId, productIds)));
+        return ApiResponse.ok(OrderReturnResponse.of(orderCancelReturnService.requestReturn(orderNo, productIds, WOW.getText())));
     }
 
     @GetMapping("/cancel-return/list")
@@ -62,6 +67,6 @@ public class OrderCancelReturnController {
             @PathVariable(name = "orderNo") String orderNo,
             @RequestParam(name = "productIds") List<Long> productIds
     ) {
-        return ApiResponse.ok(OrderCancelReturnDetailResponse.of(orderCancelReturnService.findCancelReturnDetail(orderNo, productIds)));
+        return ApiResponse.ok(OrderCancelReturnDetailResponse.of(orderCancelReturnService.findCancelReturnDetail(orderNo, productIds, WOW.getText(), dateTimeHolder)));
     }
 }
