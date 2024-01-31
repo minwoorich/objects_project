@@ -93,11 +93,4 @@ public class OrderController {
 
         return request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
     }
-
-    @PostMapping("/test")
-    public ApiResponse<String> test(
-            @AuthenticationPrincipal CustomUserDetails userDetail) {
-
-        return ApiResponse.ok(userDetail.getEmail());
-    }
 }
