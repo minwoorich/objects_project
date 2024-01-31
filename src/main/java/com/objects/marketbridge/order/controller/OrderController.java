@@ -1,6 +1,7 @@
 package com.objects.marketbridge.order.controller;
 
 import com.objects.marketbridge.common.config.KakaoPayConfig;
+import com.objects.marketbridge.common.security.domain.CustomUserDetails;
 import com.objects.marketbridge.order.domain.Address;
 import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
@@ -13,16 +14,18 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.request.CreateOrderRequest;
 import com.objects.marketbridge.order.controller.response.CheckoutResponse;
 import com.objects.marketbridge.order.service.CreateOrderService;
-import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 import static com.objects.marketbridge.common.config.KakaoPayConfig.ONE_TIME_CID;
 import static com.objects.marketbridge.common.exception.error.ErrorCode.SHIPPING_ADDRESS_NOT_REGISTERED;
@@ -67,8 +70,12 @@ public class OrderController {
             @AuthMemberId Long memberId,
             @Valid @RequestBody CreateOrderRequest request) {
 
+        // 0. orderNo 생성
+        String orderNo = UUID.randomUUID().toString();
+
         // 1. kakaoPaymentReadyService 호출
-        KakaoPayReadyResponse response = kakaoPayService.ready(createKakaoReadyRequest(request, memberId));
+        KakaoPayReadyRequest kakaoReadyRequest = createKakaoReadyRequest(orderNo, request, memberId);
+        KakaoPayReadyResponse response = kakaoPayService.ready(kakaoReadyRequest);
         String tid = response.getTid();
 
         // 2. 주문 생성
@@ -77,13 +84,13 @@ public class OrderController {
         return ApiResponse.ok(response);
     }
 
-    private KakaoPayReadyRequest createKakaoReadyRequest(CreateOrderRequest request, Long memberId) {
+    private KakaoPayReadyRequest createKakaoReadyRequest(String orderNo, CreateOrderRequest request, Long memberId) {
 
         String cid = ONE_TIME_CID;
         String cancelUrl = kakaoPayConfig.getRedirectCancelUrl();
         String failUrl = kakaoPayConfig.getRedirectFailUrl();
         String approvalUrl = kakaoPayConfig.createApprovalUrl("/payment");
 
-        return request.toKakaoReadyRequest(memberId, cid, approvalUrl, failUrl, cancelUrl);
+        return request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
     }
 }

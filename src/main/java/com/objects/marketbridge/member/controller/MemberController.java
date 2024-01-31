@@ -8,7 +8,6 @@ import com.objects.marketbridge.common.security.dto.JwtTokenDto;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.member.constant.MemberConst;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
-import com.objects.marketbridge.member.dto.FindPointDto;
 import com.objects.marketbridge.member.dto.SignInDto;
 import com.objects.marketbridge.member.dto.SignUpDto;
 import jakarta.validation.Valid;
