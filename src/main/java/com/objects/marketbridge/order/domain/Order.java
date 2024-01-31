@@ -3,6 +3,7 @@ package com.objects.marketbridge.order.domain;
 import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.payment.domain.Payment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -47,6 +48,9 @@ public class Order extends BaseEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<OrderDetail> orderDetails = new ArrayList<>();
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Payment payment;
+
     @Builder
     public Order(Member member, Address address, String orderName, String orderNo, Long realPrice, Long totalPrice, Long totalDiscount, String tid) {
         this.member = member;
@@ -59,9 +63,15 @@ public class Order extends BaseEntity {
         this.tid = tid;
     }
 
+    // ==연관관계 편의 메서드==//
     public void addOrderDetail(OrderDetail orderDetail) {
         orderDetails.add(orderDetail);
         orderDetail.setOrder(this);
+    }
+
+    public void linkPayment(Payment payment) {
+        this.payment = payment;
+        payment.linkOrder(this);
     }
 
     //== 비즈니스 로직==//

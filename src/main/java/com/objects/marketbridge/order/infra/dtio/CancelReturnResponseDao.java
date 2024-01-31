@@ -1,4 +1,4 @@
-package com.objects.marketbridge.order.infra.dao;
+package com.objects.marketbridge.order.infra.dtio;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;

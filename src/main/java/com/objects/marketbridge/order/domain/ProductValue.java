@@ -10,13 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductValue {
     Long productId;
+    Long sellerId;
     Long couponId;
     Long quantity;
     String deliveredDate;
 
     @Builder
-    private ProductValue(Long productId, Long couponId, Long quantity, String deliveredDate) {
+    private ProductValue(Long productId, Long sellerId, Long couponId, Long quantity, String deliveredDate) {
         this.productId = productId;
+        this.sellerId = sellerId;
         this.couponId = couponId;
         this.quantity = quantity;
         this.deliveredDate = deliveredDate;

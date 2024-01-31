@@ -38,6 +38,11 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
     }
 
     @Override
+    public Order findByOrderNoWithMember(String orderNo) {
+        return orderJpaRepository.findByOrderNoWithMember(orderNo).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
     public Order findByOrderNoWithOrderDetails(String orderNo) {
         return orderJpaRepository.findByOrderNoWithOrderDetails(orderNo).orElseThrow(EntityNotFoundException::new);
     }

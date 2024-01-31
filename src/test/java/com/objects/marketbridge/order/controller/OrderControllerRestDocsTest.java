@@ -2,17 +2,14 @@ package com.objects.marketbridge.order.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.config.KakaoPayConfig;
-import com.objects.marketbridge.common.domain.AddressValue;
-import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
-import com.objects.marketbridge.common.security.SpringSecurityTestConfig;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.controller.request.CreateOrderRequest;
-import com.objects.marketbridge.order.domain.Address;
+import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
+import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
 import com.objects.marketbridge.order.domain.ProductValue;
+import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +18,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -30,7 +26,6 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -38,9 +33,9 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -56,13 +51,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 public class OrderControllerRestDocsTest  {
 
-    @Autowired private MockMvc mockMvc;
-    @Autowired private ObjectMapper objectMapper;
+    @Autowired MockMvc mockMvc;
+    @Autowired ObjectMapper objectMapper;
 
-    @MockBean MemberRepository memberRepository;
-    @MockBean KakaoPayConfig kakaoPayConfig;
+    @MockBean CreateCheckoutService createCheckoutService;
     @MockBean CreateOrderService createOrderService;
+    @MockBean KakaoPayConfig kakaoPayConfig;
     @MockBean KakaoPayService kakaoPayService;
+
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -78,10 +74,17 @@ public class OrderControllerRestDocsTest  {
     void getCheckout() throws Exception {
 
         // given
-        List<Address> addresses = getAddresses();
-        Member member = createMember(addresses);
-        when(memberRepository.findByIdWithAddresses(any())).thenReturn(member);
+        CreateCheckoutHttp.Response response = CreateCheckoutHttp.Response.builder()
+                .phoneNo("010-1234-1234")
+                .name("홍길동")
+                .city("서울")
+                .street("세종대로")
+                .zipcode("12345")
+                .detail("민들레 아파트 110동 1234호")
+                .alias("우리집")
+                .build();
 
+        given(createCheckoutService.create(anyLong())).willReturn(response);
         // when, then
         mockMvc.perform(get("/orders/checkout")
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken"))
@@ -98,68 +101,23 @@ public class OrderControllerRestDocsTest  {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                                         .description("응답 데이터"),
-                                fieldWithPath("data.address").type(JsonFieldType.OBJECT)
-                                        .description("배송지 정보"),
 
-                                fieldWithPath("data.address.phoneNo").type(JsonFieldType.STRING)
+                                fieldWithPath("data.phoneNo").type(JsonFieldType.STRING)
                                         .description("수신인 핸드폰 번호"),
-                                fieldWithPath("data.address.name").type(JsonFieldType.STRING)
+                                fieldWithPath("data.name").type(JsonFieldType.STRING)
                                         .description("수신인 이름"),
-                                fieldWithPath("data.address.city").type(JsonFieldType.STRING)
+                                fieldWithPath("data.city").type(JsonFieldType.STRING)
                                         .description("시"),
-                                fieldWithPath("data.address.street").type(JsonFieldType.STRING)
+                                fieldWithPath("data.street").type(JsonFieldType.STRING)
                                         .description("도로명"),
-                                fieldWithPath("data.address.zipcode").type(JsonFieldType.STRING)
+                                fieldWithPath("data.zipcode").type(JsonFieldType.STRING)
                                         .description("우편번호"),
-                                fieldWithPath("data.address.detail").type(JsonFieldType.STRING)
+                                fieldWithPath("data.detail").type(JsonFieldType.STRING)
                                         .description("상세 주소"),
-                                fieldWithPath("data.address.alias").type(JsonFieldType.STRING)
+                                fieldWithPath("data.alias").type(JsonFieldType.STRING)
                                         .description("배송지 별칭")
                         )
                 ));
-    }
-
-    private Member createMember(List<Address> addresses) {
-        Member member = Member.builder()
-                .id(1L)
-                .email("member2@example.com")
-                .password("1234")
-                .name("홍길동")
-                .build();
-
-        // 연관관계 매핑
-        for (Address addr : addresses) {
-            addr.setMember(member);
-        }
-
-        return addresses.get(0).getMember();
-    }
-
-    private List<Address> getAddresses() {
-
-        AddressValue addressValue = AddressValue.builder()
-                .name("홍길동")
-                .phoneNo("01012341234")
-                .city("서울")
-                .street("상도로")
-                .zipcode("12345")
-                .detail("101동 1212호")
-                .alias("우리집")
-                .build();
-
-        Address defaultAddr = Address.builder().
-                addressValue(addressValue)
-                .isDefault(true).build();
-
-        Address nonDefaultAddr1 = Address.builder().
-                addressValue(addressValue)
-                .isDefault(false).build();
-
-        Address nonDefaultAddr2 = Address.builder().
-                addressValue(addressValue)
-                .isDefault(false).build();
-
-        return List.of(defaultAddr, nonDefaultAddr1, nonDefaultAddr2);
     }
 
     @DisplayName("주문을 생성하는 API")
@@ -168,7 +126,7 @@ public class OrderControllerRestDocsTest  {
     void createOrder() throws Exception {
 
         // given
-        CreateOrderRequest createOrderRequest = getCreateOrderRequest(createProductValues());
+        CreateOrderHttp.Request createOrderRequest = getCreateOrderRequest(createProductValues());
         KakaoPayReadyResponse response = KakaoPayReadyResponse.builder()
                 .tid("tid")
                 .nextRedirectPcUrl("nextRedirectPcUrl")
@@ -208,6 +166,8 @@ public class OrderControllerRestDocsTest  {
                                         .description("상품 아이디"),
                                 fieldWithPath("productValues[].couponId").type(JsonFieldType.NUMBER)
                                         .description("사용한 쿠폰 아이디"),
+                                fieldWithPath("productValues[].sellerId").type(JsonFieldType.NUMBER)
+                                        .description("판매자 아이디"),
                                 fieldWithPath("productValues[].quantity").type(JsonFieldType.NUMBER)
                                         .description("주문 상품 수량"),
                                 fieldWithPath("productValues[].deliveredDate").type(JsonFieldType.STRING)
@@ -240,8 +200,8 @@ public class OrderControllerRestDocsTest  {
                         ));
     }
 
-    private CreateOrderRequest getCreateOrderRequest(List<ProductValue> productValues) {
-        return CreateOrderRequest.builder()
+    private CreateOrderHttp.Request getCreateOrderRequest(List<ProductValue> productValues) {
+        return CreateOrderHttp.Request.builder()
                 .amount(20000L)
                 .addressId(1L)
                 .orderName("가방외 1건")
@@ -252,12 +212,14 @@ public class OrderControllerRestDocsTest  {
     private List<ProductValue> createProductValues() {
         ProductValue productValue1 = ProductValue.builder()
                 .deliveredDate("2024-01-21")
+                .sellerId(1L)
                 .couponId(1L)
                 .productId(1L)
                 .quantity(1L).build();
 
         ProductValue productValue2 = ProductValue.builder()
                 .deliveredDate("2024-01-21")
+                .sellerId(2L)
                 .couponId(2L)
                 .productId(2L)
                 .quantity(2L).build();

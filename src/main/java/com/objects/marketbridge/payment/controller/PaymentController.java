@@ -7,6 +7,7 @@ import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.payment.controller.dto.CompleteOrderHttp;
 import com.objects.marketbridge.payment.service.CreatePaymentService;
 import com.objects.marketbridge.payment.service.QuitPaymentService;
 import lombok.RequiredArgsConstructor;
@@ -26,20 +27,18 @@ public class PaymentController {
     private final CreatePaymentService createPaymentService;
     private final KakaoPayService kakaoPayService;
     private final OrderQueryRepository orderQueryRepository;
-    private final QuitPaymentService quitPaymentService;
 
     @GetMapping("/payment/kakao-pay/approval/{orderNo}")
-    public ApiResponse<KakaoPayApproveResponse> kakaoPaymentApproved(
+    public ApiResponse<CompleteOrderHttp.Response> createPayment(
             @RequestParam(name = "pg_token") String pgToken,
             @PathVariable(name = "orderNo") String orderNo) {
 
-        // TODO : order와 memeber 둘다 가져오는 쿼리메서드로 변경해야함
-        Order order = orderQueryRepository.findByOrderNo(orderNo);
-        KakaoPayApproveResponse response = kakaoPayService.approve(createKakaoRequest(order, pgToken));
+        // 1. kakaoPayService 로 결제 승인 요청 보내기
+        Order order = orderQueryRepository.findByOrderNoWithMember(orderNo);
+        KakaoPayApproveResponse kakaoResponse = kakaoPayService.approve(createKakaoRequest(order, pgToken));
 
         // 2. Payment 생성 및 OrderDetails 업데이트
-        createPaymentService.create(response);
-
+        CompleteOrderHttp.Response response = createPaymentService.create(kakaoResponse);
 
         return ApiResponse.ok(response);
     }
@@ -60,8 +59,8 @@ public class PaymentController {
     public ApiResponse<KakaoPayOrderResponse> kakaoPaymentFail(@PathVariable(name = "orderNo") String orderNo){
 
         Order order = orderQueryRepository.findByOrderNo(orderNo);
-
         KakaoPayOrderResponse response = kakaoPayService.getOrders(order.getTid(), ONE_TIME_CID);
+        // TODO : 조회 후 status가 FAIL_PAYMENT 일 경우 후처리 로직 만들어야함
 
         return ApiResponse.ok(response);
     }

@@ -56,6 +56,14 @@ public class Member extends BaseEntity {
         this.isAgree = isAgree;
     }
 
+    // Member <-> Address 연관관계 편의 메서드
+    public void addAddress(Address address) {
+        if (!this.addresses.contains(address)) {
+            this.addresses.add(address);
+        }
+        address.setMember(this);
+    }
+
     public void changePoint(Point point) {
         this.point = point;
     }

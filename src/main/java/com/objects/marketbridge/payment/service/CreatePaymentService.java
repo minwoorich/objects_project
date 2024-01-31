@@ -2,10 +2,8 @@ package com.objects.marketbridge.payment.service;
 
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
 import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.domain.StatusCodeType;
-import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.payment.controller.dto.CompleteOrderHttp;
 import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import com.objects.marketbridge.payment.domain.Payment;
@@ -13,6 +11,8 @@ import com.objects.marketbridge.payment.service.port.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
 
@@ -24,7 +24,7 @@ public class CreatePaymentService {
     private final OrderQueryRepository orderQueryRepository;
 
     @Transactional
-    public void create(KakaoPayApproveResponse response) {
+    public CompleteOrderHttp.Response create(KakaoPayApproveResponse response) {
 
         // 1. Payment 엔티티 생성
         Payment payment = createPayment(response);
@@ -32,12 +32,17 @@ public class CreatePaymentService {
 
         // 2. Order - Payment 연관관계 매핑
         Order order = orderQueryRepository.findByOrderNoWithOrderDetailsAndProduct(response.getPartnerOrderId());
-        payment.linkOrder(order);
+        order.linkPayment(payment);
 
         // 3. orderDetail 의 statusCode 업데이트
         payment.changeStatusCode(PAYMENT_COMPLETED.getCode());
 
-        //TODO : 4. 판매자 계좌 변경
+        //TODO
+        // 4. 판매자 계좌 변경
+        // 5. delivery 생성
+
+        // TODO : payment
+        return CompleteOrderHttp.Response.of(payment);
     }
 
     private Payment createPayment(KakaoPayApproveResponse response) {
@@ -47,7 +52,8 @@ public class CreatePaymentService {
         String tid = response.getTid();
         CardInfo cardInfo = response.getCardInfo();
         Amount amount = response.getAmount();
+        LocalDateTime approvedAt = response.getApprovedAt();
 
-        return Payment.create(orderNo, paymentMethod, tid, cardInfo, amount);
+        return Payment.create(orderNo, paymentMethod, tid, cardInfo, amount, approvedAt);
     }
 }

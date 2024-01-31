@@ -1,4 +1,4 @@
-package com.objects.marketbridge.order.infra.dao;
+package com.objects.marketbridge.order.infra.dtio;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
