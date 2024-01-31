@@ -32,7 +32,7 @@ public class CreatePaymentService {
 
         // 2. Order - Payment 연관관계 매핑
         Order order = orderQueryRepository.findByOrderNoWithOrderDetailsAndProduct(response.getPartnerOrderId());
-        payment.linkOrder(order);
+        order.linkPayment(payment);
 
         // 3. orderDetail 의 statusCode 업데이트
         payment.changeStatusCode(PAYMENT_COMPLETED.getCode());
@@ -41,6 +41,7 @@ public class CreatePaymentService {
         // 4. 판매자 계좌 변경
         // 5. delivery 생성
 
+        // TODO : payment
         return CompleteOrderHttp.Response.of(payment);
     }
 
