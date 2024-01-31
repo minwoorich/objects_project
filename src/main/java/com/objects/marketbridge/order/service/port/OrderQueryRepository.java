@@ -12,9 +12,12 @@ public interface OrderQueryRepository {
 
     Order findByOrderNo(String orderNo);
 
+    Order findByOrderNoWithMember(String orderNo);
+
     Order findByOrderNoWithOrderDetails(String orderNo);
 
     Order findByIdWithOrderDetailsAndProduct(Long orderId);
+
     Order findByOrderNoWithOrderDetailsAndProduct(String orderNo);
 
 //    Optional<Order> findWithOrderDetailsAndProduct(Long orderId);

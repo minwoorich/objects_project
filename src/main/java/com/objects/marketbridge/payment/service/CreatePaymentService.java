@@ -1,6 +1,7 @@
 package com.objects.marketbridge.payment.service;
 
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
+import com.objects.marketbridge.order.controller.response.OrderCompletedResponse;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.StatusCodeType;
@@ -24,7 +25,7 @@ public class CreatePaymentService {
     private final OrderQueryRepository orderQueryRepository;
 
     @Transactional
-    public void create(KakaoPayApproveResponse response) {
+    public OrderCompletedResponse create(KakaoPayApproveResponse response) {
 
         // 1. Payment 엔티티 생성
         Payment payment = createPayment(response);
@@ -38,6 +39,10 @@ public class CreatePaymentService {
         payment.changeStatusCode(PAYMENT_COMPLETED.getCode());
 
         //TODO : 4. 판매자 계좌 변경
+
+
+
+        return null;
     }
 
     private Payment createPayment(KakaoPayApproveResponse response) {

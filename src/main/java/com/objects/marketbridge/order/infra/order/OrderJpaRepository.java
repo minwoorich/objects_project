@@ -17,10 +17,13 @@ public interface OrderJpaRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderDetails od LEFT JOIN FETCH od.product WHERE o.orderNo = :orderNo")
     Optional<Order> findByOrderNoWithOrderDetailsAndProduct(@Param("orderNo") String orderNo);
 
-    @Query("SELECT distinct o FROM Order o JOIN FETCH o.orderDetails WHERE o.id = :orderNo")
+    @Query("SELECT distinct o FROM Order o JOIN FETCH o.orderDetails WHERE o.orderNo = :orderNo")
     Optional<Order> findByOrderNoWithOrderDetails(@Param("orderNo") String orderNo);
 
     Optional<Order> findByOrderNo(String orderNo);
+
+    @Query("select o from Order o join fetch o.member where o.orderNo = :orderNo")
+    Optional<Order> findByOrderNoWithMember(String orderNo);
 
     Optional<Order> findByTid(String tid);
 

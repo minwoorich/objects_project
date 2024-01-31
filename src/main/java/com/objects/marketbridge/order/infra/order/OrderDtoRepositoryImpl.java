@@ -1,10 +1,10 @@
 package com.objects.marketbridge.order.infra.order;
 
 import com.objects.marketbridge.order.domain.StatusCodeType;
-import com.objects.marketbridge.order.infra.dao.CancelReturnResponseDao;
-import com.objects.marketbridge.order.infra.dao.DetailResponseDao;
-import com.objects.marketbridge.order.infra.dao.QCancelReturnResponseDao;
-import com.objects.marketbridge.order.infra.dao.QDetailResponseDao;
+import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDao;
+import com.objects.marketbridge.order.infra.dtio.DetailResponseDao;
+import com.objects.marketbridge.order.infra.dtio.QCancelReturnResponseDao;
+import com.objects.marketbridge.order.infra.dtio.QDetailResponseDao;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;

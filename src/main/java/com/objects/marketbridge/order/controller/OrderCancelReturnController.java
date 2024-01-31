@@ -5,7 +5,7 @@ import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.order.controller.request.OrderCancelRequest;
 import com.objects.marketbridge.order.controller.response.OrderCancelResponse;
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnDetailResponse;
-import com.objects.marketbridge.order.infra.dao.CancelReturnResponseDao;
+import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDao;
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnResponse;
 import com.objects.marketbridge.order.service.OrderCancelReturnService;
 import com.objects.marketbridge.order.controller.response.OrderReturnResponse;

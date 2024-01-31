@@ -34,14 +34,13 @@ public class PaymentController {
             @PathVariable(name = "orderNo") String orderNo) {
 
         // TODO : order와 memeber 둘다 가져오는 쿼리메서드로 변경해야함
-        Order order = orderQueryRepository.findByOrderNo(orderNo);
-        KakaoPayApproveResponse response = kakaoPayService.approve(createKakaoRequest(order, pgToken));
+        Order order = orderQueryRepository.findByOrderNoWithMember(orderNo);
+        KakaoPayApproveResponse kakaoResponse = kakaoPayService.approve(createKakaoRequest(order, pgToken));
 
         // 2. Payment 생성 및 OrderDetails 업데이트
-        createPaymentService.create(response);
+        createPaymentService.create(kakaoResponse);
 
-
-        return ApiResponse.ok(response);
+        return ApiResponse.ok(kakaoResponse);
     }
 
 //    @GetMapping("/payment/kakao-pay/fail/{orderNo}")

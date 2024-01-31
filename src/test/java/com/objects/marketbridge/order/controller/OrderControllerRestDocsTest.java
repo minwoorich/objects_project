@@ -7,10 +7,9 @@ import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
-import com.objects.marketbridge.common.security.SpringSecurityTestConfig;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.controller.request.CreateOrderRequest;
+import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
 import com.objects.marketbridge.order.domain.Address;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.CreateOrderService;
@@ -21,7 +20,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -30,7 +28,6 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -168,7 +165,7 @@ public class OrderControllerRestDocsTest  {
     void createOrder() throws Exception {
 
         // given
-        CreateOrderRequest createOrderRequest = getCreateOrderRequest(createProductValues());
+        CreateOrderHttp.Request createOrderRequest = getCreateOrderRequest(createProductValues());
         KakaoPayReadyResponse response = KakaoPayReadyResponse.builder()
                 .tid("tid")
                 .nextRedirectPcUrl("nextRedirectPcUrl")
@@ -240,8 +237,8 @@ public class OrderControllerRestDocsTest  {
                         ));
     }
 
-    private CreateOrderRequest getCreateOrderRequest(List<ProductValue> productValues) {
-        return CreateOrderRequest.builder()
+    private CreateOrderHttp.Request getCreateOrderRequest(List<ProductValue> productValues) {
+        return CreateOrderHttp.Request.builder()
                 .amount(20000L)
                 .addressId(1L)
                 .orderName("가방외 1건")
