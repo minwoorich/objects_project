@@ -11,20 +11,20 @@ import lombok.NoArgsConstructor;
 public class OrderCancelRequest {
 
     @NotNull
-    private Long orderId;
+    private String orderNo;
     @NotNull
     private String cancelReason;
 
 
     @Builder
-    public OrderCancelRequest(Long orderId, String cancelReason) {
-        this.orderId = orderId;
+    public OrderCancelRequest(String orderNo, String cancelReason) {
+        this.orderNo = orderNo;
         this.cancelReason = cancelReason;
     }
 
     public CancelRequestDto toServiceRequest() {
         return CancelRequestDto.builder()
-                .orderId(orderId)
+                .orderNo(orderNo)
                 .cancelReason(cancelReason)
                 .build();
     }

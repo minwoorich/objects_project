@@ -111,6 +111,7 @@ class OrderDtoRepositoryTest {
         order1.addOrderDetail(orderDetail1);
         order1.addOrderDetail(orderDetail2);
         order2.addOrderDetail(orderDetail3);
+        order2.addOrderDetail(orderDetail4);
 
         productRepository.saveAll(List.of(product1, product2, product3));
         memberRepository.save(member);
