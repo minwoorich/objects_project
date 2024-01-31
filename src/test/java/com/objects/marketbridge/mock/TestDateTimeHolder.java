@@ -3,7 +3,6 @@ package com.objects.marketbridge.mock;
 import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import lombok.Builder;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 
