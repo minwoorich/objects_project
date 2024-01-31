@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CreateCheckoutHttpDto {
+public class CreateCheckoutHttp {
 
     public static class Response {
 

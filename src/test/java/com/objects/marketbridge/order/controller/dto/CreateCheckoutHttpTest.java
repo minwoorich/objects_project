@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class CreateCheckoutHttpDtoTest {
+class CreateCheckoutHttpTest {
 
     @DisplayName("of 테스트, address 엔티티를 전달 받으면 CreateCheckout.Response를 반환한다")
     @Test
@@ -19,7 +19,7 @@ class CreateCheckoutHttpDtoTest {
         Address address = Address.builder().addressValue(addressValue).build();
 
         // when
-        CreateCheckoutHttpDto.Response response = CreateCheckoutHttpDto.Response.of(address);
+        CreateCheckoutHttp.Response response = CreateCheckoutHttp.Response.of(address);
 
         //then
         assertThat(response).extracting(

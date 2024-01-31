@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.controller;
 
 import com.objects.marketbridge.common.config.KakaoPayConfig;
-import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttpDto;
+import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
@@ -33,7 +33,7 @@ public class OrderController {
     private final KakaoPayConfig kakaoPayConfig;
 
     @GetMapping("/orders/checkout")
-    public ApiResponse<CreateCheckoutHttpDto.Response> createCheckout(
+    public ApiResponse<CreateCheckoutHttp.Response> createCheckout(
             @AuthMemberId Long memberId) {
 
         return ApiResponse.ok(createCheckoutService.create(memberId));

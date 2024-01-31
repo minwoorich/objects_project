@@ -26,14 +26,13 @@ public class PaymentController {
     private final CreatePaymentService createPaymentService;
     private final KakaoPayService kakaoPayService;
     private final OrderQueryRepository orderQueryRepository;
-    private final QuitPaymentService quitPaymentService;
 
     @GetMapping("/payment/kakao-pay/approval/{orderNo}")
-    public ApiResponse<KakaoPayApproveResponse> kakaoPaymentApproved(
+    public ApiResponse<KakaoPayApproveResponse> createPayment(
             @RequestParam(name = "pg_token") String pgToken,
             @PathVariable(name = "orderNo") String orderNo) {
 
-        // TODO : order와 memeber 둘다 가져오는 쿼리메서드로 변경해야함
+        // 1. kakaoPayService 로 결제 승인 요청 보내기
         Order order = orderQueryRepository.findByOrderNoWithMember(orderNo);
         KakaoPayApproveResponse kakaoResponse = kakaoPayService.approve(createKakaoRequest(order, pgToken));
 

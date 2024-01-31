@@ -253,6 +253,7 @@ CREATE TABLE payment (
                          card_install_month	BIGINT	,
                          total_amount BIGINT,
                          discount_amount BIGINT,
+                         approved_at	datetime(6)	,
                          deleted_at	datetime(6)	,
                          updated_at	datetime(6)	,
                          created_at	datetime(6)
