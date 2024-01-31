@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateCheckoutHttp {
 
+    @Getter
+    @NoArgsConstructor
     public static class Response {
 
         private String phoneNo;

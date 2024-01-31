@@ -42,15 +42,15 @@ public class CompleteOrderHttp {
             this.productInfos = productInfos;
         }
 
-        public static Response of(Order order, Payment payment) {
+        public static Response of(Payment payment) {
             return Response.builder()
                     .paymentMethodType(payment.getPaymentMethod())
-                    .orderName(order.getOrderName())
+                    .orderName(payment.getOrder().getOrderName())
                     .approvedAt(payment.getApprovedAt())
                     .amount(payment.getAmount())
                     .cardInfo(payment.getCardInfo())
-                    .addressValue(order.getAddress().getAddressValue())
-                    .productInfos(createProductInfoDtos(order.getOrderDetails()))
+                    .addressValue(payment.getOrder().getAddress().getAddressValue())
+                    .productInfos(createProductInfoDtos(payment.getOrder().getOrderDetails()))
                     .build();
         }
 

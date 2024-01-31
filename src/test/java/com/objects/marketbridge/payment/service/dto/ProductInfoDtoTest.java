@@ -8,10 +8,11 @@ import org.junit.jupiter.api.Test;
 
 class ProductInfoDtoTest {
 
-    @DisplayName("Product를 받아서 ProductInfoDto를 만들 수 있어야한다")
+    @DisplayName("Product를 받아서 ProductInfoDto를 만들 수 있어야한다.(sellerName, deliveredDate 제외")
     @Test
     void of() {
         // given
+        // TODO : sellerName, deliveredDate 추가해야함
         Product product = Product.builder()
                 .isOwn(false)
                 .isSubs(false)

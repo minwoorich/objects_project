@@ -7,6 +7,7 @@ import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.payment.controller.dto.CompleteOrderHttp;
 import com.objects.marketbridge.payment.service.CreatePaymentService;
 import com.objects.marketbridge.payment.service.QuitPaymentService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class PaymentController {
     private final OrderQueryRepository orderQueryRepository;
 
     @GetMapping("/payment/kakao-pay/approval/{orderNo}")
-    public ApiResponse<KakaoPayApproveResponse> createPayment(
+    public ApiResponse<CompleteOrderHttp.Response> createPayment(
             @RequestParam(name = "pg_token") String pgToken,
             @PathVariable(name = "orderNo") String orderNo) {
 
@@ -37,9 +38,9 @@ public class PaymentController {
         KakaoPayApproveResponse kakaoResponse = kakaoPayService.approve(createKakaoRequest(order, pgToken));
 
         // 2. Payment 생성 및 OrderDetails 업데이트
-        createPaymentService.create(kakaoResponse);
+        CompleteOrderHttp.Response response = createPaymentService.create(kakaoResponse);
 
-        return ApiResponse.ok(kakaoResponse);
+        return ApiResponse.ok(response);
     }
 
 //    @GetMapping("/payment/kakao-pay/fail/{orderNo}")
@@ -58,8 +59,8 @@ public class PaymentController {
     public ApiResponse<KakaoPayOrderResponse> kakaoPaymentFail(@PathVariable(name = "orderNo") String orderNo){
 
         Order order = orderQueryRepository.findByOrderNo(orderNo);
-
         KakaoPayOrderResponse response = kakaoPayService.getOrders(order.getTid(), ONE_TIME_CID);
+        // TODO : 조회 후 status가 FAIL_PAYMENT 일 경우 후처리 로직 만들어야함
 
         return ApiResponse.ok(response);
     }

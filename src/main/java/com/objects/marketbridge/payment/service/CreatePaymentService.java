@@ -41,7 +41,7 @@ public class CreatePaymentService {
         // 4. 판매자 계좌 변경
         // 5. delivery 생성
 
-        return CompleteOrderHttp.Response.of(order, payment);
+        return CompleteOrderHttp.Response.of(payment);
     }
 
     private Payment createPayment(KakaoPayApproveResponse response) {
