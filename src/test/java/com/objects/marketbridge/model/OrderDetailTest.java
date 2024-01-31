@@ -25,28 +25,31 @@ class OrderDetailTest {
     }
 
     @Test
-    @DisplayName("주문 취소시 취소 이유와 상태코드가 취소로 바뀌어야 한다.")
-    public void cancel() {
+    @DisplayName("이유와 상태코드가 취소로 바뀌어야 한다.")
+    public void changeReasonAndStatus1() {
         // given
         OrderDetail orderDetail = createOrderDetail(ORDER_RECEIVED.getCode());
 
         // when
-        orderDetail.cancel("테스트 취소", ORDER_CANCEL.getCode());
+        orderDetail.changeReasonAndStatus("테스트 취소", ORDER_CANCEL.getCode());
 
         // then
         assertThat(orderDetail)
                 .extracting("statusCode", "reason")
                 .contains(ORDER_CANCEL.getCode(), "테스트 취소");
-
-        // then
-//        Assertions.assertThat(products).hasSize(2)
-//                .extracting("productNumber", "name", "sellingStatus")
-//                .containsExactlyInAnyOrder(
-//                        tuple("001", "아메리카노", SELLING),
-//                        tuple("002", "카페라떼", HOLD)
-//                );
     }
 
+    @Test
+    @DisplayName("배송완료된 상품은 취소가 되지 않는다.")
+    public void changeReasonAndStatus2() {
+        // given
+        OrderDetail orderDetail = createOrderDetail(DELIVERY_COMPLETED.getCode());
+
+        // when // then
+        assertThatThrownBy(() -> orderDetail.changeReasonAndStatus("테스트 취소", ORDER_CANCEL.getCode()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("이미 배송완료된 상품은 취소가 불가능합니다.");
+    }
 
     private OrderDetail createOrderDetail(String statusCode) {
         return OrderDetail

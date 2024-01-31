@@ -31,7 +31,7 @@ public class PaymentController {
     @GetMapping("/payment/kakao-pay/approval/{orderNo}")
     public ApiResponse<KakaoPayApproveResponse> kakaoPaymentApproved(
             @RequestParam(name = "pg_token") String pgToken,
-            @PathVariable String orderNo) {
+            @PathVariable(name = "orderNo") String orderNo) {
 
         // TODO : order와 memeber 둘다 가져오는 쿼리메서드로 변경해야함
         Order order = orderQueryRepository.findByOrderNo(orderNo);

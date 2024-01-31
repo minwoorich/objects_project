@@ -2,6 +2,7 @@ package com.objects.marketbridge.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.security.domain.CustomUserDetails;
+import com.objects.marketbridge.member.controller.MemberController;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
 import com.objects.marketbridge.member.dto.SignInDto;
 import com.objects.marketbridge.member.dto.SignUpDto;

@@ -81,7 +81,7 @@ public class Product extends BaseEntity{
         orderDetail.setProduct(this);
     }
 
-    public void increase(Long quantity) {
+    public void increaseQuantity(Long quantity) {
         stock += quantity;
     }
 
