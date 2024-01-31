@@ -4,15 +4,18 @@ import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 public class CreateOrderHttp {
 
+    // Request 클래스
+    @Getter
+    @NoArgsConstructor
     public static class Request {
         private Long amount;
         private Long addressId;
@@ -27,8 +30,9 @@ public class CreateOrderHttp {
             this.productValues = productValues;
         }
 
-        public CreateOrderDto toDto(String tid, Long memberId) {
+        public CreateOrderDto toDto(String orderNo, String tid, Long memberId) {
             return CreateOrderDto.builder()
+                    .orderNo(orderNo)
                     .memberId(memberId)
                     .tid(tid)
                     .addressId(addressId)
@@ -40,13 +44,13 @@ public class CreateOrderHttp {
 
         public KakaoPayReadyRequest toKakaoReadyRequest(String orderNo, Long memberId, String cid, String approvalUrl, String failUrl, String cancelUrl) {
             return KakaoPayReadyRequest.builder()
+                    .partnerOrderId(orderNo)
+                    .partnerUserId(memberId.toString())
                     .cid(cid)
                     .approvalUrl(approvalUrl)
                     .failUrl(failUrl)
                     .cancelUrl(cancelUrl)
                     .quantity(productValues.stream().mapToLong(ProductValue::getQuantity).sum())
-                    .partnerOrderId(orderNo)
-                    .partnerUserId(memberId.toString())
                     .itemName(orderName)
                     .taxFreeAmount(0L)
                     .totalAmount(amount)
@@ -54,6 +58,9 @@ public class CreateOrderHttp {
         }
     }
 
+    // Response 클래스
+    @Getter
+    @NoArgsConstructor
     public static class Response{
 
         private String tid; // 결제 고유 번호

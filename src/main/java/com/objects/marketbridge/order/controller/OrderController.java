@@ -42,18 +42,18 @@ public class OrderController {
     @PostMapping("/orders/checkout")
     public ApiResponse<CreateOrderHttp.Response> createOrder(
             @AuthMemberId Long memberId,
-            @Valid @RequestBody CreateOrderHttp.Request request) {
+            @Valid @RequestBody CreateOrderHttp.Request createOrderRequest) {
 
         // 0. orderNo 생성
         String orderNo = UUID.randomUUID().toString();
 
         // 1. kakaoPaymentReadyService 호출
-        KakaoPayReadyRequest kakaoReadyRequest = createKakaoReadyRequest(orderNo, request, memberId);
+        KakaoPayReadyRequest kakaoReadyRequest = createKakaoReadyRequest(orderNo, createOrderRequest, memberId);
         KakaoPayReadyResponse kakaoReadyResponse = kakaoPayService.ready(kakaoReadyRequest);
         String tid = kakaoReadyResponse.getTid();
 
         // 2. 주문 생성
-        createOrderService.create(request.toDto(tid, memberId));
+        createOrderService.create(createOrderRequest.toDto(orderNo, tid, memberId));
 
         return ApiResponse.ok(CreateOrderHttp.Response.of(kakaoReadyResponse));
     }
