@@ -31,6 +31,7 @@ public class ProductResponse {
                 .name(product.getName())
                 .price(product.getPrice())
                 .quantity(quantity)
+                .productNo(product.getProductNo())
                 .build();
     }
 

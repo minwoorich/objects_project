@@ -2,6 +2,7 @@ package com.objects.marketbridge.order.domain;
 
 import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.payment.domain.Payment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -80,18 +81,11 @@ public class Order extends BaseEntity {
                 .sum();
     }
 
-    public void returnCoupon() {
+    public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
 
         orderDetails.stream()
                 .filter(o -> o.getCoupon() != null)
-                .forEach(OrderDetail::returnCoupon);
-    }
-
-    public void useCoupon(LocalDateTime dateTime) {
-
-        orderDetails.stream()
-                .filter(o -> o.getCoupon() != null)
-                .forEach(o -> o.useCoupon(dateTime));
+                .forEach(o -> o.changeMemberCouponInfo(dateTimeHolder));
     }
 
     public void changeStatusCode(String statusCode) {

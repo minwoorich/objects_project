@@ -1,5 +1,7 @@
 package com.objects.marketbridge.model;
 
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
@@ -102,7 +104,11 @@ class OrderTest {
         Order findOrder = orderQueryRepository.findById(order.getId()).get();
 
         // when
-        findOrder.returnCoupon();
+        findOrder.changeMemberCouponInfo(
+                TestDateTimeHolder.builder()
+                        .now(null)
+                        .build()
+        );
 
         // then
         assertThat(coupon1.getCount()).isEqualTo(11L);
@@ -117,6 +123,9 @@ class OrderTest {
     @Test
     void useCoupon(){
         LocalDateTime useDate = LocalDateTime.of(2024, 1, 16, 7, 14);
+        DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+                .now(useDate)
+                .build();
 
         Order order = Order.builder()
                 .build();
@@ -171,7 +180,7 @@ class OrderTest {
 
 
         // when
-        savedOrder.useCoupon(useDate);
+        savedOrder.changeMemberCouponInfo(dateTimeHolder);
 
         // then
         assertThat(memberCoupon1.getUsedDate()).isEqualTo(useDate);

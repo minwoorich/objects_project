@@ -27,7 +27,6 @@ import java.util.List;
 @Slf4j
 public class CreateOrderService {
 
-    private final DateTimeHolder dateTimeHolder;
     private final OrderDetailCommendRepository orderDetailCommendRepository;
     private final OrderCommendRepository orderCommendRepository;
     private final ProductRepository productRepository;
@@ -35,6 +34,7 @@ public class CreateOrderService {
     private final CouponRepository couponRepository;
     private final AddressRepository addressRepository;
     private final CalcTotalDiscountService calcTotalDiscountService;
+    private final DateTimeHolder dateTimeHolder;
 
     @Transactional
     public void create(CreateOrderDto createOrderDto) {
@@ -49,7 +49,7 @@ public class CreateOrderService {
         order.calcTotalDiscount(calcTotalDiscountService);
 
         // 4. MemberCoupon 의 isUsed 변경, 사용날짜 저장
-        order.useCoupon(dateTimeHolder.getCreateTime(order));
+        order.changeMemberCouponInfo(dateTimeHolder);
 
         // 5. Product 의 stock 감소
         order.stockDecrease();

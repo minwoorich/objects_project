@@ -50,8 +50,9 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
 
     private List<CancelReturnResponseDao> getOrderCancelReturnListResponses(Long memberId) {
         List<CancelReturnResponseDao> content = queryFactory
-                .select(new QCancelReturnResponseDao(
-                        order.updatedAt,
+                .select(
+                        new QCancelReturnResponseDao(
+                                order.updatedAt,
                                 order.createdAt,
                                 order.orderNo
                         )
@@ -87,7 +88,7 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     }
 
     private void orderDetailResponseSetting(List<CancelReturnResponseDao> content, Map<String, List<DetailResponseDao>> orderDetailResponseMap) {
-        content.forEach(o-> o.changeDetailResponsDaos(orderDetailResponseMap.get(o.getOrderNo())));
+        content.forEach(o -> o.changeDetailResponsDaos(orderDetailResponseMap.get(o.getOrderNo())));
     }
 
     private JPAQuery<CancelReturnResponseDao> getCountQuery(Long memberId) {

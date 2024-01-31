@@ -12,7 +12,7 @@ class OrderCancelRequestTest {
     public void toServiceRequest() {
         // given
         OrderCancelRequest orderCancelRequest = OrderCancelRequest.builder()
-                .orderId(1L)
+                .orderNo("1")
                 .cancelReason("옥지보단 빵빵이")
                 .build();
 
@@ -20,7 +20,7 @@ class OrderCancelRequestTest {
         CancelRequestDto result = orderCancelRequest.toServiceRequest();
 
         // then
-        Assertions.assertThat(result).extracting("orderId", "cancelReason")
-                .contains(1L, "옥지보단 빵빵이");
+        Assertions.assertThat(result).extracting("orderNo", "cancelReason")
+                .contains("1", "옥지보단 빵빵이");
     }
 }
