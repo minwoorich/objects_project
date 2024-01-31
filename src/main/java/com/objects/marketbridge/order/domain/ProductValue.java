@@ -15,7 +15,7 @@ public class ProductValue {
     String deliveredDate;
 
     @Builder
-    public ProductValue(Long productId, Long couponId, Long quantity, String deliveredDate) {
+    private ProductValue(Long productId, Long couponId, Long quantity, String deliveredDate) {
         this.productId = productId;
         this.couponId = couponId;
         this.quantity = quantity;

@@ -68,13 +68,12 @@ include::api/order/ordercancelreturndetail.adoc[]
 
 [[OrderCreate-API]]
 == OrderCreate API
-
-// include::api/order/ordercreate.adoc[]
+include::api/order/ordercreate.adoc[]
 
 [[OrderCheckout-API]]
 == OrderCheckout API
 
-// include::api/order/ordercheckout.adoc[]
+include::api/order/ordercheckout.adoc[]
 =======
 {empty}
 {empty}
