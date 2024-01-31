@@ -46,8 +46,7 @@ public class OrderCancelReturnService {
     // TODO 트랜잭션 위치 고려해야함
     @Transactional
     public CancelReturnResponseDto confirmCancelReturn(CancelRequestDto cancelRequestDto) {
-        Order order = orderQueryRepository.findById(cancelRequestDto.getOrderId())
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 주문이 없습니다."));
+        Order order = orderQueryRepository.findByOrderNo(cancelRequestDto.getOrderNo());
 
         Integer cancelAmount = order.changeDetailsReasonAndStatus(cancelRequestDto.getCancelReason(), ORDER_CANCEL.getCode());
 
@@ -59,7 +58,6 @@ public class OrderCancelReturnService {
     }
 
     public CancelResponseDto requestCancel(Long orderId, List<Long> productIds) {
-        Order order = orderQueryRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("조회한 주문이 없습니다."));
         List<Product> products = validProducts(productIds);
 
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrder_IdAndProductIn(orderId, products);
@@ -74,28 +72,11 @@ public class OrderCancelReturnService {
         return ReturnResponseDto.of(orderDetails, WOW.getText()); // TODO 맴버 조회해서 타입 넣기
     }
 
-    public OrderCancelReturnDetailResponseDto findCancelReturnDetail(String orderNo, Long paymentId, List<Long> productIds) {
+    public OrderCancelReturnDetailResponseDto findCancelReturnDetail(String orderNo, List<Long> productIds) {
         Order order = validOrder(orderNo);
         List<OrderDetail> orderDetails = validOrderDetails(orderNo, productIds);
-        Payment payment = vaildPayment(paymentId);
 
         return OrderCancelReturnDetailResponseDto.of(order, orderDetails, WOW.getText(), dateTimeHolder); // TODO 맴버 조회해서 타입 넣기
-    }
-
-    private Payment vaildPayment(Long paymentId) {
-        Payment payment = paymentRepository.findById(paymentId);
-        if (payment == null) {
-            throw new EntityNotFoundException("조회된 결재가 없습니다.");
-        }
-        return payment;
-    }
-
-    private Payment validPayment(Long orderId) {
-        Payment payment = paymentRepository.findByOrderId(orderId);
-        if (payment == null) {
-            throw new CustomLogicException(ErrorCode.PAYMENT_NOT_FOUND.getMessage());
-        }
-        return payment;
     }
 
     private List<Product> validProducts(List<Long> productIds) {

@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 public class CancelRequestDto {
 
-    private Long orderId;
+    private String orderNo;
     private String cancelReason;
 
     @Builder
-    private CancelRequestDto(Long orderId, String cancelReason) {
-        this.orderId = orderId;
+    private CancelRequestDto(String orderNo, String cancelReason) {
+        this.orderNo = orderNo;
         this.cancelReason = cancelReason;
     }
 }
