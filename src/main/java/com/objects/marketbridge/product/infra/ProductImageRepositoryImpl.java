@@ -22,9 +22,10 @@ public class ProductImageRepositoryImpl implements ProductImageRepository{
     }
 
     public List<ProductImage> findAllByProductId(Long productId){
-        return em.createQuery("select pi from ProductImage pi where pi.product = :product", ProductImage.class)
-                .setParameter("product", productRepository.findById(productId))
-                .getResultList();
+//        return em.createQuery("select pi from ProductImage pi where pi.product = :product", ProductImage.class)
+//                .setParameter("product", productRepository.findById(productId))
+//                .getResultList();
+        return productImageJpaRepository.findAllByProductId(productId);
     }
 
     public void delete(ProductImage productImage) {

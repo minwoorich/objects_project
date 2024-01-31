@@ -1,9 +1,8 @@
 package com.objects.marketbridge.category.service;
 
-import com.objects.marketbridge.category.controller.response.CategoryReadResponseDto;
+import com.objects.marketbridge.category.controller.response.ReadCategoryResponseDto;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.common.domain.Category;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -169,17 +167,17 @@ public class CategoryService {
 
 
 
-    public List<CategoryReadResponseDto> getLargeCategories() {
+    public List<ReadCategoryResponseDto> getLargeCategories() {
         List<Category> categories = categoryRepository.findAllByLevelAndParentIdIsNull(0L);
         return convertToDtoList(categories);
     }
 
-    public List<CategoryReadResponseDto> getMediumCategories(Long parentId) {
+    public List<ReadCategoryResponseDto> getMediumCategories(Long parentId) {
         List<Category> categories = categoryRepository.findAllByLevelAndParentId(1L, parentId);
         return convertToDtoList(categories);
     }
 
-    public List<CategoryReadResponseDto> getSmallCategories(Long parentId) {
+    public List<ReadCategoryResponseDto> getSmallCategories(Long parentId) {
         List<Category> categories = categoryRepository.findAllByLevelAndParentId(2L, parentId);
         return convertToDtoList(categories);
     }
@@ -187,21 +185,21 @@ public class CategoryService {
 
 
     //내부 이용 메서드
-    private List<CategoryReadResponseDto> convertToDtoList(List<Category> categories) {
-        List<CategoryReadResponseDto> categoryReadResponseDtos = new ArrayList<>();
+    private List<ReadCategoryResponseDto> convertToDtoList(List<Category> categories) {
+        List<ReadCategoryResponseDto> readCategoryResponseDtos = new ArrayList<>();
         for (Category category : categories) {
-            CategoryReadResponseDto categoryReadResponseDto = new CategoryReadResponseDto();
-            categoryReadResponseDto.setId(category.getId());
-            categoryReadResponseDto.setParentId(category.getParentId());
-            categoryReadResponseDto.setLevel(category.getLevel());
-            categoryReadResponseDto.setName(category.getName());
+            ReadCategoryResponseDto readCategoryResponseDto = new ReadCategoryResponseDto();
+            readCategoryResponseDto.setId(category.getId());
+            readCategoryResponseDto.setParentId(category.getParentId());
+            readCategoryResponseDto.setLevel(category.getLevel());
+            readCategoryResponseDto.setName(category.getName());
 
             // childCategories 필드는 재귀적으로 변환
-            categoryReadResponseDto.setChildCategories(convertToDtoList(category.getChildCategories()));
+            readCategoryResponseDto.setChildCategories(convertToDtoList(category.getChildCategories()));
 
-            categoryReadResponseDtos.add(categoryReadResponseDto);
+            readCategoryResponseDtos.add(readCategoryResponseDto);
         }
-        return categoryReadResponseDtos;
+        return readCategoryResponseDtos;
     }
 
 

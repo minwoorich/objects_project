@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ProductDeleteResponseDto {
+public class DeleteProductResponseDto {
 
     private Long productId;
 
     @Builder
-    public ProductDeleteResponseDto(Long productId) {
+    public DeleteProductResponseDto(Long productId) {
         this.productId = productId;
     }
 }

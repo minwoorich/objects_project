@@ -554,6 +554,7 @@ CREATE TABLE product (
                          stock	bigint	,
                          thumb_img	varchar(255)	,
                          discount_rate	bigint	,
+                         product_no	varchar(255),
                          created_at	datetime(6)	,
                          updated_at	datetime(6)	,
                          deleted_at	datetime(6)
