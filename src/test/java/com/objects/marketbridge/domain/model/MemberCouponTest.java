@@ -1,6 +1,8 @@
 package com.objects.marketbridge.domain.model;
 
 import com.objects.marketbridge.common.domain.MemberCoupon;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.mock.TestDateTimeHolder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,10 +16,13 @@ class MemberCouponTest {
     public void returnCoupon() {
         // given
         LocalDateTime localDateTime = LocalDateTime.of(2024, 1, 16, 6, 34);
+        DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+                .now(localDateTime)
+                .build();
         MemberCoupon usedCoupon = createMemberCoupon(localDateTime, true);
 
         // when
-        usedCoupon.returnCoupon();
+        usedCoupon.changeUsageInfo(dateTimeHolder);
     
         // then
         Assertions.assertThat(usedCoupon).extracting("usedDate", "isUsed")
