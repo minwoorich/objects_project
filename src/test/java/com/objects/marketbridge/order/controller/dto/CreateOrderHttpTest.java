@@ -1,16 +1,15 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.common.domain.Product;
 import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
+import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class CreateOrderHttpTest {
 
@@ -34,7 +33,7 @@ class CreateOrderHttpTest {
         CreateOrderDto dto = request.toDto(orderNo, tid, memberId);
 
         //then
-        Assertions.assertThat(dto).extracting(
+        assertThat(dto).extracting(
                 "tid",
                 "memberId",
                 "addressId",
@@ -76,7 +75,7 @@ class CreateOrderHttpTest {
         KakaoPayReadyRequest kakaoReadyRequest = request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
 
         //then
-        Assertions.assertThat(kakaoReadyRequest).extracting(
+        assertThat(kakaoReadyRequest).extracting(
                         "partnerOrderId",
                         "partnerUserId",
                         "cid",
@@ -106,11 +105,35 @@ class CreateOrderHttpTest {
     @Test
     void response_of() {
         // given
+        KakaoPayReadyResponse kakaoResp = KakaoPayReadyResponse.builder()
+                .tid("tid")
+                .nextRedirectPcUrl("pc")
+                .nextRedirectAppUrl("app")
+                .nextRedirectMobileUrl("mobile")
+                .androidAppScheme("android")
+                .iosAppScheme("app")
+                .createdAt("createdAt")
+                .build();
 
         // when
+        CreateOrderHttp.Response createOrderResp = CreateOrderHttp.Response.of(kakaoResp);
 
         //then
-
+        assertThat(createOrderResp).extracting(
+                "tid",
+                "nextRedirectPcUrl",
+                "nextRedirectAppUrl",
+                "nextRedirectMobileUrl",
+                "androidAppScheme",
+                "iosAppScheme",
+                "createdAt").containsExactlyInAnyOrder(
+                kakaoResp.getTid(),
+                kakaoResp.getNextRedirectPcUrl(),
+                kakaoResp.getNextRedirectAppUrl(),
+                kakaoResp.getNextRedirectMobileUrl(),
+                kakaoResp.getAndroidAppScheme(),
+                kakaoResp.getIosAppScheme(),
+                kakaoResp.getCreatedAt());
     }
 
     private List<ProductValue> createProductValues(){
