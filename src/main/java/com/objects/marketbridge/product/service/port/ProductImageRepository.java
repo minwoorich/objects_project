@@ -8,7 +8,7 @@ public interface ProductImageRepository {
 
     void save(ProductImage productImage);
 
-    public List<ProductImage> findAllByProductId(Long productId);
+    List<ProductImage> findAllByProductId(Long productId);
 
     void delete(ProductImage productImage);
 

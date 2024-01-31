@@ -1,14 +1,18 @@
 package com.objects.marketbridge.product.service.dto;
 
 import com.objects.marketbridge.common.domain.ProductImage;
-import com.objects.marketbridge.product.controller.request.CreateProductRequestDto;
+import com.objects.marketbridge.product.controller.request.UpdateProductRequestDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@NoArgsConstructor
 @Getter
-public class CreateProductDto {
+@Component
+public class UpdateProductDto {
 
     private Long categoryId;
     private Boolean isOwn; // 로켓 true , 오픈 마켓 false
@@ -18,11 +22,13 @@ public class CreateProductDto {
     private Long stock;
     private String thumbImg;
     private Long discountRate;
-    private String productNo;
     private List<ProductImage> productImages;
+    private String productNo;
 
     @Builder
-    public CreateProductDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate, String productNo,List<ProductImage> productImages) {
+    public UpdateProductDto(Long categoryId, Boolean isOwn, String name, Long price,
+                            Boolean isSubs, Long stock, String thumbImg, Long discountRate,
+                            List<ProductImage> productImages, String productNo) {
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
@@ -31,12 +37,12 @@ public class CreateProductDto {
         this.stock = stock;
         this.thumbImg = thumbImg;
         this.discountRate = discountRate;
-        this.productNo = productNo;
         this.productImages = productImages;
+        this.productNo = productNo;
     }
 
-    public static CreateProductDto fromRequest(CreateProductRequestDto request){
-        return CreateProductDto.builder()
+    public static UpdateProductDto fromRequest(UpdateProductRequestDto request){
+        return UpdateProductDto.builder()
                 .categoryId(request.getCategoryId())
                 .isOwn(request.getIsOwn())
                 .name(request.getName())
@@ -48,5 +54,4 @@ public class CreateProductDto {
                 .productNo(request.getProductNo())
                 .build();
     }
-
 }

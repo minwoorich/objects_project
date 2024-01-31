@@ -5,5 +5,5 @@
 //
 //@Getter
 //@NoArgsConstructor
-//public class ProductReadRequestDto {
+//public class ReadProductRequestDto {
 //}

@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CategoryReadResponseDto {
+public class ReadCategoryResponseDto {
 
     private Long id;
     private Long parentId;
@@ -20,7 +20,7 @@ public class CategoryReadResponseDto {
     private List<?> childCategories;
 
     @Builder
-    public CategoryReadResponseDto(Long id, Long parentId, Long level, String name, List<Category> childCategories) {
+    public ReadCategoryResponseDto(Long id, Long parentId, Long level, String name, List<Category> childCategories) {
         this.id = id;
         this.parentId = parentId;
         this.level = level;
