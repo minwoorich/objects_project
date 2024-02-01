@@ -59,7 +59,6 @@ public class Payment extends BaseEntity {
                 .build();
     }
 
-    // 연관관계 메서드 (단방향)
     public void linkOrder(Order order) {
         this.order = order;
     }
