@@ -1,4 +1,4 @@
 //package com.objects.marketbridge.category.controller.request;
 //
-//public class CategoryCreateRequestDto {
+//public class CreateCategoryRequestDto {
 //}

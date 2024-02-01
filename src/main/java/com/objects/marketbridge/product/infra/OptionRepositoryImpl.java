@@ -6,6 +6,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class OptionRepositoryImpl implements OptionRepository {
@@ -18,12 +20,12 @@ public class OptionRepositoryImpl implements OptionRepository {
     }
 
     @Override
-    public Option findById(Long id) {
-        return optionJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public Optional<Option> findById(Long id) {
+        return optionJpaRepository.findById(id);
     }
 
     @Override
-    public Option findByName(String name) {
+    public Optional<Option> findByName(String name) {
         return optionJpaRepository.findByName(name);
     }
 }

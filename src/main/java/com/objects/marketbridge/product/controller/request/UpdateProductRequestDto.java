@@ -4,14 +4,18 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
-public class ProductCreateRequestDto {
-//    private Long productId;
+public class UpdateProductRequestDto {
+
+    @NotNull
+    private Long productId;
 
     @NotNull
     private Long categoryId;
@@ -28,7 +32,7 @@ public class ProductCreateRequestDto {
     private Boolean isSubs;
     @NotNull
     private Long stock;
-    @NotNull
+
     private String thumbImg;
 
     private List<String> itemImgUrls = new ArrayList<>();
@@ -40,9 +44,16 @@ public class ProductCreateRequestDto {
     @NotNull
     private List<String> optionNames = new ArrayList<>();
 
+    @NotNull
+    private String productNo;
+
 
     @Builder
-    public ProductCreateRequestDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, List<String> itemImgUrls, List<String> detailImgUrls, Long discountRate, List<String> optionNames) {
+    public UpdateProductRequestDto(Long productId, Long categoryId, Boolean isOwn, String name,
+                                   Long price, Boolean isSubs, Long stock, String thumbImg,
+                                   List<String> itemImgUrls, List<String> detailImgUrls, Long discountRate,
+                                   List<String> optionNames, String productNo) {
+        this.productId = productId;
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
@@ -54,5 +65,6 @@ public class ProductCreateRequestDto {
         this.detailImgUrls = detailImgUrls;
         this.discountRate = discountRate;
         this.optionNames = optionNames;
+        this.productNo = productNo;
     }
 }

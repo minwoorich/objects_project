@@ -73,8 +73,8 @@ DROP TABLE IF EXISTS category;
 CREATE TABLE category (
                             category_id	bigint auto_increment
                                 primary key,
-                            prev_id	bigint	,
-                            next_id	bigint	,
+                            parent_id	bigint	,
+                            level	bigint	,
                             name	varchar(255)	,
                             created_at	timestamp	,
                             updated_at	timestamp	,
@@ -112,6 +112,7 @@ CREATE TABLE product_image (
                                      primary key,
                                  product_id	bigint	,
                                  image_id	bigint	,
+                                 seq_no bigint ,
                                  created_at	timestamp	,
                                  updated_at	timestamp	,
                                  deleted_at	timestamp	
@@ -547,7 +548,6 @@ DROP TABLE IF EXISTS product;
 CREATE TABLE product (
                            product_id	bigint auto_increment primary key,
                            category_id	bigint	,
-                           product_no	varchar(255)	,
                            is_own	bit	,
                            name	varchar(255)	,
                            price	bigint	,
@@ -555,6 +555,7 @@ CREATE TABLE product (
                            stock	bigint	,
                            thumb_img	varchar(255)	,
                            discount_rate	bigint	,
+                           product_no	varchar(255)	,
                            created_at	timestamp	,
                            updated_at	timestamp	,
                            deleted_at	timestamp	

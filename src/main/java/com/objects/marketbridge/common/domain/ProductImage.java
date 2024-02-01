@@ -24,11 +24,26 @@ public class ProductImage extends BaseEntity{
     @JoinColumn(name = "image_id")
     private Image image;
 
-    @Builder
+    private Long seqNo;
 
-    private ProductImage(Product product, Image image) {
+    @Builder
+    private ProductImage(Product product, Image image, Long seqNo) {
         this.product = product;
         this.image = image;
+        this.seqNo = seqNo;
     }
+
+    public void setProduct(Product product) { this.product = product; }
+
+    public void setImage(Image image){ this.image = image; }
+
+    public static ProductImage create(Product product, Image image, Long seqNo){
+        return ProductImage.builder()
+                .product(product)
+                .image(image)
+                .seqNo(seqNo)
+                .build();
+    }
+
 }
 
