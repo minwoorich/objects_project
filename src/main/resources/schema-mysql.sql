@@ -546,7 +546,6 @@ DROP TABLE IF EXISTS product;
 
 CREATE TABLE product (
                          product_id	bigint auto_increment primary key,
-                         product_no varchar(255),
                          category_id	bigint	,
                          is_own	bit	,
                          name	varchar(255)	,
