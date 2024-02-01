@@ -593,7 +593,8 @@ create table seller_account
     seller_id         BIGINT null,
     incoming          BIGINT null,
     outgoing          BIGINT null,
-    balance           BIGINT null
+    balance           BIGINT null,
+    detail           varchar(255)
 
 );
 
