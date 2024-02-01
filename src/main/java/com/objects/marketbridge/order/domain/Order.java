@@ -1,8 +1,9 @@
 package com.objects.marketbridge.order.domain;
 
-import com.objects.marketbridge.common.domain.Address;
 import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.payment.domain.Payment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -36,59 +37,80 @@ public class Order extends BaseEntity {
 
     private String orderNo;
 
-    private Long totalUsedCouponPrice; // 총 사용된 쿠폰 금액
+    private Long totalDiscount; // 총 할인 금액 (쿠폰,포인트,멤버쉽)
 
-    private Long totalPrice; // 찐 최종 주문 금액
+    private Long totalPrice; // 총 금액
 
-    private Long realPrice; // 쿠폰, 포인트사용 뺀 진짜 결제된 금액
-
-    private Long usedPoint; // 구매하는데 사용한 포인트
+    private Long realPrice; // 실 결제 금액
 
     private String tid;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderDetail> orderDetails = new ArrayList<>();
+    private final List<OrderDetail> orderDetails = new ArrayList<>();
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Payment payment;
 
     @Builder
-    public Order(Member member, Address address, String orderName, String orderNo, Long realPrice, Long totalPrice, Long totalUsedCouponPrice, Long usedPoint, String tid) {
+    public Order(Member member, Address address, String orderName, String orderNo, Long realPrice, Long totalPrice, Long totalDiscount, String tid) {
         this.member = member;
         this.address = address;
         this.orderName = orderName;
         this.orderNo = orderNo;
         this.realPrice = realPrice;
         this.totalPrice = totalPrice;
-        this.totalUsedCouponPrice = totalUsedCouponPrice;
-        this.usedPoint = usedPoint;
+        this.totalDiscount = totalDiscount;
         this.tid = tid;
     }
 
+    // ==연관관계 편의 메서드==//
     public void addOrderDetail(OrderDetail orderDetail) {
         orderDetails.add(orderDetail);
         orderDetail.setOrder(this);
     }
 
+    public void linkPayment(Payment payment) {
+        this.payment = payment;
+        payment.linkOrder(this);
+    }
+
     //== 비즈니스 로직==//
-    public void cancelReturn(String reason, String statusCode, LocalDateTime cancelDateTime) {
-        changeUpdateAt(cancelDateTime);
-        orderDetails.forEach(orderDetail -> orderDetail.cancel(reason, statusCode));
+    public Integer changeDetailsReasonAndStatus(String reason, String statusCode) {
+        return orderDetails.stream()
+                .mapToInt(od -> od.changeReasonAndStatus(reason, statusCode))
+                .sum();
     }
 
-    public void returnCoupon() {
-        orderDetails.forEach(OrderDetail::returnCoupon);
+    public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
+
+        orderDetails.stream()
+                .filter(o -> o.getCoupon() != null)
+                .forEach(o -> o.changeMemberCouponInfo(dateTimeHolder));
     }
 
-    public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice, String tid){
+    public void changeStatusCode(String statusCode) {
+        orderDetails.forEach(orderDetail -> orderDetail.changeStatusCode(statusCode));
+    }
+
+    public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, String tid) {
+
         return Order.builder()
                 .member(member)
                 .address(address)
                 .orderName(orderName)
                 .orderNo(orderNo)
                 .totalPrice(totalPrice)
-                .realPrice(realPrice)
                 .tid(tid)
                 .build();
     }
-    public void setTotalUsedCouponPrice(Long totalUsedCouponPrice) {
-        this.totalUsedCouponPrice = totalUsedCouponPrice;
+
+    public void calcTotalDiscount(CalcTotalDiscountService service) {
+
+        totalDiscount = service.calculate(this);
+        realPrice = totalPrice - totalDiscount;
+    }
+
+    public void stockDecrease() {
+        orderDetails.forEach(o -> o.getProduct().decrease(o.getQuantity()));
     }
 }

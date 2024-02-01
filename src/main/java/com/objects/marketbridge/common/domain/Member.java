@@ -1,5 +1,6 @@
 package com.objects.marketbridge.common.domain;
 
+import com.objects.marketbridge.order.domain.Address;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,14 @@ public class Member extends BaseEntity {
         this.phoneNo = phoneNo;
         this.isAlert = isAlert;
         this.isAgree = isAgree;
+    }
+
+    // Member <-> Address 연관관계 편의 메서드
+    public void addAddress(Address address) {
+        if (!this.addresses.contains(address)) {
+            this.addresses.add(address);
+        }
+        address.setMember(this);
     }
 
     public void changePoint(Point point) {

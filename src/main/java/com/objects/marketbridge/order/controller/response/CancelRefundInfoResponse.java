@@ -1,5 +1,6 @@
 package com.objects.marketbridge.order.controller.response;
 
+import com.objects.marketbridge.order.service.dto.CancelRefundInfoResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CancelRefundInfoResponse {
+
     private Long deliveryFee;
     private Long refundFee;
     private Long discountPrice;
@@ -18,5 +20,14 @@ public class CancelRefundInfoResponse {
         this.refundFee = refundFee;
         this.discountPrice = discountPrice;
         this.totalPrice = totalPrice;
+    }
+
+    public static CancelRefundInfoResponse of(CancelRefundInfoResponseDto serviceDto) {
+        return CancelRefundInfoResponse.builder()
+                .deliveryFee(serviceDto.getDeliveryFee())
+                .refundFee(serviceDto.getRefundFee())
+                .discountPrice(serviceDto.getDiscountPrice())
+                .totalPrice(serviceDto.getTotalPrice())
+                .build();
     }
 }

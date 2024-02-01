@@ -1,6 +1,5 @@
 package com.objects.marketbridge.order.domain;
 
-import com.objects.marketbridge.common.domain.Address;
 import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.seller.domain.Seller;
 import jakarta.persistence.*;

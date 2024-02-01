@@ -1,8 +1,6 @@
 package com.objects.marketbridge.order.controller.response;
 
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.payment.domain.Payment;
+import com.objects.marketbridge.order.service.dto.OrderCancelReturnDetailResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,32 +30,13 @@ public class OrderCancelReturnDetailResponse {
         this.cancelRefundInfoResponse = cancelRefundInfoResponse;
     }
 
-    public static OrderCancelReturnDetailResponse of(Order order, List<OrderDetail> orderDetails, Payment payment) {
+    public static OrderCancelReturnDetailResponse of(OrderCancelReturnDetailResponseDto serviceDto) {
         return OrderCancelReturnDetailResponse.builder()
-                .orderDate(order.getCreatedAt())
-                .cancelDate(order.getUpdatedAt())
-                .orderNo(order.getOrderNo())
-                .cancelReason(orderDetails.get(0).getReason())
-                .productResponseList(
-                        orderDetails.stream()
-                        .map(ProductResponse::of)
-                        .toList()
-                )
-                .cancelRefundInfoResponse(
-                        CancelRefundInfoResponse.builder()
-                                .refundFee(0L)
-                                .deliveryFee(0L)
-                                .discountPrice(
-                                        orderDetails.stream()
-                                        .mapToLong(od -> od.getCoupon().getPrice())
-                                        .sum()
-                                )
-                                .totalPrice(orderDetails.stream()
-                                        .mapToLong(OrderDetail::getPrice)
-                                        .sum()
-                                )
-                                .build()
-                )
+                .orderDate(serviceDto.getOrderDate())
+                .cancelDate(serviceDto.getCancelDate())
+                .orderNo(serviceDto.getOrderNo())
+                .cancelReason(serviceDto.getCancelReason())
+                .cancelRefundInfoResponse(CancelRefundInfoResponse.of(serviceDto.getCancelRefundInfoResponseDto()))
                 .build();
     }
 
