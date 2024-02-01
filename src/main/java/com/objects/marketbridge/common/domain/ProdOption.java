@@ -28,4 +28,12 @@ public class ProdOption extends BaseEntity {
         this.product = product;
         this.option = option;
     }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setOption(Option option){
+        this.option = option;
+    }
 }
