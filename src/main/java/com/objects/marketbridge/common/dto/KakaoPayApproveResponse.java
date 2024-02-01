@@ -1,5 +1,6 @@
 package com.objects.marketbridge.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import lombok.Builder;
@@ -19,7 +20,6 @@ public class KakaoPayApproveResponse {
     private String partnerOrderId;
     private String partnerUserId;
     private String paymentMethodType;
-    private String orderName;
 
     @JsonProperty("item_name")
     private String orderName;
@@ -33,9 +33,6 @@ public class KakaoPayApproveResponse {
 
     @JsonProperty("approved_at")
     private LocalDateTime approvedAt;
-
-    private Amount amount;
-    private CardInfo cardInfo;
 
     @Builder
     public KakaoPayApproveResponse(String aid, String tid, String cid, String sid, String partnerOrderId, String partnerUserId, String paymentMethodType, String orderName, Long quantity, Amount amount, CardInfo cardInfo, LocalDateTime approvedAt, String pgToken) {

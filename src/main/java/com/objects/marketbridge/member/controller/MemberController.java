@@ -1,7 +1,6 @@
 package com.objects.marketbridge.member.controller;
 
 import com.objects.marketbridge.common.config.KakaoPayConfig;
-import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.domain.Membership;
 import com.objects.marketbridge.common.dto.*;
 import com.objects.marketbridge.common.infra.KakaoPayService;
@@ -16,7 +15,6 @@ import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.member.constant.MemberConst;
 import com.objects.marketbridge.member.service.port.MembershipRepository;
 import com.objects.marketbridge.payment.domain.Amount;
-import com.objects.marketbridge.payment.service.PaymentService;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
 import com.objects.marketbridge.member.dto.SignInDto;
 import com.objects.marketbridge.member.dto.SignUpDto;
@@ -27,9 +25,11 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.UUID;
 
 import static com.objects.marketbridge.common.config.KakaoPayConfig.SUBS_CID;
+
 
 @Slf4j
 @RestController
