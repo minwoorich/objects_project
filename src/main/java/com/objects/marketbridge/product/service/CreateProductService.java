@@ -40,6 +40,7 @@ public class CreateProductService {
         productImageRepository.saveAll(productImages);
 
         //3. 옵션 추가
+        createProdOptions();
 
         //4. product id 반환
         return product.getId();
@@ -77,6 +78,13 @@ public class CreateProductService {
             product.addProductImages(productImage);
         }
         return productImages;
+    }
+
+    public List<ProdOption> createProdOptions(){
+        List<ProdOption> prodOptions = new ArrayList<>();
+
+
+        return prodOptions;
     }
 
 }
