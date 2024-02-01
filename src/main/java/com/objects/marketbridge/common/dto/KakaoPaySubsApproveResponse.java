@@ -11,42 +11,56 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class KakaoPayApproveResponse {
+public class KakaoPaySubsApproveResponse {
 
     private String aid;
     private String tid;
-    private String cid;
     private String sid;
+    private String cid;
+
+    @JsonProperty("partner_order_id")
     private String partnerOrderId;
+
+    @JsonProperty("partner_user_id")
     private String partnerUserId;
+
+    @JsonProperty("payment_method_type")
     private String paymentMethodType;
-
-    @JsonProperty("item_name")
-    private String orderName;
-
-    private Long quantity;
 
     private Amount amount;
 
     @JsonProperty("card_info")
     private CardInfo cardInfo;
 
+    @JsonProperty("item_name")
+    private String orderName;
+
+    private Long quantity;
+
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
+
     @JsonProperty("approved_at")
     private LocalDateTime approvedAt;
 
+    private String payload;
+
     @Builder
-    public KakaoPayApproveResponse(String aid, String tid, String cid, String sid, String partnerOrderId, String partnerUserId, String paymentMethodType, String orderName, Long quantity, Amount amount, CardInfo cardInfo, LocalDateTime approvedAt, String pgToken) {
+
+    public KakaoPaySubsApproveResponse(String aid, String tid, String sid, String cid, String partnerOrderId, String partnerUserId, String paymentMethodType, Amount amount, CardInfo cardInfo, String orderName, Long quantity, LocalDateTime createdAt, LocalDateTime approvedAt, String payload) {
         this.aid = aid;
         this.tid = tid;
-        this.cid = cid;
         this.sid = sid;
+        this.cid = cid;
         this.partnerOrderId = partnerOrderId;
         this.partnerUserId = partnerUserId;
         this.paymentMethodType = paymentMethodType;
-        this.quantity = quantity;
         this.amount = amount;
         this.cardInfo = cardInfo;
         this.orderName = orderName;
+        this.quantity = quantity;
+        this.createdAt = createdAt;
         this.approvedAt = approvedAt;
+        this.payload = payload;
     }
 }

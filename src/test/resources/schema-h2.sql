@@ -6,7 +6,7 @@ CREATE TABLE member (
                             
                           member_type	varchar(255)	,
                           social_type	varchar(255)	,
-                          membership	varchar(255)	,
+                          membership_no	varchar(255)	,
                           email	varchar(255)	,
                           password	varchar(255)	,
                           name	varchar(255)	,
@@ -16,6 +16,29 @@ CREATE TABLE member (
                           created_at	timestamp	,
                           updated_at	timestamp	,
                           deleted_at	timestamp	
+);
+
+DROP TABLE IF EXISTS membership;
+
+CREATE TABLE membership (
+                        subs_id	bigint auto_increment
+                            primary key,
+
+                        member_id	varchar(255)	,
+                        tid	varchar(255)	,
+                        sid	varchar(255)	,
+                        subs_order_no	varchar(255)	,
+                        status_code	varchar(255)	,
+                        payment_method	varchar(255)	,
+                        total_amount bigint,
+                        discount_amount bigint,
+                        card_issuer_name	varchar(255)	,
+                        card_purchase_name	varchar(255)	,
+                        card_no	varchar(255)	,
+                        card_install_month	BIGINT	,
+                        created_at	datetime(6)	,
+                        updated_at	datetime(6)	,
+                        deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS seller;

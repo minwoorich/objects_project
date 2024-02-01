@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.service.dto;
 
-import com.objects.marketbridge.common.domain.Membership;
-import com.objects.marketbridge.order.domain.MemberShipPrice;
+
+import com.objects.marketbridge.common.domain.MembershipType;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.Objects;
 
-import static com.objects.marketbridge.order.domain.MemberShipPrice.*;
+import static com.objects.marketbridge.order.domain.MemberShipPrice.BASIC;
+import static com.objects.marketbridge.order.domain.MemberShipPrice.WOW;
 
 @Getter
 @NoArgsConstructor
@@ -37,7 +38,7 @@ public class CancelRefundInfoResponseDto {
     }
 
     private static boolean isBasicMember(String memberShip) {
-        return Objects.equals(memberShip, Membership.BASIC.getText());
+        return Objects.equals(memberShip, MembershipType.BASIC.getText());
     }
 
     private static CancelRefundInfoResponseDto createDto(List<OrderDetail> orderDetails, Long deliveryFee, Long refundFee) {
