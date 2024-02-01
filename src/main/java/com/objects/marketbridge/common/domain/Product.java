@@ -1,9 +1,7 @@
 package com.objects.marketbridge.common.domain;
 
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.common.exception.error.CustomLogicException;
-import com.objects.marketbridge.seller.domain.SellerAccount;
-import com.objects.marketbridge.seller.domain.SellerProduct;
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.objects.marketbridge.common.exception.error.ErrorCode.OUT_OF_STOCK;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT_OF_STOCK;
 
 @Entity
 @Getter

@@ -6,6 +6,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class SellerAccountRepoitoryImpl implements SellerAccountRepository {
@@ -26,5 +28,10 @@ public class SellerAccountRepoitoryImpl implements SellerAccountRepository {
     @Override
     public SellerAccount save(SellerAccount sellerAccount) {
         return sellerAccountJpaRepository.save(sellerAccount);
+    }
+
+    @Override
+    public List<SellerAccount> saveAll(List<SellerAccount> sellerAccounts) {
+        return sellerAccountJpaRepository.saveAll(sellerAccounts);
     }
 }

@@ -32,6 +32,7 @@ CREATE TABLE seller (
                         license_no	varchar(255)	,
                         email	varchar(255)	,
                         account_no	varchar(255)	,
+                        balance	bigint	,
                         created_at	datetime(6)	,
                         updated_at	datetime(6)	,
                         deleted_at	datetime(6)

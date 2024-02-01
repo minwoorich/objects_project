@@ -18,6 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
 
@@ -28,6 +32,7 @@ public class CreatePaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderQueryRepository orderQueryRepository;
     private final SellerRepository sellerRepository;
+    private final SellerAccountRepository sellerAccountRepository;
 
     @Transactional
     public CompleteOrderHttp.Response create(KakaoPayApproveResponse response) {
@@ -44,10 +49,16 @@ public class CreatePaymentService {
         payment.changeStatusCode(PAYMENT_COMPLETED.getCode());
 
         //TODO
-        // 4. 판매자 계좌 변경
-        for (OrderDetail orderDetail : order.getOrderDetails()) {
-            Seller seller = sellerRepository.findByIdWithSellerAccount(orderDetail.getSellerId());
-        }
+        // 4. 판매자 계좌 내역 생성
+        List<SellerAccount> sellerAccounts = createSellerAccounts(order);
+        sellerAccountRepository.saveAll(sellerAccounts);
+
+//        Map<Long, List<OrderDetail>> orderDetailMap = order.orderDetailsGroupedBySellerId();
+//        orderDetailMap.entrySet().stream()
+//                .map(entry -> {
+//                    Seller seller = sellerRepository.findById(entry.getKey());
+//                    seller.linkSellerAccounts();
+//                })
 
         // 5. delivery 생성
 
@@ -65,5 +76,25 @@ public class CreatePaymentService {
         LocalDateTime approvedAt = response.getApprovedAt();
 
         return Payment.create(orderNo, paymentMethod, tid, cardInfo, amount, approvedAt);
+    }
+    private List<SellerAccount> createSellerAccounts(Order order) {
+
+        return order.totalAmountGroupedBySellerId().entrySet().stream()
+                .map(entry ->{
+                    sellerRepository.findById(entry.getKey()).updateBalance(entry.getValue());
+                    return createSellerAccount(entry.getValue(), entry.getValue(), "입금");
+                }
+        ).collect(Collectors.toList());
+    }
+    private SellerAccount createSellerAccount(Long amount, Long balance, String detail) {
+
+        Long incoming = amount >=0 ? amount : 0L;
+        Long outgoing = amount <0 ? -amount : 0L;
+
+        return SellerAccount.create(incoming, outgoing, balance, detail);
+    }
+
+    private Long getBalance(Long sellerId) {
+        return sellerRepository.findById(sellerId).getBalance();
     }
 }

@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -113,5 +116,24 @@ public class Order extends BaseEntity {
 
     public void stockDecrease() {
         orderDetails.forEach(o -> o.getProduct().decrease(o.getQuantity()));
+    }
+
+    // 판매자별 총 주문 금액
+    public Map<Long, Long> totalAmountGroupedBySellerId() {
+        return orderDetails.stream()
+                .collect(Collectors.groupingBy(OrderDetail::getSellerId,
+                        Collectors.summingLong(OrderDetail::totalAmount)));
+    }
+
+    // 판매자 별 주문리스트
+    public Map<Long, List<OrderDetail>> orderDetailsGroupedBySellerId() {
+        return orderDetails.stream()
+                .collect(Collectors.groupingBy(OrderDetail::getSellerId));
+    }
+
+    // 판매자 별 sellerId 리스트
+    public Set<Long> sellerIds() {
+        return orderDetails.stream()
+                .collect(Collectors.groupingBy(OrderDetail::getSellerId)).keySet();
     }
 }
