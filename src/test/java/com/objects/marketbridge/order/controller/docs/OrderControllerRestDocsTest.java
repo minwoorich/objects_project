@@ -1,4 +1,4 @@
-package com.objects.marketbridge.order.controller;
+package com.objects.marketbridge.order.controller.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.config.KakaoPayConfig;
@@ -6,6 +6,7 @@ import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
+import com.objects.marketbridge.order.controller.OrderController;
 import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
 import com.objects.marketbridge.order.domain.ProductValue;

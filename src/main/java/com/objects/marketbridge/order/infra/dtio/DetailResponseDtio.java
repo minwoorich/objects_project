@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class DetailResponseDao {
+public class DetailResponseDtio {
 
     private String orderNo;
     private Long productId;
@@ -19,7 +19,7 @@ public class DetailResponseDao {
 
     @Builder
     @QueryProjection
-    public DetailResponseDao(String orderNo, Long productId, String productNo, String name, Long price, Long quantity, String orderStatus) {
+    public DetailResponseDtio(String orderNo, Long productId, String productNo, String name, Long price, Long quantity, String orderStatus) {
         this.orderNo = orderNo;
         this.productId = productId;
         this.productNo = productNo;
