@@ -1,5 +1,6 @@
 package com.objects.marketbridge.common.domain;
 
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -42,17 +43,17 @@ public class MemberCoupon extends BaseEntity {
         this.endDate = endDate;
     }
 
-    public void returnCoupon() {
+    public void changeUsageInfo(DateTimeHolder dateTimeHolder) {
         isUsed = !isUsed;
-        usedDate = null;
+        usedDate = dateTimeHolder == null ? null : dateTimeHolder.getTimeNow();
     }
 
     public void setCoupon(Coupon coupon) {
         this.coupon = coupon;
     }
 
-    public void applyCouponUsage(Boolean isUsed, LocalDateTime usedDate) {
+    public void applyCouponUsage(Boolean isUsed, DateTimeHolder dateTimeHolder) {
         this.isUsed = isUsed;
-        this.usedDate = usedDate;
+        this.usedDate = dateTimeHolder.getTimeNow();
     }
 }

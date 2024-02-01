@@ -2,9 +2,9 @@ package com.objects.marketbridge.member.service;
 
 import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.domain.Membership;
+import com.objects.marketbridge.common.security.domain.CustomUserDetails;
 import com.objects.marketbridge.common.security.dto.JwtTokenDto;
-import com.objects.marketbridge.common.security.jwt.JwtTokenProvider;
-import com.objects.marketbridge.common.security.user.CustomUserDetails;
+import com.objects.marketbridge.common.security.service.JwtTokenProvider;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
 import com.objects.marketbridge.member.dto.SignInDto;
 import com.objects.marketbridge.member.dto.SignUpDto;

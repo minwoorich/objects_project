@@ -3,6 +3,7 @@ package com.objects.marketbridge.order.domain;
 import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,7 +51,7 @@ public class OrderDetail extends BaseEntity {
     private LocalDateTime cancelledAt;
 
     @Builder
-    public OrderDetail(Order order, String orderNo, String tid, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
+    private OrderDetail(Order order, String orderNo, String tid, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
         this.orderNo = orderNo;
         this.tid = tid;
         this.order = order;
@@ -64,10 +65,12 @@ public class OrderDetail extends BaseEntity {
         this.cancelledAt = cancelledAt;
     }
 
+    // 연관관계 메서드
     public void setOrder(Order order) {
         this.order = order;
     }
 
+    // 비즈니스 로직
     public void changeStatusCode(String statusCode) {
         this.statusCode = statusCode;
     }
@@ -86,20 +89,28 @@ public class OrderDetail extends BaseEntity {
                 .build();
     }
 
-    public void cancel(String reason, String statusCode) {
-        if (Objects.equals(statusCode, DELIVERY_COMPLETED.getCode())) {
+    public Integer changeReasonAndStatus(String reason, String statusCode) {
+        // TODO 정책 정해야 함
+        if (Objects.equals(this.statusCode, DELIVERY_COMPLETED.getCode())) {
             throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
         }
         this.statusCode = statusCode;
         this.reason = reason;
         this.product.increase(quantity);
+        return totalAmount();
     }
 
-    public void returnCoupon() {
-        coupon.returnCoupon();
+    public Integer totalAmount() {
+        return (int) (price * quantity);
+    }
+
+
+    public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
+        coupon.changeMemberCouponInfo(dateTimeHolder);
     }
 
     public void setProduct(Product product) {
         this.product = product;
     }
+
 }

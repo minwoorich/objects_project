@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.service.port;
 
-import com.objects.marketbridge.common.domain.Address;
+import com.objects.marketbridge.order.domain.Address;
 
 import java.util.List;
 

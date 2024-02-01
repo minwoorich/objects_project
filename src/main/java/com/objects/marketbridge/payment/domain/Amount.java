@@ -11,10 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Amount {
 
-    @JsonProperty("total")
     private Long totalAmount;
 
-    @JsonProperty("discount")
     private Long discountAmount;
 
     @Builder
