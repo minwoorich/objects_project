@@ -80,6 +80,19 @@ public class KakaoPayService {
                 .body(KakaoPayApproveResponse.class);
     }
 
+    public KakaoPaySubsApproveResponse subsApprove(KakaoPaySubsApproveRequest request) {
+
+        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
+
+        RestClient restClient = setup();
+
+        return restClient.post()
+                .uri(SUBS_END_POINT)
+                .body(requestMap)
+                .retrieve()
+                .body(KakaoPaySubsApproveResponse.class);
+    }
+
     // 취소
     public KaKaoCancelResponse cancel(String tid, Integer cancelAmount) {
 
