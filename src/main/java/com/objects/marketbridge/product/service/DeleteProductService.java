@@ -39,7 +39,7 @@ public class DeleteProductService {
         Product findProduct = productRepository.findById(request.getProductId()).get();
         //2. 연관된 image들과 productImage들 삭제
         DeleteProductDto deleteProductDto = DeleteProductDto.fromRequest(request);
-        deleteImagesAndProductImages(findProduct);
+        deleteProductImages(findProduct);
         //3. 상품 삭제
         productRepository.delete(findProduct);
         //4. 응답Dto 반환
@@ -47,7 +47,7 @@ public class DeleteProductService {
         return response;
     }
 
-    private void deleteImagesAndProductImages(Product product) {
+    private void deleteProductImages(Product product) {
 
         // 관련 images 및 productImages 삭제 로직
         List<ProductImage> findProductImages = productImageRepository.findAllByProductId(product.getId());

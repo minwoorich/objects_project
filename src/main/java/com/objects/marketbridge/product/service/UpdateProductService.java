@@ -36,9 +36,9 @@ public class UpdateProductService {
         updateProduct(findProduct, updateProductDto);
         productRepository.save(findProduct);
         //3. image 및 productImage 수정(삭제후 재등록)
-        deleteImagesAndProductImages(findProduct);
-        List<ProductImage> productImages = createImagesAndProductImages(request.getDetailImgUrls(), ImageType.DETAIL_IMG.toString(),findProduct);
-        productImages.addAll( createImagesAndProductImages(request.getItemImgUrls(), ImageType.ITEM_IMG.toString(), findProduct) );
+        deleteProductImages(findProduct);
+        List<ProductImage> productImages = createProductImages(request.getDetailImgUrls(), ImageType.DETAIL_IMG.toString(),findProduct);
+        productImages.addAll( createProductImages(request.getItemImgUrls(), ImageType.ITEM_IMG.toString(), findProduct) );
         productImageRepository.saveAll(productImages);
 
         //4. product ----- product_option ---- options ---- option_category 관련은 아직 수정하지 않음.
@@ -64,7 +64,7 @@ public class UpdateProductService {
     }
 
 
-    private void deleteImagesAndProductImages(Product product){
+    private void deleteProductImages(Product product){
 
         // 관련 images 및 productImages 삭제 로직
         List<ProductImage> findProductImages = productImageRepository.findAllByProductId(product.getId());
@@ -114,7 +114,7 @@ public class UpdateProductService {
 //        }
     }
 
-    public List<ProductImage> createImagesAndProductImages(List<String> imgUrls, String type, Product product){
+    public List<ProductImage> createProductImages(List<String> imgUrls, String type, Product product){
         List<ProductImage> productImages = new ArrayList<>();
         for (int i = 0; i<imgUrls.size(); i++) {
             // 이미지 저장

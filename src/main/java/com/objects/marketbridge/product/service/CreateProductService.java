@@ -35,8 +35,8 @@ public class CreateProductService {
         Product product = productRepository.save(createProduct(CreateProductDto.fromRequest(request)));
         //2. productImage 저장
         // 2-1. imageurl -> ProductImage 화
-        List<ProductImage> productImages = createImagesAndProductImages(request.getDetailImgUrls(), ImageType.DETAIL_IMG.toString(),product);
-        productImages.addAll( createImagesAndProductImages(request.getItemImgUrls(), ImageType.ITEM_IMG.toString(), product) );
+        List<ProductImage> productImages = createProductImages(request.getDetailImgUrls(), ImageType.DETAIL_IMG.toString(),product);
+        productImages.addAll( createProductImages(request.getItemImgUrls(), ImageType.ITEM_IMG.toString(), product) );
         productImageRepository.saveAll(productImages);
 
         //3. 옵션 추가
@@ -59,7 +59,7 @@ public class CreateProductService {
         return Product.create(category,isOwn,name,price,isSubs,stock,thumbImg,discountRate,productNo);
     }
 
-    public List<ProductImage> createImagesAndProductImages(List<String> imgUrls, String type, Product product){
+    public List<ProductImage> createProductImages(List<String> imgUrls, String type, Product product){
         List<ProductImage> productImages = new ArrayList<>();
         for (int i = 0; i < imgUrls.size(); i++) {
             // 이미지 저장

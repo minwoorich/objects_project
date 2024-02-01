@@ -22,6 +22,11 @@ public class FakeOrderQueryRepository extends BaseFakeOrderRepository implements
     }
 
     @Override
+    public Order findByOrderNoWithMember(String orderNo) {
+        return null;
+    }
+
+    @Override
     public Order findByOrderNoWithOrderDetails(String orderNo) {
         return null;
     }
