@@ -6,6 +6,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class ImageRepositoryImpl implements ImageRepository {
@@ -18,8 +20,8 @@ public class ImageRepositoryImpl implements ImageRepository {
     }
 
     @Override
-    public Image findById(Long id) {
-        return imageJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public Optional<Image> findById(Long id) {
+        return imageJpaRepository.findById(id);
     }
 
     public void delete(Image image) {
@@ -27,6 +29,6 @@ public class ImageRepositoryImpl implements ImageRepository {
     }
 
     public void deleteById(Long id) {
-        imageJpaRepository.delete(findById(id));
+        imageJpaRepository.delete(findById(id).get());
     }
 }

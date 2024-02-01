@@ -15,13 +15,18 @@ public class FakeOrderQueryRepository extends BaseFakeOrderRepository implements
 
     @Override
     public Order findByOrderNo(String orderNo) {
-            return getInstance().data.stream()
+            return getInstance().getData().stream()
                     .filter(order -> order.getOrderNo().equals(orderNo))
                     .findAny()
                     .orElseThrow(() -> new IllegalArgumentException("orderNo와 일치하는 주문이 존재하지 않습니다."));
     }
 
     // TODO : 아래 fakeRepo 에 대한 메서드들 구현해줘야햠 (민우)
+    @Override
+    public Order findByOrderNoWithMember(String orderNo) {
+        return null;
+    }
+
     @Override
     public Order findByOrderNoWithMember(String orderNo) {
         return null;

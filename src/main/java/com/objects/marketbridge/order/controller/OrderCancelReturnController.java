@@ -6,12 +6,13 @@ import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.order.controller.request.OrderCancelRequest;
 import com.objects.marketbridge.order.controller.response.OrderCancelResponse;
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnDetailResponse;
-import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDao;
+import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnResponse;
 import com.objects.marketbridge.order.controller.response.OrderReturnResponse;
 import com.objects.marketbridge.order.service.OrderCancelReturnService;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import jakarta.validation.Valid;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +20,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.objects.marketbridge.common.domain.Membership.WOW;
+import static com.objects.marketbridge.common.domain.MembershipType.WOW;
 
+@Builder
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/orders")
@@ -52,7 +54,7 @@ public class OrderCancelReturnController {
     }
 
     @GetMapping("/cancel-return/list")
-    public ApiResponse<Page<CancelReturnResponseDao>> getCancelReturnList(
+    public ApiResponse<Page<CancelReturnResponseDtio>> getCancelReturnList(
             @RequestParam(name = "memberId") Long memberId,
             @RequestParam(name = "page") Integer page,
             @RequestParam(name = "size") Integer size) {

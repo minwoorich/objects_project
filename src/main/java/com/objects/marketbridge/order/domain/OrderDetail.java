@@ -100,7 +100,7 @@ public class OrderDetail extends BaseEntity {
         }
         this.statusCode = statusCode;
         this.reason = reason;
-        this.product.increaseQuantity(quantity);
+        this.product.increase(quantity);
         return totalAmount();
     }
 

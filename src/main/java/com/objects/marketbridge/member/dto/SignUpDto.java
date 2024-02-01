@@ -2,7 +2,7 @@ package com.objects.marketbridge.member.dto;
 
 
 import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.common.domain.Membership;
+import com.objects.marketbridge.common.domain.MembershipType;
 import com.objects.marketbridge.common.domain.SocialType;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -48,7 +48,7 @@ public class SignUpDto {
                 .phoneNo(phoneNo)
                 .isAgree(isAgree)
                 .isAlert(true)
-                .membership(Membership.BASIC.toString())
+                .membership(MembershipType.BASIC.toString())
                 .socialType(SocialType.DEFAULT.toString())
                 .build();
     }

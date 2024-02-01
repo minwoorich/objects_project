@@ -27,11 +27,14 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product")
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "product")
 //    private List<ProdOption> prodOptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductImage> productImages = new ArrayList<>();
 
     private Boolean isOwn; // 로켓 true , 오픈 마켓 false
 
@@ -50,7 +53,7 @@ public class Product extends BaseEntity{
     private String productNo;
 
     @Builder
-    private Product(Category category, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate, String productNo) {
+    private Product(Category category, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate,String productNo) {
         this.category = category;
         this.isOwn = isOwn; // 로켓 true , 오픈 마켓 false
         this.name = name;
@@ -62,7 +65,28 @@ public class Product extends BaseEntity{
         this.productNo = productNo;
     }
 
-    public Product updateProduct(Category category, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate, String productNo) {
+    public static Product create(Category category, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate,String productNo){
+        return Product.builder()
+                .category(category)
+                .isOwn(isOwn)
+                .name(name)
+                .price(price)
+                .isSubs(isSubs)
+                .stock(stock)
+                .thumbImg(thumbImg)
+                .discountRate(discountRate)
+                .productNo(productNo)
+                .build();
+    }
+
+    public void addProductImages(ProductImage productImage){
+        productImages.add(productImage);
+        productImage.setProduct(this);
+    }
+
+    public Product update(Category category, Boolean isOwn, String name, Long price,
+                          Boolean isSubs, Long stock, String thumbImg, Long discountRate,
+                          String productNo ) {
         this.category = category;
         this.isOwn = isOwn; // 로켓 true , 오픈 마켓 false
         this.name = name;
@@ -72,6 +96,7 @@ public class Product extends BaseEntity{
         this.thumbImg = thumbImg;
         this.discountRate = discountRate;
         this.productNo = productNo;
+
         return this;
     }
 
@@ -80,7 +105,7 @@ public class Product extends BaseEntity{
         orderDetail.setProduct(this);
     }
 
-    public void increaseQuantity(Long quantity) {
+    public void increase(Long quantity) {
         stock += quantity;
     }
 

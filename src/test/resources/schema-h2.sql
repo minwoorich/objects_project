@@ -6,7 +6,7 @@ CREATE TABLE member (
                             
                           member_type	varchar(255)	,
                           social_type	varchar(255)	,
-                          membership	varchar(255)	,
+                          membership_no	varchar(255)	,
                           email	varchar(255)	,
                           password	varchar(255)	,
                           name	varchar(255)	,
@@ -16,6 +16,29 @@ CREATE TABLE member (
                           created_at	timestamp	,
                           updated_at	timestamp	,
                           deleted_at	timestamp	
+);
+
+DROP TABLE IF EXISTS membership;
+
+CREATE TABLE membership (
+                        subs_id	bigint auto_increment
+                            primary key,
+
+                        member_id	varchar(255)	,
+                        tid	varchar(255)	,
+                        sid	varchar(255)	,
+                        subs_order_no	varchar(255)	,
+                        status_code	varchar(255)	,
+                        payment_method	varchar(255)	,
+                        total_amount bigint,
+                        discount_amount bigint,
+                        card_issuer_name	varchar(255)	,
+                        card_purchase_name	varchar(255)	,
+                        card_no	varchar(255)	,
+                        card_install_month	BIGINT	,
+                        created_at	datetime(6)	,
+                        updated_at	datetime(6)	,
+                        deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS seller;
@@ -74,8 +97,8 @@ DROP TABLE IF EXISTS category;
 CREATE TABLE category (
                             category_id	bigint auto_increment
                                 primary key,
-                            prev_id	bigint	,
-                            next_id	bigint	,
+                            parent_id	bigint	,
+                            level	bigint	,
                             name	varchar(255)	,
                             created_at	timestamp	,
                             updated_at	timestamp	,
@@ -113,6 +136,7 @@ CREATE TABLE product_image (
                                      primary key,
                                  product_id	bigint	,
                                  image_id	bigint	,
+                                 seq_no bigint ,
                                  created_at	timestamp	,
                                  updated_at	timestamp	,
                                  deleted_at	timestamp	
@@ -549,7 +573,6 @@ DROP TABLE IF EXISTS product;
 CREATE TABLE product (
                            product_id	bigint auto_increment primary key,
                            category_id	bigint	,
-                           product_no	varchar(255)	,
                            is_own	bit	,
                            name	varchar(255)	,
                            price	bigint	,
@@ -557,6 +580,7 @@ CREATE TABLE product (
                            stock	bigint	,
                            thumb_img	varchar(255)	,
                            discount_rate	bigint	,
+                           product_no	varchar(255)	,
                            created_at	timestamp	,
                            updated_at	timestamp	,
                            deleted_at	timestamp	

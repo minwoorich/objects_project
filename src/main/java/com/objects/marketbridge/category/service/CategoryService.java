@@ -1,6 +1,6 @@
 package com.objects.marketbridge.category.service;
 
-import com.objects.marketbridge.category.controller.response.CategoryReadResponseDto;
+import com.objects.marketbridge.category.controller.response.ReadCategoryResponseDto;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.common.domain.Category;
 import lombok.RequiredArgsConstructor;
@@ -47,15 +47,20 @@ public class CategoryService {
                 }
                 // 필요한 열의 데이터 추출
                 String largeCategoryName = row.getCell(0).getStringCellValue(); // 대분류 카테고리 이름
+
+                // '/'를 '_'로 변경
+                largeCategoryName = largeCategoryName.replace("/", "_");
+
                 //대분류 등록
                 Category largeCategory;
                 if (categoryRepository.existsByName(largeCategoryName)) {
                     // 대분류가 이미 존재하는 경우 처리
-                    largeCategory = categoryRepository.findByName(largeCategoryName);
+                    largeCategory = categoryRepository.findByName(largeCategoryName).get();
                 } else {
                     // 대분류가 존재하지 않는 경우 처리
                     largeCategory = new Category(null, 0L, largeCategoryName);
                     categoryRepository.save(largeCategory);
+
                 }
             }
 
@@ -74,7 +79,16 @@ public class CategoryService {
                 String largeCategoryName = row.getCell(0).getStringCellValue(); // 대분류 카테고리 이름
                 String mediumCategoryName = row.getCell(1).getStringCellValue(); // 중분류 카테고리 이름
 
-                Category largeCategory = categoryRepository.findByNameAndLevel(largeCategoryName, 0L);
+                // '/'를 '_'로 변경
+                largeCategoryName = largeCategoryName.replace("/", "_");
+                mediumCategoryName = mediumCategoryName.replace("/", "_");
+
+                Category largeCategory = categoryRepository.findByNameAndLevel(largeCategoryName, 0L).get();
+
+//                Optional<Category> optionalLargeCategory
+//                        = categoryRepository.findByNameAndLevel(largeCategoryName, 0L);
+//                Category largeCategory = optionalLargeCategory
+//                        .orElseThrow(() -> new EntityNotFoundException("해당하는 대분류 카테고리를 찾을 수 없습니다."));
 
                 // 중복 체크 및 중분류 등록
                 Category mediumCategory;
@@ -117,13 +131,19 @@ public class CategoryService {
                 String largeCategoryName = row.getCell(0).getStringCellValue(); // 대분류 카테고리 이름
                 String mediumCategoryName = row.getCell(1).getStringCellValue(); // 중분류 카테고리 이름
                 String smallCategoryName = row.getCell(2).getStringCellValue(); // 소분류 카테고리 이름
+
+                // '/'를 '_'로 변경
+                largeCategoryName = largeCategoryName.replace("/", "_");
+                mediumCategoryName = mediumCategoryName.replace("/", "_");
+                smallCategoryName = smallCategoryName.replace("/", "_");
+
                 // 중복 체크 및 소분류 등록
                 Category smallCategory;
                 List<Category> mediumCategoriesToBeCompared
                         = categoryRepository.findAllByNameAndLevel(mediumCategoryName, 1L);
                 for (Category mediumCategoryToBeCompared : mediumCategoriesToBeCompared) {
                     Category largeCategoryToBeCompared
-                            = categoryRepository.findById(mediumCategoryToBeCompared.getParentId());
+                            = categoryRepository.findById(mediumCategoryToBeCompared.getParentId()).get();
                     if (largeCategoryToBeCompared.getName().equals(largeCategoryName)) {
                         smallCategory = new Category(mediumCategoryToBeCompared.getId(), 2L, smallCategoryName);
                         categoryRepository.save(smallCategory);
@@ -147,29 +167,17 @@ public class CategoryService {
 
 
 
-//    public List<Category> getAllCategories() {
-//    }
-
-    //    public List<Category> getLargeCategories() {
-//        return categoryRepository.findAllByLevelAndParentIdIsNull(0L);
-//    }
-    public List<CategoryReadResponseDto> getLargeCategories() {
+    public List<ReadCategoryResponseDto> getLargeCategories() {
         List<Category> categories = categoryRepository.findAllByLevelAndParentIdIsNull(0L);
         return convertToDtoList(categories);
     }
 
-    //    public List<Category> getMediumCategories(Long parentId) {
-//        return categoryRepository.findAllByLevelAndParentId(1L, parentId);
-//    }
-    public List<CategoryReadResponseDto> getMediumCategories(Long parentId) {
+    public List<ReadCategoryResponseDto> getMediumCategories(Long parentId) {
         List<Category> categories = categoryRepository.findAllByLevelAndParentId(1L, parentId);
         return convertToDtoList(categories);
     }
 
-    //    public List<Category> getSmallCategories(Long parentId) {
-//        return categoryRepository.findAllByLevelAndParentId(2L, parentId);
-//    }
-    public List<CategoryReadResponseDto> getSmallCategories(Long parentId) {
+    public List<ReadCategoryResponseDto> getSmallCategories(Long parentId) {
         List<Category> categories = categoryRepository.findAllByLevelAndParentId(2L, parentId);
         return convertToDtoList(categories);
     }
@@ -177,21 +185,21 @@ public class CategoryService {
 
 
     //내부 이용 메서드
-    private List<CategoryReadResponseDto> convertToDtoList(List<Category> categories) {
-        List<CategoryReadResponseDto> categoryReadResponseDtos = new ArrayList<>();
+    private List<ReadCategoryResponseDto> convertToDtoList(List<Category> categories) {
+        List<ReadCategoryResponseDto> readCategoryResponseDtos = new ArrayList<>();
         for (Category category : categories) {
-            CategoryReadResponseDto categoryReadResponseDto = new CategoryReadResponseDto();
-            categoryReadResponseDto.setId(category.getId());
-            categoryReadResponseDto.setParentId(category.getParentId());
-            categoryReadResponseDto.setLevel(category.getLevel());
-            categoryReadResponseDto.setName(category.getName());
+            ReadCategoryResponseDto readCategoryResponseDto = new ReadCategoryResponseDto();
+            readCategoryResponseDto.setId(category.getId());
+            readCategoryResponseDto.setParentId(category.getParentId());
+            readCategoryResponseDto.setLevel(category.getLevel());
+            readCategoryResponseDto.setName(category.getName());
 
             // childCategories 필드는 재귀적으로 변환
-            categoryReadResponseDto.setChildCategories(convertToDtoList(category.getChildCategories()));
+            readCategoryResponseDto.setChildCategories(convertToDtoList(category.getChildCategories()));
 
-            categoryReadResponseDtos.add(categoryReadResponseDto);
+            readCategoryResponseDtos.add(readCategoryResponseDto);
         }
-        return categoryReadResponseDtos;
+        return readCategoryResponseDtos;
     }
 
 
