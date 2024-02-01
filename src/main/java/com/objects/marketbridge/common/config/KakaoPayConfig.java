@@ -1,9 +1,11 @@
 package com.objects.marketbridge.common.config;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Getter
 public class KakaoPayConfig {
 
     public static final String KAKAO_BASE_URL = "https://kapi.kakao.com/v1/payment";
@@ -11,6 +13,8 @@ public class KakaoPayConfig {
     public static final String READY_END_POINT = "/ready";
 
     public static final String APPROVE_END_POINT = "/approve";
+
+    public static final String SUBS_END_POINT = "/subscribe";
 
     public static final String CANCEL_END_POINT = "/cancel";
 
@@ -43,11 +47,5 @@ public class KakaoPayConfig {
         return host + uri + "/kakao-pay/approval";
     }
 
-    public String getAdminKey() {
-        return adminKey;
-    }
 
-    public String getTestApiKey() {
-        return testApiKey;
-    }
 }

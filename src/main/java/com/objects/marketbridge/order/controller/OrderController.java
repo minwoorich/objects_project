@@ -77,19 +77,19 @@ public class OrderController {
         return ApiResponse.ok(response);
     }
 
-    public ApiResponse<KakaoPayReadyResponse> saveSubsOrder(
-            @AuthMemberId Long memberId,
-            @Valid @RequestBody CreateOrderRequest request) {
-
-        // 1. kakaoPaymentReadyService 호출
-        KakaoPayReadyResponse response = kakaoPayService.ready(createKakaoSubsReadyRequest(request, memberId));
-        String tid = response.getTid();
-
-        // 2. 주문 생성
-        createOrderService.create(getCreateOrderDto(request, memberId, tid));
-
-        return ApiResponse.ok(response);
-    }
+//    public ApiResponse<KakaoPayReadyResponse> saveSubsOrder(
+//            @AuthMemberId Long memberId,
+//            @Valid @RequestBody CreateOrderRequest request) {
+//
+//        // 1. kakaoPaymentReadyService 호출
+//        KakaoPayReadyResponse response = kakaoPayService.ready(createKakaoSubsReadyRequest(request, memberId));
+//        String tid = response.getTid();
+//
+//        // 2. 주문 생성
+//        createOrderService.create(getCreateOrderDto(request, memberId, tid));
+//
+//        return ApiResponse.ok(response);
+//    }
 
     private CreateOrderDto getCreateOrderDto(CreateOrderRequest request, Long memberId, String tid) {
 

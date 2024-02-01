@@ -1,10 +1,7 @@
 package com.objects.marketbridge.common.infra;
 
 import com.objects.marketbridge.common.config.KakaoPayConfig;
-import com.objects.marketbridge.common.dto.KakaoPayApproveRequest;
-import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
-import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
-import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
+import com.objects.marketbridge.common.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.FormHttpMessageConverter;
@@ -52,6 +49,19 @@ public class KakaoPayService {
                 .body(requestMap)
                 .retrieve()
                 .body(KakaoPayApproveResponse.class);
+    }
+
+    public KakaoPaySubsApproveResponse subsApprove(KakaoPaySubsApproveRequest request) {
+
+        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
+
+        RestClient restClient = setup();
+
+        return restClient.post()
+                .uri(SUBS_END_POINT)
+                .body(requestMap)
+                .retrieve()
+                .body(KakaoPaySubsApproveResponse.class);
     }
 
     // 취소
