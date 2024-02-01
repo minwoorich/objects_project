@@ -18,7 +18,7 @@ class ProductTest {
         Long quantity = 5L;
 
         // when
-        product.increaseQuantity(quantity);
+        product.increase(quantity);
 
         // then
         assertThat(product.getStock()).isEqualTo(15L);
