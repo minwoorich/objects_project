@@ -2,12 +2,14 @@ package com.objects.marketbridge.order.service.dto;
 
 import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.Membership;
+import com.objects.marketbridge.common.domain.MembershipType;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.objects.marketbridge.common.domain.MembershipType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CancelRefundInfoResponseDtoTest {
@@ -16,7 +18,7 @@ class CancelRefundInfoResponseDtoTest {
     @DisplayName("멤버십이 일반이라면 배송비 3000원, 환불비 1000원이다.")
     public void of1() {
         // given
-        String memberShip = Membership.BASIC.getText();
+        String memberShip = BASIC.getText();
 
         Coupon coupon1 = Coupon.builder()
                 .price(1000L)
@@ -50,7 +52,7 @@ class CancelRefundInfoResponseDtoTest {
     @DisplayName("멤버십이 와우라면 배송비, 환불비는 0원이다.")
     public void of2() {
         // given
-        String memberShip = Membership.WOW.getText();
+        String memberShip = WOW.getText();
 
         Coupon coupon1 = Coupon.builder()
                 .price(1000L)

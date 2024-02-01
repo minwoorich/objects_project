@@ -2,6 +2,7 @@ package com.objects.marketbridge.order.service.dto;
 
 
 import com.objects.marketbridge.common.domain.MembershipType;
+import com.objects.marketbridge.common.domain.Membership;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import lombok.Builder;
 import lombok.Getter;

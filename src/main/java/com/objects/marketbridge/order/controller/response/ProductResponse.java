@@ -2,6 +2,7 @@ package com.objects.marketbridge.order.controller.response;
 
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.order.service.dto.ProductListResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,18 @@ public class ProductResponse {
                 .name(orderDetail.getProduct().getName())
                 .price(orderDetail.getProduct().getPrice())
                 .quantity(orderDetail.getQuantity())
+                .productNo(orderDetail.getProduct().getProductNo())
                 .build();
+    }
+
+    public static ProductResponse of(ProductListResponseDto productListResponseDto) {
+        return ProductResponse.builder()
+                .productId(productListResponseDto.getProductId())
+                .name(productListResponseDto.getName())
+                .price(productListResponseDto.getPrice())
+                .quantity(productListResponseDto.getQuantity())
+                .productNo(productListResponseDto.getProductNo())
+                .build();
+
     }
 }
