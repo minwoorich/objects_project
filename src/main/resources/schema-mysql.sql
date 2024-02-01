@@ -55,6 +55,7 @@ CREATE TABLE seller (
                         license_no	varchar(255)	,
                         email	varchar(255)	,
                         account_no	varchar(255)	,
+                        balance	bigint	,
                         created_at	datetime(6)	,
                         updated_at	datetime(6)	,
                         deleted_at	datetime(6)
@@ -250,6 +251,7 @@ CREATE TABLE order_detail (
                                    reward_type	varchar(255)	,
                                    quantity	bigint	,
                                    price	bigint	,
+                                   seller_id	bigint	,
                                    status_code	varchar(255)	,
                                    tid	varchar(255)	,
                                    delivered_date	datetime(6)	,

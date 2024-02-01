@@ -21,8 +21,8 @@ public class SellerRepositoryImpl implements SellerRepository {
     }
 
     @Override
-    public Seller findWithSellerAccountById(Long id) {
-        return null;
+    public Seller findByIdWithSellerAccount(Long id) {
+        return sellerJpaRepository.findByIdWithSellerAccount(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

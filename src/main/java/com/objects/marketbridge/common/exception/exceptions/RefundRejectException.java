@@ -1,4 +1,4 @@
-package com.objects.marketbridge.common.exception.error;
+package com.objects.marketbridge.common.exception.exceptions;
 
 public class RefundRejectException extends RuntimeException {
 

@@ -80,10 +80,11 @@ public class CreateOrderService {
             Long quantity = productValue.getQuantity();
             Long price = product.getPrice();
             String tid = order.getTid();
+            Long sellerId = productValue.getSellerId();
 
             // OrderDetail 엔티티 생성
             OrderDetail orderDetail =
-                    OrderDetail.create(tid, order, product, orderNo, coupon, quantity, price, StatusCodeType.ORDER_INIT.getCode());
+                    OrderDetail.create(tid, order, product, orderNo, coupon, quantity, price, sellerId, StatusCodeType.ORDER_INIT.getCode());
 
             // orderDetails 에 추가
             orderDetails.add(orderDetail);
