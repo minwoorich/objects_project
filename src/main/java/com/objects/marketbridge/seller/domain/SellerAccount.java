@@ -30,4 +30,9 @@ public class SellerAccount {
         this.incoming = incoming;
         this.outgoing = outgoing;
     }
+
+    // 연관관계 편의 메서드
+    public void linkSeller(Seller seller) {
+        this.seller = seller;
+    }
 }

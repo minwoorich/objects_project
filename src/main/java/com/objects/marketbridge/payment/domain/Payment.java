@@ -24,9 +24,9 @@ public class Payment extends BaseEntity {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    private String tid;
     private String orderNo;
     private String paymentMethod; // CARD, MONEY
-    private String tid;
     private LocalDateTime approvedAt;
 
     // 카드 결제

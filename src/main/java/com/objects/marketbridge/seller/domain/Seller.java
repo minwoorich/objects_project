@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,6 +28,9 @@ public class Seller extends BaseEntity {
     String email;
     String accountNo;
 
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<SellerAccount> sellerAccounts = new ArrayList<>();
+
     @Builder
     private Seller(String name, String bizNo, String owner, String category, String detail, String address, String licenseNo, String email, String accountNo) {
         this.name = name;
@@ -36,5 +42,14 @@ public class Seller extends BaseEntity {
         this.licenseNo = licenseNo;
         this.email = email;
         this.accountNo = accountNo;
+    }
+
+    // 연관관계 메서드
+    public void linkSellerAccounts(SellerAccount sellerAccount) {
+        if (this.sellerAccounts.contains(sellerAccount)) {
+            sellerAccounts.remove(sellerAccount);
+        }
+        this.sellerAccounts.add(sellerAccount);
+        sellerAccount.linkSeller(this);
     }
 }

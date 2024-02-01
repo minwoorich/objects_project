@@ -223,6 +223,7 @@ CREATE TABLE order_detail (
                                      product_id	bigint	,
                                      order_no varchar(255),
                                      coupon_id	bigint	,
+                                     seller_id	bigint	,
                                      reward_type	varchar(255)	,
                                      quantity	bigint	,
                                      price	bigint	,
