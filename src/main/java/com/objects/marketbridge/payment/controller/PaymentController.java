@@ -71,7 +71,7 @@ public class PaymentController {
                 .partnerUserId(order.getMember().getId().toString())
                 .partnerOrderId(order.getOrderNo())
                 .tid(order.getTid())
-                .totalAmount(order.getTotalPrice().toString())
+                .totalAmount(order.getTotalPrice())
                 .cid(ONE_TIME_CID)
                 .build();
     }

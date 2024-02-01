@@ -151,7 +151,7 @@ public class MemberController {
                 .partnerOrderId(membership.getSubsOrderNo())
                 .partnerUserId(membership.getMember().getId().toString())
                 .tid(membership.getTid())
-                .totalAmount(membership.getAmount().getTotalAmount().toString())
+                .totalAmount(membership.getAmount().getTotalAmount())
                 .cid(SUBS_CID)
                 .build();
     }
