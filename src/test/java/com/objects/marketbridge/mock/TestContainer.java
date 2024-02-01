@@ -10,7 +10,9 @@ import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 public class TestContainer {
 
