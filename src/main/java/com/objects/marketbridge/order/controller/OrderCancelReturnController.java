@@ -3,6 +3,7 @@ package com.objects.marketbridge.order.controller;
 
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.order.controller.dto.ConfirmCancelReturnHttp;
 import com.objects.marketbridge.order.controller.request.OrderCancelRequest;
 import com.objects.marketbridge.order.controller.response.OrderCancelResponse;
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnDetailResponse;
@@ -33,8 +34,8 @@ public class OrderCancelReturnController {
     private final DateTimeHolder dateTimeHolder;
 
     @PostMapping("/cancel-return-flow/thank-you")
-    public ApiResponse<OrderCancelReturnResponse> cancelReturnOrder(@RequestBody @Valid OrderCancelRequest request) {
-        return ApiResponse.ok(OrderCancelReturnResponse.of(orderCancelReturnService.confirmCancelReturn(request.toServiceRequest(), dateTimeHolder)));
+    public ApiResponse<ConfirmCancelReturnHttp.Response> confirmCancelReturn(@RequestBody @Valid OrderCancelRequest request) {
+        return ApiResponse.ok(ConfirmCancelReturnHttp.Response.of(orderCancelReturnService.confirmCancelReturn(request.toServiceRequest(), dateTimeHolder)));
     }
 
     @GetMapping("/cancel-flow")

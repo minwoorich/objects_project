@@ -8,6 +8,7 @@ import com.objects.marketbridge.mock.BaseFakeOrderDetailRepository;
 import com.objects.marketbridge.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.mock.TestContainer;
 import com.objects.marketbridge.mock.TestDateTimeHolder;
+import com.objects.marketbridge.order.controller.dto.ConfirmCancelReturnHttp;
 import com.objects.marketbridge.order.controller.request.OrderCancelRequest;
 import com.objects.marketbridge.order.controller.response.OrderCancelResponse;
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnDetailResponse;
@@ -138,7 +139,7 @@ public class OrderCancelReturnControllerTest {
                 .build();
 
         // when
-        ApiResponse<OrderCancelReturnResponse> result = orderCancelReturnController.cancelReturnOrder(request);
+        ApiResponse<ConfirmCancelReturnHttp.Response> result = orderCancelReturnController.confirmCancelReturn(request);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
