@@ -4,21 +4,19 @@ import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.OrderCancelReturnController;
 import com.objects.marketbridge.order.service.OrderCancelReturnService;
-import com.objects.marketbridge.order.service.RefundService;
+import com.objects.marketbridge.payment.service.port.RefundClient;
 import com.objects.marketbridge.order.service.port.*;
 import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 
 public class TestContainer {
 
     public final OrderCancelReturnController orderCancelReturnController;
 
     public final OrderCancelReturnService orderCancelReturnService;
-    public final RefundService refundService;
+    public final RefundClient refundClient;
 
     public final OrderQueryRepository orderQueryRepository;
     public final OrderCommendRepository orderCommendRepository;
@@ -44,13 +42,13 @@ public class TestContainer {
         this.memberRepository = new FakeMemberRepository();
 
         // Service
-        this.refundService = new FakeRefundService(dateTimeHolder);
+        this.refundClient = new FakeRefundClient(dateTimeHolder);
         this.orderCancelReturnService = OrderCancelReturnService.builder()
                 .dateTimeHolder(dateTimeHolder)
                 .orderDetailQueryRepository(this.orderDetailQueryRepository)
                 .orderQueryRepository(this.orderQueryRepository)
                 .productRepository(this.productRepository)
-                .refundService(this.refundService)
+                .refundClient(this.refundClient)
                 .orderCommendRepository(this.orderCommendRepository)
                 .orderDetailCommendRepository(this.orderDetailCommendRepository)
                 .build();

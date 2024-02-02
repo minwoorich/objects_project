@@ -10,6 +10,7 @@ import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
+import com.objects.marketbridge.payment.service.port.RefundClient;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class OrderCancelReturnService {
 
     private final DateTimeHolder dateTimeHolder;
 
-    private final RefundService refundService;
+    private final RefundClient refundClient;
 
     private final OrderDetailQueryRepository orderDetailQueryRepository;
     private final OrderDetailCommendRepository orderDetailCommendRepository;
@@ -40,38 +41,38 @@ public class OrderCancelReturnService {
 
     // TODO 트랜잭션 위치 고려해야함
     @Transactional
-    public CancelReturnResponseDto confirmCancelReturn(CancelRequestDto cancelRequestDto, DateTimeHolder dateTimeHolder) {
-        Order order = orderQueryRepository.findByOrderNo(cancelRequestDto.getOrderNo());
+    public ConfirmCancelReturnDto.Response confirmCancelReturn(ConfirmCancelReturnDto.Request request, DateTimeHolder dateTimeHolder) {
+        Order order = orderQueryRepository.findByOrderNo(request.getOrderNo());
 
-        Integer cancelAmount = order.changeDetailsReasonAndStatus(cancelRequestDto.getCancelReason(), ORDER_CANCEL.getCode());
+        Integer cancelAmount = order.changeDetailsReasonAndStatus(request.getCancelReason(), ORDER_CANCEL.getCode());
 
         order.changeMemberCouponInfo(null);
 
-        RefundDto refundDto = refundService.refund(order.getTid(), cancelAmount);
+        RefundDto refundDto = refundClient.refund(order.getTid(), cancelAmount);
 
-        return CancelReturnResponseDto.of(order, refundDto, dateTimeHolder);
+        return ConfirmCancelReturnDto.Response.of(order, refundDto, dateTimeHolder);
     }
 
-    public CancelResponseDto requestCancel(String orderNo, List<Long> productIds, String membership) {
+    public RequestCancelDto.Response findCancelInfo(String orderNo, List<Long> productIds, String membership) {
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
 
-        return CancelResponseDto.of(orderDetails, membership); // TODO 맴버 조회해서 타입 넣기
+        return RequestCancelDto.Response.of(orderDetails, membership); // TODO 맴버 조회해서 타입 넣기
     }
 
-    public ReturnResponseDto requestReturn(String orderNo, List<Long> productIds, String membership) {
+    public RequestReturnDto.Response findReturnInfo(String orderNo, List<Long> productIds, String membership) {
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
 
-        return ReturnResponseDto.of(orderDetails, membership); // TODO 맴버 조회해서 타입 넣기
+        return RequestReturnDto.Response.of(orderDetails, membership); // TODO 맴버 조회해서 타입 넣기
     }
 
-    public OrderCancelReturnDetailResponseDto findCancelReturnDetail(String orderNo, List<Long> productIds, String membership, DateTimeHolder dateTimeHolder) {
+    public GetCancelReturnDetailDto.Response findCancelReturnDetail(String orderNo, List<Long> productIds, String membership, DateTimeHolder dateTimeHolder) {
 
 //        Order order = validOrder(orderNo);
 //        List<OrderDetail> orderDetails = validOrderDetails(orderNo, productIds);
         Order order = orderQueryRepository.findByOrderNo(orderNo);
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
 
-        return OrderCancelReturnDetailResponseDto.of(order, orderDetails, membership, dateTimeHolder); // TODO 맴버 조회해서 타입 넣기
+        return GetCancelReturnDetailDto.Response.of(order, orderDetails, membership, dateTimeHolder); // TODO 맴버 조회해서 타입 넣기
     }
 
 //    private Order validOrder(String orderNo) {
