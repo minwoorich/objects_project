@@ -21,7 +21,9 @@ class CancelResponseDtoTest {
     @DisplayName("일반 맴버십인 경우 배송비 3000원, 반품비 1000원으로 CancelResponseDto로 변환할 수 있다.")
     public void of1() {
         // given
-        String memberShip = BASIC.getText();
+
+        String memberShip = MembershipType.BASIC.getText();
+
 
         Product product1 = Product.builder()
                 .price(1000L)
@@ -76,7 +78,8 @@ class CancelResponseDtoTest {
     @DisplayName("와우 맴버십인 경우 배송비 0원, 반품비 0원으로 CancelResponseDto로 변환할 수 있다.")
     public void of2() {
         // given
-        String memberShip = WOW.getText();
+
+        String memberShip = MembershipType.WOW.getText();
 
         Product product1 = Product.builder()
                 .price(1000L)

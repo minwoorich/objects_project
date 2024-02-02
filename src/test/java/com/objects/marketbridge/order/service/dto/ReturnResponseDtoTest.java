@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.service.dto;
 
 import com.objects.marketbridge.common.domain.Coupon;
-import com.objects.marketbridge.common.domain.Membership;
+
 import com.objects.marketbridge.common.domain.MembershipType;
 import com.objects.marketbridge.common.domain.Product;
 import com.objects.marketbridge.order.domain.OrderDetail;
@@ -21,7 +21,8 @@ class ReturnResponseDtoTest {
     @DisplayName("일반 맴버십인 경우 배송비 3000원, 반품비 1000원으로 ReturnResponseDto로 변환할 수 있다.")
     public void of1() {
         // given
-        String memberShip = BASIC.getText();
+
+        String memberShip = MembershipType.BASIC.getText();
 
         Product product1 = Product.builder()
                 .price(1000L)
@@ -76,7 +77,8 @@ class ReturnResponseDtoTest {
     @DisplayName("일반 맴버십인 경우 배송비 3000원, 반품비 1000원으로 ReturnResponseDto로 변환할 수 있다.")
     public void of2() {
         // given
-        String memberShip = WOW.getText();
+        String memberShip = MembershipType.WOW.getText();
+
 
         Product product1 = Product.builder()
                 .price(1000L)
