@@ -44,8 +44,8 @@ public class MemberController {
 
     @GetMapping("/check-email")
     public ApiResponse<CheckedResultDto> checkDuplicateEmail(@RequestParam(name="email") String email) {
-        CheckedResultDto checked = memberService.isDuplicateEmail(email);
-        return ApiResponse.ok(checked);
+        CheckedResultDto checkedResultDto = memberService.isDuplicateEmail(email);
+        return ApiResponse.ok(checkedResultDto);
     }
 
     @PostMapping("/sign-up")

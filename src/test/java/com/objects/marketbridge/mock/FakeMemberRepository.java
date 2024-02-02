@@ -17,6 +17,11 @@ public class FakeMemberRepository implements MemberRepository {
     private List<Member> data = new ArrayList<>();
 
     @Override
+    public boolean existsByEmail(String email) {
+        return false;
+    }
+
+    @Override
     public AuthMember findAuthMemberByEmail(String email) {
         return null;
     }

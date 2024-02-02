@@ -39,7 +39,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     public CheckedResultDto isDuplicateEmail(String email){
-        boolean isDuplicateEmail = memberRepository.findOptionalByEmail(email).isPresent();
+        boolean isDuplicateEmail = memberRepository.existsByEmail(email);
         return CheckedResultDto.builder().checked(isDuplicateEmail).build();
     }
 

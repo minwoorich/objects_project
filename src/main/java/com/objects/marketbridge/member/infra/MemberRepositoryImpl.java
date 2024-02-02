@@ -17,6 +17,11 @@ public class MemberRepositoryImpl implements MemberRepository {
     private final MemberJpaRepository memberJpaRepository;
 
     @Override
+    public boolean existsByEmail(String email) {
+        return memberJpaRepository.existsByEmail(email);
+    }
+
+    @Override
     public AuthMember findAuthMemberByEmail(String email) {
         return  memberJpaRepository.findAuthMemberByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
