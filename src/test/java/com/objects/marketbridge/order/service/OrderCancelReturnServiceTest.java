@@ -133,7 +133,7 @@ class OrderCancelReturnServiceTest {
 
         // then
         assertThat(result.getOrderId()).isEqualTo(1L);
-        assertThat(result.getOrderNumber()).isEqualTo("1");
+        assertThat(result.getOrderNo()).isEqualTo("1");
         assertThat(result.getTotalPrice()).isEqualTo(8000L);
         assertThat(result.getCancellationDate()).isEqualTo(updateTime);
         assertThat(result.getRefundInfo())

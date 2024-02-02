@@ -43,11 +43,11 @@ public class ConfirmCancelReturnHttp {
         private String orderNumber;
         private Long totalPrice;
         private LocalDateTime cancellationDate; // 주문 취소 일자
-        private List<ConfirmCancelReturnDto.ProductResponse> cancelledItems;
+        private List<ConfirmCancelReturnDto.ProductInfo> cancelledItems;
         private ConfirmCancelReturnDto.RefundInfo refundInfo;
 
         @Builder
-        private Response(Long orderId, String orderNumber, Long totalPrice, LocalDateTime cancellationDate, ConfirmCancelReturnDto.RefundInfo refundInfo, List<ConfirmCancelReturnDto.ProductResponse> cancelledItems) {
+        private Response(Long orderId, String orderNumber, Long totalPrice, LocalDateTime cancellationDate, ConfirmCancelReturnDto.RefundInfo refundInfo, List<ConfirmCancelReturnDto.ProductInfo> cancelledItems) {
             this.orderId = orderId;
             this.orderNumber = orderNumber;
             this.totalPrice = totalPrice;
@@ -59,7 +59,7 @@ public class ConfirmCancelReturnHttp {
         public static Response of(ConfirmCancelReturnDto.Response serviceDto) {
             return Response.builder()
                     .orderId(serviceDto.getOrderId())
-                    .orderNumber(serviceDto.getOrderNumber())
+                    .orderNumber(serviceDto.getOrderNo())
                     .totalPrice(serviceDto.getTotalPrice())
                     .cancellationDate(serviceDto.getCancellationDate())
                     .refundInfo(serviceDto.getRefundInfo())
