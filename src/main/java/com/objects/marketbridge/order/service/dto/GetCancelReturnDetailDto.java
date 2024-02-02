@@ -25,17 +25,17 @@ public class GetCancelReturnDetailDto {
         private LocalDateTime cancelDate;
         private String orderNo;
         private String cancelReason;
-        private List<ProductInfo> productListResponseDtos;
-        private CancelRefundInfoResponseDto cancelRefundInfoResponseDto;
+        private List<ProductInfo> productInfos;
+        private CancelRefundInfo cancelRefundInfo;
 
         @Builder
-        private Response(LocalDateTime orderDate, LocalDateTime cancelDate, String orderNo, String cancelReason, List<ProductInfo> productListResponseDtos, CancelRefundInfoResponseDto cancelRefundInfoResponseDto) {
+        private Response(LocalDateTime orderDate, LocalDateTime cancelDate, String orderNo, String cancelReason, List<ProductInfo> productInfos, CancelRefundInfo cancelRefundInfo) {
             this.orderDate = orderDate;
             this.cancelDate = cancelDate;
             this.orderNo = orderNo;
             this.cancelReason = cancelReason;
-            this.productListResponseDtos = productListResponseDtos;
-            this.cancelRefundInfoResponseDto = cancelRefundInfoResponseDto;
+            this.productInfos = productInfos;
+            this.cancelRefundInfo = cancelRefundInfo;
         }
 
         public static Response of(Order order, List<OrderDetail> orderDetails, String memberShip, DateTimeHolder dateTimeHolder) {
@@ -44,13 +44,13 @@ public class GetCancelReturnDetailDto {
                     .cancelDate(dateTimeHolder.getUpdateTime(order))
                     .orderNo(order.getOrderNo())
                     .cancelReason(orderDetails.get(0).getReason())
-                    .productListResponseDtos(
+                    .productInfos(
                             orderDetails.stream()
                                     .map(ProductInfo::of)
                                     .toList()
                     )
-                    .cancelRefundInfoResponseDto(
-                            CancelRefundInfoResponseDto.of(orderDetails, memberShip)
+                    .cancelRefundInfo(
+                            CancelRefundInfo.of(orderDetails, memberShip)
                     )
                     .build();
         }
@@ -97,7 +97,7 @@ public class GetCancelReturnDetailDto {
 
     @Getter
     @NoArgsConstructor
-    public static class CancelRefundInfoResponseDto {
+    public static class CancelRefundInfo {
 
         private Long deliveryFee;
         private Long refundFee;
@@ -105,14 +105,14 @@ public class GetCancelReturnDetailDto {
         private Long totalPrice;
 
         @Builder
-        private CancelRefundInfoResponseDto(Long deliveryFee, Long refundFee, Long discountPrice, Long totalPrice) {
+        private CancelRefundInfo(Long deliveryFee, Long refundFee, Long discountPrice, Long totalPrice) {
             this.deliveryFee = deliveryFee;
             this.refundFee = refundFee;
             this.discountPrice = discountPrice;
             this.totalPrice = totalPrice;
         }
 
-        public static CancelRefundInfoResponseDto of(List<OrderDetail> orderDetails, String memberShip) {
+        public static CancelRefundInfo of(List<OrderDetail> orderDetails, String memberShip) {
             if (isBasicMember(memberShip)) {
                 return createDto(orderDetails, BASIC.getDeliveryFee(), BASIC.getRefundFee());
             }
@@ -123,15 +123,17 @@ public class GetCancelReturnDetailDto {
             return Objects.equals(memberShip, MembershipType.BASIC.getText());
         }
 
-        private static CancelRefundInfoResponseDto createDto(List<OrderDetail> orderDetails, Long deliveryFee, Long refundFee) {
-            return CancelRefundInfoResponseDto.builder()
-                    .discountPrice( // TODO coupon 으로 인해 N+1문제 발생할 것으로 예상 -> fetchJoin으로 쿠폰까지 조인후 해결
+        private static CancelRefundInfo createDto(List<OrderDetail> orderDetails, Long deliveryFee, Long refundFee) {
+            return CancelRefundInfo.builder()
+                    .discountPrice(
                             orderDetails.stream()
-                                    .mapToLong(orderDetail -> orderDetail.getCoupon().getPrice())
+                                    .filter(detail -> detail != null && detail.getCoupon() != null)
+                                    .mapToLong(detail -> detail.getCoupon().getPrice())
                                     .sum()
                     )
                     .totalPrice(
                             orderDetails.stream()
+                                    .filter(Objects::nonNull)
                                     .mapToLong(OrderDetail::totalAmount)
                                     .sum()
                     )

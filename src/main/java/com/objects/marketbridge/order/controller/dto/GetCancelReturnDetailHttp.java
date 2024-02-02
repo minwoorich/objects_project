@@ -39,9 +39,9 @@ public class GetCancelReturnDetailHttp {
                     .cancelDate(serviceDto.getCancelDate())
                     .orderNo(serviceDto.getOrderNo())
                     .cancelReason(serviceDto.getCancelReason())
-                    .cancelRefundInfoResponse(CancelRefundInfoResponse.of(serviceDto.getCancelRefundInfoResponseDto()))
+                    .cancelRefundInfoResponse(CancelRefundInfoResponse.of(serviceDto.getCancelRefundInfo()))
                     .productResponseList(
-                            serviceDto.getProductListResponseDtos().stream()
+                            serviceDto.getProductInfos().stream()
                                     .map(ProductResponse::of)
                                     .toList()
                     )
@@ -117,7 +117,7 @@ public class GetCancelReturnDetailHttp {
             this.totalPrice = totalPrice;
         }
 
-        public static CancelRefundInfoResponse of(GetCancelReturnDetailDto.CancelRefundInfoResponseDto serviceDto) {
+        public static CancelRefundInfoResponse of(GetCancelReturnDetailDto.CancelRefundInfo serviceDto) {
             return CancelRefundInfoResponse.builder()
                     .deliveryFee(serviceDto.getDeliveryFee())
                     .refundFee(serviceDto.getRefundFee())

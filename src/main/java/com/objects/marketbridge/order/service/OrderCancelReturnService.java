@@ -10,6 +10,7 @@ import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
+import com.objects.marketbridge.payment.service.port.RefundClient;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class OrderCancelReturnService {
 
     private final DateTimeHolder dateTimeHolder;
 
-    private final RefundService refundService;
+    private final RefundClient refundClient;
 
     private final OrderDetailQueryRepository orderDetailQueryRepository;
     private final OrderDetailCommendRepository orderDetailCommendRepository;
@@ -47,7 +48,7 @@ public class OrderCancelReturnService {
 
         order.changeMemberCouponInfo(null);
 
-        RefundDto refundDto = refundService.refund(order.getTid(), cancelAmount);
+        RefundDto refundDto = refundClient.refund(order.getTid(), cancelAmount);
 
         return ConfirmCancelReturnDto.Response.of(order, refundDto, dateTimeHolder);
     }

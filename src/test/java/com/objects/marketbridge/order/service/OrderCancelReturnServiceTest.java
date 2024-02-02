@@ -291,21 +291,21 @@ class OrderCancelReturnServiceTest {
         assertThat(result.getOrderNo()).isEqualTo(orderNo);
         assertThat(result.getCancelReason()).isEqualTo("단순변심");
 
-        assertThat(result.getCancelRefundInfoResponseDto().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
-        assertThat(result.getCancelRefundInfoResponseDto().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
-        assertThat(result.getCancelRefundInfoResponseDto().getDiscountPrice()).isEqualTo(3000L);
-        assertThat(result.getCancelRefundInfoResponseDto().getTotalPrice()).isEqualTo(8000L);
+        assertThat(result.getCancelRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
+        assertThat(result.getCancelRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
+        assertThat(result.getCancelRefundInfo().getDiscountPrice()).isEqualTo(3000L);
+        assertThat(result.getCancelRefundInfo().getTotalPrice()).isEqualTo(8000L);
 
-        assertThat(result.getProductListResponseDtos().get(0).getProductId()).isEqualTo(1L);
-        assertThat(result.getProductListResponseDtos().get(0).getProductNo()).isEqualTo("1");
-        assertThat(result.getProductListResponseDtos().get(0).getName()).isEqualTo("빵빵이키링");
-        assertThat(result.getProductListResponseDtos().get(0).getPrice()).isEqualTo(1000L);
-        assertThat(result.getProductListResponseDtos().get(0).getQuantity()).isEqualTo(2L);
-        assertThat(result.getProductListResponseDtos().get(1).getProductId()).isEqualTo(2L);
-        assertThat(result.getProductListResponseDtos().get(1).getProductNo()).isEqualTo("2");
-        assertThat(result.getProductListResponseDtos().get(1).getName()).isEqualTo("옥지얌키링");
-        assertThat(result.getProductListResponseDtos().get(1).getPrice()).isEqualTo(2000L);
-        assertThat(result.getProductListResponseDtos().get(1).getQuantity()).isEqualTo(3L);
+        assertThat(result.getProductInfos().get(0).getProductId()).isEqualTo(1L);
+        assertThat(result.getProductInfos().get(0).getProductNo()).isEqualTo("1");
+        assertThat(result.getProductInfos().get(0).getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getProductInfos().get(0).getPrice()).isEqualTo(1000L);
+        assertThat(result.getProductInfos().get(0).getQuantity()).isEqualTo(2L);
+        assertThat(result.getProductInfos().get(1).getProductId()).isEqualTo(2L);
+        assertThat(result.getProductInfos().get(1).getProductNo()).isEqualTo("2");
+        assertThat(result.getProductInfos().get(1).getName()).isEqualTo("옥지얌키링");
+        assertThat(result.getProductInfos().get(1).getPrice()).isEqualTo(2000L);
+        assertThat(result.getProductInfos().get(1).getQuantity()).isEqualTo(3L);
     }
 
     @Test
@@ -332,21 +332,21 @@ class OrderCancelReturnServiceTest {
         assertThat(result.getOrderNo()).isEqualTo(orderNo);
         assertThat(result.getCancelReason()).isEqualTo("단순변심");
 
-        assertThat(result.getCancelRefundInfoResponseDto().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
-        assertThat(result.getCancelRefundInfoResponseDto().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
-        assertThat(result.getCancelRefundInfoResponseDto().getDiscountPrice()).isEqualTo(3000L);
-        assertThat(result.getCancelRefundInfoResponseDto().getTotalPrice()).isEqualTo(8000L);
+        assertThat(result.getCancelRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
+        assertThat(result.getCancelRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
+        assertThat(result.getCancelRefundInfo().getDiscountPrice()).isEqualTo(3000L);
+        assertThat(result.getCancelRefundInfo().getTotalPrice()).isEqualTo(8000L);
 
-        assertThat(result.getProductListResponseDtos().get(0).getProductId()).isEqualTo(1L);
-        assertThat(result.getProductListResponseDtos().get(0).getProductNo()).isEqualTo("1");
-        assertThat(result.getProductListResponseDtos().get(0).getName()).isEqualTo("빵빵이키링");
-        assertThat(result.getProductListResponseDtos().get(0).getPrice()).isEqualTo(1000L);
-        assertThat(result.getProductListResponseDtos().get(0).getQuantity()).isEqualTo(2L);
-        assertThat(result.getProductListResponseDtos().get(1).getProductId()).isEqualTo(2L);
-        assertThat(result.getProductListResponseDtos().get(1).getProductNo()).isEqualTo("2");
-        assertThat(result.getProductListResponseDtos().get(1).getName()).isEqualTo("옥지얌키링");
-        assertThat(result.getProductListResponseDtos().get(1).getPrice()).isEqualTo(2000L);
-        assertThat(result.getProductListResponseDtos().get(1).getQuantity()).isEqualTo(3L);
+        assertThat(result.getProductInfos().get(0).getProductId()).isEqualTo(1L);
+        assertThat(result.getProductInfos().get(0).getProductNo()).isEqualTo("1");
+        assertThat(result.getProductInfos().get(0).getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getProductInfos().get(0).getPrice()).isEqualTo(1000L);
+        assertThat(result.getProductInfos().get(0).getQuantity()).isEqualTo(2L);
+        assertThat(result.getProductInfos().get(1).getProductId()).isEqualTo(2L);
+        assertThat(result.getProductInfos().get(1).getProductNo()).isEqualTo("2");
+        assertThat(result.getProductInfos().get(1).getName()).isEqualTo("옥지얌키링");
+        assertThat(result.getProductInfos().get(1).getPrice()).isEqualTo(2000L);
+        assertThat(result.getProductInfos().get(1).getQuantity()).isEqualTo(3L);
     }
 
 }
