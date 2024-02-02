@@ -43,6 +43,11 @@ public class MemberService {
         return CheckedResultDto.builder().checked(isDuplicateEmail).build();
     }
 
+    public void addMemberAddress(){
+
+    }
+
+
     @Transactional
     public void save(SignUpDto signUpDto) throws BadRequestException {
         boolean isDuplicateEmail = isDuplicateEmail(signUpDto.getEmail()).isChecked();
