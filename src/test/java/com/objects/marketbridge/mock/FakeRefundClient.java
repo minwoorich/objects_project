@@ -1,16 +1,16 @@
 package com.objects.marketbridge.mock;
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.order.service.RefundService;
+import com.objects.marketbridge.payment.service.port.RefundClient;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
 import lombok.Builder;
 
-public class FakeRefundService implements RefundService {
+public class FakeRefundClient implements RefundClient {
 
     private DateTimeHolder dateTimeHolder;
 
     @Builder
-    public FakeRefundService(DateTimeHolder dateTimeHolder) {
+    public FakeRefundClient(DateTimeHolder dateTimeHolder) {
         this.dateTimeHolder = dateTimeHolder;
     }
 

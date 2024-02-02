@@ -8,8 +8,8 @@
 ----
 
 .*HTTP Request*
-include::{snippets}/member-re-issue/http-request.adoc[]
+include::{snippets}/auth-re-issue/http-request.adoc[]
 
 .*HTTP Response*
-include::{snippets}/member-re-issue/http-response.adoc[]
-include::{snippets}/member-re-issue/response-fields.adoc[]
+include::{snippets}/auth-re-issue/http-response.adoc[]
+include::{snippets}/auth-re-issue/response-fields.adoc[]

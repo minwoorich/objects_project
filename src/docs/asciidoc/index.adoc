@@ -14,16 +14,13 @@ endif::[]
 Doc Writer <Team Objects Backend>
 v1.0, 2024-01-25
 
-[[OrderReturnCancel-API]]
-== OrderCancel API
 == *회원*
-
-=== *인증*
 
 include::api/member/checkemail.adoc[]
 {empty}
 {empty}
 
+=== *인증*
 include::api/member/signup.adoc[]
 {empty}
 {empty}

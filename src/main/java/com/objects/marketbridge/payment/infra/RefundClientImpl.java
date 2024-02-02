@@ -1,13 +1,14 @@
-package com.objects.marketbridge.order.service;
+package com.objects.marketbridge.payment.infra;
 
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
+import com.objects.marketbridge.payment.service.port.RefundClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class RefundServiceImpl implements RefundService {
+public class RefundClientImpl implements RefundClient {
 
     private final KakaoPayService kakaoPayService;
 
