@@ -37,22 +37,22 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
 
 @ActiveProfiles("test")
-@WebMvcTest(AuthControllerTest.class)
+@WebMvcTest(AuthController.class)
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = {SpringSecurityTestConfig.class})
 @ExtendWith(RestDocumentationExtension.class)
 public class AuthControllerTest {
+
+    @MockBean
+    AuthService authService;
+    @MockBean
+    JwtTokenProvider jwtTokenProvider;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @MockBean
-    private AuthService authService;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -60,6 +60,177 @@ public class AuthControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentationContextProvider))
                 .build();
+    }
+
+    @Test
+    public void singUp_ok() throws Exception {
+        //given
+        SignUpDto signUpDto = SignUpDto.builder()
+                .email("member@example.com")
+                .password("암호화_된_비밀번호")
+                .name("테스트")
+                .phoneNo("01000000000")
+                .isAgree(true)
+                .build();
+
+        willDoNothing().given(authService).signUp(signUpDto);
+
+        //when
+        ResultActions actions = mockMvc.perform(post("/auth/sign-up")
+                .content(objectMapper.writeValueAsString(signUpDto))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isCreated())
+                .andDo(document("auth-sign-up",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("email").type(JsonFieldType.STRING)
+                                        .description("중복 체크가 완료된 이메일"),
+                                fieldWithPath("password").type(JsonFieldType.STRING)
+                                        .description("암호화 된 비밀번호"),
+                                fieldWithPath("name").type(JsonFieldType.STRING)
+                                        .description("이름"),
+                                fieldWithPath("phoneNo").type(JsonFieldType.STRING)
+                                        .description("연락처"),
+                                fieldWithPath("isAgree").type(JsonFieldType.BOOLEAN)
+                                        .description("회원가입 동의 여부")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL)
+                                        .description("응답 데이터")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockCustomUser
+    public void signIn() throws Exception {
+        //given
+        SignInDto signInDto = SignInDto.builder()
+                .email("member@example.com")
+                .password("암호화_된_비밀번호")
+                .build();
+
+        JwtTokenDto jwtTokenDto = JwtTokenDto.builder()
+                .grantType("bearer")
+                .accessToken("accessToken")
+                .refreshToken("refreshToken")
+                .build();
+
+        given(jwtTokenProvider.generateToken(any(CustomUserDetails.class))).willReturn(jwtTokenDto);
+
+        //when
+        ResultActions actions = mockMvc.perform(post("/auth/sign-in")
+                .content(objectMapper.writeValueAsString(signInDto))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isOk())
+                .andDo(document("auth-sign-in",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("email").type(JsonFieldType.STRING)
+                                        .description("이메일"),
+                                fieldWithPath("password").type(JsonFieldType.STRING)
+                                        .description("암호화 된 비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.grantType").type(JsonFieldType.STRING)
+                                        .description("토큰 타입: bearer"),
+                                fieldWithPath("data.accessToken").type(JsonFieldType.STRING)
+                                        .description("api 요청용 AccessToken"),
+                                fieldWithPath("data.refreshToken").type(JsonFieldType.STRING)
+                                        .description("AccessToken 만료시 재발급용 Token 다른 api 요청 안됨")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockCustomUser
+    public void signOut() throws Exception {
+        //given
+        Long memberId = 1L;
+        willDoNothing().given(jwtTokenProvider).deleteToken(memberId);
+
+        //when
+        ResultActions actions = mockMvc.perform(delete("/auth/sign-out")
+                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isOk())
+                .andDo(document("auth-sign-out",
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL)
+                                        .description("응답 데이터")
+                        )
+                ));
+
+    }
+
+    @Test
+    @WithMockCustomUser
+    public void reIssueToken() throws Exception {
+        //given
+        JwtTokenDto jwtTokenDto = JwtTokenDto.builder()
+                .grantType("bearer")
+                .accessToken("accessToken")
+                .refreshToken("refreshToken")
+                .build();
+
+        given(jwtTokenProvider.generateToken(any(CustomUserDetails.class))).willReturn(jwtTokenDto);
+
+
+        //when
+        ResultActions actions = mockMvc.perform(put("/auth/re-issue")
+                .header(HttpHeaders.AUTHORIZATION, "bearer RefreshToken")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isOk())
+                .andDo(document("auth-re-issue",
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.grantType").type(JsonFieldType.STRING)
+                                        .description("토큰 타입: bearer"),
+                                fieldWithPath("data.accessToken").type(JsonFieldType.STRING)
+                                        .description("api 요청용 AccessToken"),
+                                fieldWithPath("data.refreshToken").type(JsonFieldType.STRING)
+                                        .description("AccessToken 만료시 재발급용 Token 다른 api 요청 안됨")
+                        )
+                ));
     }
 
 }
