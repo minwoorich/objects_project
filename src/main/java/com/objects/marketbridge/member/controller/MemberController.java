@@ -64,7 +64,7 @@ public class MemberController {
     @DeleteMapping("/sign-out")
     public ApiResponse<Void> signOut(@AuthMemberId Long memberId) {
         memberService.signOut(memberId);
-        return ApiResponse.of(HttpStatus.OK, MemberConst.LOGGED_OUT_SUCCESSFULLY, null);
+        return ApiResponse.of(HttpStatus.OK, MemberConst.SIGNED_OUT_SUCCESSFULLY, null);
     }
 
     @PutMapping("/re-issue")
@@ -169,10 +169,4 @@ public class MemberController {
 
         return request.toKakaoReadyRequest(memberId,subsOrderNo, cid, approvalUrl, failUrl, cancelUrl);
     }
-//    @GetMapping("/point/{id}")
-//    public ApiResponse<FindPointDto> findPointById(@PathVariable Long id){
-//
-//        FindPointDto memberPoint = memberService.findPointById(id);
-//        return ApiResponse.of(HttpStatus.OK, memberPoint);
-//    }
 }
