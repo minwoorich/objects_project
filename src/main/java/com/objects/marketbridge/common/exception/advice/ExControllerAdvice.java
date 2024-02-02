@@ -16,7 +16,7 @@ public class ExControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResult> customExHandler(CustomLogicException e) {
         log.error("[exceptionHandler] ex ", e);
-        ErrorResult errorResult = new ErrorResult(e.getErrorCode(), e.getErrorCode().getMessage());
+        ErrorResult errorResult = new ErrorResult(e.getErrorCode(), e.getMessage());
 
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
