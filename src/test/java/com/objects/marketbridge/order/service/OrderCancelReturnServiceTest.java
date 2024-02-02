@@ -156,7 +156,7 @@ class OrderCancelReturnServiceTest {
         String membership = WOW.getText();
 
         // when
-        CancelResponseDto result = orderCancelReturnService.requestCancel(orderNo, productIds, membership);
+        RequestCancelDto.Response result = orderCancelReturnService.findCancelInfo(orderNo, productIds, membership);
         CancelRefundInfoResponseDto refundInfoResponseDto = result.getCancelRefundInfoResponseDto();
         List<ProductInfoResponseDto> infoResponseDtos = result.getProductInfoResponseDtos();
 
@@ -187,7 +187,7 @@ class OrderCancelReturnServiceTest {
         String membership = BASIC.getText();
 
         // when
-        CancelResponseDto result = orderCancelReturnService.requestCancel(orderNo, productIds, membership);
+        RequestCancelDto.Response result = orderCancelReturnService.findCancelInfo(orderNo, productIds, membership);
         CancelRefundInfoResponseDto refundInfoResponseDto = result.getCancelRefundInfoResponseDto();
         List<ProductInfoResponseDto> infoResponseDtos = result.getProductInfoResponseDtos();
 

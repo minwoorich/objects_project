@@ -9,15 +9,13 @@ import com.objects.marketbridge.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.mock.TestContainer;
 import com.objects.marketbridge.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.controller.dto.ConfirmCancelReturnHttp;
-import com.objects.marketbridge.order.controller.request.OrderCancelRequest;
-import com.objects.marketbridge.order.controller.response.OrderCancelResponse;
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnDetailResponse;
-import com.objects.marketbridge.order.controller.response.OrderCancelReturnResponse;
 import com.objects.marketbridge.order.controller.response.OrderReturnResponse;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
 import com.objects.marketbridge.order.infra.dtio.DetailResponseDtio;
+import com.objects.marketbridge.order.service.dto.RequestCancelHttp;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -174,7 +172,7 @@ public class OrderCancelReturnControllerTest {
         List<Long> productIds = List.of(1L, 2L);
 
         // when
-        ApiResponse<OrderCancelResponse> result = orderCancelReturnController.requestCancelOrder(orderNo, productIds);
+        ApiResponse<RequestCancelHttp.Response> result = orderCancelReturnController.requestCancel(orderNo, productIds);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
