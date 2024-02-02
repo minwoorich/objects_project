@@ -30,7 +30,7 @@ public class UpdateProductService {
     @Transactional
     public UpdateProductResponseDto update(UpdateProductRequestDto request){
         //1. 상품 조회
-        Product findProduct = productRepository.findById(request.getProductId()).get();
+        Product findProduct = productRepository.findById(request.getProductId());
         //2. 상품 수정
         UpdateProductDto updateProductDto = UpdateProductDto.fromRequest(request);
         updateProduct(findProduct, updateProductDto);

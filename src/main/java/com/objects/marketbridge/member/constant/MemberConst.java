@@ -2,5 +2,5 @@ package com.objects.marketbridge.member.constant;
 
 public class MemberConst {
 
-    public static final String LOGGED_OUT_SUCCESSFULLY = "LOGGED_OUT_SUCCESSFULLY";
+    public static final String SIGNED_OUT_SUCCESSFULLY = "SIGNED_OUT_SUCCESSFULLY";
 }

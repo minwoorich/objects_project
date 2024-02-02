@@ -8,7 +8,7 @@ public interface SellerAccountRepository {
 
     SellerAccount findById(Long id);
 
-    SellerAccount findBySellerId(Long sellerId);
+    List<SellerAccount> findBySellerId(Long sellerId);
 
     SellerAccount save(SellerAccount sellerAccount);
 
