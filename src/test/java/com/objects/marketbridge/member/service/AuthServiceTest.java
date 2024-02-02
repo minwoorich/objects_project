@@ -3,22 +3,28 @@ package com.objects.marketbridge.member.service;
 import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.domain.MembershipType;
 import com.objects.marketbridge.common.domain.SocialType;
+import com.objects.marketbridge.member.dto.SignUpDto;
+import com.objects.marketbridge.member.mock.FakeAuthRepository;
+
 import com.objects.marketbridge.member.mock.FakeMemberRepository;
+import com.objects.marketbridge.member.mock.FakePasswordEncoder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.* ;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 //@SpringBootTest
 //@Transactional
 @ActiveProfiles("test")
-class MemberServiceTest {
+class AuthServiceTest {
 
+    AuthService authService;
     MemberService memberService;
 
     @BeforeEach
@@ -26,6 +32,13 @@ class MemberServiceTest {
         FakeMemberRepository fakeMemberRepository = new FakeMemberRepository();
         memberService = MemberService.builder()
                 .memberRepository(fakeMemberRepository)
+                .build();
+
+        FakeAuthRepository fakeAuthRepository = new FakeAuthRepository();
+        authService = AuthService.builder()
+                .authRepository(fakeAuthRepository)
+                .memberService(memberService)
+                .passwordEncoder(new FakePasswordEncoder())
                 .build();
 
         Member member1 = Member.builder()
@@ -54,44 +67,44 @@ class MemberServiceTest {
 
         fakeMemberRepository.save(member1);
         fakeMemberRepository.save(member2);
+        fakeAuthRepository.addData(member1);
+        fakeAuthRepository.addData(member2);
     }
 
     @Test
-    @DisplayName("이메일이 중복이 되었으면 true를 반환한다")
-    public void checkDuplicateEmailTrue() {
+    @DisplayName("회원가입 완료")
+    public void signUp_new() throws BadRequestException {
+        //given
+        SignUpDto signUpDto = SignUpDto.builder()
+                .email("member3@example.com")
+                .name("테스트3")
+                .password("03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4")
+                .phoneNo("01000000003")
+                .isAgree(true)
+                .build();
+
+        //when
+        authService.signUp(signUpDto);
+
+        //then
+        //회원 가입이 됬으면 저장된 이메일이 있는지 확인.
+        boolean duplicateEmail = memberService.isDuplicateEmail(signUpDto.getEmail()).isChecked();
+        assertThat(duplicateEmail).isTrue();
+    }
+
+    @Test
+    @DisplayName("중복 된 이메일로 회원가입 시도시 Exception 발생")
+    public void signUp_dup() {
         //given
         String email = "member1@example.com";
+        SignUpDto signUpDto = SignUpDto.builder().email(email).build();
 
         //when
-        boolean isDuplicateEmail = (memberService.isDuplicateEmail(email)).isChecked();
 
         //then
-        assertThat(isDuplicateEmail).isTrue();
+        assertThatThrownBy(() -> {
+            authService.signUp(signUpDto);
+        }).isInstanceOf(BadRequestException.class);
     }
 
-    @Test
-    @DisplayName("이메일이 중복이 되지 않았으면 false를 반환한다")
-    public void checkDuplicateEmailFalse() {
-        //given
-        String email = "member11@example.com";
-
-        //when
-        boolean isDuplicateEmail = (memberService.isDuplicateEmail(email)).isChecked();
-
-        //then
-        assertThat(isDuplicateEmail).isFalse();
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("멤버십 변경 API")
-    public void testUpdateWowMemberShip(){
-//        //given
-//        Member member = memberRepository.findByEmail("iiwisii@naver.com").orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
-//        String memberShipData = "BASIC";
-//        //when
-//        memberService.changeMemberShip(member.getId());
-//        //then
-//        assertThat(member.getMembership()).isEqualTo(memberShipData);
-    }
 }
