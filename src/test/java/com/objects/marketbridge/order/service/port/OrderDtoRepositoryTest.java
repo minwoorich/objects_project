@@ -1,8 +1,8 @@
 package com.objects.marketbridge.order.service.port;
 
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDao;
-import com.objects.marketbridge.order.infra.dtio.DetailResponseDao;
+import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
+import com.objects.marketbridge.order.infra.dtio.DetailResponseDtio;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.product.infra.ProductRepository;
@@ -117,15 +117,15 @@ class OrderDtoRepositoryTest {
         orderCommendRepository.save(order2);
 
         // when
-        Page<CancelReturnResponseDao> orderCancelReturnListResponsePage = orderDtoRepository.findOrdersByMemberId(member.getId(), PageRequest.of(0, 3));
-        List<CancelReturnResponseDao> content = orderCancelReturnListResponsePage.getContent();
+        Page<CancelReturnResponseDtio> orderCancelReturnListResponsePage = orderDtoRepository.findOrdersByMemberId(member.getId(), PageRequest.of(0, 3));
+        List<CancelReturnResponseDtio> content = orderCancelReturnListResponsePage.getContent();
         // then
         assertThat(content).hasSize(2)
                 .extracting("orderNo")
                 .contains("123", "456");
 
-        List<DetailResponseDao> detailResponses1Dao = content.get(0).getDetailResponseDaos();
-        List<DetailResponseDao> detailResponses2Dao = content.get(1).getDetailResponseDaos();
+        List<DetailResponseDtio> detailResponses1Dao = content.get(0).getDetailResponseDtios();
+        List<DetailResponseDtio> detailResponses2Dao = content.get(1).getDetailResponseDtios();
 
         assertThat(detailResponses1Dao).hasSize(2)
                 .extracting("orderNo", "productId", "productNo", "name", "price", "quantity", "orderStatus")

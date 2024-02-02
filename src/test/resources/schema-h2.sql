@@ -55,6 +55,7 @@ CREATE TABLE seller (
                           license_no	varchar(255)	,
                           email	varchar(255)	,
                           account_no	varchar(255)	,
+                          balance	bigint	,
                           created_at	timestamp	,
                           updated_at	timestamp	,
                           deleted_at	timestamp	
@@ -247,6 +248,7 @@ CREATE TABLE order_detail (
                                      product_id	bigint	,
                                      order_no varchar(255),
                                      coupon_id	bigint	,
+                                     seller_id	bigint	,
                                      reward_type	varchar(255)	,
                                      quantity	bigint	,
                                      price	bigint	,
@@ -592,7 +594,8 @@ create table seller_account
     seller_id         BIGINT null,
     incoming          BIGINT null,
     outgoing          BIGINT null,
-    balance           BIGINT null
+    balance           BIGINT null,
+    detail           varchar(255)
 
 );
 

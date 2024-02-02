@@ -37,6 +37,11 @@ public class OrderCancelReturnDetailResponse {
                 .orderNo(serviceDto.getOrderNo())
                 .cancelReason(serviceDto.getCancelReason())
                 .cancelRefundInfoResponse(CancelRefundInfoResponse.of(serviceDto.getCancelRefundInfoResponseDto()))
+                .productResponseList(
+                        serviceDto.getProductListResponseDtos().stream()
+                                .map(ProductResponse::of)
+                                .toList()
+                )
                 .build();
     }
 

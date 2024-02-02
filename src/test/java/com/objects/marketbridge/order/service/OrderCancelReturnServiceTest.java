@@ -9,6 +9,7 @@ import com.objects.marketbridge.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.service.dto.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static com.objects.marketbridge.common.domain.MembershipType.BASIC;
 import static com.objects.marketbridge.common.domain.MembershipType.WOW;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -29,7 +31,7 @@ class OrderCancelReturnServiceTest {
     LocalDateTime cancelDate = LocalDateTime.of(2024, 1, 31, 9, 26);
 
     @BeforeEach
-    void init() {
+    void beforeEach() {
         TestContainer testContainer = TestContainer.builder()
                 .dateTimeHolder(TestDateTimeHolder.builder()
                         .now(cancelDate)
@@ -82,6 +84,7 @@ class OrderCancelReturnServiceTest {
                 .coupon(coupon1)
                 .order(order)
                 .reason("단순변심")
+                .statusCode(StatusCodeType.ORDER_RECEIVED.getCode())
                 .tid("1")
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
@@ -92,6 +95,7 @@ class OrderCancelReturnServiceTest {
                 .coupon(coupon2)
                 .order(order)
                 .reason("단순변심")
+                .statusCode(StatusCodeType.DELIVERY_ING.getCode())
                 .tid("1")
                 .build();
 

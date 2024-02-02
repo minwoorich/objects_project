@@ -1,4 +1,4 @@
-package com.objects.marketbridge.model;
+package com.objects.marketbridge.common.domain;
 
 import com.objects.marketbridge.common.domain.MemberCoupon;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;

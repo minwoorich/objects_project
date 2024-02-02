@@ -19,11 +19,11 @@ public class MemberCoupon extends BaseEntity {
     @Column(name = "member_coupon_id")
     private Long id;
 
-    // TODO
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    // TODO
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;

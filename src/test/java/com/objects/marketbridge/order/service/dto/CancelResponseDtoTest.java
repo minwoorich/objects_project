@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.objects.marketbridge.common.domain.MembershipType.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +21,9 @@ class CancelResponseDtoTest {
     @DisplayName("일반 맴버십인 경우 배송비 3000원, 반품비 1000원으로 CancelResponseDto로 변환할 수 있다.")
     public void of1() {
         // given
+
         String memberShip = MembershipType.BASIC.getText();
+
 
         Product product1 = Product.builder()
                 .price(1000L)
@@ -75,6 +78,7 @@ class CancelResponseDtoTest {
     @DisplayName("와우 맴버십인 경우 배송비 0원, 반품비 0원으로 CancelResponseDto로 변환할 수 있다.")
     public void of2() {
         // given
+
         String memberShip = MembershipType.WOW.getText();
 
         Product product1 = Product.builder()

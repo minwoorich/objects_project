@@ -47,8 +47,9 @@ class SellerAccountJpaRepositoryTest {
         //when
         Optional<SellerAccount> result = sellerAccountJpaRepository.findBySellerId(1L);
 
-
         // then
         Assertions.assertThat(result.get().getSeller().getId()).isEqualTo(account.getSeller().getId());
     }
+
+
 }

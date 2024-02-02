@@ -1,4 +1,4 @@
-package com.objects.marketbridge.model;
+package com.objects.marketbridge.common.domain;
 
 import com.objects.marketbridge.common.domain.Product;
 import org.junit.jupiter.api.DisplayName;

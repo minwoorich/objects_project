@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.service.dto;
 
 import com.objects.marketbridge.common.domain.Coupon;
-import com.objects.marketbridge.common.domain.Membership;
+import com.objects.marketbridge.common.domain.MembershipType;
 import com.objects.marketbridge.common.domain.Product;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.mock.TestDateTimeHolder;
@@ -14,6 +14,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 import static com.objects.marketbridge.common.domain.MembershipType.BASIC;
 import static com.objects.marketbridge.common.domain.MembershipType.WOW;
