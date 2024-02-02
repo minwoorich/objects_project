@@ -15,8 +15,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.common.domain.MembershipType.*;
+
 import static com.objects.marketbridge.common.domain.MembershipType.BASIC;
+import static com.objects.marketbridge.common.domain.MembershipType.WOW;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 

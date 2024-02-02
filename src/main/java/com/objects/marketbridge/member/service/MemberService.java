@@ -14,7 +14,6 @@ import com.objects.marketbridge.member.dto.SignInDto;
 import com.objects.marketbridge.member.dto.SignUpDto;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.member.service.port.MembershipRepository;
-import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import lombok.RequiredArgsConstructor;
