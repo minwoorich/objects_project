@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class RequestCancelDtoTest {
 
     @Test
-    @DisplayName("일반 맴버십인 경우 배송비 3000원, 반품비 1000원으로 RequestCancelDto.Response 변환할 수 있다.")
+    @DisplayName("일반 맴버십인 경우 배송비 3000원, 반품비 1000원으로 Response 변환할 수 있다.")
     public void response_of_BASIC() {
         // given
         String memberShip = MembershipType.BASIC.getText();
@@ -70,7 +70,7 @@ class RequestCancelDtoTest {
     }
 
     @Test
-    @DisplayName("와우 맴버십인 경우 배송비 0원, 반품비 0원으로 RequestCancelDto.Response로 변환할 수 있다.")
+    @DisplayName("와우 맴버십인 경우 배송비 0원, 반품비 0원으로 Response로 변환할 수 있다.")
     public void response_of_WOW() {
         // given
         String memberShip = MembershipType.WOW.getText();
@@ -124,7 +124,7 @@ class RequestCancelDtoTest {
     }
 
     @Test
-    @DisplayName("주문 상세를 RequestCancelDto.ProductInfo로 변환")
+    @DisplayName("주문 상세를 ProductInfo로 변환")
     public void productInfo_of() {
         // given
         Product product1 = Product.builder()
@@ -148,7 +148,7 @@ class RequestCancelDtoTest {
     }
 
     @Test
-    @DisplayName("멤버십이 일반이라면 배송비 3000원, 환불비 1000원이다.")
+    @DisplayName("주문 상세 리스트와 멤버십이 주어지면 CancelRefundInfo를 반한다.(BASIC)")
     public void CancelRefundInfo_of_BASIC() {
         // given
         String memberShip = MembershipType.BASIC.getText();
@@ -182,7 +182,7 @@ class RequestCancelDtoTest {
     }
 
     @Test
-    @DisplayName("멤버십이 와우라면 배송비, 환불비는 0원이다.")
+    @DisplayName("주문 상세 리스트와 멤버십이 주어지면 CancelRefundInfo를 반한다.(WOW)")
     public void CancelRefundInfo_of_WOW() {
         // given
         String memberShip = MembershipType.WOW.getText();
