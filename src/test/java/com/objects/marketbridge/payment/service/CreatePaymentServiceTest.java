@@ -8,9 +8,7 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.Address;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
-import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
@@ -18,7 +16,6 @@ import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,8 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_INIT;
+import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest

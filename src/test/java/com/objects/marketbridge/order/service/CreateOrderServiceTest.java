@@ -2,16 +2,13 @@ package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.common.domain.*;
 import com.objects.marketbridge.order.domain.*;
-import com.objects.marketbridge.order.service.port.AddressRepository;
-import com.objects.marketbridge.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.order.service.port.*;
 import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
-import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
-import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.product.infra.ProductJpaRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import jakarta.persistence.EntityManager;
@@ -45,10 +42,12 @@ class CreateOrderServiceTest {
     @Autowired MemberRepository memberRepository;
     @Autowired AddressRepository addressRepository;
     @Autowired OrderDetailQueryRepository orderDetailQueryRepository;
+    @Autowired OrderDetailCommendRepository orderDetailCommendRepository;
     @Autowired OrderCommendRepository orderCommendRepository;
     @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired MemberCouponRepository memberCouponRepository;
     @Autowired EntityManager em;
+
 
     @BeforeEach
     void init(){
@@ -384,6 +383,22 @@ class CreateOrderServiceTest {
                 .totalOrderPrice(totalOrderPrice)
                 .productValues(productValues)
                 .build();
+    }
+
+    @DisplayName("프록시 or null")
+    @Test
+    void test(){
+        //given
+        Order order = Order.builder().orderNo("aaaa").build();
+        orderCommendRepository.save(order);
+        em.flush();
+        em.clear();
+
+        //when
+        Order findOrder = orderQueryRepository.findByOrderNo("aaaa");
+
+        //then
+        log.info("findOrder.getMember() : {}", findOrder.getMember().getClass());
     }
 
 }
