@@ -48,10 +48,12 @@ public class OrderDetail extends BaseEntity {
 
     private String tid;
 
+    private Long sellerId;
+
     private LocalDateTime cancelledAt;
 
     @Builder
-    private OrderDetail(Order order, String orderNo, String tid, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, LocalDateTime cancelledAt) {
+    private OrderDetail(Order order, String orderNo, String tid, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, Long sellerId, LocalDateTime cancelledAt) {
         this.orderNo = orderNo;
         this.tid = tid;
         this.order = order;
@@ -62,6 +64,7 @@ public class OrderDetail extends BaseEntity {
         this.statusCode = statusCode;
         this.deliveredDate = deliveredDate;
         this.reason = reason;
+        this.sellerId = sellerId;
         this.cancelledAt = cancelledAt;
     }
 
@@ -75,7 +78,7 @@ public class OrderDetail extends BaseEntity {
         this.statusCode = statusCode;
     }
 
-    public static OrderDetail create(String tid, Order order, Product product, String orderNo, Coupon coupon, Long quantity, Long price, String statusCode) {
+    public static OrderDetail create(String tid, Order order, Product product, String orderNo, Coupon coupon, Long quantity, Long price, Long sellerId, String statusCode) {
 
         return OrderDetail.builder()
                 .tid(tid)
@@ -85,6 +88,7 @@ public class OrderDetail extends BaseEntity {
                 .coupon(coupon)
                 .quantity(quantity)
                 .price(price)
+                .sellerId(sellerId)
                 .statusCode(statusCode)
                 .build();
     }
@@ -112,5 +116,4 @@ public class OrderDetail extends BaseEntity {
     public void setProduct(Product product) {
         this.product = product;
     }
-
 }

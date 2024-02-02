@@ -1,4 +1,4 @@
-package com.objects.marketbridge.common.security.domain;
+package com.objects.marketbridge.common.security.infra;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.index.Indexed;
 
 @Getter
 @RedisHash("JwtToken")
-public class JwtToken {
+public class JwtTokenRedisEntity {
     @Id
     private final String email;
 
@@ -16,7 +16,7 @@ public class JwtToken {
     private final String token;
 
     @Builder
-    public JwtToken(String email, String token) {
+    public JwtTokenRedisEntity(String email, String token) {
         this.email = email;
         this.token = token;
     }

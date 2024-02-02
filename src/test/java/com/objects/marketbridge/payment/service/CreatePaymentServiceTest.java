@@ -10,6 +10,7 @@ import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
@@ -29,7 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_INIT;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -128,7 +131,7 @@ class CreatePaymentServiceTest {
         Payment payment = paymentRepository.findByOrderNo("1234");
 
         //then
-        Assertions.assertThat(payment.getId()).isEqualTo(1L);
+        assertThat(payment.getId()).isEqualTo(1L);
 
     }
 
@@ -148,7 +151,7 @@ class CreatePaymentServiceTest {
                 .build();
     }
 
-    private  CardInfo createCardInfo() {
+    private CardInfo createCardInfo() {
         return CardInfo.builder()
                 .cardIssuerName("카카오뱅크")
                 .cardPurchaseName("국민은행")
@@ -156,11 +159,46 @@ class CreatePaymentServiceTest {
                 .build();
     }
 
-    private  Amount createAmount() {
+    private Amount createAmount() {
         return Amount.builder()
                 .totalAmount(10000L)
                 .discountAmount(4000L)
                 .build();
+    }
+
+    @DisplayName("payment생성시 pamyment와 order가 연관관계를 맺어야한다")
+    @Test
+    void linkOrderWithPayment(){
+        // given
+        KakaoPayApproveResponse response = createKakaoPayApproveResponse();
+        Order order = orderQueryRepository.findByOrderNoWithOrderDetailsAndProduct("1234");
+
+        // when
+        createPaymentService.create(response);
+        Payment payment = paymentRepository.findByTid(order.getTid());
+
+        //then
+        assertThat(payment.getOrder().getOrderNo()).isEqualTo(order.getOrderNo());
+        assertThat(order.getOrderNo()).isEqualTo(payment.getOrder().getOrderNo());
+        assertThat(payment.getOrder().getOrderDetails().get(0).getId()).isEqualTo(order.getOrderDetails().get(0).getId());
+        assertThat(payment.getOrder().getOrderDetails().get(1).getId()).isEqualTo(order.getOrderDetails().get(1).getId());
+    }
+
+    @DisplayName("orderDetail의 statusCode 가 업데이트 되어야 한다.")
+    @Test
+    void changeStsatusCode(){
+        //given
+        KakaoPayApproveResponse response = createKakaoPayApproveResponse();
+        Order order = orderQueryRepository.findByOrderNoWithOrderDetailsAndProduct("1234");
+
+        //when
+        createPaymentService.create(response);
+        Payment payment = paymentRepository.findByTid(order.getTid());
+
+        //then
+        assertThat(payment.getOrder().getOrderDetails().get(0).getStatusCode()).isEqualTo(PAYMENT_COMPLETED.getCode());
+        assertThat(payment.getOrder().getOrderDetails().get(1).getStatusCode()).isEqualTo(PAYMENT_COMPLETED.getCode());
+
     }
 
 }

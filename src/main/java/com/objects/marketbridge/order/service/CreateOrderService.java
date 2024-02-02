@@ -73,17 +73,18 @@ public class CreateOrderService {
 
         for (ProductValue productValue : productValues) {
 
-            Product product = productRepository.findById(productValue.getProductId()).get();
+            Product product = productRepository.findById(productValue.getProductId());
             // 쿠폰이 적용안된 product 가 존재할 경우 그냥 null 저장
             Coupon coupon = (productValue.getCouponId() != null) ? couponRepository.findById(productValue.getCouponId()) : null ;
             String orderNo = order.getOrderNo();
             Long quantity = productValue.getQuantity();
             Long price = product.getPrice();
             String tid = order.getTid();
+            Long sellerId = productValue.getSellerId();
 
             // OrderDetail 엔티티 생성
             OrderDetail orderDetail =
-                    OrderDetail.create(tid, order, product, orderNo, coupon, quantity, price, StatusCodeType.ORDER_INIT.getCode());
+                    OrderDetail.create(tid, order, product, orderNo, coupon, quantity, price, sellerId, StatusCodeType.ORDER_INIT.getCode());
 
             // orderDetails 에 추가
             orderDetails.add(orderDetail);

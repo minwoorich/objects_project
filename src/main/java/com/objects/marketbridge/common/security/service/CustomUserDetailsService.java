@@ -2,6 +2,7 @@ package com.objects.marketbridge.common.security.service;
 
 import com.objects.marketbridge.common.security.domain.CustomUserDetails;
 import com.objects.marketbridge.member.dto.AuthMember;
+import com.objects.marketbridge.member.service.port.AuthRepository;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,18 +20,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final MemberRepository memberRepository;
+    private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        AuthMember member = memberRepository.findAuthMemberByEmail(email);
+        AuthMember member = authRepository.findAuthMemberByEmail(email);
 
         // db에 저장하지 않고 여기서 권한 부여
-        List<String> roles = new ArrayList<>();
-        roles.add("USER");
-
-      return new CustomUserDetails(member.id(), member.email(), passwordEncoder.encode(member.password()), roles);
+        return CustomUserDetails.builder()
+                .id(member.id())
+                .email(member.email())
+                .password(passwordEncoder.encode(member.password()))
+                .roles(List.of("USER"))
+                .build();
     }
 }

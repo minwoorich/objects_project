@@ -11,7 +11,7 @@ public interface SellerRepository {
 
     Seller findById(Long id);
 
-    Seller findWithSellerAccountById(Long id);
+    Seller findByIdWithSellerAccount(Long id);
     List<Seller> findAllSeller();
     Seller save(Seller seller);
 }
