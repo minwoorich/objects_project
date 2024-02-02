@@ -1,8 +1,10 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.order.controller.response.ProductResponse;
-import com.objects.marketbridge.order.controller.response.RefundInfo;
+import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.dto.ConfirmCancelReturnDto;
+import com.objects.marketbridge.order.service.dto.GetCancelReturnDetailDto;
+import com.objects.marketbridge.payment.service.dto.RefundDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,11 +43,11 @@ public class ConfirmCancelReturnHttp {
         private String orderNumber;
         private Long totalPrice;
         private LocalDateTime cancellationDate; // 주문 취소 일자
-        private List<ProductResponse> cancelledItems;
-        private RefundInfo refundInfo;
+        private List<ConfirmCancelReturnDto.ProductResponse> cancelledItems;
+        private ConfirmCancelReturnDto.RefundInfo refundInfo;
 
         @Builder
-        private Response(Long orderId, String orderNumber, Long totalPrice, LocalDateTime cancellationDate, RefundInfo refundInfo, List<ProductResponse> cancelledItems) {
+        private Response(Long orderId, String orderNumber, Long totalPrice, LocalDateTime cancellationDate, ConfirmCancelReturnDto.RefundInfo refundInfo, List<ConfirmCancelReturnDto.ProductResponse> cancelledItems) {
             this.orderId = orderId;
             this.orderNumber = orderNumber;
             this.totalPrice = totalPrice;
@@ -64,6 +66,80 @@ public class ConfirmCancelReturnHttp {
                     .cancelledItems(serviceDto.getCancelledItems())
                     .build();
 
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class ProductResponse {
+
+        private Long productId;
+        private String productNo;
+        private String name;
+        private Long price;
+        private Long quantity;
+
+        @Builder
+        private ProductResponse(Long productId, String productNo, String name, Long price,Long quantity) {
+            this.productId = productId;
+            this.productNo = productNo;
+            this.name = name;
+            this.price = price;
+            this.quantity = quantity;
+        }
+
+        public static ProductResponse of(Product product, Long quantity) {
+            return ProductResponse.builder()
+                    .productId(product.getId())
+                    .name(product.getName())
+                    .price(product.getPrice())
+                    .quantity(quantity)
+                    .productNo(product.getProductNo())
+                    .build();
+        }
+
+        public static ProductResponse of(OrderDetail orderDetail) {
+            return ProductResponse.builder()
+                    .productId(orderDetail.getProduct().getId())
+                    .name(orderDetail.getProduct().getName())
+                    .price(orderDetail.getProduct().getPrice())
+                    .quantity(orderDetail.getQuantity())
+                    .productNo(orderDetail.getProduct().getProductNo())
+                    .build();
+        }
+
+        public static ProductResponse of(GetCancelReturnDetailDto.ProductInfo productListResponseDto) {
+            return ProductResponse.builder()
+                    .productId(productListResponseDto.getProductId())
+                    .name(productListResponseDto.getName())
+                    .price(productListResponseDto.getPrice())
+                    .quantity(productListResponseDto.getQuantity())
+                    .productNo(productListResponseDto.getProductNo())
+                    .build();
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class RefundInfo {
+
+        private Long totalRefundAmount;
+        private String refundMethod;
+        private LocalDateTime refundProcessedAt; // 환불 일자
+
+        @Builder
+        public RefundInfo(Long totalRefundAmount, String refundMethod, LocalDateTime refundProcessedAt) {
+            this.totalRefundAmount = totalRefundAmount;
+            this.refundMethod = refundMethod;
+            this.refundProcessedAt = refundProcessedAt;
+        }
+
+        public static RefundInfo of(RefundDto refundDto) {
+            return RefundInfo.builder()
+                    .totalRefundAmount(refundDto.getTotalRefundAmount())
+                    .refundMethod(refundDto.getRefundMethod())
+                    .refundProcessedAt(refundDto.getRefundProcessedAt())
+                    .build();
         }
     }
 }

@@ -24,13 +24,13 @@ public class RequestReturnHttp {
         public static Response of(RequestReturnDto.Response serviceDto) {
             return Response.builder()
                     .productResponses(
-                            serviceDto.getProductInfoResponseDtos()
+                            serviceDto.getProductInfos()
                                     .stream()
                                     .map(RequestReturnHttp.ProductInfoResponse::of)
                                     .toList()
                     )
                     .returnRefundInfoResponse(
-                            RequestReturnHttp.ReturnRefundInfoResponse.of(serviceDto.getReturnRefundInfoResponseDto())
+                            RequestReturnHttp.ReturnRefundInfoResponse.of(serviceDto.getReturnRefundInfo())
                     )
                     .build();
         }
@@ -52,7 +52,7 @@ public class RequestReturnHttp {
             this.image = image;
         }
 
-        private static ProductInfoResponse of(RequestReturnDto.ProductInfoResponseDto serviceDto) {
+        private static ProductInfoResponse of(RequestReturnDto.ProductInfo serviceDto) {
             return ProductInfoResponse.builder()
                     .quantity(serviceDto.getQuantity())
                     .name(serviceDto.getName())
@@ -77,7 +77,7 @@ public class RequestReturnHttp {
             this.productPrice = productPrice;
         }
 
-        public static ReturnRefundInfoResponse of(RequestReturnDto.ReturnRefundInfoResponseDto serviceDto) {
+        public static ReturnRefundInfoResponse of(RequestReturnDto.ReturnRefundInfo serviceDto) {
             return ReturnRefundInfoResponse.builder()
                     .deliveryFee(serviceDto.getDeliveryFee())
                     .returnFee(serviceDto.getReturnFee())

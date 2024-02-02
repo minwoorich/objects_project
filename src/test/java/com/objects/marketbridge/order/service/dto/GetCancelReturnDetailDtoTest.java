@@ -1,7 +1,6 @@
 package com.objects.marketbridge.order.service.dto;
 
 import com.objects.marketbridge.common.domain.Coupon;
-import com.objects.marketbridge.common.domain.MembershipType;
 import com.objects.marketbridge.common.domain.Product;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.mock.TestDateTimeHolder;
@@ -15,16 +14,16 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 import static com.objects.marketbridge.common.domain.MembershipType.BASIC;
 import static com.objects.marketbridge.common.domain.MembershipType.WOW;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-class OrderCancelReturnDetailResponseDtoTest {
+class GetCancelReturnDetailDtoTest {
+
 
     @Test
-    @DisplayName("주문, 주문 상세가 주어지면 OrderCancelReturnDetailResponseDto로 변환할 수 있다.")
+    @DisplayName("주문, 주문 상세가 주어지면 GetCancelReturnDetailDto.Response로 변환할 수 있다.")
     public void ofWithWOW() {
         // given
         Order order = Order.builder()
@@ -79,7 +78,7 @@ class OrderCancelReturnDetailResponseDtoTest {
         TestDateTimeHolder testDateTimeHolder = new TestDateTimeHolder(LocalDateTime.now(), createTime, updateTime, updateTime);
 
         // when
-        OrderCancelReturnDetailResponseDto result = OrderCancelReturnDetailResponseDto.of(order, orderDetails, WOW.getText(), testDateTimeHolder);
+        GetCancelReturnDetailDto.Response result = GetCancelReturnDetailDto.Response.of(order, orderDetails, WOW.getText(), testDateTimeHolder);
 
         // then
         assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "cancelReason")
@@ -99,7 +98,7 @@ class OrderCancelReturnDetailResponseDtoTest {
     }
 
     @Test
-    @DisplayName("주문, 주문 상세가 주어지면 OrderCancelReturnDetailResponseDto로 변환할 수 있다.")
+    @DisplayName("주문, 주문 상세가 주어지면 GetCancelReturnDetailDto.Response로 변환할 수 있다.")
     public void ofWithBasic() {
         // given
         Order order = Order.builder()
@@ -153,7 +152,7 @@ class OrderCancelReturnDetailResponseDtoTest {
         DateTimeHolder testDateTimeHolder = new TestDateTimeHolder(LocalDateTime.now(), createTime, updateTime, updateTime);
 
         // when
-        OrderCancelReturnDetailResponseDto result = OrderCancelReturnDetailResponseDto.of(order, orderDetails, BASIC.getText(), testDateTimeHolder);
+        GetCancelReturnDetailDto.Response result = GetCancelReturnDetailDto.Response.of(order, orderDetails, BASIC.getText(), testDateTimeHolder);
 
         // then
         assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "cancelReason")
@@ -169,6 +168,51 @@ class OrderCancelReturnDetailResponseDtoTest {
         assertThat(result.getCancelRefundInfoResponseDto())
                 .extracting("deliveryFee", "refundFee", "discountPrice", "totalPrice")
                 .contains(MemberShipPrice.BASIC.getDeliveryFee(), MemberShipPrice.BASIC.getRefundFee(), 3000L, 5000L);
+
+    }
+
+    @Test
+    @DisplayName("주문 상세가 주어졌을 때 ProductListResponseDto 변환")
+    public void productInfo_of_With_OrderDetail() {
+        Product product = Product.builder()
+                .price(1000L)
+                .name("빵빵이")
+                .productNo("123")
+                .build();
+        ReflectionTestUtils.setField(product, "id", 1L, Long.class);
+        OrderDetail orderDetail = OrderDetail.builder()
+                .product(product)
+                .price(product.getPrice())
+                .quantity(2L)
+                .build();
+
+        // when
+        GetCancelReturnDetailDto.ProductInfo result = GetCancelReturnDetailDto.ProductInfo.of(orderDetail);
+
+        // then
+        assertThat(result).extracting("productId", "productNo", "name", "price", "quantity")
+                .contains(1L, "123", "빵빵이", 1000L, 2L);
+    }
+
+
+    @Test
+    @DisplayName("상품과 수량이 주어졌을 때 ProductListResponseDto 변환")
+    public void productInfo_of_With_Product_And_Quantity() {
+        Long quantity = 2L;
+
+        Product product = Product.builder()
+                .price(1000L)
+                .name("빵빵이")
+                .productNo("123")
+                .build();
+        ReflectionTestUtils.setField(product, "id", 1L, Long.class);
+
+        // when
+        GetCancelReturnDetailDto.ProductInfo result = GetCancelReturnDetailDto.ProductInfo.of(product, quantity);
+
+        // then
+        assertThat(result).extracting("productId", "productNo", "name", "price", "quantity")
+                .contains(1L, "123", "빵빵이", 1000L, 2L);
 
     }
 

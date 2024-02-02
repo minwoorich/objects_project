@@ -17,47 +17,45 @@ public class RequestReturnDto {
     @Getter
     @NoArgsConstructor
     public static class Response {
-        private List<ProductInfoResponseDto> productInfoResponseDtos;
-        private ReturnRefundInfoResponseDto returnRefundInfoResponseDto;
+        private List<ProductInfo> productInfos;
+        private ReturnRefundInfo returnRefundInfo;
 
         @Builder
-        private Response(List<ProductInfoResponseDto> productInfoResponseDtos, ReturnRefundInfoResponseDto returnRefundInfoResponseDto) {
-            this.productInfoResponseDtos = productInfoResponseDtos;
-            this.returnRefundInfoResponseDto = returnRefundInfoResponseDto;
+        private Response(List<ProductInfo> productInfos, ReturnRefundInfo returnRefundInfo) {
+            this.productInfos = productInfos;
+            this.returnRefundInfo = returnRefundInfo;
         }
 
         public static Response of(List<OrderDetail> orderDetails, String memberType) {
             return Response.builder()
-                    .productInfoResponseDtos(
+                    .productInfos(
                             orderDetails.stream()
-                                    .map(ProductInfoResponseDto::of)
+                                    .map(ProductInfo::of)
                                     .toList()
                     )
-                    .returnRefundInfoResponseDto(
-                            ReturnRefundInfoResponseDto.of(orderDetails, memberType)
-                    )
+                    .returnRefundInfo(ReturnRefundInfo.of(orderDetails, memberType))
                     .build();
         }
     }
 
     @Getter
     @NoArgsConstructor
-    public static class ProductInfoResponseDto {
+    public static class ProductInfo {
         private Long quantity;
         private String name;
         private Long price;
         private String image; // TODO 주문 취소 요청 이미지 반환
 
         @Builder
-        private ProductInfoResponseDto(Long quantity, String name, Long price, String image) {
+        private ProductInfo(Long quantity, String name, Long price, String image) {
             this.quantity = quantity;
             this.name = name;
             this.price = price;
             this.image = image;
         }
 
-        public static ProductInfoResponseDto of(OrderDetail orderDetail) {
-            return ProductInfoResponseDto.builder()
+        public static ProductInfo of(OrderDetail orderDetail) {
+            return ProductInfo.builder()
                     .quantity(orderDetail.getQuantity())
                     .name(orderDetail.getProduct().getName())
                     .price(orderDetail.getProduct().getPrice())
@@ -68,19 +66,19 @@ public class RequestReturnDto {
 
     @Getter
     @NoArgsConstructor
-    public static class ReturnRefundInfoResponseDto {
+    public static class ReturnRefundInfo {
         private Long deliveryFee;
         private Long returnFee;
         private Long productTotalPrice;
 
         @Builder
-        private ReturnRefundInfoResponseDto(Long deliveryFee, Long returnFee, Long productTotalPrice) {
+        private ReturnRefundInfo(Long deliveryFee, Long returnFee, Long productTotalPrice) {
             this.deliveryFee = deliveryFee;
             this.returnFee = returnFee;
             this.productTotalPrice = productTotalPrice;
         }
 
-        public static ReturnRefundInfoResponseDto of(List<OrderDetail> orderDetails, String memberShip) {
+        public static ReturnRefundInfo of(List<OrderDetail> orderDetails, String memberShip) {
             if (isBasicMember(memberShip)) {
                 return createDto(orderDetails, BASIC.getDeliveryFee(), BASIC.getReturnFee());
             }
@@ -91,8 +89,8 @@ public class RequestReturnDto {
             return Objects.equals(memberShip, MembershipType.BASIC.getText());
         }
 
-        private static ReturnRefundInfoResponseDto createDto(List<OrderDetail> orderDetails, Long deliveryFee, Long refundFee) {
-            return ReturnRefundInfoResponseDto.builder()
+        private static ReturnRefundInfo createDto(List<OrderDetail> orderDetails, Long deliveryFee, Long refundFee) {
+            return ReturnRefundInfo.builder()
                     .deliveryFee(deliveryFee)
                     .returnFee(refundFee)
                     .productTotalPrice(

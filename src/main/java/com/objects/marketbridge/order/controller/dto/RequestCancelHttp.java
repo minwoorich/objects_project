@@ -24,13 +24,13 @@ public class RequestCancelHttp {
         public static Response of(RequestCancelDto.Response serviceDto) {
             return Response.builder()
                     .productResponses(
-                            serviceDto.getProductInfoResponseDtos()
+                            serviceDto.getProductInfos()
                                     .stream()
-                                    .map(RequestCancelHttp.ProductInfoResponse::of)
+                                    .map(ProductInfoResponse::of)
                                     .toList()
                     )
                     .cancelRefundInfoResponse(
-                            CancelRefundInfoResponse.of(serviceDto.getCancelRefundInfoResponseDto())
+                            CancelRefundInfoResponse.of(serviceDto.getCancelRefundInfo())
                     )
                     .build();
         }
@@ -52,7 +52,7 @@ public class RequestCancelHttp {
             this.image = image;
         }
 
-        private static ProductInfoResponse of(RequestCancelDto.ProductInfoResponseDto serviceDto) {
+        private static ProductInfoResponse of(RequestCancelDto.ProductInfo serviceDto) {
             return ProductInfoResponse.builder()
                     .quantity(serviceDto.getQuantity())
                     .name(serviceDto.getName())
@@ -79,7 +79,7 @@ public class RequestCancelHttp {
             this.totalPrice = totalPrice;
         }
 
-        public static CancelRefundInfoResponse of(RequestCancelDto.CancelRefundInfoResponseDto serviceDto) {
+        public static CancelRefundInfoResponse of(RequestCancelDto.CancelRefundInfo serviceDto) {
             return CancelRefundInfoResponse.builder()
                     .deliveryFee(serviceDto.getDeliveryFee())
                     .refundFee(serviceDto.getRefundFee())
