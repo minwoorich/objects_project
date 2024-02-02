@@ -1,15 +1,12 @@
 package com.objects.marketbridge.member.service.port;
 
 import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.member.dto.AuthMember;
 
 import java.util.Optional;
 
 public interface MemberRepository {
 
     boolean existsByEmail(String email);
-
-    AuthMember findAuthMemberByEmail(String email);
 
     Member findByEmail(String email);
 
