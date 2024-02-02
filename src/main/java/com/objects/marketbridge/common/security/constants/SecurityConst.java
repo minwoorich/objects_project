@@ -29,5 +29,9 @@ public class SecurityConst {
 
     public static final String BLACKLIST_TRUE = "true";
 
-    public static final String RE_ISSUE_URI = "/member/re-issue";
+    public static final String SIGN_IN_URI = "/auth/sign-in";
+
+    public static final String RE_ISSUE_URI = "/auth/re-issue";
+
+    public static final String LOCATION_FILTER = "FILTER";
 }

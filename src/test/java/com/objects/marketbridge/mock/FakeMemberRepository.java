@@ -1,9 +1,7 @@
 package com.objects.marketbridge.mock;
 
 import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.member.dto.AuthMember;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.domain.OrderDetail;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -17,8 +15,8 @@ public class FakeMemberRepository implements MemberRepository {
     private List<Member> data = new ArrayList<>();
 
     @Override
-    public AuthMember findAuthMemberByEmail(String email) {
-        return null;
+    public boolean existsByEmail(String email) {
+        return false;
     }
 
     @Override
