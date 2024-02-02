@@ -4,6 +4,7 @@ import com.objects.marketbridge.common.domain.Option;
 import com.objects.marketbridge.product.service.port.OptionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -20,12 +21,12 @@ public class OptionRepositoryImpl implements OptionRepository {
     }
 
     @Override
-    public Optional<Option> findById(Long id) {
-        return optionJpaRepository.findById(id);
+    public Option findById(Long id) {
+        return optionJpaRepository.findById(id).orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
     }
 
     @Override
-    public Optional<Option> findByName(String name) {
+    public Option findByName(String name) {
         return optionJpaRepository.findByName(name);
     }
 }

@@ -47,7 +47,7 @@ public class CreateProductService {
     }
 
     public Product createProduct(CreateProductDto createProductDto){
-        Category category = categoryRepository.findById(createProductDto.getCategoryId()).get();
+        Category category = categoryRepository.findById(createProductDto.getCategoryId());
         Boolean isOwn = createProductDto.getIsOwn();
         String name = createProductDto.getName();
         Long price = createProductDto.getPrice();
@@ -71,7 +71,7 @@ public class CreateProductService {
             imageRepository.save(image);
 
             //ProductImage 엔티티 생성 (정렬 순서대로 seqNo 할당)
-            ProductImage productImage = ProductImage.create( product, imageRepository.findById(image.getId()).get(),Long.valueOf(i) );
+            ProductImage productImage = ProductImage.create( product, imageRepository.findById(image.getId()),Long.valueOf(i) );
             productImages.add(productImage);
 
             // 연관관계 추가

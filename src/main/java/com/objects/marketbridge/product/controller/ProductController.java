@@ -7,11 +7,9 @@ import com.objects.marketbridge.product.controller.response.CreateProductRespons
 import com.objects.marketbridge.product.controller.response.DeleteProductResponseDto;
 import com.objects.marketbridge.product.controller.response.ReadProductResponseDto;
 import com.objects.marketbridge.product.controller.response.UpdateProductResponseDto;
-import com.objects.marketbridge.product.service.CreateProductService;
+import com.objects.marketbridge.product.service.*;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.UserAuthorize;
-import com.objects.marketbridge.product.service.DeleteProductService;
-import com.objects.marketbridge.product.service.UpdateProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +19,19 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ProductController {
 
-//    private final ProductService productService;
+    private final BulkUploadProductService bulkUploadProductService;
     private final CreateProductService createProductService;
+    private final ReadProductService readProductService;
     private final UpdateProductService updateProductService;
     private final DeleteProductService deleteProductService;
 
 
-//    //상품들 Excel파일로 대량등록
-//    @UserAuthorize
-//    @PostMapping("/products/uploadExcel")
-//    public String uploadExcelFile(@RequestParam("file") MultipartFile file){
-//        return productService.uploadExcelFile(file);
-//    }
+    //상품들 Excel파일로 대량등록
+    @UserAuthorize
+    @PostMapping("/products/uploadExcel")
+    public String uploadExcelFile(@RequestParam("file") MultipartFile file){
+        return bulkUploadProductService.uploadExcelFile(file);
+    }
 
 
 
@@ -48,14 +47,14 @@ public class ProductController {
 
 
 
-//    //상품조회
-//    @UserAuthorize
-//    @GetMapping("/products/{id}")
-//    public ApiResponse<ReadProductResponseDto> readProduct
-//    (@PathVariable("id") Long id){
-//        ReadProductResponseDto readProductResponseDto = productService.readProduct(id);
-//        return ApiResponse.ok(readProductResponseDto);
-//    }
+    //상품조회
+    @UserAuthorize
+    @GetMapping("/products/{id}")
+    public ApiResponse<ReadProductResponseDto> readProduct
+    (@PathVariable("id") Long id){
+        ReadProductResponseDto readProductResponseDto = readProductService.read(id);
+        return ApiResponse.ok(readProductResponseDto);
+    }
 
 
 

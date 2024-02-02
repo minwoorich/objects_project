@@ -50,7 +50,7 @@ public class UpdateProductService {
     }
 
     protected Product updateProduct(Product product, UpdateProductDto updateProductDto){
-        Category category = categoryRepository.findById(updateProductDto.getCategoryId()).get();
+        Category category = categoryRepository.findById(updateProductDto.getCategoryId());
         Boolean isOwn = updateProductDto.getIsOwn();
         String name = updateProductDto.getName();
         Long price = updateProductDto.getPrice();
@@ -125,7 +125,7 @@ public class UpdateProductService {
             imageRepository.save(image);
 
             //ProductImage 엔티티 생성 (정렬 순서대로 seqNo 할당)
-            ProductImage productImage = ProductImage.create( product, imageRepository.findById(image.getId()).get(), Long.valueOf(i) );
+            ProductImage productImage = ProductImage.create( product, imageRepository.findById(image.getId()), Long.valueOf(i) );
             productImages.add(productImage);
 
             // 연관관계 추가

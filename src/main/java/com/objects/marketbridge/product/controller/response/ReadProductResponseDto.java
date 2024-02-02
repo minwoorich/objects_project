@@ -1,5 +1,6 @@
 package com.objects.marketbridge.product.controller.response;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,6 +32,7 @@ public class ReadProductResponseDto {
 //        this.productId = productId;
 //    }
 
+    @Builder
     public ReadProductResponseDto
             (Long productId, Long categoryId, Boolean isOwn, String name, Long price,
              Boolean isSubs, Long stock, String thumbImg,
