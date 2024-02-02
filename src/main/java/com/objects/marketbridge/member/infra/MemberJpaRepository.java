@@ -8,9 +8,11 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
+//JpaRepository에서 제공되는 기본메서드 사용
 public interface MemberJpaRepository extends JpaRepository<Member, Long> {
 
-    //JpaRepository에서 제공되는 기본메서드 사용
+    boolean existsByEmail(String email);
+
     Optional<Member> findByEmail(String email);
 
     Optional<Member> findMemberById(Long id);

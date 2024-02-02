@@ -30,16 +30,6 @@ public class SignUpDto {
 
     private Boolean isAgree;
 
-    static public SignUpDto toDto(Member member) {
-        return SignUpDto.builder()
-                .email(member.getEmail())
-                .password(member.getPassword())
-                .name(member.getName())
-                .phoneNo(member.getPhoneNo())
-                .isAgree(member.getIsAgree())
-                .build();
-    }
-
     public Member toEntity(String encodedPassword) {
         return Member.builder()
                 .email(email)
