@@ -131,7 +131,7 @@ class CreatePaymentServiceTest {
         Payment payment = paymentRepository.findByOrderNo("1234");
 
         //then
-        assertThat(payment.getId()).isEqualTo(1L);
+        assertThat(payment.getTid()).isEqualTo("tid");
 
     }
 
