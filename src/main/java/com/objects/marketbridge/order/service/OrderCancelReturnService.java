@@ -58,10 +58,10 @@ public class OrderCancelReturnService {
         return RequestCancelDto.Response.of(orderDetails, membership); // TODO 맴버 조회해서 타입 넣기
     }
 
-    public ReturnResponseDto requestReturn(String orderNo, List<Long> productIds, String membership) {
+    public RequestReturnDto.Response findReturnInfo(String orderNo, List<Long> productIds, String membership) {
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
 
-        return ReturnResponseDto.of(orderDetails, membership); // TODO 맴버 조회해서 타입 넣기
+        return RequestReturnDto.Response.of(orderDetails, membership); // TODO 맴버 조회해서 타입 넣기
     }
 
     public OrderCancelReturnDetailResponseDto findCancelReturnDetail(String orderNo, List<Long> productIds, String membership, DateTimeHolder dateTimeHolder) {

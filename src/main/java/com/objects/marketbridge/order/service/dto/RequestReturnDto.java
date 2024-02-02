@@ -12,31 +12,29 @@ import java.util.Objects;
 import static com.objects.marketbridge.order.domain.MemberShipPrice.BASIC;
 import static com.objects.marketbridge.order.domain.MemberShipPrice.WOW;
 
-public class RequestCancelDto {
+public class RequestReturnDto {
 
     @Getter
     @NoArgsConstructor
     public static class Response {
         private List<ProductInfoResponseDto> productInfoResponseDtos;
-        private CancelRefundInfoResponseDto cancelRefundInfoResponseDto;
+        private ReturnRefundInfoResponseDto returnRefundInfoResponseDto;
 
         @Builder
-        private Response(List<ProductInfoResponseDto> productInfoResponseDtos, CancelRefundInfoResponseDto cancelRefundInfoResponseDto) {
+        private Response(List<ProductInfoResponseDto> productInfoResponseDtos, ReturnRefundInfoResponseDto returnRefundInfoResponseDto) {
             this.productInfoResponseDtos = productInfoResponseDtos;
-            this.cancelRefundInfoResponseDto = cancelRefundInfoResponseDto;
+            this.returnRefundInfoResponseDto = returnRefundInfoResponseDto;
         }
 
-        public static Response of(List<OrderDetail> orderDetails, String memberShip) {
+        public static Response of(List<OrderDetail> orderDetails, String memberType) {
             return Response.builder()
                     .productInfoResponseDtos(
                             orderDetails.stream()
-                            // TODO Product로 인해 N+1 문제 발생 예상 (of)
-                            .map(RequestCancelDto.ProductInfoResponseDto::of)
-                            .toList()
+                                    .map(ProductInfoResponseDto::of)
+                                    .toList()
                     )
-                    .cancelRefundInfoResponseDto(
-                            // TODO coupon 으로 인해 N+1문제 발생할 것으로 예상 (of) -> fetchJoin으로 쿠폰까지 조인후 해결
-                            CancelRefundInfoResponseDto.of(orderDetails, memberShip)
+                    .returnRefundInfoResponseDto(
+                            ReturnRefundInfoResponseDto.of(orderDetails, memberType)
                     )
                     .build();
         }
@@ -70,48 +68,40 @@ public class RequestCancelDto {
 
     @Getter
     @NoArgsConstructor
-    public static class CancelRefundInfoResponseDto {
+    public static class ReturnRefundInfoResponseDto {
         private Long deliveryFee;
-        private Long refundFee;
-        private Long discountPrice;
-        private Long totalPrice;
+        private Long returnFee;
+        private Long productTotalPrice;
 
         @Builder
-        private CancelRefundInfoResponseDto(Long deliveryFee, Long refundFee, Long discountPrice, Long totalPrice) {
+        private ReturnRefundInfoResponseDto(Long deliveryFee, Long returnFee, Long productTotalPrice) {
             this.deliveryFee = deliveryFee;
-            this.refundFee = refundFee;
-            this.discountPrice = discountPrice;
-            this.totalPrice = totalPrice;
+            this.returnFee = returnFee;
+            this.productTotalPrice = productTotalPrice;
         }
 
-        public static CancelRefundInfoResponseDto of(List<OrderDetail> orderDetails, String memberShip) {
+        public static ReturnRefundInfoResponseDto of(List<OrderDetail> orderDetails, String memberShip) {
             if (isBasicMember(memberShip)) {
-                return createDto(orderDetails, BASIC.getDeliveryFee(), BASIC.getRefundFee());
+                return createDto(orderDetails, BASIC.getDeliveryFee(), BASIC.getReturnFee());
             }
-            return createDto(orderDetails, WOW.getDeliveryFee(), WOW.getRefundFee());
+            return createDto(orderDetails, WOW.getDeliveryFee(), WOW.getReturnFee());
         }
 
         private static boolean isBasicMember(String memberShip) {
             return Objects.equals(memberShip, MembershipType.BASIC.getText());
         }
 
-        private static CancelRefundInfoResponseDto createDto(List<OrderDetail> orderDetails, Long deliveryFee, Long refundFee) {
-            return CancelRefundInfoResponseDto.builder()
-                    .discountPrice( // TODO coupon 으로 인해 N+1문제 발생할 것으로 예상 -> fetchJoin으로 쿠폰까지 조인후 해결
-                            orderDetails.stream()
-                                    .mapToLong(orderDetail -> orderDetail.getCoupon().getPrice())
-                                    .sum()
-                    )
-                    .totalPrice(
+        private static ReturnRefundInfoResponseDto createDto(List<OrderDetail> orderDetails, Long deliveryFee, Long refundFee) {
+            return ReturnRefundInfoResponseDto.builder()
+                    .deliveryFee(deliveryFee)
+                    .returnFee(refundFee)
+                    .productTotalPrice(
                             orderDetails.stream()
                                     .mapToLong(orderDetail -> orderDetail.getPrice() * orderDetail.getQuantity())
                                     .sum()
                     )
-                    .deliveryFee(deliveryFee)
-                    .refundFee(refundFee)
                     .build();
         }
     }
-
 
 }

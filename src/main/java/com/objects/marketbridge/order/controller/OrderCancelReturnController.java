@@ -4,11 +4,11 @@ package com.objects.marketbridge.order.controller;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.order.controller.dto.ConfirmCancelReturnHttp;
+import com.objects.marketbridge.order.controller.dto.RequestReturnHttp;
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnDetailResponse;
 import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
-import com.objects.marketbridge.order.controller.response.OrderReturnResponse;
 import com.objects.marketbridge.order.service.OrderCancelReturnService;
-import com.objects.marketbridge.order.service.dto.RequestCancelHttp;
+import com.objects.marketbridge.order.controller.dto.RequestCancelHttp;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import jakarta.validation.Valid;
 import lombok.Builder;
@@ -45,11 +45,11 @@ public class OrderCancelReturnController {
     }
 
     @GetMapping("/return-flow")
-    public ApiResponse<OrderReturnResponse> requestReturnOrder(
+    public ApiResponse<RequestReturnHttp.Response> requestReturn (
             @RequestParam(name = "orderNo") String orderNo,
             @RequestParam(name = "productIds") List<Long> productIds
     ) {
-        return ApiResponse.ok(OrderReturnResponse.of(orderCancelReturnService.requestReturn(orderNo, productIds, WOW.getText())));
+        return ApiResponse.ok(RequestReturnHttp.Response.of(orderCancelReturnService.findReturnInfo(orderNo, productIds, WOW.getText())));
     }
 
     @GetMapping("/cancel-return/list")

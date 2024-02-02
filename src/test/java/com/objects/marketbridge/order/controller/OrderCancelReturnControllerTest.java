@@ -9,13 +9,14 @@ import com.objects.marketbridge.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.mock.TestContainer;
 import com.objects.marketbridge.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.controller.dto.ConfirmCancelReturnHttp;
+import com.objects.marketbridge.order.controller.dto.RequestReturnHttp;
 import com.objects.marketbridge.order.controller.response.OrderCancelReturnDetailResponse;
 import com.objects.marketbridge.order.controller.response.OrderReturnResponse;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
 import com.objects.marketbridge.order.infra.dtio.DetailResponseDtio;
-import com.objects.marketbridge.order.service.dto.RequestCancelHttp;
+import com.objects.marketbridge.order.controller.dto.RequestCancelHttp;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -202,7 +203,7 @@ public class OrderCancelReturnControllerTest {
         List<Long> productIds = List.of(1L, 2L);
 
         // when
-        ApiResponse<OrderReturnResponse> result = orderCancelReturnController.requestReturnOrder(orderNo, productIds);
+        ApiResponse<RequestReturnHttp.Response> result = orderCancelReturnController.requestReturn(orderNo, productIds);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
