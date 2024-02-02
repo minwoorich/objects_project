@@ -18,23 +18,39 @@ public class Review extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member memberId;
+    private Member member;
 
     //private Long orderId; orderid 제거
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product productId;
+    private Product product;
 
-    private String content;
     // 별점
     private Integer rating; //1-5
 
+    private String content;
+
+
     @Builder
-    private Review(Member memberId, Product productId, String content, Integer rating) {
-        this.memberId = memberId;
-        this.productId = productId;
-        this.content = content;
+    private Review(Member member, Product product, Integer rating, String content) {
+        this.member = member;
+        this.product = product;
         this.rating = rating;
+        this.content = content;
+    }
+
+//    public void create(Member member, Product product, Integer rating, String content){
+//        this.member = member;
+//        this.product = product;
+//        this.rating = rating;
+//        this.content = content;
+//    }
+
+    public void update(Member member, Product product, Integer rating, String content){
+        this.member = member;
+        this.product = product;
+        this.rating = rating;
+        this.content = content;
     }
 }

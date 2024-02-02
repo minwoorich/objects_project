@@ -20,7 +20,7 @@ public class OptionCategory extends BaseEntity{
 
     private String name;
 
-    @OneToMany(mappedBy = "option_category")
+    @OneToMany(mappedBy = "optionCategory")
     private List<Option> options;
 
     @Builder

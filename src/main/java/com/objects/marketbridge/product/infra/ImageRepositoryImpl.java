@@ -4,6 +4,7 @@ import com.objects.marketbridge.common.domain.Image;
 import com.objects.marketbridge.product.service.port.ImageRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -20,8 +21,8 @@ public class ImageRepositoryImpl implements ImageRepository {
     }
 
     @Override
-    public Optional<Image> findById(Long id) {
-        return imageJpaRepository.findById(id);
+    public Image findById(Long id) {
+        return imageJpaRepository.findById(id).orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
     }
 
     public void delete(Image image) {
@@ -29,6 +30,6 @@ public class ImageRepositoryImpl implements ImageRepository {
     }
 
     public void deleteById(Long id) {
-        imageJpaRepository.delete(findById(id).get());
+        imageJpaRepository.delete(findById(id));
     }
 }

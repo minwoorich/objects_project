@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.common.exception.error.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.order.domain.Address;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.objects.marketbridge.common.exception.error.ErrorCode.SHIPPING_ADDRESS_NOT_REGISTERED;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.SHIPPING_ADDRESS_NOT_REGISTERED;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +31,6 @@ public class CreateCheckoutService {
         return addresses.stream()
                 .filter(Address::getIsDefault)
                 .findFirst()
-                .orElseThrow(() -> new CustomLogicException(SHIPPING_ADDRESS_NOT_REGISTERED.getMessage(), SHIPPING_ADDRESS_NOT_REGISTERED));
+                .orElseThrow(() -> new CustomLogicException("기본배송지가 없습니다", SHIPPING_ADDRESS_NOT_REGISTERED));
     }
 }

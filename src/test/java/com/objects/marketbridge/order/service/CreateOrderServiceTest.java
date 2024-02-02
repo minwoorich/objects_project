@@ -2,14 +2,13 @@ package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.common.domain.*;
 import com.objects.marketbridge.order.domain.*;
-import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.common.exception.error.CustomLogicException;
-import com.objects.marketbridge.common.exception.error.ErrorCode;
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
@@ -29,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT_OF_STOCK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -166,7 +166,7 @@ class CreateOrderServiceTest {
     private long getTotalOrderPrice(List<ProductValue> productValues) {
 
         return productValues.stream().mapToLong(p ->
-                productRepository.findById(p.getProductId()).get().getPrice() * p.getQuantity()
+                productRepository.findById(p.getProductId()).getPrice() * p.getQuantity()
         ).sum();
     }
 
@@ -188,10 +188,10 @@ class CreateOrderServiceTest {
         assertThat(orderDetails).hasSize(3);
 
         for (int i = 0; i < orderDetails.size(); i++) {
-            assertThat(orderDetails.get(i).getProduct()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()));
+            assertThat(orderDetails.get(i).getProduct().getId()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()).getId());
             assertThat(orderDetails.get(i).getOrderNo()).isEqualTo(createOrderDto.getOrderNo());
             assertThat(orderDetails.get(i).getQuantity()).isEqualTo(createOrderDto.getProductValues().get(i).getQuantity());
-            assertThat(orderDetails.get(i).getPrice()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()).get().getPrice());
+            assertThat(orderDetails.get(i).getPrice()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()).getPrice());
             assertThat(orderDetails.get(i).getStatusCode()).isEqualTo(StatusCodeType.ORDER_INIT.getCode());
         }
     }
@@ -346,7 +346,7 @@ class CreateOrderServiceTest {
         assertThatThrownBy(() ->
                 createOrderService.create(createOrderDto))
                 .isInstanceOf(CustomLogicException.class)
-                .hasMessageContaining(ErrorCode.OUT_OF_STOCK.getMessage());
+                .hasMessageContaining("재고가 없습니다",OUT_OF_STOCK);
 
     }
 

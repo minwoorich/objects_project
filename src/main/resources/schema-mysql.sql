@@ -18,6 +18,29 @@ CREATE TABLE member (
                         deleted_at	datetime(6)
 );
 
+DROP TABLE IF EXISTS membership;
+
+CREATE TABLE membership (
+                        subs_id	bigint auto_increment
+                            primary key,
+
+                        member_id	varchar(255)	,
+                        tid	varchar(255)	,
+                        sid	varchar(255)	,
+                        subs_order_no	varchar(255)	,
+                        status_code	varchar(255)	,
+                        payment_method	varchar(255)	,
+                        total_amount bigint,
+                        discount_amount bigint,
+                        card_issuer_name	varchar(255)	,
+                        card_purchase_name	varchar(255)	,
+                        card_no	varchar(255)	,
+                        card_install_month	BIGINT	,
+                        created_at	datetime(6)	,
+                        updated_at	datetime(6)	,
+                        deleted_at	datetime(6)
+);
+
 DROP TABLE IF EXISTS seller;
 
 CREATE TABLE seller (
@@ -32,6 +55,7 @@ CREATE TABLE seller (
                         license_no	varchar(255)	,
                         email	varchar(255)	,
                         account_no	varchar(255)	,
+                        balance	bigint	,
                         created_at	datetime(6)	,
                         updated_at	datetime(6)	,
                         deleted_at	datetime(6)
@@ -227,6 +251,7 @@ CREATE TABLE order_detail (
                                    reward_type	varchar(255)	,
                                    quantity	bigint	,
                                    price	bigint	,
+                                   seller_id	bigint	,
                                    status_code	varchar(255)	,
                                    tid	varchar(255)	,
                                    delivered_date	datetime(6)	,
@@ -568,7 +593,8 @@ create table seller_account
     seller_id         BIGINT null,
     incoming          BIGINT null,
     outgoing          BIGINT null,
-    balance           BIGINT null
+    balance           BIGINT null,
+    detail           varchar(255)
 
 );
 

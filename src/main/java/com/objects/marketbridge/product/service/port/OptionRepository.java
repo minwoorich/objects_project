@@ -8,7 +8,7 @@ public interface OptionRepository {
 
     void save(Option option);
 
-    Optional<Option> findById(Long id);
+    Option findById(Long id);
 
-    Optional<Option> findByName(String name);
+    Option findByName(String name);
 }

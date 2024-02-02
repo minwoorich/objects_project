@@ -15,7 +15,7 @@ public class FakeProductRepository implements ProductRepository {
     private final List<Product> data = new ArrayList<>();
 
     @Override
-    public Optional<Product> findById(Long id) {
+    public Product findById(Long id) {
         return null;
     }
 

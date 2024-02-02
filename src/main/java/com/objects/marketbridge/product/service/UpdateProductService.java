@@ -30,7 +30,7 @@ public class UpdateProductService {
     @Transactional
     public UpdateProductResponseDto update(UpdateProductRequestDto request){
         //1. 상품 조회
-        Product findProduct = productRepository.findById(request.getProductId()).get();
+        Product findProduct = productRepository.findById(request.getProductId());
         //2. 상품 수정
         UpdateProductDto updateProductDto = UpdateProductDto.fromRequest(request);
         updateProduct(findProduct, updateProductDto);
@@ -50,7 +50,7 @@ public class UpdateProductService {
     }
 
     protected Product updateProduct(Product product, UpdateProductDto updateProductDto){
-        Category category = categoryRepository.findById(updateProductDto.getCategoryId()).get();
+        Category category = categoryRepository.findById(updateProductDto.getCategoryId());
         Boolean isOwn = updateProductDto.getIsOwn();
         String name = updateProductDto.getName();
         Long price = updateProductDto.getPrice();
@@ -125,7 +125,7 @@ public class UpdateProductService {
             imageRepository.save(image);
 
             //ProductImage 엔티티 생성 (정렬 순서대로 seqNo 할당)
-            ProductImage productImage = ProductImage.create( product, imageRepository.findById(image.getId()).get(), Long.valueOf(i) );
+            ProductImage productImage = ProductImage.create( product, imageRepository.findById(image.getId()), Long.valueOf(i) );
             productImages.add(productImage);
 
             // 연관관계 추가

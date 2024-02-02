@@ -9,6 +9,7 @@ import com.objects.marketbridge.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.service.dto.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,8 +19,9 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.common.domain.Membership.BASIC;
-import static com.objects.marketbridge.common.domain.Membership.WOW;
+import static com.objects.marketbridge.common.domain.MembershipType.BASIC;
+import static com.objects.marketbridge.common.domain.MembershipType.WOW;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -29,7 +31,7 @@ class OrderCancelReturnServiceTest {
     LocalDateTime cancelDate = LocalDateTime.of(2024, 1, 31, 9, 26);
 
     @BeforeEach
-    void init() {
+    void beforeEach() {
         TestContainer testContainer = TestContainer.builder()
                 .dateTimeHolder(TestDateTimeHolder.builder()
                         .now(cancelDate)
@@ -82,6 +84,7 @@ class OrderCancelReturnServiceTest {
                 .coupon(coupon1)
                 .order(order)
                 .reason("단순변심")
+                .statusCode(StatusCodeType.ORDER_RECEIVED.getCode())
                 .tid("1")
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
@@ -92,6 +95,7 @@ class OrderCancelReturnServiceTest {
                 .coupon(coupon2)
                 .order(order)
                 .reason("단순변심")
+                .statusCode(StatusCodeType.DELIVERY_ING.getCode())
                 .tid("1")
                 .build();
 
@@ -114,7 +118,7 @@ class OrderCancelReturnServiceTest {
     @DisplayName("취소/반품 확정")
     public void confirmCancelReturn() {
         // given
-        CancelRequestDto request = CancelRequestDto.builder()
+        ConfirmCancelReturnDto.Request request = ConfirmCancelReturnDto.Request.builder()
                 .orderNo("1")
                 .cancelReason("단순변심")
                 .build();
@@ -125,11 +129,11 @@ class OrderCancelReturnServiceTest {
                 .build();
 
         // when
-        CancelReturnResponseDto result = orderCancelReturnService.confirmCancelReturn(request, dateTimeHolder);
+        ConfirmCancelReturnDto.Response result = orderCancelReturnService.confirmCancelReturn(request, dateTimeHolder);
 
         // then
         assertThat(result.getOrderId()).isEqualTo(1L);
-        assertThat(result.getOrderNumber()).isEqualTo("1");
+        assertThat(result.getOrderNo()).isEqualTo("1");
         assertThat(result.getTotalPrice()).isEqualTo(8000L);
         assertThat(result.getCancellationDate()).isEqualTo(updateTime);
         assertThat(result.getRefundInfo())
@@ -142,7 +146,7 @@ class OrderCancelReturnServiceTest {
                         tuple(2L, "2", "옥지얌키링", 2000L, 3L)
                 );
     }
-    
+
     @Test
     @DisplayName("WOW회원 일때 취소 요청")
     public void requestCancel1() {
@@ -152,25 +156,25 @@ class OrderCancelReturnServiceTest {
         String membership = WOW.getText();
 
         // when
-        CancelResponseDto result = orderCancelReturnService.requestCancel(orderNo, productIds, membership);
-        CancelRefundInfoResponseDto refundInfoResponseDto = result.getCancelRefundInfoResponseDto();
-        List<ProductInfoResponseDto> infoResponseDtos = result.getProductInfoResponseDtos();
+        RequestCancelDto.Response result = orderCancelReturnService.findCancelInfo(orderNo, productIds, membership);
+        RequestCancelDto.CancelRefundInfo cancelRefundInfo = result.getCancelRefundInfo();
+        List<RequestCancelDto.ProductInfo> productInfos = result.getProductInfos();
 
         // then
-        assertThat(refundInfoResponseDto.getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
-        assertThat(refundInfoResponseDto.getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
-        assertThat(refundInfoResponseDto.getDiscountPrice()).isEqualTo(3000L);
-        assertThat(refundInfoResponseDto.getTotalPrice()).isEqualTo(8000L);
+        assertThat(cancelRefundInfo.getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
+        assertThat(cancelRefundInfo.getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
+        assertThat(cancelRefundInfo.getDiscountPrice()).isEqualTo(3000L);
+        assertThat(cancelRefundInfo.getTotalPrice()).isEqualTo(8000L);
 
-        assertThat(infoResponseDtos.get(0).getQuantity()).isEqualTo(2L);
-        assertThat(infoResponseDtos.get(0).getName()).isEqualTo("빵빵이키링");
-        assertThat(infoResponseDtos.get(0).getPrice()).isEqualTo(1000L);
-        assertThat(infoResponseDtos.get(0).getImage()).isEqualTo("빵빵이썸네일");
+        assertThat(productInfos.get(0).getQuantity()).isEqualTo(2L);
+        assertThat(productInfos.get(0).getName()).isEqualTo("빵빵이키링");
+        assertThat(productInfos.get(0).getPrice()).isEqualTo(1000L);
+        assertThat(productInfos.get(0).getImage()).isEqualTo("빵빵이썸네일");
 
-        assertThat(infoResponseDtos.get(1).getQuantity()).isEqualTo(3L);
-        assertThat(infoResponseDtos.get(1).getName()).isEqualTo("옥지얌키링");
-        assertThat(infoResponseDtos.get(1).getPrice()).isEqualTo(2000L);
-        assertThat(infoResponseDtos.get(1).getImage()).isEqualTo("옥지얌썸네일");
+        assertThat(productInfos.get(1).getQuantity()).isEqualTo(3L);
+        assertThat(productInfos.get(1).getName()).isEqualTo("옥지얌키링");
+        assertThat(productInfos.get(1).getPrice()).isEqualTo(2000L);
+        assertThat(productInfos.get(1).getImage()).isEqualTo("옥지얌썸네일");
 
     }
 
@@ -183,25 +187,25 @@ class OrderCancelReturnServiceTest {
         String membership = BASIC.getText();
 
         // when
-        CancelResponseDto result = orderCancelReturnService.requestCancel(orderNo, productIds, membership);
-        CancelRefundInfoResponseDto refundInfoResponseDto = result.getCancelRefundInfoResponseDto();
-        List<ProductInfoResponseDto> infoResponseDtos = result.getProductInfoResponseDtos();
+        RequestCancelDto.Response result = orderCancelReturnService.findCancelInfo(orderNo, productIds, membership);
+        RequestCancelDto.CancelRefundInfo cancelRefundInfo = result.getCancelRefundInfo();
+        List<RequestCancelDto.ProductInfo> productInfos = result.getProductInfos();
 
         // then
-        assertThat(refundInfoResponseDto.getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
-        assertThat(refundInfoResponseDto.getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
-        assertThat(refundInfoResponseDto.getDiscountPrice()).isEqualTo(3000L);
-        assertThat(refundInfoResponseDto.getTotalPrice()).isEqualTo(8000L);
+        assertThat(cancelRefundInfo.getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
+        assertThat(cancelRefundInfo.getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
+        assertThat(cancelRefundInfo.getDiscountPrice()).isEqualTo(3000L);
+        assertThat(cancelRefundInfo.getTotalPrice()).isEqualTo(8000L);
 
-        assertThat(infoResponseDtos.get(0).getQuantity()).isEqualTo(2L);
-        assertThat(infoResponseDtos.get(0).getName()).isEqualTo("빵빵이키링");
-        assertThat(infoResponseDtos.get(0).getPrice()).isEqualTo(1000L);
-        assertThat(infoResponseDtos.get(0).getImage()).isEqualTo("빵빵이썸네일");
+        assertThat(productInfos.get(0).getQuantity()).isEqualTo(2L);
+        assertThat(productInfos.get(0).getName()).isEqualTo("빵빵이키링");
+        assertThat(productInfos.get(0).getPrice()).isEqualTo(1000L);
+        assertThat(productInfos.get(0).getImage()).isEqualTo("빵빵이썸네일");
 
-        assertThat(infoResponseDtos.get(1).getQuantity()).isEqualTo(3L);
-        assertThat(infoResponseDtos.get(1).getName()).isEqualTo("옥지얌키링");
-        assertThat(infoResponseDtos.get(1).getPrice()).isEqualTo(2000L);
-        assertThat(infoResponseDtos.get(1).getImage()).isEqualTo("옥지얌썸네일");
+        assertThat(productInfos.get(1).getQuantity()).isEqualTo(3L);
+        assertThat(productInfos.get(1).getName()).isEqualTo("옥지얌키링");
+        assertThat(productInfos.get(1).getPrice()).isEqualTo(2000L);
+        assertThat(productInfos.get(1).getImage()).isEqualTo("옥지얌썸네일");
 
     }
 
@@ -214,24 +218,24 @@ class OrderCancelReturnServiceTest {
         String membership = WOW.getText();
 
         // when
-        ReturnResponseDto result = orderCancelReturnService.requestReturn(orderNo, productIds, membership);
-        ReturnRefundInfoResponseDto refundInfoResponseDto = result.getReturnRefundInfoResponseDto();
-        List<ProductInfoResponseDto> infoResponseDtos = result.getProductInfoResponseDtos();
+        RequestReturnDto.Response result = orderCancelReturnService.findReturnInfo(orderNo, productIds, membership);
+        RequestReturnDto.ReturnRefundInfo returnRefundInfo = result.getReturnRefundInfo();
+        List<RequestReturnDto.ProductInfo> productInfos = result.getProductInfos();
 
         // then
-        assertThat(refundInfoResponseDto.getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
-        assertThat(refundInfoResponseDto.getReturnFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
-        assertThat(refundInfoResponseDto.getProductTotalPrice()).isEqualTo(8000L);
+        assertThat(returnRefundInfo.getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
+        assertThat(returnRefundInfo.getReturnFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
+        assertThat(returnRefundInfo.getProductTotalPrice()).isEqualTo(8000L);
 
-        assertThat(infoResponseDtos.get(0).getQuantity()).isEqualTo(2L);
-        assertThat(infoResponseDtos.get(0).getName()).isEqualTo("빵빵이키링");
-        assertThat(infoResponseDtos.get(0).getPrice()).isEqualTo(1000L);
-        assertThat(infoResponseDtos.get(0).getImage()).isEqualTo("빵빵이썸네일");
+        assertThat(productInfos.get(0).getQuantity()).isEqualTo(2L);
+        assertThat(productInfos.get(0).getName()).isEqualTo("빵빵이키링");
+        assertThat(productInfos.get(0).getPrice()).isEqualTo(1000L);
+        assertThat(productInfos.get(0).getImage()).isEqualTo("빵빵이썸네일");
 
-        assertThat(infoResponseDtos.get(1).getQuantity()).isEqualTo(3L);
-        assertThat(infoResponseDtos.get(1).getName()).isEqualTo("옥지얌키링");
-        assertThat(infoResponseDtos.get(1).getPrice()).isEqualTo(2000L);
-        assertThat(infoResponseDtos.get(1).getImage()).isEqualTo("옥지얌썸네일");
+        assertThat(productInfos.get(1).getQuantity()).isEqualTo(3L);
+        assertThat(productInfos.get(1).getName()).isEqualTo("옥지얌키링");
+        assertThat(productInfos.get(1).getPrice()).isEqualTo(2000L);
+        assertThat(productInfos.get(1).getImage()).isEqualTo("옥지얌썸네일");
     }
 
     @Test
@@ -243,24 +247,24 @@ class OrderCancelReturnServiceTest {
         String membership = BASIC.getText();
 
         // when
-        ReturnResponseDto result = orderCancelReturnService.requestReturn(orderNo, productIds, membership);
-        ReturnRefundInfoResponseDto refundInfoResponseDto = result.getReturnRefundInfoResponseDto();
-        List<ProductInfoResponseDto> infoResponseDtos = result.getProductInfoResponseDtos();
+        RequestReturnDto.Response result = orderCancelReturnService.findReturnInfo(orderNo, productIds, membership);
+        RequestReturnDto.ReturnRefundInfo returnRefundInfo = result.getReturnRefundInfo();
+        List<RequestReturnDto.ProductInfo> productInfos = result.getProductInfos();
 
         // then
-        assertThat(refundInfoResponseDto.getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
-        assertThat(refundInfoResponseDto.getReturnFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
-        assertThat(refundInfoResponseDto.getProductTotalPrice()).isEqualTo(8000L);
+        assertThat(returnRefundInfo.getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
+        assertThat(returnRefundInfo.getReturnFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
+        assertThat(returnRefundInfo.getProductTotalPrice()).isEqualTo(8000L);
 
-        assertThat(infoResponseDtos.get(0).getQuantity()).isEqualTo(2L);
-        assertThat(infoResponseDtos.get(0).getName()).isEqualTo("빵빵이키링");
-        assertThat(infoResponseDtos.get(0).getPrice()).isEqualTo(1000L);
-        assertThat(infoResponseDtos.get(0).getImage()).isEqualTo("빵빵이썸네일");
+        assertThat(productInfos.get(0).getQuantity()).isEqualTo(2L);
+        assertThat(productInfos.get(0).getName()).isEqualTo("빵빵이키링");
+        assertThat(productInfos.get(0).getPrice()).isEqualTo(1000L);
+        assertThat(productInfos.get(0).getImage()).isEqualTo("빵빵이썸네일");
 
-        assertThat(infoResponseDtos.get(1).getQuantity()).isEqualTo(3L);
-        assertThat(infoResponseDtos.get(1).getName()).isEqualTo("옥지얌키링");
-        assertThat(infoResponseDtos.get(1).getPrice()).isEqualTo(2000L);
-        assertThat(infoResponseDtos.get(1).getImage()).isEqualTo("옥지얌썸네일");
+        assertThat(productInfos.get(1).getQuantity()).isEqualTo(3L);
+        assertThat(productInfos.get(1).getName()).isEqualTo("옥지얌키링");
+        assertThat(productInfos.get(1).getPrice()).isEqualTo(2000L);
+        assertThat(productInfos.get(1).getImage()).isEqualTo("옥지얌썸네일");
     }
 
     @Test
@@ -279,7 +283,7 @@ class OrderCancelReturnServiceTest {
                 .build();
 
         // when
-        OrderCancelReturnDetailResponseDto result = orderCancelReturnService.findCancelReturnDetail(orderNo, productIds, membership, dateTimeHolder);
+        GetCancelReturnDetailDto.Response result = orderCancelReturnService.findCancelReturnDetail(orderNo, productIds, membership, dateTimeHolder);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDateTime);
@@ -287,21 +291,21 @@ class OrderCancelReturnServiceTest {
         assertThat(result.getOrderNo()).isEqualTo(orderNo);
         assertThat(result.getCancelReason()).isEqualTo("단순변심");
 
-        assertThat(result.getCancelRefundInfoResponseDto().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
-        assertThat(result.getCancelRefundInfoResponseDto().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
-        assertThat(result.getCancelRefundInfoResponseDto().getDiscountPrice()).isEqualTo(3000L);
-        assertThat(result.getCancelRefundInfoResponseDto().getTotalPrice()).isEqualTo(8000L);
+        assertThat(result.getCancelRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
+        assertThat(result.getCancelRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
+        assertThat(result.getCancelRefundInfo().getDiscountPrice()).isEqualTo(3000L);
+        assertThat(result.getCancelRefundInfo().getTotalPrice()).isEqualTo(8000L);
 
-        assertThat(result.getProductListResponseDtos().get(0).getProductId()).isEqualTo(1L);
-        assertThat(result.getProductListResponseDtos().get(0).getProductNo()).isEqualTo("1");
-        assertThat(result.getProductListResponseDtos().get(0).getName()).isEqualTo("빵빵이키링");
-        assertThat(result.getProductListResponseDtos().get(0).getPrice()).isEqualTo(1000L);
-        assertThat(result.getProductListResponseDtos().get(0).getQuantity()).isEqualTo(2L);
-        assertThat(result.getProductListResponseDtos().get(1).getProductId()).isEqualTo(2L);
-        assertThat(result.getProductListResponseDtos().get(1).getProductNo()).isEqualTo("2");
-        assertThat(result.getProductListResponseDtos().get(1).getName()).isEqualTo("옥지얌키링");
-        assertThat(result.getProductListResponseDtos().get(1).getPrice()).isEqualTo(2000L);
-        assertThat(result.getProductListResponseDtos().get(1).getQuantity()).isEqualTo(3L);
+        assertThat(result.getProductInfos().get(0).getProductId()).isEqualTo(1L);
+        assertThat(result.getProductInfos().get(0).getProductNo()).isEqualTo("1");
+        assertThat(result.getProductInfos().get(0).getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getProductInfos().get(0).getPrice()).isEqualTo(1000L);
+        assertThat(result.getProductInfos().get(0).getQuantity()).isEqualTo(2L);
+        assertThat(result.getProductInfos().get(1).getProductId()).isEqualTo(2L);
+        assertThat(result.getProductInfos().get(1).getProductNo()).isEqualTo("2");
+        assertThat(result.getProductInfos().get(1).getName()).isEqualTo("옥지얌키링");
+        assertThat(result.getProductInfos().get(1).getPrice()).isEqualTo(2000L);
+        assertThat(result.getProductInfos().get(1).getQuantity()).isEqualTo(3L);
     }
 
     @Test
@@ -320,7 +324,7 @@ class OrderCancelReturnServiceTest {
                 .build();
 
         // when
-        OrderCancelReturnDetailResponseDto result = orderCancelReturnService.findCancelReturnDetail(orderNo, productIds, membership, dateTimeHolder);
+        GetCancelReturnDetailDto.Response result = orderCancelReturnService.findCancelReturnDetail(orderNo, productIds, membership, dateTimeHolder);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDateTime);
@@ -328,21 +332,21 @@ class OrderCancelReturnServiceTest {
         assertThat(result.getOrderNo()).isEqualTo(orderNo);
         assertThat(result.getCancelReason()).isEqualTo("단순변심");
 
-        assertThat(result.getCancelRefundInfoResponseDto().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
-        assertThat(result.getCancelRefundInfoResponseDto().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
-        assertThat(result.getCancelRefundInfoResponseDto().getDiscountPrice()).isEqualTo(3000L);
-        assertThat(result.getCancelRefundInfoResponseDto().getTotalPrice()).isEqualTo(8000L);
+        assertThat(result.getCancelRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
+        assertThat(result.getCancelRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
+        assertThat(result.getCancelRefundInfo().getDiscountPrice()).isEqualTo(3000L);
+        assertThat(result.getCancelRefundInfo().getTotalPrice()).isEqualTo(8000L);
 
-        assertThat(result.getProductListResponseDtos().get(0).getProductId()).isEqualTo(1L);
-        assertThat(result.getProductListResponseDtos().get(0).getProductNo()).isEqualTo("1");
-        assertThat(result.getProductListResponseDtos().get(0).getName()).isEqualTo("빵빵이키링");
-        assertThat(result.getProductListResponseDtos().get(0).getPrice()).isEqualTo(1000L);
-        assertThat(result.getProductListResponseDtos().get(0).getQuantity()).isEqualTo(2L);
-        assertThat(result.getProductListResponseDtos().get(1).getProductId()).isEqualTo(2L);
-        assertThat(result.getProductListResponseDtos().get(1).getProductNo()).isEqualTo("2");
-        assertThat(result.getProductListResponseDtos().get(1).getName()).isEqualTo("옥지얌키링");
-        assertThat(result.getProductListResponseDtos().get(1).getPrice()).isEqualTo(2000L);
-        assertThat(result.getProductListResponseDtos().get(1).getQuantity()).isEqualTo(3L);
+        assertThat(result.getProductInfos().get(0).getProductId()).isEqualTo(1L);
+        assertThat(result.getProductInfos().get(0).getProductNo()).isEqualTo("1");
+        assertThat(result.getProductInfos().get(0).getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getProductInfos().get(0).getPrice()).isEqualTo(1000L);
+        assertThat(result.getProductInfos().get(0).getQuantity()).isEqualTo(2L);
+        assertThat(result.getProductInfos().get(1).getProductId()).isEqualTo(2L);
+        assertThat(result.getProductInfos().get(1).getProductNo()).isEqualTo("2");
+        assertThat(result.getProductInfos().get(1).getName()).isEqualTo("옥지얌키링");
+        assertThat(result.getProductInfos().get(1).getPrice()).isEqualTo(2000L);
+        assertThat(result.getProductInfos().get(1).getQuantity()).isEqualTo(3L);
     }
 
 }

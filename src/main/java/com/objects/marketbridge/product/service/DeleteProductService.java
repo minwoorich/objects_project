@@ -36,7 +36,7 @@ public class DeleteProductService {
     @Transactional
     public DeleteProductResponseDto delete(DeleteProductRequestDto request){
         //1. 삭제할 상품 조회
-        Product findProduct = productRepository.findById(request.getProductId()).get();
+        Product findProduct = productRepository.findById(request.getProductId());
         //2. 연관된 image들과 productImage들 삭제
         DeleteProductDto deleteProductDto = DeleteProductDto.fromRequest(request);
         deleteProductImages(findProduct);

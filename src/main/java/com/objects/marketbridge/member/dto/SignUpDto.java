@@ -2,7 +2,7 @@ package com.objects.marketbridge.member.dto;
 
 
 import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.common.domain.Membership;
+import com.objects.marketbridge.common.domain.MembershipType;
 import com.objects.marketbridge.common.domain.SocialType;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -30,16 +30,6 @@ public class SignUpDto {
 
     private Boolean isAgree;
 
-    static public SignUpDto toDto(Member member) {
-        return SignUpDto.builder()
-                .email(member.getEmail())
-                .password(member.getPassword())
-                .name(member.getName())
-                .phoneNo(member.getPhoneNo())
-                .isAgree(member.getIsAgree())
-                .build();
-    }
-
     public Member toEntity(String encodedPassword) {
         return Member.builder()
                 .email(email)
@@ -48,7 +38,7 @@ public class SignUpDto {
                 .phoneNo(phoneNo)
                 .isAgree(isAgree)
                 .isAlert(true)
-                .membership(Membership.BASIC.toString())
+                .membership(MembershipType.BASIC.toString())
                 .socialType(SocialType.DEFAULT.toString())
                 .build();
     }

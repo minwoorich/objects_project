@@ -5,6 +5,7 @@ import com.objects.marketbridge.common.domain.Category;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,8 +19,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     private final EntityManager em;
 
     @Override
-    public Optional<Category> findById(Long id) {
-        return categoryJpaRepository.findById(id);
+    public Category findById(Long id) {
+        return categoryJpaRepository.findById(id)
+                .orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
     }
 
     @Override
@@ -33,25 +35,23 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public Optional<Category> findByName(String name) {
+    public Category findByName(String name) {
         return categoryJpaRepository.findByName(name);
-    }
 
 //    public List<ProductImage> findAllByProductId(Long productId){
 //        return em.createQuery("select pi from ProductImage pi where pi.product = :product", ProductImage.class)
 //                .setParameter("product", productRepository.findById(productId))
 //                .getResultList();
-//    }
+    }
 
     @Override
-    public Optional<Category> findByNameAndLevel(String name, Long level) {
+    public Category findByNameAndLevel(String name, Long level) {
 //        Category category = em.createQuery
 //                        ("select c from Category c where c.name = :name and c.level = :level", Category.class)
 //                .setParameter("name", name)
 //                .setParameter("level", level)
 //                .getSingleResult();
-        Optional<Category> category = categoryJpaRepository.findByNameAndLevel(name, level);
-        return category;
+        return categoryJpaRepository.findByNameAndLevel(name, level);
     }
 
     @Override

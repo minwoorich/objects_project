@@ -55,7 +55,7 @@ public class CategoryService {
                 Category largeCategory;
                 if (categoryRepository.existsByName(largeCategoryName)) {
                     // 대분류가 이미 존재하는 경우 처리
-                    largeCategory = categoryRepository.findByName(largeCategoryName).get();
+                    largeCategory = categoryRepository.findByName(largeCategoryName);
                 } else {
                     // 대분류가 존재하지 않는 경우 처리
                     largeCategory = new Category(null, 0L, largeCategoryName);
@@ -83,7 +83,7 @@ public class CategoryService {
                 largeCategoryName = largeCategoryName.replace("/", "_");
                 mediumCategoryName = mediumCategoryName.replace("/", "_");
 
-                Category largeCategory = categoryRepository.findByNameAndLevel(largeCategoryName, 0L).get();
+                Category largeCategory = categoryRepository.findByNameAndLevel(largeCategoryName, 0L);
 
 //                Optional<Category> optionalLargeCategory
 //                        = categoryRepository.findByNameAndLevel(largeCategoryName, 0L);
@@ -143,7 +143,7 @@ public class CategoryService {
                         = categoryRepository.findAllByNameAndLevel(mediumCategoryName, 1L);
                 for (Category mediumCategoryToBeCompared : mediumCategoriesToBeCompared) {
                     Category largeCategoryToBeCompared
-                            = categoryRepository.findById(mediumCategoryToBeCompared.getParentId()).get();
+                            = categoryRepository.findById(mediumCategoryToBeCompared.getParentId());
                     if (largeCategoryToBeCompared.getName().equals(largeCategoryName)) {
                         smallCategory = new Category(mediumCategoryToBeCompared.getId(), 2L, smallCategoryName);
                         categoryRepository.save(smallCategory);
@@ -166,18 +166,20 @@ public class CategoryService {
     } //uploadExcelFile
 
 
-
-    public List<ReadCategoryResponseDto> getLargeCategories() {
+    //전체(라지,미디엄,스몰). 라지가 해당 미디엄 전부를, 미디엄이 해당 스몰 전부를 포함하는 형태로 JSON형식.
+    public List<ReadCategoryResponseDto> getTotalCategories() {
         List<Category> categories = categoryRepository.findAllByLevelAndParentIdIsNull(0L);
         return convertToDtoList(categories);
     }
 
-    public List<ReadCategoryResponseDto> getMediumCategories(Long parentId) {
+    //특정부모카테고리(라지)의 미디엄(스몰 포함) 전체.
+    public List<ReadCategoryResponseDto> get2DepthCategories(Long parentId) {
         List<Category> categories = categoryRepository.findAllByLevelAndParentId(1L, parentId);
         return convertToDtoList(categories);
     }
 
-    public List<ReadCategoryResponseDto> getSmallCategories(Long parentId) {
+    //특정부모카테고리(미디엄)의 스몰 전체.
+    public List<ReadCategoryResponseDto> get3DepthCategories(Long parentId) {
         List<Category> categories = categoryRepository.findAllByLevelAndParentId(2L, parentId);
         return convertToDtoList(categories);
     }
