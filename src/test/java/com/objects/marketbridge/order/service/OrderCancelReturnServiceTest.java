@@ -146,7 +146,7 @@ class OrderCancelReturnServiceTest {
                         tuple(2L, "2", "옥지얌키링", 2000L, 3L)
                 );
     }
-    
+
     @Test
     @DisplayName("WOW회원 일때 취소 요청")
     public void requestCancel1() {

@@ -30,8 +30,8 @@ public class Product extends BaseEntity{
     @OneToMany(mappedBy = "product")
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "product")
-//    private List<ProdOption> prodOptions = new ArrayList<>();
+    @OneToMany(mappedBy = "product")
+    private List<ProdOption> prodOptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
     private List<ProductImage> productImages = new ArrayList<>();
@@ -82,6 +82,11 @@ public class Product extends BaseEntity{
     public void addProductImages(ProductImage productImage){
         productImages.add(productImage);
         productImage.setProduct(this);
+    }
+
+    public void addProdOptions(ProdOption prodOption){
+        prodOptions.add(prodOption);
+        prodOption.setProduct(this);
     }
 
     public Product update(Category category, Boolean isOwn, String name, Long price,

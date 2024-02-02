@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,8 +20,16 @@ public class OptionCategory extends BaseEntity{
 
     private String name;
 
+    @OneToMany(mappedBy = "optionCategory")
+    private List<Option> options;
+
     @Builder
     private OptionCategory(String name) {
         this.name = name;
+    }
+
+    public void addOptions(Option option){
+        options.add(option);
+        option.setOptionCategory(this);
     }
 }

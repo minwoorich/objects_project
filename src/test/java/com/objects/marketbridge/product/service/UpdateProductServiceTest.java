@@ -4,7 +4,6 @@ import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.common.domain.Category;
 import com.objects.marketbridge.common.domain.Product;
 import com.objects.marketbridge.product.infra.ProductRepository;
-import com.objects.marketbridge.product.service.dto.CreateProductDto;
 import com.objects.marketbridge.product.service.dto.UpdateProductDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
