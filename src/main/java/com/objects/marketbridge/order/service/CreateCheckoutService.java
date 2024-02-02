@@ -31,6 +31,6 @@ public class CreateCheckoutService {
         return addresses.stream()
                 .filter(Address::getIsDefault)
                 .findFirst()
-                .orElseThrow(() -> new CustomLogicException(SHIPPING_ADDRESS_NOT_REGISTERED.getMessage(), SHIPPING_ADDRESS_NOT_REGISTERED));
+                .orElseThrow(() -> new CustomLogicException("기본배송지가 없습니다", SHIPPING_ADDRESS_NOT_REGISTERED));
     }
 }
