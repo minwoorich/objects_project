@@ -1,4 +1,4 @@
-package com.objects.marketbridge.common.security;
+package com.objects.marketbridge.common.security.config;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

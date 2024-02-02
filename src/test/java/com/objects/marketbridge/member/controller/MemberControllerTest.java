@@ -1,15 +1,17 @@
 package com.objects.marketbridge.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.objects.marketbridge.common.config.KakaoPayConfig;
+import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.security.domain.CustomUserDetails;
-import com.objects.marketbridge.member.controller.MemberController;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
 import com.objects.marketbridge.member.dto.SignInDto;
 import com.objects.marketbridge.member.dto.SignUpDto;
 import com.objects.marketbridge.member.service.MemberService;
-import com.objects.marketbridge.common.security.SpringSecurityTestConfig;
+import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.common.security.dto.JwtTokenDto;
+import com.objects.marketbridge.member.service.port.MembershipRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,6 +54,13 @@ public class MemberControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private MemberService memberService;
+    @MockBean
+    private KakaoPayService kakaoPayService;
+    @MockBean
+    private KakaoPayConfig kakaoPayConfig;
+    @MockBean
+    private MembershipRepository membershipRepository;
+
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,

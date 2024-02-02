@@ -21,9 +21,9 @@ import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class KakaoPayService {
 
     private final KakaoPayConfig kakaoPayConfig;
