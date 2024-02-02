@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -45,10 +46,10 @@ class SellerAccountJpaRepositoryTest {
         sellerAccountJpaRepository.save(account);
 
         //when
-        Optional<SellerAccount> result = sellerAccountJpaRepository.findBySellerId(1L);
+        List<SellerAccount> results = sellerAccountJpaRepository.findBySellerId(1L);
 
         // then
-        Assertions.assertThat(result.get().getSeller().getId()).isEqualTo(account.getSeller().getId());
+        Assertions.assertThat(results.get(0).getSeller().getId()).isEqualTo(account.getSeller().getId());
     }
 
 

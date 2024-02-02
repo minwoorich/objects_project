@@ -5,11 +5,14 @@ import com.objects.marketbridge.common.domain.Category;
 import com.objects.marketbridge.common.domain.Product;
 import com.objects.marketbridge.product.controller.request.DeleteProductRequestDto;
 import com.objects.marketbridge.product.infra.ProductRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,9 @@ public class DeleteProductServiceTest {
 
     @Autowired
     DeleteProductService deleteProductService;
+
+    @Autowired
+    EntityManager em;
 
     @Test
     @DisplayName("상품을_삭제하면_삭제된다")
@@ -52,6 +58,9 @@ public class DeleteProductServiceTest {
                 .build();
 
         productRepository.save(product);
+        em.flush();
+        em.clear();
+
 
         //when
         DeleteProductRequestDto deleteProductRequestDto
@@ -64,6 +73,9 @@ public class DeleteProductServiceTest {
         //then
         System.out.println("product = " + product);
         System.out.println("product.getId() = " + product.getId());
-        Assertions.assertThat(productRepository.findById(product.getId())).isEmpty();
+
+        Assertions.assertThatThrownBy(() -> productRepository.findById(product.getId()))
+                .isInstanceOf(JpaObjectRetrievalFailureException.class);
+
     }
 }

@@ -166,7 +166,7 @@ class CreateOrderServiceTest {
     private long getTotalOrderPrice(List<ProductValue> productValues) {
 
         return productValues.stream().mapToLong(p ->
-                productRepository.findById(p.getProductId()).get().getPrice() * p.getQuantity()
+                productRepository.findById(p.getProductId()).getPrice() * p.getQuantity()
         ).sum();
     }
 
@@ -188,10 +188,10 @@ class CreateOrderServiceTest {
         assertThat(orderDetails).hasSize(3);
 
         for (int i = 0; i < orderDetails.size(); i++) {
-            assertThat(orderDetails.get(i).getProduct()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()));
+            assertThat(orderDetails.get(i).getProduct().getId()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()).getId());
             assertThat(orderDetails.get(i).getOrderNo()).isEqualTo(createOrderDto.getOrderNo());
             assertThat(orderDetails.get(i).getQuantity()).isEqualTo(createOrderDto.getProductValues().get(i).getQuantity());
-            assertThat(orderDetails.get(i).getPrice()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()).get().getPrice());
+            assertThat(orderDetails.get(i).getPrice()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()).getPrice());
             assertThat(orderDetails.get(i).getStatusCode()).isEqualTo(StatusCodeType.ORDER_INIT.getCode());
         }
     }
