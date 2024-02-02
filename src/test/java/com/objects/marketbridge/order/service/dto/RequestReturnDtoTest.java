@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.tuple;
 class RequestReturnDtoTest {
 
     @Test
-    @DisplayName("일반 맴버십인 경우 배송비 3000원, 반품비 1000원으로 RequestReturnDto.Response로 변환할 수 있다.")
+    @DisplayName("주문 상세 리스트와 맴버십이 주어진 경우 Response를 반환한다.(BASIC)")
     public void response_of_BASIC() {
         // given
         String memberShip = MembershipType.BASIC.getText();
@@ -71,7 +71,7 @@ class RequestReturnDtoTest {
     }
 
     @Test
-    @DisplayName("일반 맴버십인 경우 배송비 3000원, 반품비 1000원으로 RequestReturnDto.Response 변환할 수 있다.")
+    @DisplayName("주문 상세 리스트와 맴버십이 주어진 경우 Response를 반환한다.(WOW)")
     public void response_of_WOW() {
         // given
         String memberShip = MembershipType.WOW.getText();
@@ -126,7 +126,38 @@ class RequestReturnDtoTest {
     }
 
     @Test
-    @DisplayName("멤버십이 BASIC이라면 배송비 3000원, 반품비 1000원이다.")
+    @DisplayName("주문 상세가 주어질 경우 ProductInfo를 반환한다.")
+    public void productInfo_of() {
+        // given
+        Product product = Product.builder()
+                .price(1000L)
+                .name("빵빵이")
+                .thumbImg("빵빵이 이미지")
+                .build();
+
+        Coupon coupon = Coupon.builder()
+                .price(1000L)
+                .build();
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .coupon(coupon)
+                .product(product)
+                .price(1000L)
+                .quantity(2L)
+                .build();
+
+        // when
+        RequestReturnDto.ProductInfo result = RequestReturnDto.ProductInfo.of(orderDetail);
+
+        // then
+        assertThat(result.getQuantity()).isEqualTo(2L);
+        assertThat(result.getName()).isEqualTo("빵빵이");
+        assertThat(result.getPrice()).isEqualTo(1000L);
+        assertThat(result.getImage()).isEqualTo("빵빵이 이미지");
+    }
+
+    @Test
+    @DisplayName("주문 상세 리스트와 맴버십이 주어진 경우 ReturnRefundInfo를 반환한다.(BASIC)")
     public void returnRefundInfo_of_BASIC() {
         // given
         String memberShip = MembershipType.BASIC.getText();
@@ -151,7 +182,7 @@ class RequestReturnDtoTest {
     }
 
     @Test
-    @DisplayName("멤버십이 WOW라면 배송비, 반품비 0원이다.")
+    @DisplayName("주문 상세 리스트와 맴버십이 주어진 경우 ReturnRefundInfo를 반환한다.(WOW)")
     public void returnRefundInfo_of_WOW() {
         // given
         String memberShip = MembershipType.WOW.getText();
