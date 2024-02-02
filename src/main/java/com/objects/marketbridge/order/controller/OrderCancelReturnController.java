@@ -34,7 +34,7 @@ public class OrderCancelReturnController {
     private final DateTimeHolder dateTimeHolder;
 
     @PostMapping("/cancel-return-flow/thank-you")
-    public ApiResponse<ConfirmCancelReturnHttp.Response> confirmCancelReturn(@RequestBody @Valid OrderCancelRequest request) {
+    public ApiResponse<ConfirmCancelReturnHttp.Response> confirmCancelReturn(@RequestBody @Valid ConfirmCancelReturnHttp.Request request) {
         return ApiResponse.ok(ConfirmCancelReturnHttp.Response.of(orderCancelReturnService.confirmCancelReturn(request.toServiceRequest(), dateTimeHolder)));
     }
 

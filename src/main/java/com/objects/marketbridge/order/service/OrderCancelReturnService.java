@@ -40,16 +40,16 @@ public class OrderCancelReturnService {
 
     // TODO 트랜잭션 위치 고려해야함
     @Transactional
-    public CancelReturnResponseDto confirmCancelReturn(CancelRequestDto cancelRequestDto, DateTimeHolder dateTimeHolder) {
-        Order order = orderQueryRepository.findByOrderNo(cancelRequestDto.getOrderNo());
+    public ConfirmCancelReturnDto.Response confirmCancelReturn(ConfirmCancelReturnDto.Request request, DateTimeHolder dateTimeHolder) {
+        Order order = orderQueryRepository.findByOrderNo(request.getOrderNo());
 
-        Integer cancelAmount = order.changeDetailsReasonAndStatus(cancelRequestDto.getCancelReason(), ORDER_CANCEL.getCode());
+        Integer cancelAmount = order.changeDetailsReasonAndStatus(request.getCancelReason(), ORDER_CANCEL.getCode());
 
         order.changeMemberCouponInfo(null);
 
         RefundDto refundDto = refundService.refund(order.getTid(), cancelAmount);
 
-        return CancelReturnResponseDto.of(order, refundDto, dateTimeHolder);
+        return ConfirmCancelReturnDto.Response.of(order, refundDto, dateTimeHolder);
     }
 
     public CancelResponseDto requestCancel(String orderNo, List<Long> productIds, String membership) {

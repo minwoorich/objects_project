@@ -118,7 +118,7 @@ class OrderCancelReturnServiceTest {
     @DisplayName("취소/반품 확정")
     public void confirmCancelReturn() {
         // given
-        CancelRequestDto request = CancelRequestDto.builder()
+        ConfirmCancelReturnDto.Request request = ConfirmCancelReturnDto.Request.builder()
                 .orderNo("1")
                 .cancelReason("단순변심")
                 .build();
@@ -129,7 +129,7 @@ class OrderCancelReturnServiceTest {
                 .build();
 
         // when
-        CancelReturnResponseDto result = orderCancelReturnService.confirmCancelReturn(request, dateTimeHolder);
+        ConfirmCancelReturnDto.Response result = orderCancelReturnService.confirmCancelReturn(request, dateTimeHolder);
 
         // then
         assertThat(result.getOrderId()).isEqualTo(1L);

@@ -133,7 +133,7 @@ public class OrderCancelReturnControllerTest {
     @DisplayName("")
     public void cancelReturnOrder() {
         // given
-        OrderCancelRequest request = OrderCancelRequest.builder()
+        ConfirmCancelReturnHttp.Request request = ConfirmCancelReturnHttp.Request.builder()
                 .cancelReason("단순변심")
                 .orderNo("1")
                 .build();
@@ -292,8 +292,6 @@ public class OrderCancelReturnControllerTest {
         assertThat(result.getData().getProductResponseList().get(1).getName()).isEqualTo("옥지얌키링");
         assertThat(result.getData().getProductResponseList().get(1).getPrice()).isEqualTo(2000L);
         assertThat(result.getData().getProductResponseList().get(1).getQuantity()).isEqualTo(3L);
-
-
 
 
     }
