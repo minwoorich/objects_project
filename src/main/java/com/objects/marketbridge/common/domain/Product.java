@@ -116,7 +116,7 @@ public class Product extends BaseEntity{
 
     private void verifyStockAvailable(Long quantity) {
         if (stock - quantity < 0) {
-            throw new CustomLogicException(OUT_OF_STOCK.getMessage());
+            throw new CustomLogicException("재고가 없습니다",OUT_OF_STOCK);
         }
     }
 }

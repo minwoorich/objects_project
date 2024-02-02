@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT_OF_STOCK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -345,7 +346,7 @@ class CreateOrderServiceTest {
         assertThatThrownBy(() ->
                 createOrderService.create(createOrderDto))
                 .isInstanceOf(CustomLogicException.class)
-                .hasMessageContaining(ErrorCode.OUT_OF_STOCK.getMessage());
+                .hasMessageContaining("재고가 없습니다",OUT_OF_STOCK);
 
     }
 
