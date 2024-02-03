@@ -31,39 +31,13 @@ public class KakaoPayService {
 
     public KakaoPayReadyResponse ready(KakaoPayReadyRequest request) {
 
-        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
+//        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
 
         RestClient restClient = setup();
 
         return restClient.post()
                 .uri(READY_END_POINT)
-                .body(requestMap)
-                .retrieve()
-                .body(KakaoPayReadyResponse.class);
-    }
-
-    public KakaoPayReadyResponse testReady() {
-
-        KakaoPayReadyRequest request = KakaoPayReadyRequest.builder()
-                .cid(ONE_TIME_CID)
-                .partnerOrderId("order1")
-                .partnerUserId("1")
-                .itemName("가방")
-                .quantity(1L)
-                .totalAmount(1000L)
-                .taxFreeAmount(0L)
-                .approvalUrl(kakaoPayConfig.createApprovalUrl("/payment"))
-                .cancelUrl(kakaoPayConfig.getRedirectCancelUrl())
-                .failUrl(kakaoPayConfig.getRedirectFailUrl())
-                .build();
-
-        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
-
-        RestClient restClient = setup();
-
-        return restClient.post()
-                .uri(READY_END_POINT)
-                .body(requestMap)
+                .body(request)
                 .retrieve()
                 .body(KakaoPayReadyResponse.class);
     }
@@ -142,11 +116,9 @@ public class KakaoPayService {
 
         return RestClient.builder()
                 .baseUrl(KAKAO_BASE_URL)
-                .messageConverters((converters) ->
-                        converters.add(new FormHttpMessageConverter()))
                 .defaultHeaders((httpHeaders -> {
                     httpHeaders.add(AUTHORIZATION, kakaoPayConfig.getSecretKeyDev());
-                    httpHeaders.add(ACCEPT, APPLICATION_JSON.toString());
+                    httpHeaders.add(ACCEPT, APPLICATION_JSON.toString()+";charset=UTF-8");
                     httpHeaders.add(CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
                 }))
                 .build();
