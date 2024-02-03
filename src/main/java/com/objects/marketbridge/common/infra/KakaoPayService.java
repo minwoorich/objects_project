@@ -46,29 +46,29 @@ public class KakaoPayService {
     //정기구독 1회차 , 단건결제
     public KakaoPayApproveResponse approve(KakaoPayApproveRequest request) {
 
-        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
+//        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
 
         RestClient restClient = setup();
 
         return restClient.post()
                 .uri(APPROVE_END_POINT)
-                .body(requestMap)
+                .body(request)
                 .retrieve()
                 .body(KakaoPayApproveResponse.class);
     }
 
     //정기구독 2회차
-    public KakaoPaySubsApproveResponse subsApprove(KakaoPaySubsApproveRequest request) {
+    public KakaoPayApproveResponse subsApprove(KakaoPaySubsApproveRequest request) {
 
-        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
+//        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
 
         RestClient restClient = setup();
 
         return restClient.post()
                 .uri(SUBS_END_POINT)
-                .body(requestMap)
+                .body(request)
                 .retrieve()
-                .body(KakaoPaySubsApproveResponse.class);
+                .body(KakaoPayApproveResponse.class);
     }
 
     // 취소

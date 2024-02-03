@@ -6,6 +6,8 @@ public interface MembershipRepository {
 
     Membership save(Membership membership);
 
+    Membership findById(Long id);
+
     Membership findBySubsOrderNo(String subsOrderNo);
 
 }

@@ -1,5 +1,6 @@
 package com.objects.marketbridge.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.objects.marketbridge.payment.domain.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,17 +15,39 @@ public class KakaoPayOrderResponse {
     private String tid;
     private String cid;
     private String status;
+
+    @JsonProperty("partner_order_id")
     private String partnerOrderId;
+
+    @JsonProperty("partner_user_id")
     private String partnerUserId;
+
+    @JsonProperty("payment_method_type")
     private String paymentMethodType;
+
     private Amount amount;
+
+    @JsonProperty("canceled_amount")
     private CanceledAmount canceledAmount;
+
+    @JsonProperty("cancel_available_amount")
     private CanceledAvailableAmount canceledAvailableAmount;
+
+    @JsonProperty("item_name")
     private String itemName;
+
     private String quantity;
+
+    @JsonProperty("approved_at")
     private LocalDateTime approvedAt;
+
+    @JsonProperty("canceled_at")
     private LocalDateTime canceledAt;
+
+    @JsonProperty("selected_card_info")
     private CardInfo selectedCardInfo;
+
+    @JsonProperty("payment_action_details")
     private List<PaymentActionDetail> paymentActionDetails;
 
     @Builder
