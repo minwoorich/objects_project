@@ -2,11 +2,8 @@ package com.objects.marketbridge.member.infra;
 
 import com.objects.marketbridge.common.domain.Membership;
 import com.objects.marketbridge.member.service.port.MembershipRepository;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 

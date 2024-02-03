@@ -6,6 +6,7 @@ import com.objects.marketbridge.common.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -68,7 +69,7 @@ public class KakaoPayService {
     }
 
 
-    //인터페이스 -> 정기구독 정기용, 단건용
+    //정기구독 1회차 , 단건결제
     public KakaoPayApproveResponse approve(KakaoPayApproveRequest request) {
 
         MultiValueMap<String, String> requestMap = request.toMultiValueMap();
@@ -82,6 +83,7 @@ public class KakaoPayService {
                 .body(KakaoPayApproveResponse.class);
     }
 
+    //정기구독 2회차
     public KakaoPaySubsApproveResponse subsApprove(KakaoPaySubsApproveRequest request) {
 
         MultiValueMap<String, String> requestMap = request.toMultiValueMap();
@@ -143,9 +145,9 @@ public class KakaoPayService {
                 .messageConverters((converters) ->
                         converters.add(new FormHttpMessageConverter()))
                 .defaultHeaders((httpHeaders -> {
-                    httpHeaders.add(AUTHORIZATION, KAKAO_AK + kakaoPayConfig.getAdminKey());
+                    httpHeaders.add(AUTHORIZATION, kakaoPayConfig.getSecretKeyDev());
                     httpHeaders.add(ACCEPT, APPLICATION_JSON.toString());
-                    httpHeaders.add(CONTENT_TYPE, APPLICATION_FORM_URLENCODED + ";charset=UTF-8");
+                    httpHeaders.add(CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
                 }))
                 .build();
     }
