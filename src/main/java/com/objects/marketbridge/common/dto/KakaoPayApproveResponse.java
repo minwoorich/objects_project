@@ -1,6 +1,7 @@
 package com.objects.marketbridge.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.objects.marketbridge.common.domain.Membership;
 import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import lombok.Builder;
@@ -17,8 +18,14 @@ public class KakaoPayApproveResponse {
     private String tid;
     private String cid;
     private String sid;
+
+    @JsonProperty("partner_order_id")
     private String partnerOrderId;
+
+    @JsonProperty("partner_user_id")
     private String partnerUserId;
+
+    @JsonProperty("payment_method_type")
     private String paymentMethodType;
 
     @JsonProperty("item_name")
@@ -35,18 +42,18 @@ public class KakaoPayApproveResponse {
     private LocalDateTime approvedAt;
 
     @Builder
-    public KakaoPayApproveResponse(String aid, String tid, String cid, String sid, String partnerOrderId, String partnerUserId, String paymentMethodType, String orderName, Long quantity, Amount amount, CardInfo cardInfo, LocalDateTime approvedAt, String pgToken) {
+    public KakaoPayApproveResponse(String aid, String tid, String sid, String cid, String partnerOrderId, String partnerUserId, String paymentMethodType, Amount amount, CardInfo cardInfo, String orderName, Long quantity, LocalDateTime createdAt, LocalDateTime approvedAt, String payload) {
         this.aid = aid;
         this.tid = tid;
-        this.cid = cid;
         this.sid = sid;
+        this.cid = cid;
         this.partnerOrderId = partnerOrderId;
         this.partnerUserId = partnerUserId;
         this.paymentMethodType = paymentMethodType;
-        this.quantity = quantity;
         this.amount = amount;
         this.cardInfo = cardInfo;
         this.orderName = orderName;
+        this.quantity = quantity;
         this.approvedAt = approvedAt;
     }
 }
