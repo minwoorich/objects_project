@@ -8,17 +8,17 @@ import java.util.Optional;
 
 public interface CategoryRepository {
 
-    Optional<Category> findById(Long id);
+    Category findById(Long id);
 
     Boolean existsByName(String name);
 
     void save(Category category);
 
-    Optional<Category> findByName(String name);
+    Category findByName(String name);
 
     Boolean existsByNameAndLevel(String name, Long level);
 
-    Optional<Category> findByNameAndLevel(String name, Long level);
+    Category findByNameAndLevel(String name, Long level);
 
     List<Category> findAllByNameAndLevel(String name, Long level);
 

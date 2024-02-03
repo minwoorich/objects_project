@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Table(name = "options")
@@ -21,11 +23,23 @@ public class Option extends BaseEntity{
     @JoinColumn(name = "option_category_id")
     private OptionCategory optionCategory;
 
+    @OneToMany(mappedBy = "option")
+    private List<ProdOption> prodOptions;
+
     private String name;
 
     @Builder
     private Option(OptionCategory optionCategory, String name) {
         this.optionCategory = optionCategory;
         this.name = name;
+    }
+
+    public void setOptionCategory(OptionCategory optionCategory){
+        this.optionCategory = optionCategory;
+    }
+
+    public void addProdOptions(ProdOption prodOption){
+        prodOptions.add(prodOption);
+        prodOption.setOption(this);
     }
 }

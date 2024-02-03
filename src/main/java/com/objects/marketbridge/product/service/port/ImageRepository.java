@@ -8,7 +8,7 @@ public interface ImageRepository {
 
     void save(Image image);
 
-    Optional<Image> findById(Long id);
+    Image findById(Long id);
 
     void delete(Image image);
 

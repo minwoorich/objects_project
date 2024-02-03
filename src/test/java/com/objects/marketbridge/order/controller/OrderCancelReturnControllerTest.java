@@ -8,15 +8,14 @@ import com.objects.marketbridge.mock.BaseFakeOrderDetailRepository;
 import com.objects.marketbridge.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.mock.TestContainer;
 import com.objects.marketbridge.mock.TestDateTimeHolder;
-import com.objects.marketbridge.order.controller.request.OrderCancelRequest;
-import com.objects.marketbridge.order.controller.response.OrderCancelResponse;
-import com.objects.marketbridge.order.controller.response.OrderCancelReturnDetailResponse;
-import com.objects.marketbridge.order.controller.response.OrderCancelReturnResponse;
-import com.objects.marketbridge.order.controller.response.OrderReturnResponse;
+import com.objects.marketbridge.order.controller.dto.ConfirmCancelReturnHttp;
+import com.objects.marketbridge.order.controller.dto.GetCancelReturnDetailHttp;
+import com.objects.marketbridge.order.controller.dto.RequestReturnHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
 import com.objects.marketbridge.order.infra.dtio.DetailResponseDtio;
+import com.objects.marketbridge.order.controller.dto.RequestCancelHttp;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -132,13 +131,13 @@ public class OrderCancelReturnControllerTest {
     @DisplayName("")
     public void cancelReturnOrder() {
         // given
-        OrderCancelRequest request = OrderCancelRequest.builder()
+        ConfirmCancelReturnHttp.Request request = ConfirmCancelReturnHttp.Request.builder()
                 .cancelReason("단순변심")
                 .orderNo("1")
                 .build();
 
         // when
-        ApiResponse<OrderCancelReturnResponse> result = orderCancelReturnController.cancelReturnOrder(request);
+        ApiResponse<ConfirmCancelReturnHttp.Response> result = orderCancelReturnController.confirmCancelReturn(request);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -173,7 +172,7 @@ public class OrderCancelReturnControllerTest {
         List<Long> productIds = List.of(1L, 2L);
 
         // when
-        ApiResponse<OrderCancelResponse> result = orderCancelReturnController.requestCancelOrder(orderNo, productIds);
+        ApiResponse<RequestCancelHttp.Response> result = orderCancelReturnController.requestCancel(orderNo, productIds);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -203,7 +202,7 @@ public class OrderCancelReturnControllerTest {
         List<Long> productIds = List.of(1L, 2L);
 
         // when
-        ApiResponse<OrderReturnResponse> result = orderCancelReturnController.requestReturnOrder(orderNo, productIds);
+        ApiResponse<RequestReturnHttp.Response> result = orderCancelReturnController.requestReturn(orderNo, productIds);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -268,7 +267,7 @@ public class OrderCancelReturnControllerTest {
         List<Long> productIds = List.of(1L, 2L);
 
         // when
-        ApiResponse<OrderCancelReturnDetailResponse> result = orderCancelReturnController.getCancelReturnDetail(orderNo, productIds);
+        ApiResponse<GetCancelReturnDetailHttp.Response> result = orderCancelReturnController.getCancelReturnDetail(orderNo, productIds);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -291,8 +290,6 @@ public class OrderCancelReturnControllerTest {
         assertThat(result.getData().getProductResponseList().get(1).getName()).isEqualTo("옥지얌키링");
         assertThat(result.getData().getProductResponseList().get(1).getPrice()).isEqualTo(2000L);
         assertThat(result.getData().getProductResponseList().get(1).getQuantity()).isEqualTo(3L);
-
-
 
 
     }

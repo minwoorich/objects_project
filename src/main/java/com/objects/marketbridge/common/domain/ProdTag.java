@@ -25,7 +25,6 @@ public class ProdTag extends BaseEntity {
     private Product product;
 
     @Builder
-
     private ProdTag(Tag tag, Product product) {
         this.tag = tag;
         this.product = product;

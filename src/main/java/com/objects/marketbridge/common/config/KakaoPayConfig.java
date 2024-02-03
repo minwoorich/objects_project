@@ -8,13 +8,13 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class KakaoPayConfig {
 
-    public static final String KAKAO_BASE_URL = "https://kapi.kakao.com/v1/payment";
+    public static final String KAKAO_BASE_URL = "https://open-api.kakaopay.com/online/v1/payment";
 
     public static final String READY_END_POINT = "/ready";
 
     public static final String APPROVE_END_POINT = "/approve";
 
-    public static final String SUBS_END_POINT = "/subscribe";
+    public static final String SUBS_END_POINT = "/subscription";
 
     public static final String CANCEL_END_POINT = "/cancel";
 
@@ -24,18 +24,23 @@ public class KakaoPayConfig {
 
     public static final String SUBS_CID = "TCSUBSCRIP";
 
-    public static final String KAKAO_AK = "KakaoAK ";
+//    public static final String KAKAO_AK = "KakaoAK ";
 
 
-    @Value("${payment.kakao.admin_key}")
-    private String adminKey;
+    @Value("${payment.kakao.client_id}")
+    private String clientId;
 
-    @Value("${payment.kakao.test_api_key}")
-    private String testApiKey;
+    @Value("${payment.kakao.client_secret}")
+    private String clientSecret;
+
+    @Value("${payment.kakao.secret_key}")
+    private String secretKey;
+
+    @Value("${payment.kakao.secret_key_dev}")
+    private String secretKeyDev;
 
     @Value("${host}")
     private String host;
-
 
     public String getRedirectCancelUrl() {
         return host + "/kakao-pay/cancel";
