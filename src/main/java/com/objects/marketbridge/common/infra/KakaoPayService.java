@@ -117,7 +117,7 @@ public class KakaoPayService {
         return RestClient.builder()
                 .baseUrl(KAKAO_BASE_URL)
                 .defaultHeaders((httpHeaders -> {
-                    httpHeaders.add(AUTHORIZATION, kakaoPayConfig.getSecretKeyDev());
+                    httpHeaders.add(AUTHORIZATION, AUTH_SCHEME+ kakaoPayConfig.getSecretKeyDev());
                     httpHeaders.add(ACCEPT, APPLICATION_JSON.toString()+";charset=UTF-8");
                     httpHeaders.add(CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
                 }))

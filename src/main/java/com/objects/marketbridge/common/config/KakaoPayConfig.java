@@ -24,7 +24,7 @@ public class KakaoPayConfig {
 
     public static final String SUBS_CID = "TCSUBSCRIP";
 
-//    public static final String KAKAO_AK = "KakaoAK ";
+    public static final String AUTH_SCHEME = "DEV_SECRET_KEY ";
 
 
     @Value("${payment.kakao.client_id}")
