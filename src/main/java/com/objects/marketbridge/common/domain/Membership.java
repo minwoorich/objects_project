@@ -23,6 +23,7 @@ public class Membership extends BaseEntity{
     private Member Member;
 
     private String cid;
+
     @JoinColumn(name = "partner_order_id")
     private String partnerOrderId;
 

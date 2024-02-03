@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Member;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@Slf4j
 public class CreateSubsRequest {
 
     private Long price;
@@ -26,6 +28,7 @@ public class CreateSubsRequest {
     }
 
     public KakaoPayReadyRequest toKakaoReadyRequest(Long memberId, String subsOrderNo, String cid, String approvalUrl, String failUrl, String cancelUrl) {
+        log.info("subsOrderNo , {}",subsOrderNo);
         return KakaoPayReadyRequest.builder()
                 .cid(cid)
                 .partnerOrderId(subsOrderNo)
