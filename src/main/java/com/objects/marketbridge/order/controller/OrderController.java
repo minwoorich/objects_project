@@ -67,4 +67,12 @@ public class OrderController {
 
         return request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
     }
+
+//    @GetMapping("/orders")
+//    public ApiResponse<OrderListHttp.Response> selectOrder(
+//            @AuthMemberId Long memberId,
+//            @Valid @RequestBody OrderList
+//    ) {
+//
+//    }
 }
