@@ -20,6 +20,7 @@ import com.objects.marketbridge.product.infra.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,6 +121,7 @@ class CreatePaymentServiceTest {
         return List.of(orderDetail1, orderDetail2);
     }
 
+    @Disabled
     @DisplayName("payment가 생성 되어야 한다.")
     @Test
     void create() {

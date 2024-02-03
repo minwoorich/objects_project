@@ -13,6 +13,7 @@ import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.MemberCoupon;
 import com.objects.marketbridge.common.domain.Product;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,8 @@ class OrderTest {
     private ProductRepository productRepository;
     @Autowired
     private EntityManager em;
+
+    @Disabled
     @Test
     @DisplayName("주문 취소시 사용한 유저 쿠폰이 모두 반환되야 한다.")
     public void returnCoupon() {

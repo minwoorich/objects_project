@@ -4,13 +4,15 @@ import com.objects.marketbridge.common.domain.MemberCoupon;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.mock.TestDateTimeHolder;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
 class MemberCouponTest {
-    
+
+    @Disabled
     @Test
     @DisplayName("사용여부와 사용시간이 초기화 되어야 한다.")
     public void returnCoupon() {

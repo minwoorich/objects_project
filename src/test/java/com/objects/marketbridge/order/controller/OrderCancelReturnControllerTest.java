@@ -8,14 +8,9 @@ import com.objects.marketbridge.mock.BaseFakeOrderDetailRepository;
 import com.objects.marketbridge.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.mock.TestContainer;
 import com.objects.marketbridge.mock.TestDateTimeHolder;
-import com.objects.marketbridge.order.controller.dto.ConfirmCancelReturnHttp;
-import com.objects.marketbridge.order.controller.dto.GetCancelReturnDetailHttp;
-import com.objects.marketbridge.order.controller.dto.RequestReturnHttp;
+import com.objects.marketbridge.order.controller.dto.*;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
-import com.objects.marketbridge.order.infra.dtio.DetailResponseDtio;
-import com.objects.marketbridge.order.controller.dto.RequestCancelHttp;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.objects.marketbridge.order.domain.MemberShipPrice.WOW;
-import static com.objects.marketbridge.order.domain.StatusCodeType.*;
+import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -231,7 +226,7 @@ public class OrderCancelReturnControllerTest {
         Integer size = 5;
 
         // when
-        ApiResponse<Page<CancelReturnResponseDtio>> result = orderCancelReturnController.getCancelReturnList(memberId, page, size);
+        ApiResponse<Page<GetCancelReturnListHttp.Response>> result = orderCancelReturnController.getCancelReturnList(memberId, page, size);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -240,7 +235,7 @@ public class OrderCancelReturnControllerTest {
         assertThat(result.getData().getContent().size()).isEqualTo(1);
         assertThat(result.getData().getContent().get(0).getOrderNo()).isEqualTo("1");
 
-        List<DetailResponseDtio> dtios = result.getData().getContent().get(0).getDetailResponseDtios();
+        List<GetCancelReturnListHttp.OrderDetailInfo> dtios = result.getData().getContent().get(0).getOrderDetailInfos();
         assertThat(dtios.get(0).getOrderNo()).isEqualTo("1");
         assertThat(dtios.get(0).getProductId()).isEqualTo(1L);
         assertThat(dtios.get(0).getProductNo()).isEqualTo("1");

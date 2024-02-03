@@ -1,13 +1,12 @@
 package com.objects.marketbridge.order.service.port;
 
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
-import com.objects.marketbridge.order.infra.dtio.DetailResponseDtio;
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
+import com.objects.marketbridge.product.infra.ProductRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 @ActiveProfiles("test")
 @Transactional
@@ -117,15 +117,15 @@ class OrderDtoRepositoryTest {
         orderCommendRepository.save(order2);
 
         // when
-        Page<CancelReturnResponseDtio> orderCancelReturnListResponsePage = orderDtoRepository.findOrdersByMemberId(member.getId(), PageRequest.of(0, 3));
-        List<CancelReturnResponseDtio> content = orderCancelReturnListResponsePage.getContent();
+        Page<GetCancelReturnListDtio.Response> orderCancelReturnListResponsePage = orderDtoRepository.findOrdersByMemberId(member.getId(), PageRequest.of(0, 3));
+        List<GetCancelReturnListDtio.Response> content = orderCancelReturnListResponsePage.getContent();
         // then
         assertThat(content).hasSize(2)
                 .extracting("orderNo")
                 .contains("123", "456");
 
-        List<DetailResponseDtio> detailResponses1Dao = content.get(0).getDetailResponseDtios();
-        List<DetailResponseDtio> detailResponses2Dao = content.get(1).getDetailResponseDtios();
+        List<GetCancelReturnListDtio.OrderDetailInfo> detailResponses1Dao = content.get(0).getOrderDetailInfos();
+        List<GetCancelReturnListDtio.OrderDetailInfo> detailResponses2Dao = content.get(1).getOrderDetailInfos();
 
         assertThat(detailResponses1Dao).hasSize(2)
                 .extracting("orderNo", "productId", "productNo", "name", "price", "quantity", "orderStatus")

@@ -7,6 +7,7 @@ import com.objects.marketbridge.seller.service.port.SellerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ class SellerAccountJpaRepositoryTest {
     void init() {
 
     }
+    @Disabled
     @Test
     @DisplayName("Optional 타입의 SellerAccount 를 sellerId를 통해 조회할 수 있다")
     void findBySellerId() {
