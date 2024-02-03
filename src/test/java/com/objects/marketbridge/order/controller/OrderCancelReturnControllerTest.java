@@ -144,7 +144,7 @@ public class OrderCancelReturnControllerTest {
         assertThat(result.getStatus()).isEqualTo(OK);
         assertThat(result.getMessage()).isEqualTo(OK.name());
         assertThat(result.getData().getOrderId()).isEqualTo(1L);
-        assertThat(result.getData().getOrderNumber()).isEqualTo("1");
+        assertThat(result.getData().getOrderNo()).isEqualTo("1");
         assertThat(result.getData().getTotalPrice()).isEqualTo(8000L);
 
         assertThat(result.getData().getCancelledItems().get(0).getProductId()).isEqualTo(1L);
@@ -290,7 +290,5 @@ public class OrderCancelReturnControllerTest {
         assertThat(result.getData().getProductResponseList().get(1).getName()).isEqualTo("옥지얌키링");
         assertThat(result.getData().getProductResponseList().get(1).getPrice()).isEqualTo(2000L);
         assertThat(result.getData().getProductResponseList().get(1).getQuantity()).isEqualTo(3L);
-
-
     }
 }

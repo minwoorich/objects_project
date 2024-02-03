@@ -205,7 +205,4 @@ class RequestReturnDtoTest {
                 .extracting("deliveryFee", "returnFee", "productTotalPrice")
                 .contains(0L, 0L, 6000L);
     }
-
-
-
 }
