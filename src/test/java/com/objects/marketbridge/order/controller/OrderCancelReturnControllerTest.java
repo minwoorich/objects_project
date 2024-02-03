@@ -208,19 +208,18 @@ public class OrderCancelReturnControllerTest {
         assertThat(result.getCode()).isEqualTo(OK.value());
         assertThat(result.getStatus()).isEqualTo(OK);
         assertThat(result.getMessage()).isEqualTo(OK.name());
-        assertThat(result.getData().getReturnRefundInfoResponse().getDeliveryFee()).isEqualTo(WOW.getDeliveryFee());
-        assertThat(result.getData().getReturnRefundInfoResponse().getReturnFee()).isEqualTo(WOW.getReturnFee());
-        assertThat(result.getData().getReturnRefundInfoResponse().getProductPrice()).isEqualTo(8000L);
+        assertThat(result.getData().getReturnRefundInfo().getDeliveryFee()).isEqualTo(WOW.getDeliveryFee());
+        assertThat(result.getData().getReturnRefundInfo().getReturnFee()).isEqualTo(WOW.getReturnFee());
+        assertThat(result.getData().getReturnRefundInfo().getProductTotalPrice()).isEqualTo(8000L);
 
-        assertThat(result.getData().getProductResponses().get(0).getName()).isEqualTo("빵빵이키링");
-        assertThat(result.getData().getProductResponses().get(0).getQuantity()).isEqualTo(2L);
-        assertThat(result.getData().getProductResponses().get(0).getImage()).isEqualTo("빵빵이썸네일");
-        assertThat(result.getData().getProductResponses().get(0).getPrice()).isEqualTo(1000L);
-
-        assertThat(result.getData().getProductResponses().get(1).getName()).isEqualTo("옥지얌키링");
-        assertThat(result.getData().getProductResponses().get(1).getQuantity()).isEqualTo(3L);
-        assertThat(result.getData().getProductResponses().get(1).getImage()).isEqualTo("옥지얌썸네일");
-        assertThat(result.getData().getProductResponses().get(1).getPrice()).isEqualTo(2000L);
+        assertThat(result.getData().getProductInfos().get(0).getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getData().getProductInfos().get(0).getQuantity()).isEqualTo(2L);
+        assertThat(result.getData().getProductInfos().get(0).getImage()).isEqualTo("빵빵이썸네일");
+        assertThat(result.getData().getProductInfos().get(0).getPrice()).isEqualTo(1000L);
+        assertThat(result.getData().getProductInfos().get(1).getName()).isEqualTo("옥지얌키링");
+        assertThat(result.getData().getProductInfos().get(1).getQuantity()).isEqualTo(3L);
+        assertThat(result.getData().getProductInfos().get(1).getImage()).isEqualTo("옥지얌썸네일");
+        assertThat(result.getData().getProductInfos().get(1).getPrice()).isEqualTo(2000L);
     }
 
     @Test
