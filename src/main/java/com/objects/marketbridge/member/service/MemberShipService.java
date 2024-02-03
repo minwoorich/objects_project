@@ -54,12 +54,8 @@ public class MemberShipService {
 
     @Transactional
     public void saveAprrovalResponse(KakaoPayApproveResponse response){
-        membershipRepository.save(saveSubsResponse(response));
-    }
-
-    @Transactional
-    public void saveSubsAprrovalResponse(KakaoPaySubsApproveResponse response){
-        membershipRepository.save(saveSubscribePaymentResponse(response));
+        Membership membership = membershipRepository.findBySubsOrderNo(response.getPartnerOrderId());
+        membership.update(response.getTid(),response.getSid(),response.getCid(),response.getPartnerOrderId(),response.getPartnerUserId(),response.getOrderName(),response.getQuantity(),response.getPaymentMethodType(),response.getCardInfo(),response.getAmount());
     }
 
     private Membership createSubscribtion(CreateSubsDto createSubsDto) {
@@ -71,36 +67,20 @@ public class MemberShipService {
         return Membership.create(member,subsOrderNo, tid,amount);
     }
 
-    private Membership saveSubsResponse(KakaoPayApproveResponse response){
-        String tid = response.getTid();
-        String sid = response.getSid();
-        String cid = response.getCid();
-        String orderNo = response.getPartnerOrderId();
-        String partnerUserId = response.getPartnerUserId();
-        String itemName = response.getOrderName();
-        Long quantity = response.getQuantity();
-        String paymentMethod = response.getPaymentMethodType();
-        CardInfo cardInfo = response.getCardInfo();
-        Amount amount = response.getAmount();
-
-        return Membership.createPayment(tid, sid, cid, orderNo,partnerUserId ,itemName ,quantity, paymentMethod, cardInfo, amount);
-    }
-
-    private Membership saveSubscribePaymentResponse(KakaoPaySubsApproveResponse response){
-        String tid = response.getTid();
-        String sid = response.getSid();
-        String cid = response.getCid();
-        String orderNo = response.getPartnerOrderId();
-        String partnerUserId = response.getPartnerUserId();
-        String itemName = response.getOrderName();
-        Long quantity = response.getQuantity();
-        String paymentMethod = response.getPaymentMethodType();
-        CardInfo cardInfo = response.getCardInfo();
-        Amount amount = response.getAmount();
-
-        return Membership.createPayment(tid, sid, cid, orderNo,partnerUserId ,itemName ,quantity, paymentMethod, cardInfo, amount);
-    }
-
+//    private Membership updateMembership(KakaoPaySubsApproveResponse response, Membership membership){
+//        String tid = response.getTid();
+//        String sid = response.getSid();
+//        String cid = response.getCid();
+//        String orderNo = response.getPartnerOrderId();
+//        String partnerUserId = response.getPartnerUserId();
+//        String itemName = response.getOrderName();
+//        Long quantity = response.getQuantity();
+//        String paymentMethod = response.getPaymentMethodType();
+//        CardInfo cardInfo = response.getCardInfo();
+//        Amount amount = response.getAmount();
+//
+//        return Membership.createPayment(tid, sid, cid, orderNo,partnerUserId ,itemName ,quantity, paymentMethod, cardInfo, amount);
+//    }
 
     }
 

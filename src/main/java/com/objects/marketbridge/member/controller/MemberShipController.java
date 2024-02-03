@@ -82,20 +82,18 @@ public class MemberShipController {
 
     //정기결제 2회차
     @PostMapping("/membership/online/v1/payment/subscription")
-    public ApiResponse<KakaoPaySubsApproveResponse> kakaoPaySubsPayment(
-            @AuthMemberId Long memberId ,
-            @RequestParam(name = "pg_token") String pgToken)
+    public ApiResponse<KakaoPayApproveResponse> kakaoPaySubsPayment()
     {
         //TODO 배치로 DB에서 필요한 값을 받아서 처리를 해야함
-        Membership membership = membershipRepository.findBySubsOrderNo("1");
-        KakaoPaySubsApproveResponse response = kakaoPayService.subsApprove(createSubsApprove(membership,pgToken));
-        memberShipService.saveSubsAprrovalResponse(response);
+        Membership membership = membershipRepository.findById(1L);
+        KakaoPayApproveResponse response = kakaoPayService.subsApprove(createSubsApprove(membership));
+        memberShipService.saveAprrovalResponse(response);
 
         return ApiResponse.ok(response);
     }
 
 
-    private KakaoPaySubsApproveRequest createSubsApprove(Membership membership, String pgToken){
+    private KakaoPaySubsApproveRequest createSubsApprove(Membership membership){
         return KakaoPaySubsApproveRequest.builder()
                 .cid(membership.getCid())
                 .sid(membership.getSid())
@@ -104,7 +102,7 @@ public class MemberShipController {
                 .itemName(membership.getItemName())
                 .quantity(membership.getQuantity())
                 .totalAmount(membership.getAmount().getTotalAmount())
-//                .taxFreeAmount(membership)
+                .taxFreeAmount(membership.getAmount().getTaxFreeAmount())
                 .build();
     }
 

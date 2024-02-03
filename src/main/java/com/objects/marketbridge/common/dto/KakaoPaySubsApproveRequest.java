@@ -1,5 +1,6 @@
 package com.objects.marketbridge.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.util.LinkedMultiValueMap;
@@ -10,11 +11,22 @@ public class KakaoPaySubsApproveRequest {
 
     private String cid;
     private String sid;
+
+    @JsonProperty("partner_order_id")
     private String partnerOrderId;
+
+    @JsonProperty("partner_user_id")
     private String partnerUserId;
+
+    @JsonProperty("item_name")
     private String itemName;
+
     private Long quantity;
+
+    @JsonProperty("total_amount")
     private Long totalAmount;
+
+    @JsonProperty("tax_free_amount")
     private Long taxFreeAmount;
 
 
