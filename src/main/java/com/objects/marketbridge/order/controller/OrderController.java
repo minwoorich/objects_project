@@ -8,15 +8,15 @@ import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
+import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
+import com.objects.marketbridge.order.service.GetOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -29,6 +29,7 @@ public class OrderController {
 
     private final CreateOrderService createOrderService;
     private final CreateCheckoutService createCheckoutService;
+    private final GetOrderService getOrderService;
     private final KakaoPayService kakaoPayService;
     private final KakaoPayConfig kakaoPayConfig;
 
@@ -68,11 +69,15 @@ public class OrderController {
         return request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
     }
 
-//    @GetMapping("/orders")
-//    public ApiResponse<OrderListHttp.Response> selectOrder(
-//            @AuthMemberId Long memberId,
-//            @Valid @RequestBody OrderList
-//    ) {
-//
-//    }
+    // TODO : 전체 주문 목록 조회 컨트롤러 완성해야함
+    @GetMapping("/orders/list")
+    public ApiResponse<GetOrderHttp.Response> getOrders(
+            @AuthMemberId Long memberId,
+            GetOrderHttp.Condition condition,
+            Pageable pageable
+    ) {
+        condition.setMemberId(memberId);
+        GetOrderHttp.Response response = getOrderService.find(pageable, condition);
+        return null;
+    }
 }
