@@ -97,36 +97,6 @@ public class ConfirmCancelReturnHttp {
                     .productNo(productInfo.getProductNo())
                     .build();
         }
-
-//        public static ProductInfo of(Product product, Long quantity) {
-//            return ProductInfo.builder()
-//                    .productId(product.getId())
-//                    .name(product.getName())
-//                    .price(product.getPrice())
-//                    .quantity(quantity)
-//                    .productNo(product.getProductNo())
-//                    .build();
-//        }
-
-//        public static ProductInfo of(OrderDetail orderDetail) {
-//            return ProductInfo.builder()
-//                    .productId(orderDetail.getProduct().getId())
-//                    .name(orderDetail.getProduct().getName())
-//                    .price(orderDetail.getProduct().getPrice())
-//                    .quantity(orderDetail.getQuantity())
-//                    .productNo(orderDetail.getProduct().getProductNo())
-//                    .build();
-//        }
-
-//        public static ProductInfo of(GetCancelReturnDetailDto.ProductInfo productListResponseDto) {
-//            return ProductInfo.builder()
-//                    .productId(productListResponseDto.getProductId())
-//                    .name(productListResponseDto.getName())
-//                    .price(productListResponseDto.getPrice())
-//                    .quantity(productListResponseDto.getQuantity())
-//                    .productNo(productListResponseDto.getProductNo())
-//                    .build();
-//        }
     }
 
     @Getter
@@ -138,7 +108,7 @@ public class ConfirmCancelReturnHttp {
         private LocalDateTime refundProcessedAt; // 환불 일자
 
         @Builder
-        public RefundInfo(Long totalRefundAmount, String refundMethod, LocalDateTime refundProcessedAt) {
+        private RefundInfo(Long totalRefundAmount, String refundMethod, LocalDateTime refundProcessedAt) {
             this.totalRefundAmount = totalRefundAmount;
             this.refundMethod = refundMethod;
             this.refundProcessedAt = refundProcessedAt;

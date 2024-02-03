@@ -1,8 +1,6 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.order.controller.dto.ConfirmCancelReturnHttp;
 import com.objects.marketbridge.order.service.dto.ConfirmCancelReturnDto;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +9,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-class ConfirmCancelReturnHttpRequestTest {
+class ConfirmCancelReturnHttpTest {
 
     @Test
     @DisplayName("serviceDto로 변환할 수 있다.")
