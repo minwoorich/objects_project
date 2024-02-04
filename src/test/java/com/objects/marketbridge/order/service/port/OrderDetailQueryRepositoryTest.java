@@ -1,6 +1,8 @@
 package com.objects.marketbridge.order.service.port;
 
+import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.product.infra.ProductRepository;
@@ -9,11 +11,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.*;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -220,8 +224,77 @@ class OrderDetailQueryRepositoryTest {
     void findAllWithMemberOrderDetailProduct(){
         //given
 
+        Member member = createMember();
+
+        Product product1 = Product.builder()
+                .price(1000L)
+                .thumbImg("썸네일1")
+                .name("옷")
+                .build();
+        Product product2 = Product.builder()
+                .name("바지")
+                .price(2000L)
+                .thumbImg("썸네일2")
+                .build();
+        Product product3 = Product.builder()
+                .name("신발")
+                .price(3000L)
+                .thumbImg("썸네일3")
+                .build();
+
+        OrderDetail orderDetail1 = OrderDetail.builder()
+                .product(product1)
+                .quantity(2L)
+                .price(product1.getPrice() * 2L)
+                .orderNo("123")
+                .statusCode(ORDER_CANCEL.getCode())
+                .reason("빵빵이")
+                .build();
+        OrderDetail orderDetail2 = OrderDetail.builder()
+                .product(product2)
+                .quantity(3L)
+                .price(product2.getPrice() * 3L)
+                .orderNo("123")
+                .statusCode(ORDER_CANCEL.getCode())
+                .reason("옥지얌")
+                .build();
+        OrderDetail orderDetail3 = OrderDetail.builder()
+                .product(product3)
+                .quantity(4L)
+                .price(product3.getPrice() * 4L)
+                .orderNo("123")
+                .statusCode(RETURN_COMPLETED.getCode())
+                .reason("멍청이")
+                .build();
+
+        Order order = Order.builder()
+                .member(member)
+                .orderNo("123")
+                .build();
+
+        order.addOrderDetail(orderDetail1);
+        order.addOrderDetail(orderDetail2);
+        order.addOrderDetail(orderDetail3);
+
+        PageRequest page = PageRequest.of(0, 10);
+        Condition condition
+                = Condition.builder()
+                .memberId(1L)
+                .keyword("바지")
+                .year("2024")
+                .isSearch(true)
+                .build();
+
         //when
+        List<Order> orders = orderQueryRepository.findAllWithMemberOrderDetailProduct(page, condition);
 
         //then
+        assertThat(orders).hasSize(1);
+    }
+
+    private Member createMember() {
+        return Member.builder()
+                .name("홍길동")
+                .build();
     }
 }

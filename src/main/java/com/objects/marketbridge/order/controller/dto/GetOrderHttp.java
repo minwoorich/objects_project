@@ -1,5 +1,6 @@
 package com.objects.marketbridge.order.controller.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,6 +38,13 @@ public class GetOrderHttp {
         private String year;
         private Boolean isSearch;
         private Long memberId;
+        @Builder
+        public Condition(String keyword, String year, Boolean isSearch, Long memberId) {
+            this.keyword = keyword;
+            this.year = year;
+            this.isSearch = isSearch;
+            this.memberId = memberId;
+        }
 
         public void setMemberId(Long memberId) {
             this.memberId = memberId;
