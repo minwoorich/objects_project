@@ -108,7 +108,6 @@ public class OrderDetail extends BaseEntity {
         return (int) (price * quantity);
     }
 
-
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
         coupon.changeMemberCouponInfo(dateTimeHolder);
     }

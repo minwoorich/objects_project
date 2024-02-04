@@ -26,6 +26,7 @@ import static com.objects.marketbridge.product.domain.QProduct.product;
 
 
 @Repository
+@Transactional(readOnly = true)
 public class OrderDtoRepositoryImpl implements OrderDtoRepository {
 
     private final OrderJpaRepository orderJpaRepository;
@@ -38,7 +39,6 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Page<CancelReturnResponseDtio> findOrdersByMemberId(Long memberId, Pageable pageable) {
         List<CancelReturnResponseDtio> content = getOrderCancelReturnListResponses(memberId);
         Map<String, List<DetailResponseDtio>> orderDetailResponseMap = getOrderDetailResponseMap(findOrderNos(content));
@@ -110,7 +110,4 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                 .where(order.member.id.eq(memberId));
         return countQuery;
     }
-
-
-
 }

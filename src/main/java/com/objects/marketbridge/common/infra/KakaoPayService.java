@@ -6,6 +6,7 @@ import com.objects.marketbridge.common.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -30,69 +31,44 @@ public class KakaoPayService {
 
     public KakaoPayReadyResponse ready(KakaoPayReadyRequest request) {
 
-        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
+//        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
 
         RestClient restClient = setup();
 
         return restClient.post()
                 .uri(READY_END_POINT)
-                .body(requestMap)
-                .retrieve()
-                .body(KakaoPayReadyResponse.class);
-    }
-
-    public KakaoPayReadyResponse testReady() {
-
-        KakaoPayReadyRequest request = KakaoPayReadyRequest.builder()
-                .cid(ONE_TIME_CID)
-                .partnerOrderId("order1")
-                .partnerUserId("1")
-                .itemName("가방")
-                .quantity(1L)
-                .totalAmount(1000L)
-                .taxFreeAmount(0L)
-                .approvalUrl(kakaoPayConfig.createApprovalUrl("/payment"))
-                .cancelUrl(kakaoPayConfig.getRedirectCancelUrl())
-                .failUrl(kakaoPayConfig.getRedirectFailUrl())
-                .build();
-
-        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
-
-        RestClient restClient = setup();
-
-        return restClient.post()
-                .uri(READY_END_POINT)
-                .body(requestMap)
+                .body(request)
                 .retrieve()
                 .body(KakaoPayReadyResponse.class);
     }
 
 
-    //인터페이스 -> 정기구독 정기용, 단건용
+    //정기구독 1회차 , 단건결제
     public KakaoPayApproveResponse approve(KakaoPayApproveRequest request) {
 
-        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
+//        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
 
         RestClient restClient = setup();
 
         return restClient.post()
                 .uri(APPROVE_END_POINT)
-                .body(requestMap)
+                .body(request)
                 .retrieve()
                 .body(KakaoPayApproveResponse.class);
     }
 
-    public KakaoPaySubsApproveResponse subsApprove(KakaoPaySubsApproveRequest request) {
+    //정기구독 2회차
+    public KakaoPayApproveResponse subsApprove(KakaoPaySubsApproveRequest request) {
 
-        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
+//        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
 
         RestClient restClient = setup();
 
         return restClient.post()
                 .uri(SUBS_END_POINT)
-                .body(requestMap)
+                .body(request)
                 .retrieve()
-                .body(KakaoPaySubsApproveResponse.class);
+                .body(KakaoPayApproveResponse.class);
     }
 
     // 취소
@@ -140,12 +116,10 @@ public class KakaoPayService {
 
         return RestClient.builder()
                 .baseUrl(KAKAO_BASE_URL)
-                .messageConverters((converters) ->
-                        converters.add(new FormHttpMessageConverter()))
                 .defaultHeaders((httpHeaders -> {
-                    httpHeaders.add(AUTHORIZATION, KAKAO_AK + kakaoPayConfig.getAdminKey());
-                    httpHeaders.add(ACCEPT, APPLICATION_JSON.toString());
-                    httpHeaders.add(CONTENT_TYPE, APPLICATION_FORM_URLENCODED + ";charset=UTF-8");
+                    httpHeaders.add(AUTHORIZATION, AUTH_SCHEME+ kakaoPayConfig.getSecretKeyDev());
+                    httpHeaders.add(ACCEPT, APPLICATION_JSON.toString()+";charset=UTF-8");
+                    httpHeaders.add(CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
                 }))
                 .build();
     }

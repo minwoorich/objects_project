@@ -1,20 +1,25 @@
 package com.objects.marketbridge.order.infra.order;
 
 import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.QOrder;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.LockModeType;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.objects.marketbridge.product.domain.QProduct.product;
-import static com.objects.marketbridge.order.domain.QOrder.*;
+import static com.objects.marketbridge.common.domain.QMember.member;
+import static com.objects.marketbridge.common.domain.QProduct.product;
+import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
+import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
+import static org.springframework.util.StringUtils.*;
 
 @Repository
 public class OrderQueryRepositoryImpl implements OrderQueryRepository {
@@ -26,6 +31,8 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
         this.orderJpaRepository = orderJpaRepository;
         this.queryFactory = new JPAQueryFactory(em);
     }
+
+
 
     @Override
     public Optional<Order> findById(Long orderId) {
@@ -63,6 +70,36 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
                         .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                         .fetchOne()
         );
+    }
+
+    @Override
+    public List<Order> findAllWithMemberOrderDetailProduct(Pageable pageable, Condition condition) {
+        return queryFactory
+                .selectFrom(order)
+                .join(order.member, member).fetchJoin()
+                .join(order.orderDetails, orderDetail).fetchJoin()
+                .join(orderDetail.product, product).fetchJoin()
+                .where(
+                        eqMemberId(condition.getMemberId()),
+                        containsKeyword(condition.getKeyword()),
+                        eqYear(condition.getYear())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                .fetch();
+    }
+
+    private BooleanExpression eqYear(String year) {
+        return hasText(year) ? order.createdAt.year().eq(Integer.parseInt(year)) : null;
+    }
+
+    private BooleanExpression containsKeyword(String keyword) {
+        return hasText(keyword) ? orderDetail.product.name.contains(keyword) : null;
+    }
+
+    private BooleanExpression eqMemberId(Long memberId) {
+        return order.member.id.eq(memberId);
     }
 
     // orderNo 로 가져오기

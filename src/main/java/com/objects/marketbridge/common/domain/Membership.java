@@ -15,14 +15,15 @@ public class Membership extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "subs_id")
+    @Column(name = "membership_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member Member;
+    private Member member;
 
     private String cid;
+
     @JoinColumn(name = "partner_order_id")
     private String partnerOrderId;
 
@@ -43,6 +44,7 @@ public class Membership extends BaseEntity{
     private String statusCode;
 
     private String paymentMethod; // CARD, MONEY
+
     // 카드 결제
     @Embedded
     private CardInfo cardInfo;
@@ -52,8 +54,8 @@ public class Membership extends BaseEntity{
     private Amount amount;
 
     @Builder
-    public Membership(com.objects.marketbridge.common.domain.Member member, String cid, String partnerOrderId, String partnerUserId, String itemName, Long quantity, String tid, String sid, String subsOrderNo, String statusCode, String paymentMethod, CardInfo cardInfo, Amount amount) {
-        Member = member;
+    public Membership(Member member, String cid, String partnerOrderId, String partnerUserId, String itemName, Long quantity, String tid, String sid, String subsOrderNo, String statusCode, String paymentMethod, CardInfo cardInfo, Amount amount) {
+        this.member = member;
         this.cid = cid;
         this.partnerOrderId = partnerOrderId;
         this.partnerUserId = partnerUserId;
@@ -76,19 +78,17 @@ public class Membership extends BaseEntity{
                 .tid(tid)
                 .build();
     }
-    public static Membership createPayment(String tid, String sid, String cid, String partnerOrderId,String partnerUserId, String itemName ,Long quantity, String paymentMethod, CardInfo cardInfo , Amount amount) {
-        return Membership.builder()
-                .tid(tid)
-                .sid(sid)
-                .cid(cid)
-                .subsOrderNo(partnerOrderId)
-                .partnerOrderId(partnerOrderId)
-                .partnerUserId(partnerUserId)
-                .itemName(itemName)
-                .quantity(quantity)
-                .paymentMethod(paymentMethod)
-                .cardInfo(cardInfo)
-                .amount(amount)
-                .build();
+
+    public void update(String tid, String sid, String cid, String partnerOrderId,String partnerUserId, String itemName ,Long quantity, String paymentMethod, CardInfo cardInfo , Amount amount) {
+           this.tid = tid;
+           this.sid = sid;
+           this.cid = cid;
+           this.partnerOrderId = partnerOrderId;
+           this.partnerUserId = partnerUserId;
+           this.itemName = itemName;
+           this.quantity = quantity;
+           this.paymentMethod = paymentMethod;
+           this.cardInfo = cardInfo;
+           this.amount = amount;
     }
 }

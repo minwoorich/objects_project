@@ -1,37 +1,43 @@
 DROP TABLE IF EXISTS member;
 
 CREATE TABLE member (
-                          member_id	bigint auto_increment
+                        member_id	bigint auto_increment
                             primary key,
-                            
-                          member_type	varchar(255)	,
-                          social_type	varchar(255)	,
-                          membership_no	varchar(255)	,
-                          email	varchar(255)	,
-                          password	varchar(255)	,
-                          name	varchar(255)	,
-                          phone_no	varchar(255)	,
-                          is_alert	bit	,
-                          is_agree	bit	,
-                          created_at	timestamp	,
-                          updated_at	timestamp	,
-                          deleted_at	timestamp	
+
+                        social_type	varchar(255)	,
+                        member_type	varchar(255)	,
+                        membership	varchar(255)	,
+                        email	varchar(255)	,
+                        password	varchar(255)	,
+                        name	varchar(255)	,
+                        phone_no	varchar(255)	,
+                        is_alert	bit	,
+                        is_agree	bit	,
+                        created_at	datetime(6)	,
+                        updated_at	datetime(6)	,
+                        deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS membership;
 
 CREATE TABLE membership (
-                        subs_id	bigint auto_increment
+                        membership_id	bigint auto_increment
                             primary key,
 
                         member_id	varchar(255)	,
+                        cid varchar(255)	,
                         tid	varchar(255)	,
                         sid	varchar(255)	,
+                        item_name varchar(255),
                         subs_order_no	varchar(255)	,
+                        partner_order_id varchar(255)   ,
+                        partner_user_id varchar(255)   ,
                         status_code	varchar(255)	,
                         payment_method	varchar(255)	,
+                        quantity bigint ,
                         total_amount bigint,
                         discount_amount bigint,
+                        tax_free_amount bigint,
                         card_issuer_name	varchar(255)	,
                         card_purchase_name	varchar(255)	,
                         card_no	varchar(255)	,
@@ -272,13 +278,13 @@ CREATE TABLE payment (
                          order_no	varchar(255)	,
                          payment_method	varchar(255)	,
                          tid	varchar(255)	,
-
                          card_issuer_name	varchar(255)	,
                          card_purchase_name	varchar(255)	,
                          card_no	varchar(255)	,
                          card_install_month	BIGINT	,
                          total_amount BIGINT,
                          discount_amount BIGINT,
+                         tax_free_amount BIGINT,
                          approved_at	datetime(6)	,
                          deleted_at	datetime(6)	,
                          updated_at	datetime(6)	,

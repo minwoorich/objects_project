@@ -27,8 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_INIT;
+import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -128,7 +128,7 @@ class CreatePaymentServiceTest {
         Payment payment = paymentRepository.findByOrderNo("1234");
 
         //then
-        assertThat(payment.getId()).isEqualTo(1L);
+        assertThat(payment.getTid()).isEqualTo("tid");
 
     }
 
