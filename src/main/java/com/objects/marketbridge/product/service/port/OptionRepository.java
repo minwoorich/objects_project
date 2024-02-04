@@ -1,8 +1,6 @@
 package com.objects.marketbridge.product.service.port;
 
-import com.objects.marketbridge.common.domain.Option;
-
-import java.util.Optional;
+import com.objects.marketbridge.product.domain.Option;
 
 public interface OptionRepository {
 

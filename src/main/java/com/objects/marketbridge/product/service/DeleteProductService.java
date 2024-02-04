@@ -1,12 +1,11 @@
 package com.objects.marketbridge.product.service;
 
-import com.objects.marketbridge.common.domain.Product;
-import com.objects.marketbridge.common.domain.ProductImage;
+import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.product.domain.ProductImage;
 import com.objects.marketbridge.product.controller.request.DeleteProductRequestDto;
 import com.objects.marketbridge.product.controller.response.DeleteProductResponseDto;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.product.service.dto.DeleteProductDto;
-import com.objects.marketbridge.product.service.dto.UpdateProductDto;
 import com.objects.marketbridge.product.service.port.ImageRepository;
 import com.objects.marketbridge.product.service.port.ProductImageRepository;
 import lombok.RequiredArgsConstructor;

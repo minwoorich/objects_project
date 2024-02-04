@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.objects.marketbridge.common.domain.QProduct.product;
 import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;
 import static com.objects.marketbridge.order.domain.StatusCodeType.RETURN_COMPLETED;
+import static com.objects.marketbridge.product.domain.QProduct.product;
 
 
 @Repository

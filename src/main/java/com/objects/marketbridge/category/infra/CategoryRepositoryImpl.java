@@ -1,7 +1,7 @@
 package com.objects.marketbridge.category.infra;
 
 import com.objects.marketbridge.category.service.port.CategoryRepository;
-import com.objects.marketbridge.common.domain.Category;
+import com.objects.marketbridge.product.domain.Category;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,6 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor

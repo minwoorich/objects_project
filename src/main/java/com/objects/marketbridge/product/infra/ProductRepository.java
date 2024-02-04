@@ -1,9 +1,8 @@
 package com.objects.marketbridge.product.infra;
 
-import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.product.domain.Product;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductRepository {
     Product findById(Long id);

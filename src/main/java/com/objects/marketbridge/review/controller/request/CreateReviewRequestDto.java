@@ -1,8 +1,5 @@
 package com.objects.marketbridge.review.controller.request;
 
-import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.common.domain.Product;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
