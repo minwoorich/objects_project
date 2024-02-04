@@ -1,13 +1,12 @@
 package com.objects.marketbridge.mock;
 
-import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class FakeProductRepository implements ProductRepository {
 

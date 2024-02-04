@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.dto.GetCancelReturnDetailDto;
 import lombok.Builder;

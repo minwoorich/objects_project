@@ -1,6 +1,6 @@
 package com.objects.marketbridge.product.infra;
 
-import com.objects.marketbridge.common.domain.ProductImage;
+import com.objects.marketbridge.product.domain.ProductImage;
 import com.objects.marketbridge.product.service.port.ProductImageRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,7 @@
 package com.objects.marketbridge.common.domain;
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
