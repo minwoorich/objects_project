@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.objects.marketbridge.common.domain.QMember.member;
-import static com.objects.marketbridge.common.domain.QProduct.product;
 import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
 import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
+import static com.objects.marketbridge.product.domain.QProduct.product;
 import static org.springframework.util.StringUtils.*;
 
 @Repository
