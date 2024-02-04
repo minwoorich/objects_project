@@ -1,10 +1,9 @@
 package com.objects.marketbridge.category.infra;
 
-import com.objects.marketbridge.common.domain.Category;
+import com.objects.marketbridge.product.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CategoryJpaRepository extends JpaRepository<Category, Long> {
 

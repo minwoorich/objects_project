@@ -1,6 +1,6 @@
 package com.objects.marketbridge.common.domain;
 
-import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

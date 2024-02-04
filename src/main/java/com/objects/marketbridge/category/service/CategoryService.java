@@ -2,7 +2,7 @@ package com.objects.marketbridge.category.service;
 
 import com.objects.marketbridge.category.controller.response.ReadCategoryResponseDto;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
-import com.objects.marketbridge.common.domain.Category;
+import com.objects.marketbridge.product.domain.Category;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;

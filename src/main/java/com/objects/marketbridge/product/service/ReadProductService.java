@@ -1,6 +1,6 @@
 package com.objects.marketbridge.product.service;
 
-import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.controller.response.ReadProductResponseDto;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import lombok.RequiredArgsConstructor;
