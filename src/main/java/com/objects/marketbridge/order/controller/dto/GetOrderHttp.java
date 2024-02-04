@@ -36,13 +36,11 @@ public class GetOrderHttp {
     public static class Condition {
         private String keyword;
         private String year;
-        private Boolean isSearch;
         private Long memberId;
         @Builder
-        public Condition(String keyword, String year, Boolean isSearch, Long memberId) {
+        public Condition(String keyword, String year, Long memberId) {
             this.keyword = keyword;
             this.year = year;
-            this.isSearch = isSearch;
             this.memberId = memberId;
         }
 

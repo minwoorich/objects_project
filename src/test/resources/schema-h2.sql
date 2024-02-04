@@ -3,8 +3,8 @@ DROP TABLE IF EXISTS member;
 CREATE TABLE member (
                           member_id	bigint auto_increment
                             primary key,
-                            
-                          member_type	varchar(255)	,
+
+                          membership	varchar(255)	,
                           social_type	varchar(255)	,
                           membership_no	varchar(255)	,
                           email	varchar(255)	,
