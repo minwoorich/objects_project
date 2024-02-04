@@ -384,21 +384,4 @@ class CreateOrderServiceTest {
                 .productValues(productValues)
                 .build();
     }
-
-    @DisplayName("프록시 or null")
-    @Test
-    void test(){
-        //given
-        Order order = Order.builder().orderNo("aaaa").build();
-        orderCommendRepository.save(order);
-        em.flush();
-        em.clear();
-
-        //when
-        Order findOrder = orderQueryRepository.findByOrderNo("aaaa");
-
-        //then
-        log.info("findOrder.getMember() : {}", findOrder.getMember().getClass());
-    }
-
 }
