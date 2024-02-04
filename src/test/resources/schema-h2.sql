@@ -1,21 +1,21 @@
 DROP TABLE IF EXISTS member;
 
 CREATE TABLE member (
-                          member_id	bigint auto_increment
+                        member_id	bigint auto_increment
                             primary key,
 
-                          membership	varchar(255)	,
-                          social_type	varchar(255)	,
-                          membership_no	varchar(255)	,
-                          email	varchar(255)	,
-                          password	varchar(255)	,
-                          name	varchar(255)	,
-                          phone_no	varchar(255)	,
-                          is_alert	bit	,
-                          is_agree	bit	,
-                          created_at	timestamp	,
-                          updated_at	timestamp	,
-                          deleted_at	timestamp	
+                        social_type	varchar(255)	,
+                        member_type	varchar(255)	,
+                        membership	varchar(255)	,
+                        email	varchar(255)	,
+                        password	varchar(255)	,
+                        name	varchar(255)	,
+                        phone_no	varchar(255)	,
+                        is_alert	bit	,
+                        is_agree	bit	,
+                        created_at	datetime(6)	,
+                        updated_at	datetime(6)	,
+                        deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS membership;
