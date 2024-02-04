@@ -153,6 +153,8 @@ class OrderQueryRepositoryTest {
                 = createCondition(1L, "상품", "2024");
 
         //when
+        // TODO : 조회 쿼리 in절이 왜 없는지 알아볼것
+        // TODO : 페이징 테스트 코드 더 작성해야함
         List<Order> orders_page1 = orderQueryRepository.findAllWithMemberOrderDetailProduct(page1, condition);
 
         //then
