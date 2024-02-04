@@ -121,7 +121,6 @@ public class Order extends BaseEntity {
     // 판매자별 총 주문 금액
     public Map<Long, Long> totalAmountGroupedBySellerId() {
         return orderDetails.stream()
-                .filter(o -> o.getSellerId() != null)
                 .collect(Collectors.groupingBy(OrderDetail::getSellerId,
                         Collectors.summingLong(OrderDetail::totalAmount)));
     }
@@ -129,7 +128,6 @@ public class Order extends BaseEntity {
     // 판매자 별 주문리스트
     public Map<Long, List<OrderDetail>> orderDetailsGroupedBySellerId() {
         return orderDetails.stream()
-                .filter(o -> o.getSellerId() != null)
                 .collect(Collectors.groupingBy(OrderDetail::getSellerId));
     }
 

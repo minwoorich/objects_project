@@ -13,6 +13,7 @@ import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.MemberCoupon;
 import com.objects.marketbridge.common.domain.Product;
 import jakarta.persistence.EntityManager;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -188,5 +192,93 @@ class OrderTest {
         assertThat(memberCoupon1.getIsUsed()).isTrue();
         assertThat(memberCoupon2.getIsUsed()).isTrue();
     }
+
+    @DisplayName("판매자 별로 상세주문(OrderDetail) 을 그룹핑할 수 있다")
+    @Test
+    void orderDetailsGroupedBySellerId(){
+
+        //given
+        Order order = createOrder();
+        List<OrderDetail> orderDetails = createOrderDetails();
+        orderDetails.forEach(order::addOrderDetail);
+        orderCommendRepository.save(order);
+
+        //when
+        Map<Long, List<OrderDetail>> groupedMap =
+                order.orderDetailsGroupedBySellerId();
+
+        //then
+        assertThat(getOrderDetails(order)).hasSize(4);
+        assertThat(groupedMap.keySet()).hasSize(3);
+        assertThat(groupedMap.keySet())
+                .containsExactlyInAnyOrderElementsOf(getKeySet(orderDetails));
+        assertThat(groupedMap.get(getKeyList(orderDetails).get(0)))
+                .containsExactlyInAnyOrderElementsOf(List.of(orderDetails.get(0), orderDetails.get(1)));
+
+    }
+
+    @DisplayName("판매자 별로 상세주문(OrderDetail) 을 그룹핑할 수 있다")
+    @Test
+    void totalAmountGroupedBySellerId(){
+
+        //given
+        Order order = createOrder();
+        List<OrderDetail> orderDetails = createOrderDetails();
+        orderDetails.forEach(order::addOrderDetail);
+        orderCommendRepository.save(order);
+
+        //when
+
+        Map<Long, Long> groupedMap = order.totalAmountGroupedBySellerId();
+
+        //then
+        assertThat(getOrderDetails(order)).hasSize(4);
+        assertThat(groupedMap.keySet()).hasSize(3);
+        assertThat(groupedMap.get(getKeyList(orderDetails).get(0))).isEqualTo(3000L);
+    }
+
+    private List<OrderDetail> createOrderDetails() {
+        OrderDetail orderDetail1 = OrderDetail.builder()
+                .price(1000L)
+                .quantity(1L)
+                .sellerId(1L)
+                .build();
+        OrderDetail orderDetail2 = OrderDetail.builder()
+                .price(1000L)
+                .quantity(2L)
+                .sellerId(1L)
+                .build();
+        OrderDetail orderDetail3 = OrderDetail.builder()
+                .price(1000L)
+                .quantity(2L)
+                .sellerId(2L)
+                .build();
+        OrderDetail orderDetail4 = OrderDetail.builder()
+                .price(1000L)
+                .quantity(3L)
+                .sellerId(3L)
+                .build();
+        return List.of(orderDetail1, orderDetail2, orderDetail3, orderDetail4);
+    }
+
+    private List<OrderDetail> getOrderDetails(Order order) {
+        return order.getOrderDetails();
+    }
+
+    private Set<Long> getKeySet(List<OrderDetail> orderDetails) {
+        return orderDetails.stream().map(OrderDetail::getSellerId).collect(Collectors.toSet());
+    }
+    private List<Long> getKeyList(List<OrderDetail> orderDetails) {
+        return orderDetails.stream().map(OrderDetail::getSellerId).collect(Collectors.toList());
+    }
+
+    private Order createOrder() {
+        return Order.builder()
+                .orderNo("aaaa-aaaa-aaaa")
+                .totalPrice(4000L)
+                .build();
+    }
+
+
 
 }
