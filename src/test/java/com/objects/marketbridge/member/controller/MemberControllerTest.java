@@ -1,12 +1,10 @@
 package com.objects.marketbridge.member.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.objects.marketbridge.common.config.KakaoPayConfig;
-import com.objects.marketbridge.common.infra.KakaoPayService;
-import com.objects.marketbridge.member.dto.CheckedResultDto;
-import com.objects.marketbridge.member.service.MemberService;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
-import com.objects.marketbridge.member.service.port.MembershipRepository;
+import com.objects.marketbridge.member.dto.CheckedResultDto;
+import com.objects.marketbridge.member.infra.MemberRepositoryImpl;
+import com.objects.marketbridge.member.service.MemberService;
+import com.objects.marketbridge.member.service.port.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,14 +23,18 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @ActiveProfiles("test")
@@ -44,17 +46,10 @@ public class MemberControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
     @MockBean
     private MemberService memberService;
     @MockBean
-    private KakaoPayService kakaoPayService;
-    @MockBean
-    private KakaoPayConfig kakaoPayConfig;
-    @MockBean
-    private MembershipRepository membershipRepository;
-
+    private MemberRepository memberRepository;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,

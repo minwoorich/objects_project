@@ -47,6 +47,11 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
+    public List<Member> saveAll(List<Member> members) {
+        return null;
+    }
+
+    @Override
     public Member findByIdWithAddresses(Long id) {
         return null;
     }

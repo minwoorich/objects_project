@@ -49,6 +49,11 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
+    public List<Member> saveAll(List<Member> members) {
+        return null;
+    }
+
+    @Override
     public Member save(Member member) {
         if (member.getId() == null || member.getId() == 0) {
             Member newMember = Member.builder()
