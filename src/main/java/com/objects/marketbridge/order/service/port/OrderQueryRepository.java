@@ -11,7 +11,7 @@ import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Conditi
 
 public interface OrderQueryRepository {
 
-    List<Order> findAllWithMemberOrderDetailProduct(Pageable pageable, Condition condition);
+
 
     Optional<Order> findById(Long orderId);
 

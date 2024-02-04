@@ -1,14 +1,21 @@
 package com.objects.marketbridge.order.infra.order;
 
+import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.QAddress;
 import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
 import com.objects.marketbridge.order.infra.dtio.DetailResponseDtio;
 import com.objects.marketbridge.order.infra.dtio.QCancelReturnResponseDtio;
 import com.objects.marketbridge.order.infra.dtio.QDetailResponseDtio;
+import com.objects.marketbridge.order.service.dto.OrderDto;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
@@ -18,11 +25,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.objects.marketbridge.common.domain.QMember.member;
+import static com.objects.marketbridge.order.domain.QAddress.*;
 import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;
 import static com.objects.marketbridge.order.domain.StatusCodeType.RETURN_COMPLETED;
 import static com.objects.marketbridge.product.domain.QProduct.product;
+import static org.springframework.util.StringUtils.hasText;
 
 
 @Repository
@@ -109,5 +119,31 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                 ).from(order)
                 .where(order.member.id.eq(memberId));
         return countQuery;
+    }
+
+    @Override
+    public Page<OrderDto> findByMemberIdWithMemberAddress(GetOrderHttp.Condition condition, Pageable pageable) {
+        List<Order> orders = queryFactory
+                .selectFrom(order)
+                .join(order.address, address).fetchJoin()
+                .join(order.member, member).fetchJoin()
+                .where(
+                        eqMemberId(condition.getMemberId()),
+                        eqYear(condition.getYear())
+                )
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                .fetch();
+
+        List<OrderDto> orderDtos = orders.stream().map(OrderDto::of).toList();
+
+        return new PageImpl<>(orderDtos, pageable, orderDtos.size());
+    }
+
+    private BooleanExpression eqYear(String year) {
+        return hasText(year) ? order.createdAt.year().eq(Integer.parseInt(year)) : null;
+    }
+
+    private BooleanExpression eqMemberId(Long memberId) {
+        return order.member.id.eq(memberId);
     }
 }
