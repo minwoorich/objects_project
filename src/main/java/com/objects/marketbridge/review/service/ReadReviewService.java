@@ -1,6 +1,6 @@
 package com.objects.marketbridge.review.service;
 
-import com.objects.marketbridge.common.domain.Review;
+import com.objects.marketbridge.product.domain.Review;
 import com.objects.marketbridge.review.controller.response.ReadReviewResponseDto;
 import com.objects.marketbridge.review.service.port.ReviewRepository;
 import lombok.RequiredArgsConstructor;

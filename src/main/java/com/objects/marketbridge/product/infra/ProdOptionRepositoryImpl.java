@@ -1,6 +1,6 @@
 package com.objects.marketbridge.product.infra;
 
-import com.objects.marketbridge.common.domain.ProdOption;
+import com.objects.marketbridge.product.domain.ProdOption;
 import com.objects.marketbridge.product.service.port.ProdOptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

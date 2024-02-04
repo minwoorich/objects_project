@@ -1,6 +1,6 @@
 package com.objects.marketbridge.product.service.port;
 
-import com.objects.marketbridge.common.domain.ProductImage;
+import com.objects.marketbridge.product.domain.ProductImage;
 
 import java.util.List;
 

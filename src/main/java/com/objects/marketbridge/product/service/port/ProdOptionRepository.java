@@ -1,6 +1,6 @@
 package com.objects.marketbridge.product.service.port;
 
-import com.objects.marketbridge.common.domain.ProdOption;
+import com.objects.marketbridge.product.domain.ProdOption;
 
 public interface ProdOptionRepository {
 

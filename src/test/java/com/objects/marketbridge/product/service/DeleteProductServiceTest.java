@@ -1,12 +1,11 @@
 package com.objects.marketbridge.product.service;
 
 import com.objects.marketbridge.category.service.port.CategoryRepository;
-import com.objects.marketbridge.common.domain.Category;
-import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.product.domain.Category;
+import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.controller.request.DeleteProductRequestDto;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

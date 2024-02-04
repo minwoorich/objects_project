@@ -1,5 +1,6 @@
-package com.objects.marketbridge.common.domain;
+package com.objects.marketbridge.product.domain;
 
+import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import jakarta.persistence.*;
@@ -16,7 +17,7 @@ import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Product extends BaseEntity{
+public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

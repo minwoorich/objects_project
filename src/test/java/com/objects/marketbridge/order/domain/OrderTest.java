@@ -2,8 +2,6 @@ package com.objects.marketbridge.order.domain;
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.mock.TestDateTimeHolder;
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
@@ -11,7 +9,7 @@ import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.MemberCoupon;
-import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
