@@ -41,8 +41,8 @@ public class MemberController {
     public ApiResponse<List<Address>> addAddressValue(
             @AuthMemberId Long memberId,
             @Valid @RequestBody Address request){
+       //서비스 쪽으로
         Member member = memberRepository.findById(memberId);
-
         member.addAddress(request);
 
        return ApiResponse.ok(member.getAddresses());
