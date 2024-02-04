@@ -1,7 +1,7 @@
 package com.objects.marketbridge.category.infra;
 
 import com.objects.marketbridge.category.service.port.CategoryRepository;
-import com.objects.marketbridge.product.domain.Category;
+import com.objects.marketbridge.category.domain.Category;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

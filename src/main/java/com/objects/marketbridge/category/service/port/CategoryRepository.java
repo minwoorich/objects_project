@@ -1,6 +1,6 @@
 package com.objects.marketbridge.category.service.port;
 
-import com.objects.marketbridge.product.domain.Category;
+import com.objects.marketbridge.category.domain.Category;
 
 import java.util.List;
 

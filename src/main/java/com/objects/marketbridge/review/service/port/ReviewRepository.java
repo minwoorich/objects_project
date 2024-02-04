@@ -1,6 +1,6 @@
 package com.objects.marketbridge.review.service.port;
 
-import com.objects.marketbridge.product.domain.Review;
+import com.objects.marketbridge.review.domain.Review;
 
 public interface ReviewRepository {
 
