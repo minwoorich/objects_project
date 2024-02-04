@@ -1,6 +1,6 @@
 package com.objects.marketbridge.review.infra;
 
-import com.objects.marketbridge.product.domain.Review;
+import com.objects.marketbridge.review.domain.Review;
 import com.objects.marketbridge.review.service.port.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

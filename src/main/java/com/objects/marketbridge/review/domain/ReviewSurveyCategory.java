@@ -1,4 +1,4 @@
-package com.objects.marketbridge.product.domain;
+package com.objects.marketbridge.review.domain;
 
 import com.objects.marketbridge.common.domain.BaseEntity;
 import jakarta.persistence.*;
@@ -10,21 +10,21 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Image extends BaseEntity {
+public class ReviewSurveyCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "image_id")
+    @Column(name = "review_survey_category_id")
     private Long id;
 
-    //String으로 할것. 예시 : ImageType.ITEM_IMG.toString()
-    private String type;
+    // TODO
+    private Long productId;
 
-    private String url;
+    private String name;
 
     @Builder
-    private Image(String type, String url) {
-        this.type = type;
-        this.url = url;
+    private ReviewSurveyCategory(Long productId, String name) {
+        this.productId = productId;
+        this.name = name;
     }
 }

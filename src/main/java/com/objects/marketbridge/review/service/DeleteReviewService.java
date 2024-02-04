@@ -1,6 +1,6 @@
 package com.objects.marketbridge.review.service;
 
-import com.objects.marketbridge.product.domain.Review;
+import com.objects.marketbridge.review.domain.Review;
 import com.objects.marketbridge.review.controller.request.DeleteReviewRequestDto;
 import com.objects.marketbridge.review.controller.response.DeleteReviewResponseDto;
 import com.objects.marketbridge.review.service.port.ReviewRepository;

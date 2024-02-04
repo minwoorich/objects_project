@@ -1,6 +1,6 @@
 package com.objects.marketbridge.category.infra;
 
-import com.objects.marketbridge.product.domain.Category;
+import com.objects.marketbridge.category.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

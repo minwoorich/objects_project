@@ -1,4 +1,4 @@
-package com.objects.marketbridge.product.domain;
+package com.objects.marketbridge.review.domain;
 
 import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.common.domain.SurveyContent;
@@ -32,7 +32,7 @@ public class ReviewSurvey extends BaseEntity {
     private SurveyContent surveyContentId;
 
     @Builder
-    private ReviewSurvey(Review reviewId, ReviewSurveyCategory reviewSurveyCategoryId ,SurveyContent surveyContentId) {
+    private ReviewSurvey(Review reviewId, ReviewSurveyCategory reviewSurveyCategoryId , SurveyContent surveyContentId) {
         this.reviewId = reviewId;
         this.reviewSurveyCategoryId = reviewSurveyCategoryId;
         this.surveyContentId = surveyContentId;

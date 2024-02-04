@@ -1,4 +1,4 @@
-package com.objects.marketbridge.product.domain;
+package com.objects.marketbridge.category.domain;
 
 import com.objects.marketbridge.common.domain.BaseEntity;
 import jakarta.persistence.*;

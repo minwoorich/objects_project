@@ -1,6 +1,6 @@
 package com.objects.marketbridge.review.service;
 
-import com.objects.marketbridge.product.domain.Review;
+import com.objects.marketbridge.review.domain.Review;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.review.controller.request.CreateReviewRequestDto;
