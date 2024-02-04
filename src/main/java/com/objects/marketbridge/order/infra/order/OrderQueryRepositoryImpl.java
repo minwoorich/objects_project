@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.objects.marketbridge.common.domain.QProduct.product;
 import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
+import static com.objects.marketbridge.product.domain.QProduct.product;
 
 @Repository
 public class OrderQueryRepositoryImpl implements OrderQueryRepository {

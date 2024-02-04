@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.service.dto;
 
-import com.objects.marketbridge.common.domain.Product;
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.product.domain.Product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
