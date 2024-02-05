@@ -1,6 +1,6 @@
 package com.objects.marketbridge.member.service.port;
 
-import com.objects.marketbridge.common.domain.Membership;
+import com.objects.marketbridge.member.domain.Membership;
 
 public interface MembershipRepository {
 

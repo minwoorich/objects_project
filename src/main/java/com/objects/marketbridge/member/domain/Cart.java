@@ -1,4 +1,4 @@
-package com.objects.marketbridge.common.domain;
+package com.objects.marketbridge.member.domain;
 
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.*;

@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.service.dto;
 
-import com.objects.marketbridge.common.domain.AddressValue;
+import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.order.domain.Order;
 import lombok.Builder;
 import lombok.Getter;

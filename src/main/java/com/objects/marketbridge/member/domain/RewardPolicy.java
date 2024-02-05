@@ -1,4 +1,4 @@
-package com.objects.marketbridge.common.domain;
+package com.objects.marketbridge.member.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,17 +9,19 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Tag extends BaseEntity{
+public class RewardPolicy extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tag_id")
+    @Column(name = "reward_id")
     private Long id;
 
-    private String name;
+    private String type;
+    private Long rate;
 
     @Builder
-    private Tag(String name) {
-        this.name = name;
+    public RewardPolicy(String type, Long rate) {
+        this.type = type;
+        this.rate = rate;
     }
 }

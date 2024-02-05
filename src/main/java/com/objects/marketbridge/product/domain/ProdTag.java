@@ -1,8 +1,7 @@
 package com.objects.marketbridge.product.domain;
 
-import com.objects.marketbridge.common.domain.BaseEntity;
-import com.objects.marketbridge.common.domain.Tag;
-import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.member.domain.BaseEntity;
+import com.objects.marketbridge.member.domain.Tag;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

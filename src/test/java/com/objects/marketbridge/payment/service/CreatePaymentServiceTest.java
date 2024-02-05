@@ -1,7 +1,7 @@
 package com.objects.marketbridge.payment.service;
 
-import com.objects.marketbridge.common.domain.AddressValue;
-import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.member.domain.AddressValue;
+import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
 import com.objects.marketbridge.member.service.port.MemberRepository;
@@ -17,7 +17,6 @@ import com.objects.marketbridge.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
