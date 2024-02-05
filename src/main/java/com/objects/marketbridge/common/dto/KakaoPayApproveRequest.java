@@ -10,12 +10,9 @@ import org.springframework.util.MultiValueMap;
 public class KakaoPayApproveRequest {
 
     private String cid;
-
     private String tid;
-
     @JsonProperty("partner_order_id")
     private String partnerOrderId;
-
     @JsonProperty("partner_user_id")
     private String partnerUserId;
 
@@ -23,10 +20,10 @@ public class KakaoPayApproveRequest {
     private String pgToken;
 
     @JsonProperty("total_amount")
-    private String totalAmount;
+    private Long totalAmount;
 
     @Builder
-    public KakaoPayApproveRequest(String cid, String tid, String partnerOrderId, String partnerUserId, String pgToken, String totalAmount) {
+    public KakaoPayApproveRequest(String cid, String tid, String partnerOrderId, String partnerUserId, String pgToken, Long totalAmount) {
         this.cid = cid;
         this.tid = tid;
         this.partnerOrderId = partnerOrderId;
@@ -37,15 +34,14 @@ public class KakaoPayApproveRequest {
 
     public MultiValueMap<String, String> toMultiValueMap() {
 
-        MultiValueMap<String, String> requestMap
-                = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
 
         requestMap.add("cid", cid);
         requestMap.add("tid", tid);
         requestMap.add("partner_order_id", partnerOrderId);
         requestMap.add("partner_user_id",  partnerUserId);
         requestMap.add("pg_token",  pgToken);
-        requestMap.add("total_amount",  totalAmount);
+        requestMap.add("total_amount",  totalAmount.toString());
 
         return requestMap;
     }

@@ -7,6 +7,8 @@ public interface PaymentRepository {
     void save(Payment payment);
     Payment findById(Long id);
 
+    Payment findByTid(String tid);
+
     Payment findByOrderId(Long orderId);
 
     Payment findByOrderNo(String orderNo);

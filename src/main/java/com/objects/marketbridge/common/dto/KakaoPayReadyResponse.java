@@ -3,12 +3,13 @@ package com.objects.marketbridge.common.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class KakaoPayReadyResponse {
 
     private String tid; // 결제 고유 번호
-
     @JsonProperty("next_redirect_pc_url")
     private String nextRedirectPcUrl; // 요청한 클라이언트가 PC 웹일 경우
 
@@ -28,7 +29,7 @@ public class KakaoPayReadyResponse {
     private String createdAt; // 결제 준비 요청 시간
 
     @Builder
-    public KakaoPayReadyResponse(String tid, String nextRedirectPcUrl, String nextRedirectAppUrl, String nextRedirectMobileUrl, String androidAppScheme, String iosAppScheme, String createdAt) {
+    private KakaoPayReadyResponse(String tid, String nextRedirectPcUrl, String nextRedirectAppUrl, String nextRedirectMobileUrl, String androidAppScheme, String iosAppScheme, String createdAt) {
         this.tid = tid;
         this.nextRedirectPcUrl = nextRedirectPcUrl;
         this.nextRedirectAppUrl = nextRedirectAppUrl;

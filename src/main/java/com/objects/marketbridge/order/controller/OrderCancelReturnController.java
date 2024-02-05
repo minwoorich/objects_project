@@ -1,66 +1,68 @@
-//package com.objects.marketbridge.domain.order.controller;
-//
-//import com.objects.marketbridge.domain.order.controller.request.OrderCancelRequest;
-//import com.objects.marketbridge.domain.order.controller.response.OrderCancelResponse;
-//import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnDetailResponse;
-//import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnListResponse;
-//import com.objects.marketbridge.domain.order.controller.response.OrderCancelReturnResponse;
-//import com.objects.marketbridge.domain.order.dto.OrderReturnResponse;
-//import com.objects.marketbridge.domain.order.service.OrderCancelReturnService;
-//import com.objects.marketbridge.common.interceptor.ApiResponse;
-//import jakarta.validation.Valid;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.PageRequest;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.time.LocalDateTime;
-//import java.util.List;
-//
-//@RestController
-//@RequiredArgsConstructor
-//public class OrderCancelReturnController {
-//
-//    private final OrderCancelReturnService orderCancelReturnService;
-//
-//    @PostMapping("/orders/cancel-return-flow/thank-you")
-//    public ApiResponse<OrderCancelReturnResponse> cancelReturnOrder(@RequestBody @Valid OrderCancelRequest request) {
-//        return ApiResponse.ok(orderCancelReturnService.cancelReturnOrder(request.toServiceRequest(), LocalDateTime.now()));
-//    }
-//
-//    @GetMapping("/orders/cancel-flow")
-//    public ApiResponse<OrderCancelResponse> requestCancelOrder(
-//            @RequestParam(name = "orderId") Long orderId,
-//            @RequestParam(name = "productIds") List<Long> productIds
-//    ) {
-//        return ApiResponse.ok(orderCancelReturnService.requestCancel(orderId, productIds));
-//    }
-//
-//    @GetMapping("/orders/return-flow")
-//    public ApiResponse<OrderReturnResponse> requestReturnOrder(
-//            @RequestParam(name = "orderId") Long orderId,
-//            @RequestParam(name = "productIds") List<Long> productIds
-//    ) {
-//        return ApiResponse.ok(orderCancelReturnService.requestReturn(orderId, productIds));
-//    }
-//
-//    @GetMapping("/orders/cancel-return/list")
-//    public ApiResponse<Page<OrderCancelReturnListResponse>> getCancelReturnList(
-//            @RequestParam(name = "memberId") Long memberId,
-//            @RequestParam(name = "page") Integer page,
-//            @RequestParam(name = "size") Integer size) {
-//
-//        PageRequest pageRequest = PageRequest.of(page, size);
-//        return ApiResponse.ok(orderCancelReturnService.findCancelReturnList(memberId, pageRequest));
-//    }
-//
-//    @GetMapping("/orders/cancel-return/{orderNo}")
-//    public ApiResponse<OrderCancelReturnDetailResponse> getCancelReturnDetail(
-//            @PathVariable(name = "orderNo") String orderNo,
-//            @RequestParam(name = "paymentId") Long paymentId,
-//            @RequestParam(name = "receiptType") String receiptType,
-//            @RequestParam(name = "productIds") List<Long> productIds
-//    ) {
-//        return ApiResponse.ok(orderCancelReturnService.findCancelReturnDetail(orderNo, paymentId, productIds));
-//    }
-//}
+package com.objects.marketbridge.order.controller;
+
+
+import com.objects.marketbridge.common.interceptor.ApiResponse;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.order.controller.dto.*;
+import com.objects.marketbridge.order.service.OrderCancelReturnService;
+import com.objects.marketbridge.order.service.port.OrderDtoRepository;
+import jakarta.validation.Valid;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static com.objects.marketbridge.member.domain.MembershipType.WOW;
+
+@Builder
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/orders")
+public class OrderCancelReturnController {
+
+    private final OrderCancelReturnService orderCancelReturnService;
+    private final OrderDtoRepository orderDtoRepository;
+    private final DateTimeHolder dateTimeHolder;
+
+    @PostMapping("/cancel-return-flow/thank-you")
+    public ApiResponse<ConfirmCancelReturnHttp.Response> confirmCancelReturn(@RequestBody @Valid ConfirmCancelReturnHttp.Request request) {
+        return ApiResponse.ok(ConfirmCancelReturnHttp.Response.of(orderCancelReturnService.confirmCancelReturn(request.toServiceRequest(), dateTimeHolder)));
+    }
+
+    @GetMapping("/cancel-flow")
+    public ApiResponse<RequestCancelHttp.Response> requestCancel(
+            @RequestParam(name = "orderNo") String orderNo,
+            @RequestParam(name = "productIds") List<Long> productIds
+    ) {
+        return ApiResponse.ok(RequestCancelHttp.Response.of(orderCancelReturnService.findCancelInfo(orderNo, productIds, WOW.getText())));
+    }
+
+    @GetMapping("/return-flow")
+    public ApiResponse<RequestReturnHttp.Response> requestReturn (
+            @RequestParam(name = "orderNo") String orderNo,
+            @RequestParam(name = "productIds") List<Long> productIds
+    ) {
+        return ApiResponse.ok(RequestReturnHttp.Response.of(orderCancelReturnService.findReturnInfo(orderNo, productIds, WOW.getText())));
+    }
+
+    @GetMapping("/cancel-return/list")
+    public ApiResponse<Page<GetCancelReturnListHttp.Response>> getCancelReturnList (
+            @RequestParam(name = "memberId") Long memberId,
+            @RequestParam(name = "page") Integer page,
+            @RequestParam(name = "size") Integer size) {
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return ApiResponse.ok(GetCancelReturnListHttp.Response.of(orderDtoRepository.findOrdersByMemberId(memberId, pageRequest)));
+    }
+
+    @GetMapping("/cancel-return/{orderNo}")
+    public ApiResponse<GetCancelReturnDetailHttp.Response> getCancelReturnDetail(
+            @PathVariable(name = "orderNo") String orderNo,
+            @RequestParam(name = "productIds") List<Long> productIds
+    ) {
+        return ApiResponse.ok(GetCancelReturnDetailHttp.Response.of(orderCancelReturnService.findCancelReturnDetail(orderNo, productIds, WOW.getText(), dateTimeHolder)));
+    }
+}

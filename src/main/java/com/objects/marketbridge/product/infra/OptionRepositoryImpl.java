@@ -1,9 +1,10 @@
 package com.objects.marketbridge.product.infra;
 
-import com.objects.marketbridge.common.domain.Option;
+import com.objects.marketbridge.product.domain.Option;
 import com.objects.marketbridge.product.service.port.OptionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -19,7 +20,7 @@ public class OptionRepositoryImpl implements OptionRepository {
 
     @Override
     public Option findById(Long id) {
-        return optionJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return optionJpaRepository.findById(id).orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
     }
 
     @Override

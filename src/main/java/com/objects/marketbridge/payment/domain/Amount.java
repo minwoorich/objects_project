@@ -17,9 +17,13 @@ public class Amount {
     @JsonProperty("discount")
     private Long discountAmount;
 
+    @JsonProperty("tax_free")
+    private Long taxFreeAmount;
+
     @Builder
-    public Amount(Long totalAmount, Long discountAmount) {
+    public Amount(Long totalAmount, Long discountAmount, Long taxFreeAmount) {
         this.totalAmount = totalAmount;
         this.discountAmount = discountAmount;
+        this.taxFreeAmount=taxFreeAmount;
     }
 }

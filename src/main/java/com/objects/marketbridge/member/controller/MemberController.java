@@ -1,22 +1,20 @@
 package com.objects.marketbridge.member.controller;
 
+import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.MemberService;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
-import com.objects.marketbridge.common.security.annotation.GetAuthentication;
-import com.objects.marketbridge.common.security.dto.JwtTokenDto;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
-import com.objects.marketbridge.common.security.user.CustomUserDetails;
-import com.objects.marketbridge.member.constant.MemberConst;
+import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.order.domain.Address;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
-import com.objects.marketbridge.member.dto.FindPointDto;
-import com.objects.marketbridge.member.dto.SignInDto;
-import com.objects.marketbridge.member.dto.SignUpDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+
+import java.util.List;
+
 
 @Slf4j
 @RestController
@@ -25,47 +23,23 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
+
+    @PostMapping("/address")
+    public ApiResponse<List<Address>> addAddressValue(
+            @AuthMemberId Long memberId,
+            @Valid @RequestBody Address request){
+        Member member = memberRepository.findById(memberId);
+
+        member.addAddress(request);
+
+       return ApiResponse.ok(member.getAddresses());
+    }
 
     @GetMapping("/check-email")
     public ApiResponse<CheckedResultDto> checkDuplicateEmail(@RequestParam(name="email") String email) {
-        CheckedResultDto checked = memberService.isDuplicateEmail(email);
-        return ApiResponse.ok(checked);
+        CheckedResultDto checkedResultDto = memberService.isDuplicateEmail(email);
+        return ApiResponse.ok(checkedResultDto);
     }
 
-    @PostMapping("/sign-up")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Void> signUp(@Valid @RequestBody SignUpDto signUpDto) throws BadRequestException {
-        memberService.save(signUpDto);
-        return ApiResponse.create();
-    }
-
-    @PostMapping("/sign-in")
-    public ApiResponse<JwtTokenDto> signIn(@Valid @RequestBody SignInDto signInDto) {
-        JwtTokenDto jwtTokenDto = memberService.signIn(signInDto);
-        return ApiResponse.ok(jwtTokenDto);
-    }
-
-    @DeleteMapping("/sign-out")
-    public ApiResponse<Void> signOut(@AuthMemberId Long memberId) {
-        memberService.signOut(memberId);
-        return ApiResponse.of(HttpStatus.OK, MemberConst.LOGGED_OUT_SUCCESSFULLY, null);
-    }
-
-    @PutMapping("/re-issue")
-    public ApiResponse<JwtTokenDto> reIssueToken(@GetAuthentication CustomUserDetails principal) {
-        JwtTokenDto jwtTokenDto = memberService.reIssueToken(principal);
-        return ApiResponse.ok(jwtTokenDto);
-    }
-
-    @GetMapping("/membership/{id}")
-    public void changeMembership(@PathVariable Long id){
-        memberService.changeMemberShip(id);
-    }
-
-//    @GetMapping("/point/{id}")
-//    public ApiResponse<FindPointDto> findPointById(@PathVariable Long id){
-//
-//        FindPointDto memberPoint = memberService.findPointById(id);
-//        return ApiResponse.of(HttpStatus.OK, memberPoint);
-//    }
 }

@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Embeddable
 public class CardInfo {
-
+    //카카오페이 발급사명
     @JsonProperty("kakaopay_issuer_corp")
     private String cardIssuerName;
-
+    //카카오페이 매입사명
     @JsonProperty("kakaopay_purchase_corp")
     private String cardPurchaseName;
 

@@ -1,8 +1,9 @@
 package com.objects.marketbridge.product.infra;
 
-import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product findById(Long id) {
-        return productJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return productJpaRepository.findById(id).orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
     }
 
     @Override
@@ -39,12 +40,17 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void save(Product product) {
-        productJpaRepository.save(product);
+    public Product save(Product product) {
+        return productJpaRepository.save(product);
     }
 
     @Override
     public void saveAll(List<Product> products) {
         productJpaRepository.saveAll(products);
+    }
+
+    @Override
+    public void delete(Product product) {
+        productJpaRepository.delete(product);
     }
 }

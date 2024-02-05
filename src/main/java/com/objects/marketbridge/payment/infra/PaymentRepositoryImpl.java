@@ -22,13 +22,18 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     }
 
     @Override
+    public Payment findByTid(String tid) {
+        return paymentJpaRepository.findByTid(tid).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
     public Payment findByOrderId(Long orderId) {
-        return paymentJpaRepository.findByOrderId(orderId);
+        return paymentJpaRepository.findByOrderId(orderId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
     public Payment findByOrderNo(String orderNo) {
-        return paymentJpaRepository.findByOrderNo(orderNo);
+        return paymentJpaRepository.findByOrderNo(orderNo).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

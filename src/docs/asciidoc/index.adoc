@@ -14,18 +14,13 @@ endif::[]
 Doc Writer <Team Objects Backend>
 v1.0, 2024-01-25
 
-<<<<<<< HEAD
-[[OrderReturnCancel-API]]
-== OrderCancel API
-=======
 == *회원*
-
-=== *인증*
 
 include::api/member/checkemail.adoc[]
 {empty}
 {empty}
 
+=== *인증*
 include::api/member/signup.adoc[]
 {empty}
 {empty}
@@ -51,7 +46,6 @@ include::api/member/reissue.adoc[]
 {empty}
 
 == *주문/결제*
->>>>>>> feature/user
 
 include::api/order/ordercancelreturn.adoc[]
 {empty}
@@ -62,24 +56,28 @@ include::api/order/ordercancel.adoc[]
 {empty}
 
 include::api/order/orderreturn.adoc[]
-<<<<<<< HEAD
+{empty}
+{empty}
+
 include::api/order/ordercancelreturnlist.adoc[]
+{empty}
+{empty}
+
 include::api/order/ordercancelreturndetail.adoc[]
+{empty}
+{empty}
 
 [[OrderCreate-API]]
 == OrderCreate API
-
-// include::api/order/ordercreate.adoc[]
+include::api/order/ordercreate.adoc[]
 
 [[OrderCheckout-API]]
 == OrderCheckout API
 
-// include::api/order/ordercheckout.adoc[]
-=======
+include::api/order/ordercheckout.adoc[]
 {empty}
 {empty}
 
->>>>>>> feature/user
 // [[Order-API]]
 // == Order API
 //

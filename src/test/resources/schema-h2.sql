@@ -1,21 +1,50 @@
 DROP TABLE IF EXISTS member;
 
 CREATE TABLE member (
-                          member_id	bigint auto_increment
+                        member_id	bigint auto_increment
                             primary key,
-                            
-                          member_type	varchar(255)	,
-                          social_type	varchar(255)	,
-                          membership	varchar(255)	,
-                          email	varchar(255)	,
-                          password	varchar(255)	,
-                          name	varchar(255)	,
-                          phone_no	varchar(255)	,
-                          is_alert	bit	,
-                          is_agree	bit	,
-                          created_at	timestamp	,
-                          updated_at	timestamp	,
-                          deleted_at	timestamp	
+
+                        social_type	varchar(255)	,
+                        member_type	varchar(255)	,
+                        membership	varchar(255)	,
+                        email	varchar(255)	,
+                        password	varchar(255)	,
+                        name	varchar(255)	,
+                        phone_no	varchar(255)	,
+                        is_alert	bit	,
+                        is_agree	bit	,
+                        created_at	datetime(6)	,
+                        updated_at	datetime(6)	,
+                        deleted_at	datetime(6)
+);
+
+DROP TABLE IF EXISTS membership;
+
+CREATE TABLE membership (
+                        membership_id	bigint auto_increment
+                            primary key,
+
+                        member_id	varchar(255)	,
+                        cid varchar(255)	,
+                        tid	varchar(255)	,
+                        sid	varchar(255)	,
+                        item_name varchar(255),
+                        subs_order_no	varchar(255)	,
+                        partner_order_id varchar(255)   ,
+                        partner_user_id varchar(255)   ,
+                        status_code	varchar(255)	,
+                        payment_method	varchar(255)	,
+                        quantity bigint ,
+                        total_amount bigint,
+                        discount_amount bigint,
+                        tax_free_amount bigint,
+                        card_issuer_name	varchar(255)	,
+                        card_purchase_name	varchar(255)	,
+                        card_no	varchar(255)	,
+                        card_install_month	BIGINT	,
+                        created_at	datetime(6)	,
+                        updated_at	datetime(6)	,
+                        deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS seller;
@@ -32,6 +61,7 @@ CREATE TABLE seller (
                           license_no	varchar(255)	,
                           email	varchar(255)	,
                           account_no	varchar(255)	,
+                          balance	bigint	,
                           created_at	timestamp	,
                           updated_at	timestamp	,
                           deleted_at	timestamp	
@@ -73,8 +103,8 @@ DROP TABLE IF EXISTS category;
 CREATE TABLE category (
                             category_id	bigint auto_increment
                                 primary key,
-                            prev_id	bigint	,
-                            next_id	bigint	,
+                            parent_id	bigint	,
+                            level	bigint	,
                             name	varchar(255)	,
                             created_at	timestamp	,
                             updated_at	timestamp	,
@@ -112,6 +142,7 @@ CREATE TABLE product_image (
                                      primary key,
                                  product_id	bigint	,
                                  image_id	bigint	,
+                                 seq_no bigint ,
                                  created_at	timestamp	,
                                  updated_at	timestamp	,
                                  deleted_at	timestamp	
@@ -197,21 +228,20 @@ CREATE TABLE status_code (
 DROP TABLE IF EXISTS orders;
 
 CREATE TABLE orders (
-                              order_id	bigint auto_increment
-                                  primary key,
+                        order_id	bigint auto_increment
+                            primary key,
 
-                              member_id	bigint	,
-                              address_id bigint	,
-                              order_name	varchar(255)	,
-                              order_no	varchar(255)	,
-                              total_used_coupon_price	bigint	,
-                              total_price	bigint	,
-                              real_price	bigint	,
-                              used_point    bigint  ,
-                              tid         varchar(255),
-                              created_at	timestamp	,
-                              updated_at	timestamp	,
-                              deleted_at	timestamp	
+                        member_id	bigint	,
+                        address_id bigint	,
+                        order_name	varchar(255)	,
+                        order_no	varchar(255)	,
+                        total_discount	bigint	,
+                        total_price	bigint	,
+                        real_price	bigint	,
+                        tid         varchar(255),
+                        created_at	datetime(6)	,
+                        updated_at	datetime(6)	,
+                        deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS order_detail;
@@ -223,7 +253,8 @@ CREATE TABLE order_detail (
                                      order_id	bigint	,
                                      product_id	bigint	,
                                      order_no varchar(255),
-                                     coupon_id	bigint	,
+                                     member_coupon_id	bigint	,
+                                     seller_id	bigint	,
                                      reward_type	varchar(255)	,
                                      quantity	bigint	,
                                      price	bigint	,
@@ -247,13 +278,14 @@ CREATE TABLE payment (
                          order_no	varchar(255)	,
                          payment_method	varchar(255)	,
                          tid	varchar(255)	,
-
                          card_issuer_name	varchar(255)	,
                          card_purchase_name	varchar(255)	,
                          card_no	varchar(255)	,
                          card_install_month	BIGINT	,
                          total_amount BIGINT,
                          discount_amount BIGINT,
+                         tax_free_amount BIGINT,
+                         approved_at	datetime(6)	,
                          deleted_at	datetime(6)	,
                          updated_at	datetime(6)	,
                          created_at	datetime(6)
@@ -547,7 +579,6 @@ DROP TABLE IF EXISTS product;
 CREATE TABLE product (
                            product_id	bigint auto_increment primary key,
                            category_id	bigint	,
-                           product_no	varchar(255)	,
                            is_own	bit	,
                            name	varchar(255)	,
                            price	bigint	,
@@ -555,6 +586,7 @@ CREATE TABLE product (
                            stock	bigint	,
                            thumb_img	varchar(255)	,
                            discount_rate	bigint	,
+                           product_no	varchar(255)	,
                            created_at	timestamp	,
                            updated_at	timestamp	,
                            deleted_at	timestamp	
@@ -568,7 +600,8 @@ create table seller_account
     seller_id         BIGINT null,
     incoming          BIGINT null,
     outgoing          BIGINT null,
-    balance           BIGINT null
+    balance           BIGINT null,
+    detail           varchar(255)
 
 );
 

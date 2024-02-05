@@ -3,10 +3,12 @@ package com.objects.marketbridge.common.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 @Getter
+@NoArgsConstructor
 public class KakaoPayReadyRequest {
 
     private String cid;

@@ -36,6 +36,7 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 
 	// RestDocs
 	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
@@ -62,6 +63,14 @@ dependencies {
 
 	// WebClient 사용시 필요
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// Apache POI //category데이터 excel에서 db로 등록시 필요
+	implementation 'org.apache.poi:poi:4.1.2'
+	implementation 'org.apache.poi:poi-ooxml:4.1.2' // 1.19	버전의 취약점으로 1.21버전 추가 설치
+	implementation 'org.apache.commons:commons-compress:1.21'
+
+	//LocalDateTime 처리 라이브러리
+//	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
 ext { // 전역 변수
@@ -112,7 +121,7 @@ bootJar {
 
 def querydslDir = "src/main/generated"
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
 	options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
 //	options.compilerArgs.add("parameters")
 }

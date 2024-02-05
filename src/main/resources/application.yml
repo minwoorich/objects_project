@@ -7,6 +7,7 @@ spring:
   config:
     activate:
       on-profile: local
+
   sql:
     init:
       mode: always
@@ -20,10 +21,10 @@ spring:
     username: objects
     password: 1234
 
-datasource:
-url: jdbc:h2:tcp://localhost/~/Marketbridge
-username: sa
-password:
+#datasource:
+#url: jdbc:h2:tcp://localhost/~/Marketbridge
+#username: sa
+#password:
   jpa:
     hibernate:
       ddl-auto: none
@@ -50,10 +51,12 @@ logging:
 
 payment:
   kakao:
-    admin_key : "38ef7d9f7a2a2a43c93de1f5bb3ea2f5"
-    test_api_key : "13d26c106e60b48a0ae5d8280e0ceb10"
+    client_id : "AE7564ADF66B30123C2A"
+    client_secret : "94B65EF567BCB6E860B4"
+    secret_key: "PRD4A3CDADAF6C09168BA3E4725A3C678A78B271"
+    secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
 
-host: "http://localhost:8080/"
+host: "http://localhost:8080"
 
 ---
 
@@ -76,6 +79,7 @@ spring:
     secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
 
   datasource:
+#    url: jdbc:h2:tcp://localhost/~/Marketbridge
     url: jdbc:h2:mem:~/Marketbridge
     driver-class-name: org.h2.Driver
     username: sa
@@ -84,9 +88,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
     properties:
       hibernate:
+        show_sql: true
         format_sql: true
         default_batch_fetch_size: 100
     defer-datasource-initialization: true
@@ -101,7 +105,9 @@ logging:
 
 payment:
   kakao:
-    admin_key: "38ef7d9f7a2a2a43c93de1f5bb3ea2f5"
-    test_api_key: "13d26c106e60b48a0ae5d8280e0ceb10"
+    client_id : "AE7564ADF66B30123C2A"
+    client_secret : "94B65EF567BCB6E860B4"
+    secret_key: "PRD4A3CDADAF6C09168BA3E4725A3C678A78B271"
+    secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
 
 host: "http://localhost:8080/"

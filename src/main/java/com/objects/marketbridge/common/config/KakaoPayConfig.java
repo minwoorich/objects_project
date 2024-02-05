@@ -8,42 +8,51 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class KakaoPayConfig {
 
-    public static final String KAKAO_BASE_URL = "https://kapi.kakao.com/v1/payment";
+    public static final String KAKAO_BASE_URL = "https://open-api.kakaopay.com/online/v1/payment";
+
+    public static final String READY_END_POINT = "/ready";
+
+    public static final String APPROVE_END_POINT = "/approve";
+
+    public static final String SUBS_END_POINT = "/subscription";
+
+    public static final String CANCEL_END_POINT = "/cancel";
+
+    public static final String ORDER_END_POINT = "/order";
 
     public static final String ONE_TIME_CID = "TC0ONETIME";
 
     public static final String SUBS_CID = "TCSUBSCRIP";
 
-    public static final String KAKAO_AK = "kakaoAK ";
+    public static final String AUTH_SCHEME = "DEV_SECRET_KEY ";
 
-    public static final String READY_END_POINT = "/ready";
 
-    @Value("${payment.kakao.admin_key}")
-    public static String ADMIN_KEY;
+    @Value("${payment.kakao.client_id}")
+    private String clientId;
 
-    @Value("${payment.kakao.test_api_key}")
-    public static String TEST_API_KEY;
+    @Value("${payment.kakao.client_secret}")
+    private String clientSecret;
+
+    @Value("${payment.kakao.secret_key}")
+    private String secretKey;
+
+    @Value("${payment.kakao.secret_key_dev}")
+    private String secretKeyDev;
 
     @Value("${host}")
     private String host;
 
-    private final String cancelUrl = "/kakao-pay/cancel";
-
-    private final String failUrl = "/kakao-pay/fail";
-
-    private final String approvalUrl = "/kakao-pay/approval";
-
-
     public String getRedirectCancelUrl() {
-        return host + cancelUrl;
+        return host + "/kakao-pay/cancel";
     }
 
     public String getRedirectFailUrl() {
-        return host + failUrl;
+        return host + "/kakao-pay/fail";
     }
 
     public String createApprovalUrl(String uri) {
-        return host+uri+approvalUrl;
-
+        return host + uri + "/kakao-pay/approval";
     }
+
+
 }

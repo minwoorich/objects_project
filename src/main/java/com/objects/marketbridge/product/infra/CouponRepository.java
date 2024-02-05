@@ -1,6 +1,6 @@
 package com.objects.marketbridge.product.infra;
 
-import com.objects.marketbridge.common.domain.Coupon;
+import com.objects.marketbridge.member.domain.Coupon;
 
 import java.util.List;
 
