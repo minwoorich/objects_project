@@ -21,15 +21,18 @@ public class ReviewImage extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
-    private Review reviewId;
+    private Review review;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
-    private Image imageId;
+    private Image image;
+
+    private Long seqNo;
 
     @Builder
-    private ReviewImage(Review reviewId, Image imageId) {
-        this.reviewId = reviewId;
-        this.imageId = imageId;
+    private ReviewImage(Review review, Image image, Long seqNo) {
+        this.review = review;
+        this.image = image;
+        this.seqNo = seqNo;
     }
 }

@@ -10,13 +10,18 @@ import com.objects.marketbridge.product.controller.response.UpdateProductRespons
 import com.objects.marketbridge.product.service.*;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.UserAuthorize;
+import com.objects.marketbridge.product.service.dto.OptionDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/product")
 public class ProductController {
 
     private final BulkUploadProductService bulkUploadProductService;
@@ -28,28 +33,26 @@ public class ProductController {
 
     //상품들 Excel파일로 대량등록
     @UserAuthorize
-    @PostMapping("/products/uploadExcel")
+    @PostMapping("/uploadExcel")
     public String uploadExcelFile(@RequestParam("file") MultipartFile file){
         return bulkUploadProductService.uploadExcelFile(file);
     }
 
 
-
     //상품등록
     @UserAuthorize
-    @PostMapping("/products")
+    @PostMapping()
     public ApiResponse<CreateProductResponseDto> createProduct
-    (@Valid @RequestBody CreateProductRequestDto createProductRequestDto) {
-        Long productId = createProductService.create(createProductRequestDto);
+    (@Valid @RequestBody CreateProductRequestDto request) {
+        Long productId = createProductService.create(request);
         CreateProductResponseDto createProductResponseDto = new CreateProductResponseDto(productId);
         return ApiResponse.ok(createProductResponseDto);
     }
 
 
-
     //상품조회
     @UserAuthorize
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     public ApiResponse<ReadProductResponseDto> readProduct
     (@PathVariable("id") Long id){
         ReadProductResponseDto readProductResponseDto = readProductService.read(id);
@@ -57,10 +60,9 @@ public class ProductController {
     }
 
 
-
     //상품수정
     @UserAuthorize
-    @PatchMapping("/products/{id}")
+    @PatchMapping("/{id}")
     public ApiResponse<UpdateProductResponseDto> updateProduct
     (@PathVariable("id") Long id, @RequestBody @Valid UpdateProductRequestDto updateProductRequestDto) {
         UpdateProductResponseDto updateProductResponseDto
@@ -69,16 +71,12 @@ public class ProductController {
     }
 
 
-
     //상품삭제
     @UserAuthorize
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/{id}")
     public ApiResponse<DeleteProductResponseDto> deleteProduct
     (@PathVariable("id") Long id, @RequestBody @Valid DeleteProductRequestDto deleteProductRequestDto) {
         DeleteProductResponseDto deleteProductResponseDto = deleteProductService.delete(deleteProductRequestDto);
         return ApiResponse.ok(deleteProductResponseDto);
     }
-
-
-
 }
