@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.support.PageableUtils;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,8 +138,22 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
 
         // 엔티티 -> dto 로 변환
         List<OrderDto> orderDtos = orders.stream().map(OrderDto::of).toList();
+        JPAQuery<Long> countQuery = createCountOrdersQuery(condition);
+
+        PageableExecutionUtils.getPage(orderDtos, pageable, countQuery::fetchOne);
 
         return new PageImpl<>(orderDtos, pageable, orderDtos.size());
+    }
+
+    private JPAQuery<Long> createCountOrdersQuery(Condition condition) {
+        return queryFactory
+                .select(order.count())
+                .from(order)
+                .join(order.member, member)
+                .where(
+                        eqMemberId(condition.getMemberId()),
+                        eqYear(condition.getYear())
+                );
     }
 
     private BooleanExpression eqYear(String year) {

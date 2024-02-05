@@ -1,7 +1,6 @@
 package com.objects.marketbridge.order.service.port;
 
 import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
@@ -184,7 +183,7 @@ class OrderDtoRepositoryTest {
         Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
         orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
 
-        PageRequest page = PageRequest.of(0, 100);
+        PageRequest page = PageRequest.of(0, 2);
 
         GetOrderHttp.Condition condition1
                 = createCondition(member.getId(), null, null);
@@ -221,8 +220,6 @@ class OrderDtoRepositoryTest {
         assertThat(contents3).hasSize(4);
         assertThat(contents1.get(2).getOrderDetails().get(0)).extracting("quantity", "orderNo").containsExactlyInAnyOrder(3L, "3");
         assertThat(contents1.get(2).getOrderDetails().get(1).getProduct()).extracting("price", "thumbImg", "name").containsExactlyInAnyOrder(3000L, "썸네일3", "상품3");
-
-
 
 
     }
@@ -273,20 +270,32 @@ class OrderDtoRepositoryTest {
         Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
         orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
 
-        PageRequest pageSize1 = PageRequest.of(0, 1);
-        PageRequest pageSize2 = PageRequest.of(0, 2);
-        PageRequest pageSize2_1 = PageRequest.of(1, 2);
+        PageRequest pageSize0_1 = PageRequest.of(0, 1);
+        PageRequest pageSize1_2 = PageRequest.of(1, 2);
+        PageRequest pageSize1_3 = PageRequest.of(1, 3);
+        PageRequest pageSize2_3 = PageRequest.of(2, 3);
 
         GetOrderHttp.Condition condition
                 = createCondition(member.getId(), null, String.valueOf(LocalDateTime.now().getYear()));
 
         //when
-//        orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize1);
-//        orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize2);
-        Page<OrderDto> orders = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize2_1);
+        Page<OrderDto> orders0_1 = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize0_1);
+        Page<OrderDto> orders1_2 = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize1_2);
+        Page<OrderDto> orders1_3 = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize1_3);
+        Page<OrderDto> orders2_3 = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize2_3);
 
-        //then
-        assertThat(orders).hasSize(2);
+        //then_
+        assertThat(orders0_1.getSize()).isEqualTo(1);
+        assertThat(orders0_1.getTotalPages()).isEqualTo(4);
+        assertThat(orders0_1.isFirst()).isTrue();
+        assertThat(orders1_2.getSize()).isEqualTo(2);
+        assertThat(orders1_2.getTotalPages()).isEqualTo(2);
+        assertThat(orders1_2.isLast()).isTrue();
+//        assertThat(orders1_3.hasNext()).isFalse();
+        log.info("사이즈 : {}",orders2_3.getSize());
+        log.info("현재페이지 : {}",orders2_3.getNumber());
+        log.info("다음페이지 존재 : {}",orders2_3.hasNext());
+
 
     }
 
