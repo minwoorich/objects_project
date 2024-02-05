@@ -79,7 +79,7 @@ public class OrderDetail extends BaseEntity {
         this.statusCode = statusCode;
     }
 
-    public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long quantity, Long sellerId, String statusCode) {
+    public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long price, Long quantity, Long sellerId, String statusCode) {
 
         return OrderDetail.builder()
                 .tid(tid)
@@ -88,7 +88,7 @@ public class OrderDetail extends BaseEntity {
                 .product(product)
                 .memberCoupon(memberCoupon)
                 .quantity(quantity)
-                .price(product.getPrice() * quantity)
+                .price(price)
                 .sellerId(sellerId)
                 .statusCode(statusCode)
                 .build();

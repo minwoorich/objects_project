@@ -24,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
@@ -186,41 +187,44 @@ class OrderDtoRepositoryTest {
         PageRequest page = PageRequest.of(0, 100);
 
         GetOrderHttp.Condition condition1
-                = createCondition(1L, null, null);
+                = createCondition(member.getId(), null, null);
         GetOrderHttp.Condition condition2
-                = createCondition(1L, null, "1998");
+                = createCondition(member.getId(), null, "1998");
         GetOrderHttp.Condition condition3
-                = createCondition(1L, null, "2024");
+                = createCondition(member.getId(), null, String.valueOf(LocalDateTime.now().getYear()));
 
         //when
-        Page<OrderDto> orders = orderDtoRepository.findByMemberIdWithMemberAddress(condition1, page);
-        List<OrderDto> contents = orders.getContent();
+        Page<OrderDto> orders1 = orderDtoRepository.findByMemberIdWithMemberAddress(condition1, page);
+        List<OrderDto> contents1 = orders1.getContent();
+        Page<OrderDto> orders2 = orderDtoRepository.findByMemberIdWithMemberAddress(condition2, page);
+        List<OrderDto> contents2 = orders2.getContent();
+        Page<OrderDto> orders3 = orderDtoRepository.findByMemberIdWithMemberAddress(condition3, page);
+        List<OrderDto> contents3 = orders3.getContent();
 
         //then
-        // 주문 1
-        assertThat(contents).hasSize(4);
-        assertThat(contents.get(0)).extracting("memberId", "orderNo").containsExactlyInAnyOrder(1L, "1");
+        // condition 1
+        assertThat(contents1).hasSize(4);
+        assertThat(contents1.get(0)).extracting("memberId", "orderNo").containsExactlyInAnyOrder(member.getId(), "1");
+        assertThat(contents1.get(0).getAddress()).extracting("city", "street", "detail").containsExactlyInAnyOrder("서울", "세종대로", "민들레아파트");
 
-        assertThat(contents.get(0).getAddress()).extracting("city", "street", "detail").containsExactlyInAnyOrder("서울", "세종대로", "민들레아파트");
+        assertThat(contents1.get(0).getOrderDetails()).hasSize(3);
+        assertThat(contents1.get(0).getOrderDetails().get(0)).extracting("quantity", "orderNo").containsExactlyInAnyOrder(1L, "1");
+        assertThat(contents1.get(0).getOrderDetails().get(1).getProduct()).extracting("price", "thumbImg", "name").containsExactlyInAnyOrder(2000L, "썸네일2", "상품2");
 
-        assertThat(contents.get(0).getOrderDetails()).hasSize(3);
-        assertThat(contents.get(0).getOrderDetails().get(0)).extracting("quantity", "orderNo").containsExactlyInAnyOrder(1L, "1");
-        assertThat(contents.get(0).getOrderDetails().get(1).getProduct()).extracting("price", "thumbImg", "name").containsExactlyInAnyOrder(2000L, "썸네일2", "상품2");
+        assertThat(contents1.get(2).getOrderDetails().get(0)).extracting("quantity", "orderNo").containsExactlyInAnyOrder(3L, "3");
+        assertThat(contents1.get(2).getOrderDetails().get(1).getProduct()).extracting("price", "thumbImg", "name").containsExactlyInAnyOrder(3000L, "썸네일3", "상품3");
 
-        assertThat(contents.get(2).getOrderDetails().get(0)).extracting("quantity", "orderNo").containsExactlyInAnyOrder(3L, "3");
-        assertThat(contents.get(2).getOrderDetails().get(1).getProduct()).extracting("price", "thumbImg", "name").containsExactlyInAnyOrder(3000L, "썸네일3", "상품3");
+        // condtion 2
+        assertThat(contents2).hasSize(0);
+
+        // condtion 3
+        assertThat(contents3).hasSize(4);
+        assertThat(contents1.get(2).getOrderDetails().get(0)).extracting("quantity", "orderNo").containsExactlyInAnyOrder(3L, "3");
+        assertThat(contents1.get(2).getOrderDetails().get(1).getProduct()).extracting("price", "thumbImg", "name").containsExactlyInAnyOrder(3000L, "썸네일3", "상품3");
 
 
 
 
-    }
-
-    private Coupon createCoupon(Long price, String name, Product product) {
-        return Coupon.builder()
-                .product(product)
-                .name(name)
-                .price(price)
-                .build();
     }
 
     private Address createAddress(String city, String street, String detail) {
@@ -274,14 +278,15 @@ class OrderDtoRepositoryTest {
         PageRequest pageSize2_1 = PageRequest.of(1, 2);
 
         GetOrderHttp.Condition condition
-                = createCondition(1L, null, "2024");
+                = createCondition(member.getId(), null, String.valueOf(LocalDateTime.now().getYear()));
 
         //when
 //        orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize1);
 //        orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize2);
-        orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize2_1);
+        Page<OrderDto> orders = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize2_1);
 
         //then
+        assertThat(orders).hasSize(2);
 
     }
 
