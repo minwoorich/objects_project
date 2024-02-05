@@ -1,12 +1,15 @@
 package com.objects.marketbridge.product.controller.request;
 
+import com.objects.marketbridge.product.service.dto.OptionDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @NoArgsConstructor
@@ -37,14 +40,13 @@ public class CreateProductRequestDto {
     @NotNull
     private Long discountRate;
 
-    @NotNull
-    private List<String> optionNames = new ArrayList<>();
-
     private String productNo;
+
+    private Map<String,String> optionInfo =  new HashMap<>();
 
 
     @Builder
-    public CreateProductRequestDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, List<String> itemImgUrls, List<String> detailImgUrls, Long discountRate, List<String> optionNames, String productNo) {
+    public CreateProductRequestDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, List<String> itemImgUrls, List<String> detailImgUrls, Long discountRate, List<String> optionNames, String productNo, Map<String,String> optionInfo) {
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
@@ -55,7 +57,7 @@ public class CreateProductRequestDto {
         this.itemImgUrls = itemImgUrls;
         this.detailImgUrls = detailImgUrls;
         this.discountRate = discountRate;
-        this.optionNames = optionNames;
+        this.optionInfo = optionInfo;
         this.productNo = productNo;
     }
 }

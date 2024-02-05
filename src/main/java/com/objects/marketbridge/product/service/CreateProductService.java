@@ -8,6 +8,7 @@ import com.objects.marketbridge.product.controller.request.CreateProductRequestD
 import com.objects.marketbridge.product.domain.*;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import com.objects.marketbridge.product.service.dto.CreateProductDto;
+import com.objects.marketbridge.product.service.dto.ProductImageDto;
 import com.objects.marketbridge.product.service.port.ImageRepository;
 import com.objects.marketbridge.product.service.port.OptionRepository;
 import com.objects.marketbridge.product.service.port.ProdOptionRepository;
@@ -34,18 +35,21 @@ public class CreateProductService {
     // 상품 생성
     @Transactional
     public Long create(CreateProductRequestDto request){
+        CreateProductDto createProductDto =CreateProductDto.fromRequest(request);
         //1. 상품 생성
-        Product product = productRepository.save(createProduct(CreateProductDto.fromRequest(request)));
+        Product product = productRepository.save(createProduct(createProductDto));
+
         //2. productImage 저장
         // 2-1. imageurl -> ProductImage 화
-        List<ProductImage> productImages = createProductImages(request.getDetailImgUrls(), ImageType.DETAIL_IMG.toString(),product);
-        productImages.addAll( createProductImages(request.getItemImgUrls(), ImageType.ITEM_IMG.toString(), product) );
+        List<ProductImage> productImages = createProductImages(createProductDto.getProductImageList(),product);
         productImageRepository.saveAll(productImages);
 
         //3. 옵션 추가
-        createProdOptions();
+//        createProdOptions();
 
-        //4. product id 반환
+        //4. tag 추가
+
+        //5. product id 반환
         return product.getId();
     }
 
@@ -63,18 +67,19 @@ public class CreateProductService {
         return Product.create(category,isOwn,name,price,isSubs,stock,thumbImg,discountRate,productNo);
     }
 
-    public List<ProductImage> createProductImages(List<String> imgUrls, String type, Product product){
+    public List<ProductImage> createProductImages(List<ProductImageDto> productImageDtoList, Product product){
         List<ProductImage> productImages = new ArrayList<>();
-        for (int i = 0; i < imgUrls.size(); i++) {
+
+        for (ProductImageDto productImageDto: productImageDtoList) {
             // 이미지 저장
             Image image = Image.builder()
-                    .type(type)
-                    .url(imgUrls.get(i))
+                    .type(productImageDto.getType())
+                    .url(productImageDto.getImgUrl())
                     .build();
             imageRepository.save(image);
 
-            //ProductImage 엔티티 생성 (정렬 순서대로 seqNo 할당)
-            ProductImage productImage = ProductImage.create( product, imageRepository.findById(image.getId()),Long.valueOf(i) );
+            //ProductImage 엔티티 생성
+            ProductImage productImage = ProductImage.create( product, imageRepository.findById(image.getId()), productImageDto.getSeqNo());
             productImages.add(productImage);
 
             // 연관관계 추가
@@ -85,6 +90,7 @@ public class CreateProductService {
 
     public List<ProdOption> createProdOptions(){
         List<ProdOption> prodOptions = new ArrayList<>();
+        // option category 조회
 
 
         return prodOptions;
