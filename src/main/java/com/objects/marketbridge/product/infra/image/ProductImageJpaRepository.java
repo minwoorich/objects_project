@@ -1,4 +1,4 @@
-package com.objects.marketbridge.product.infra;
+package com.objects.marketbridge.product.infra.image;
 
 import com.objects.marketbridge.product.domain.ProductImage;
 import org.springframework.data.jpa.repository.JpaRepository;
