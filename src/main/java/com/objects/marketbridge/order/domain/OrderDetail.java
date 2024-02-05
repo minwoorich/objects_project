@@ -2,7 +2,7 @@ package com.objects.marketbridge.order.domain;
 
 import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.common.domain.Coupon;
-import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import jakarta.persistence.*;
 import lombok.*;
@@ -107,7 +107,6 @@ public class OrderDetail extends BaseEntity {
     public Integer totalAmount() {
         return (int) (price * quantity);
     }
-
 
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
         coupon.changeMemberCouponInfo(dateTimeHolder);

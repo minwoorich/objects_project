@@ -12,6 +12,7 @@ import com.objects.marketbridge.member.infra.MemberRepositoryImpl;
 import com.objects.marketbridge.member.service.MemberService;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
+import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.member.service.port.MembershipRepository;
 import com.objects.marketbridge.order.domain.Address;
 import com.objects.marketbridge.payment.domain.Amount;
@@ -35,7 +36,7 @@ import static com.objects.marketbridge.common.config.KakaoPayConfig.SUBS_CID;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberRepositoryImpl memberRepository;
+    private final MemberRepository memberRepository;
 
     @PostMapping("/address")
     public ApiResponse<List<Address>> addAddressValue(

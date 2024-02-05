@@ -4,8 +4,8 @@ CREATE TABLE member (
                         member_id	bigint auto_increment
                             primary key,
 
-                        member_type	varchar(255)	,
                         social_type	varchar(255)	,
+                        member_type	varchar(255)	,
                         membership	varchar(255)	,
                         email	varchar(255)	,
                         password	varchar(255)	,
@@ -21,7 +21,7 @@ CREATE TABLE member (
 DROP TABLE IF EXISTS membership;
 
 CREATE TABLE membership (
-                        subs_id	bigint auto_increment
+                        membership_id	bigint auto_increment
                             primary key,
 
                         member_id	varchar(255)	,
@@ -37,6 +37,7 @@ CREATE TABLE membership (
                         quantity bigint ,
                         total_amount bigint,
                         discount_amount bigint,
+                        tax_free_amount bigint,
                         card_issuer_name	varchar(255)	,
                         card_purchase_name	varchar(255)	,
                         card_no	varchar(255)	,
@@ -283,6 +284,7 @@ CREATE TABLE payment (
                          card_install_month	BIGINT	,
                          total_amount BIGINT,
                          discount_amount BIGINT,
+                         tax_free_amount BIGINT,
                          approved_at	datetime(6)	,
                          deleted_at	datetime(6)	,
                          updated_at	datetime(6)	,

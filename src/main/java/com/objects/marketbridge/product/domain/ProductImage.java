@@ -1,5 +1,7 @@
-package com.objects.marketbridge.common.domain;
+package com.objects.marketbridge.product.domain;
 
+import com.objects.marketbridge.common.domain.BaseEntity;
+import com.objects.marketbridge.common.domain.Image;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductImage extends BaseEntity{
+public class ProductImage extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

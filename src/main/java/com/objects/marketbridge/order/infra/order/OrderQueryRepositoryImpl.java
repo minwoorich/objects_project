@@ -1,7 +1,6 @@
 package com.objects.marketbridge.order.infra.order;
 
 import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.QOrder;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -12,9 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.objects.marketbridge.common.domain.QProduct.product;
-import static com.objects.marketbridge.order.domain.QOrder.*;
+import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
+import static com.objects.marketbridge.product.domain.QProduct.product;
 
 @Repository
 public class OrderQueryRepositoryImpl implements OrderQueryRepository {
@@ -26,6 +25,8 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
         this.orderJpaRepository = orderJpaRepository;
         this.queryFactory = new JPAQueryFactory(em);
     }
+
+
 
     @Override
     public Optional<Order> findById(Long orderId) {
@@ -64,6 +65,10 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
                         .fetchOne()
         );
     }
+
+
+
+
 
     // orderNo 로 가져오기
     @Override

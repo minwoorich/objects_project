@@ -1,5 +1,6 @@
-package com.objects.marketbridge.common.domain;
+package com.objects.marketbridge.product.domain;
 
+import com.objects.marketbridge.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import java.util.List;
 @Getter
 @Table(name = "options")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Option extends BaseEntity{
+public class Option extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

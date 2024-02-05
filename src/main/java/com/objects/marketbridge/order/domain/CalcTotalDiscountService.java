@@ -24,12 +24,12 @@ public class CalcTotalDiscountService{
                 .sum();
     }
 
-    // 추후에 point 서비스 도입하면 이것도 구현 필요
+    // TODO : 추후에 point 서비스 도입하면 이것도 구현 필요
     private Long calcUsedPoint(List<OrderDetail> orderDetails) {
         return 0L;
     }
 
-    // 추후에 membership 할인 서비스 도입하면 이것도 구현 필요
+    // TODO : 추후에 membership 할인 서비스 도입하면 이것도 구현 필요
     private Long calcMembershipDiscount() {
         return 0L;
     }

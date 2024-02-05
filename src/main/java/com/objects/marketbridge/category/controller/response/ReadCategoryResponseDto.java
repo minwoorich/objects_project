@@ -1,6 +1,6 @@
 package com.objects.marketbridge.category.controller.response;
 
-import com.objects.marketbridge.common.domain.Category;
+import com.objects.marketbridge.category.domain.Category;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

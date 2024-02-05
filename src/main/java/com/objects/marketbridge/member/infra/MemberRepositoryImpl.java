@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -37,6 +38,11 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public Member findByIdWithAddresses(Long id) {
         return memberJpaRepository.findByIdWithAddresses(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public List<Member> saveAll(List<Member> members) {
+        return memberJpaRepository.saveAll(members);
     }
 
     @Override

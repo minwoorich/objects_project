@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 @RequiredArgsConstructor
 public class ImageRepositoryImpl implements ImageRepository {
