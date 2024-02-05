@@ -1,5 +1,6 @@
 package com.objects.marketbridge.order.service.dto;
 
+import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.product.domain.Product;
 import lombok.Builder;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 public class OrderDetailDto {
 
     private ProductDto product;
+    private CouponDto coupon;
     private Long discountPrice;
     private Long quantity;
     private String orderNo;
@@ -79,6 +81,23 @@ public class OrderDetailDto {
                     .productNo(product.getProductNo())
                     .build();
 
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    private static class CouponDto{
+        private Long price;
+
+        @Builder
+        private CouponDto(Long price) {
+            this.price = price;
+        }
+
+        public static CouponDto of(Coupon coupon) {
+            return CouponDto.builder()
+                    .price(coupon.getPrice())
+                    .build();
         }
     }
 }
