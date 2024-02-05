@@ -56,9 +56,16 @@ include::api/order/ordercancel.adoc[]
 {empty}
 
 include::api/order/orderreturn.adoc[]
+{empty}
+{empty}
 
 include::api/order/ordercancelreturnlist.adoc[]
+{empty}
+{empty}
+
 include::api/order/ordercancelreturndetail.adoc[]
+{empty}
+{empty}
 
 [[OrderCreate-API]]
 == OrderCreate API

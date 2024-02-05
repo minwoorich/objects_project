@@ -1,4 +1,4 @@
-package com.objects.marketbridge.mock;
+package com.objects.marketbridge.order.mock;
 
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
@@ -6,8 +6,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.Objects;
-
-import static com.objects.marketbridge.mock.BaseFakeOrderRepository.*;
 
 public class FakeOrderCommendRepository extends BaseFakeOrderRepository implements OrderCommendRepository {
 

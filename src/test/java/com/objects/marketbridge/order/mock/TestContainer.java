@@ -1,4 +1,4 @@
-package com.objects.marketbridge.mock;
+package com.objects.marketbridge.order.mock;
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.service.port.MemberRepository;
