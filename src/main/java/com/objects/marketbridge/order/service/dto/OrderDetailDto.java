@@ -1,6 +1,7 @@
 package com.objects.marketbridge.order.service.dto;
 
 import com.objects.marketbridge.member.domain.Coupon;
+import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.product.domain.Product;
 import lombok.Builder;
@@ -14,8 +15,6 @@ import java.time.LocalDateTime;
 public class OrderDetailDto {
 
     private ProductDto product;
-    private CouponDto coupon;
-    private Long discountPrice;
     private Long quantity;
     private String orderNo;
     private Long price;
@@ -25,9 +24,8 @@ public class OrderDetailDto {
     private LocalDateTime cancelledAt;
 
     @Builder
-    public OrderDetailDto(ProductDto product, Long discountPrice, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime deliveredDate, Long sellerId, LocalDateTime cancelledAt) {
+    public OrderDetailDto(ProductDto product, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime deliveredDate, Long sellerId, LocalDateTime cancelledAt) {
         this.product = product;
-        this.discountPrice = discountPrice;
         this.quantity = quantity;
         this.orderNo = orderNo;
         this.price = price;
@@ -39,7 +37,6 @@ public class OrderDetailDto {
 
     public static OrderDetailDto of(OrderDetail orderDetail) {
         return OrderDetailDto.builder()
-                .discountPrice(orderDetail.getCoupon().getPrice())
                 .quantity(orderDetail.getQuantity())
                 .orderNo(orderDetail.getOrderNo())
                 .price(orderDetail.getPrice())
@@ -81,23 +78,6 @@ public class OrderDetailDto {
                     .productNo(product.getProductNo())
                     .build();
 
-        }
-    }
-
-    @Getter
-    @NoArgsConstructor
-    private static class CouponDto{
-        private Long price;
-
-        @Builder
-        private CouponDto(Long price) {
-            this.price = price;
-        }
-
-        public static CouponDto of(Coupon coupon) {
-            return CouponDto.builder()
-                    .price(coupon.getPrice())
-                    .build();
         }
     }
 }

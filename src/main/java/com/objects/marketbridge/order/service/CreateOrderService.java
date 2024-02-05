@@ -2,6 +2,7 @@ package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.service.port.MemberRepository;
@@ -11,6 +12,7 @@ import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.product.infra.CouponRepository;
+import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,7 @@ public class CreateOrderService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
+    private final MemberCouponRepository memberCouponRepository;
     private final AddressRepository addressRepository;
     private final CalcTotalDiscountService calcTotalDiscountService;
     private final DateTimeHolder dateTimeHolder;
@@ -74,7 +77,7 @@ public class CreateOrderService {
 
             Product product = productRepository.findById(productValue.getProductId());
             // 쿠폰이 적용안된 product 가 존재할 경우 그냥 null 저장
-            Coupon coupon = (productValue.getCouponId() != null) ? couponRepository.findById(productValue.getCouponId()) : null ;
+            MemberCoupon memberCoupon = (productValue.getCouponId() != null) ? memberCouponRepository.findByMemberIdAndCouponId(productValue.getCouponId(), order.getMember().getId()) : null;
             String orderNo = order.getOrderNo();
             Long quantity = productValue.getQuantity();
             Long price = product.getPrice();
@@ -83,7 +86,7 @@ public class CreateOrderService {
 
             // OrderDetail 엔티티 생성
             OrderDetail orderDetail =
-                    OrderDetail.create(tid, order, product, orderNo, coupon, quantity, price, sellerId, StatusCodeType.ORDER_INIT.getCode());
+                    OrderDetail.create(tid, order, product, orderNo, memberCoupon, quantity, price, sellerId, StatusCodeType.ORDER_INIT.getCode());
 
             // orderDetails 에 추가
             orderDetails.add(orderDetail);

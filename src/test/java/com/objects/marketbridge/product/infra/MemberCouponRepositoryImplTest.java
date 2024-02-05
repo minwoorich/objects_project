@@ -44,7 +44,7 @@ class MemberCouponRepositoryImplTest {
         Coupon coupon = couponRepository.findAll().get(0);
 
         //when
-        MemberCoupon memberCoupon = memberCouponRepository.findByMember_IdAndCoupon_Id(member.getId(), coupon.getId());
+        MemberCoupon memberCoupon = memberCouponRepository.findByMemberIdAndCouponId(member.getId(), coupon.getId());
 
         //then
         Assertions.assertThat(memberCoupon.getMember().getEmail()).isEqualTo("test@email.com");

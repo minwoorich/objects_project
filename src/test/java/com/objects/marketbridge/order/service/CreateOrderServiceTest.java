@@ -207,15 +207,16 @@ class CreateOrderServiceTest {
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
-        List<Coupon> coupons = couponRepository.findAll();
 
         //when
         createOrderService.create(createOrderDto);
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
-        assertThat(orderDetails.get(0).getCoupon().getName()).isEqualTo(coupons.get(0).getName());
-        assertThat(orderDetails.get(1).getCoupon().getName()).isEqualTo(coupons.get(1).getName());
+        assertThat(orderDetails.get(0).getMemberCoupon().getMember().getEmail()).isEqualTo("hong@email.com");
+        assertThat(orderDetails.get(0).getMemberCoupon().getCoupon().getId()).isEqualTo(1L);
+        assertThat(orderDetails.get(1).getMemberCoupon().getMember().getEmail()).isEqualTo("hong@email.com");
+        assertThat(orderDetails.get(0).getMemberCoupon().getCoupon().getId()).isEqualTo(2L);
     }
 
     @DisplayName("쿠폰을 사용하지 않은 OrderDetail 들은 orderDetail.coupon 에 null 이 들어간다")
@@ -233,7 +234,7 @@ class CreateOrderServiceTest {
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
 
         //then
-        assertThat(orderDetails.get(2).getCoupon()).isNull();
+        assertThat(orderDetails.get(2).getMemberCoupon()).isNull();
     }
 
     @DisplayName("Order 와 OrderDetail 이 서로 연관관계를 맺어야한다")
@@ -282,8 +283,8 @@ class CreateOrderServiceTest {
     }
 
     private  long getTotalUsedCoupon(Order order) {
-        return order.getOrderDetails().stream().filter(o -> o.getCoupon() != null)
-                .mapToLong(o -> o.getCoupon().getPrice())
+        return order.getOrderDetails().stream().filter(o -> o.getMemberCoupon() != null)
+                .mapToLong(o -> o.getMemberCoupon().getCoupon().getPrice())
                 .sum();
     }
 

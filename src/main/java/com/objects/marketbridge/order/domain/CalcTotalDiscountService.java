@@ -19,8 +19,8 @@ public class CalcTotalDiscountService{
 
     private Long calcUsedCoupon(List<OrderDetail> orderDetails) {
         return orderDetails.stream()
-                .filter(o -> o.getCoupon() != null)
-                .mapToLong(o -> o.getCoupon().getPrice())
+                .filter(o -> o.getMemberCoupon() != null)
+                .mapToLong(o -> o.getMemberCoupon().getCoupon().getPrice())
                 .sum();
     }
 

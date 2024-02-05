@@ -96,8 +96,8 @@ public class RequestCancelDto {
             return CancelRefundInfo.builder()
                     .discountPrice( // TODO coupon 으로 인해 N+1문제 발생할 것으로 예상 -> fetchJoin으로 쿠폰까지 조인후 해결
                             orderDetails.stream()
-                                    .filter(orderDetail -> orderDetail.getCoupon() != null)
-                                    .mapToLong(orderDetail -> orderDetail.getCoupon().getPrice())
+                                    .filter(orderDetail -> orderDetail.getMemberCoupon() != null)
+                                    .mapToLong(orderDetail -> orderDetail.getMemberCoupon().getCoupon().getPrice())
                                     .sum()
                     )
                     .totalPrice(

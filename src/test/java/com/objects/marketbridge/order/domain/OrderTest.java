@@ -149,17 +149,6 @@ class OrderTest {
                 .price(2000L)
                 .build();
 
-        OrderDetail orderDetail1 = OrderDetail.builder()
-                .order(order)
-                .coupon(coupon1)
-                .product(product1)
-                .build();
-        OrderDetail orderDetail2 = OrderDetail.builder()
-                .order(order)
-                .coupon(coupon2)
-                .product(product2)
-                .build();
-
         MemberCoupon memberCoupon1 = MemberCoupon.builder()
                 .coupon(coupon1)
                 .isUsed(false)
@@ -170,6 +159,20 @@ class OrderTest {
                 .isUsed(false)
                 .usedDate(null)
                 .build();
+
+
+        OrderDetail orderDetail1 = OrderDetail.builder()
+                .order(order)
+                .memberCoupon(memberCoupon1)
+                .product(product1)
+                .build();
+        OrderDetail orderDetail2 = OrderDetail.builder()
+                .order(order)
+                .memberCoupon(memberCoupon2)
+                .product(product2)
+                .build();
+
+
 
         Order savedOrder = orderCommendRepository.save(order);
         orderDetailCommendRepository.saveAll(List.of(orderDetail1, orderDetail2));
