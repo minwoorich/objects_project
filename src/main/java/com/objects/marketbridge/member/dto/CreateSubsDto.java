@@ -24,11 +24,11 @@ public class CreateSubsDto {
         this.amout = amout;
     }
 
-    public static CreateSubsDto of(Amount amount, Long memberId, String tid, String subsOrderNo) {
+    public static CreateSubsDto of(Long totalPrice, Long memberId, String tid, String subsOrderNo) {
         return CreateSubsDto.builder()
                 .memberId(memberId)
                 .subsOrderNo(subsOrderNo)
-                .amout(amount)
+                .amout(Amount.builder().totalAmount(totalPrice).build())
                 .tid(tid)
                 .build();
     }
