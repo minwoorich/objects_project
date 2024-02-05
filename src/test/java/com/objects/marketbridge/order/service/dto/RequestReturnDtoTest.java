@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.service.dto;
 
-import com.objects.marketbridge.common.domain.Coupon;
-import com.objects.marketbridge.common.domain.MembershipType;
+import com.objects.marketbridge.member.domain.Coupon;
+import com.objects.marketbridge.member.domain.MembershipType;
 
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.order.domain.OrderDetail;
@@ -205,7 +205,4 @@ class RequestReturnDtoTest {
                 .extracting("deliveryFee", "returnFee", "productTotalPrice")
                 .contains(0L, 0L, 6000L);
     }
-
-
-
 }

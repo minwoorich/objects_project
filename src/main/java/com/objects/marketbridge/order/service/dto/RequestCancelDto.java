@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.service.dto;
 
-import com.objects.marketbridge.common.domain.MembershipType;
+import com.objects.marketbridge.member.domain.MembershipType;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,11 +33,8 @@ public class RequestCancelDto {
                             // TODO Product로 인해 N+1 문제 발생 예상 (of)
                             .map(ProductInfo::of)
                             .toList()
-                    )
-                    .cancelRefundInfo(
-                            // TODO coupon 으로 인해 N+1문제 발생할 것으로 예상 (of) -> fetchJoin으로 쿠폰까지 조인후 해결
-                            CancelRefundInfo.of(orderDetails, memberShip)
-                    )
+                    )// TODO coupon 으로 인해 N+1문제 발생할 것으로 예상 (of) -> fetchJoin으로 쿠폰까지 조인후 해결
+                    .cancelRefundInfo(CancelRefundInfo.of(orderDetails, memberShip))
                     .build();
         }
     }
@@ -99,12 +96,13 @@ public class RequestCancelDto {
             return CancelRefundInfo.builder()
                     .discountPrice( // TODO coupon 으로 인해 N+1문제 발생할 것으로 예상 -> fetchJoin으로 쿠폰까지 조인후 해결
                             orderDetails.stream()
+                                    .filter(orderDetail -> orderDetail.getCoupon() != null)
                                     .mapToLong(orderDetail -> orderDetail.getCoupon().getPrice())
                                     .sum()
                     )
                     .totalPrice(
                             orderDetails.stream()
-                                    .mapToLong(orderDetail -> orderDetail.getPrice() * orderDetail.getQuantity())
+                                    .mapToLong(OrderDetail::totalAmount)
                                     .sum()
                     )
                     .deliveryFee(deliveryFee)

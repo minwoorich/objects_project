@@ -1,7 +1,7 @@
 package com.objects.marketbridge.product.service.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.objects.marketbridge.common.domain.ImageType;
+import com.objects.marketbridge.member.domain.ImageType;
 import com.objects.marketbridge.product.domain.ProductImage;
 import com.objects.marketbridge.product.controller.request.CreateProductRequestDto;
 import lombok.Builder;

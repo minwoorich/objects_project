@@ -299,6 +299,7 @@ CREATE TABLE review (
 
                         member_id	bigint	,
                         product_id	bigint	,
+                        order_detail_id bigint,
                         content	text	,
                         rating	bigint	,
                         created_at	datetime(6)	,
@@ -314,6 +315,7 @@ CREATE TABLE review_image (
 
                               review_id	bigint	,
                               image_id	bigint	,
+                              seq_no bigint,
                               created_at	datetime(6)	,
                               updated_at	datetime(6)	,
                               deleted_at	datetime(6)

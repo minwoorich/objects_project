@@ -1,7 +1,8 @@
 package com.objects.marketbridge.common.domain;
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.mock.TestDateTimeHolder;
+import com.objects.marketbridge.member.domain.MemberCoupon;
+import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 class MemberCouponTest {
-    
+
     @Test
     @DisplayName("사용여부와 사용시간이 초기화 되어야 한다.")
     public void returnCoupon() {
@@ -25,7 +26,7 @@ class MemberCouponTest {
     
         // then
         Assertions.assertThat(usedCoupon).extracting("usedDate", "isUsed")
-                .containsExactly(null, false);
+                .containsExactly(localDateTime, false);
     }
 
     private static MemberCoupon createMemberCoupon(LocalDateTime localDateTime, boolean isUsed) {
