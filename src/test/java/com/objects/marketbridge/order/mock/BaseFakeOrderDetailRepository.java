@@ -1,4 +1,4 @@
-package com.objects.marketbridge.mock;
+package com.objects.marketbridge.order.mock;
 
 import com.objects.marketbridge.order.domain.OrderDetail;
 import lombok.Getter;
