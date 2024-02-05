@@ -1,9 +1,11 @@
 package com.objects.marketbridge.mock;
 
+import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
 import com.objects.marketbridge.order.infra.dtio.DetailResponseDtio;
+import com.objects.marketbridge.order.service.dto.OrderDto;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,4 +71,9 @@ public class FakeOrderDtoRepository extends BaseFakeOrderRepository implements O
                 .build();
     }
 
+    @Override
+    public Page<OrderDto> findByMemberIdWithMemberAddress(GetOrderHttp.Condition condition, Pageable pageable) {
+        // TODO : 구현해야함 - 민우
+        return null;
+    }
 }

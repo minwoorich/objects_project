@@ -2,7 +2,7 @@ package com.objects.marketbridge.payment.service;
 
 import com.objects.marketbridge.common.domain.AddressValue;
 import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.Address;

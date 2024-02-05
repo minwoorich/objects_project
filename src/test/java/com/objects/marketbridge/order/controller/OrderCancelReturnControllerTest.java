@@ -2,7 +2,7 @@ package com.objects.marketbridge.order.controller;
 
 import com.objects.marketbridge.common.domain.Coupon;
 import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.common.domain.Product;
+import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.mock.BaseFakeOrderDetailRepository;
 import com.objects.marketbridge.mock.BaseFakeOrderRepository;

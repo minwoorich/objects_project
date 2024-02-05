@@ -1,5 +1,7 @@
-package com.objects.marketbridge.common.domain;
+package com.objects.marketbridge.review.domain;
 
+import com.objects.marketbridge.common.domain.BaseEntity;
+import com.objects.marketbridge.common.domain.SurveyContent;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,7 +32,7 @@ public class ReviewSurvey extends BaseEntity {
     private SurveyContent surveyContentId;
 
     @Builder
-    private ReviewSurvey(Review reviewId, ReviewSurveyCategory reviewSurveyCategoryId ,SurveyContent surveyContentId) {
+    private ReviewSurvey(Review reviewId, ReviewSurveyCategory reviewSurveyCategoryId , SurveyContent surveyContentId) {
         this.reviewId = reviewId;
         this.reviewSurveyCategoryId = reviewSurveyCategoryId;
         this.surveyContentId = surveyContentId;
