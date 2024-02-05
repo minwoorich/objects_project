@@ -63,10 +63,14 @@ public class ConfirmCancelReturnDto {
                     .refundInfo(RefundInfo.of(refundDto))
                     .cancelledItems(
                             order.getOrderDetails().stream()
-                                    .map(orderDetail -> ProductInfo.of(orderDetail.getProduct(), orderDetail.getQuantity()))
+                                    .map(Response::getProductInfo)
                                     .toList()
                     )
                     .build();
+        }
+
+        private static ProductInfo getProductInfo(OrderDetail orderDetail) {
+            return ProductInfo.of(orderDetail.getProduct(), orderDetail.getQuantity());
         }
     }
 
