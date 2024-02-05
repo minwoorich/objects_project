@@ -1,6 +1,6 @@
 package com.objects.marketbridge.mock;
 
-import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import org.springframework.test.util.ReflectionTestUtils;
 

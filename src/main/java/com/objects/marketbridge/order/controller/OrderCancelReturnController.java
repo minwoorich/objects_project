@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.objects.marketbridge.common.domain.MembershipType.WOW;
+import static com.objects.marketbridge.member.domain.MembershipType.WOW;
 
 @Builder
 @RestController

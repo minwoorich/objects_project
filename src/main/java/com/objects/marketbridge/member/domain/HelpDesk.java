@@ -1,4 +1,4 @@
-package com.objects.marketbridge.common.domain;
+package com.objects.marketbridge.member.domain;
 
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.product.domain.Product;

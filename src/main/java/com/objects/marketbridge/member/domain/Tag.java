@@ -1,4 +1,4 @@
-package com.objects.marketbridge.common.domain;
+package com.objects.marketbridge.member.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,20 +9,17 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class EstimatedTime extends BaseEntity {
+public class Tag extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "estimated_time_id")
+    @Column(name = "tag_id")
     private Long id;
 
-    private Long hours;
-
-    private Long addDay;
+    private String name;
 
     @Builder
-    private EstimatedTime(Long hour, Long addDay) {
-        this.hours = hours;
-        this.addDay = addDay;
+    private Tag(String name) {
+        this.name = name;
     }
 }
