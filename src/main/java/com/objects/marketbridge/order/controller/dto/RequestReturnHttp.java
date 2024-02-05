@@ -12,48 +12,46 @@ public class RequestReturnHttp {
     @Getter
     @NoArgsConstructor
     public static class Response {
-        private List<RequestReturnHttp.ProductInfoResponse> productResponses;
-        private RequestReturnHttp.ReturnRefundInfoResponse returnRefundInfoResponse;
+        private List<ProductInfo> productInfos;
+        private ReturnRefundInfo returnRefundInfo;
 
         @Builder
-        private Response(List<RequestReturnHttp.ProductInfoResponse> productResponses, RequestReturnHttp.ReturnRefundInfoResponse returnRefundInfoResponse) {
-            this.productResponses = productResponses;
-            this.returnRefundInfoResponse = returnRefundInfoResponse;
+        private Response(List<ProductInfo> productInfos, ReturnRefundInfo returnRefundInfo) {
+            this.productInfos = productInfos;
+            this.returnRefundInfo = returnRefundInfo;
         }
 
         public static Response of(RequestReturnDto.Response serviceDto) {
             return Response.builder()
-                    .productResponses(
+                    .productInfos(
                             serviceDto.getProductInfos()
                                     .stream()
-                                    .map(RequestReturnHttp.ProductInfoResponse::of)
+                                    .map(ProductInfo::of)
                                     .toList()
                     )
-                    .returnRefundInfoResponse(
-                            RequestReturnHttp.ReturnRefundInfoResponse.of(serviceDto.getReturnRefundInfo())
-                    )
+                    .returnRefundInfo(ReturnRefundInfo.of(serviceDto.getReturnRefundInfo()))
                     .build();
         }
     }
 
     @Getter
     @NoArgsConstructor
-    public static class ProductInfoResponse {
+    public static class ProductInfo {
         private Long quantity;
         private String name;
         private Long price;
         private String image; // TODO 주문 취소 요청 이미지 반환
 
         @Builder
-        private ProductInfoResponse(Long quantity, String name, Long price, String image) {
+        private ProductInfo(Long quantity, String name, Long price, String image) {
             this.quantity = quantity;
             this.name = name;
             this.price = price;
             this.image = image;
         }
 
-        private static ProductInfoResponse of(RequestReturnDto.ProductInfo serviceDto) {
-            return ProductInfoResponse.builder()
+        public static ProductInfo of(RequestReturnDto.ProductInfo serviceDto) {
+            return ProductInfo.builder()
                     .quantity(serviceDto.getQuantity())
                     .name(serviceDto.getName())
                     .price(serviceDto.getPrice())
@@ -64,24 +62,24 @@ public class RequestReturnHttp {
 
     @Getter
     @NoArgsConstructor
-    public static class ReturnRefundInfoResponse {
+    public static class ReturnRefundInfo {
 
         private Long deliveryFee;
         private Long returnFee;
-        private Long productPrice;
+        private Long productTotalPrice;
 
         @Builder
-        private ReturnRefundInfoResponse(Long deliveryFee, Long returnFee, Long productPrice) {
+        private ReturnRefundInfo(Long deliveryFee, Long returnFee, Long productTotalPrice) {
             this.deliveryFee = deliveryFee;
             this.returnFee = returnFee;
-            this.productPrice = productPrice;
+            this.productTotalPrice = productTotalPrice;
         }
 
-        public static ReturnRefundInfoResponse of(RequestReturnDto.ReturnRefundInfo serviceDto) {
-            return ReturnRefundInfoResponse.builder()
+        public static ReturnRefundInfo of(RequestReturnDto.ReturnRefundInfo serviceDto) {
+            return ReturnRefundInfo.builder()
                     .deliveryFee(serviceDto.getDeliveryFee())
                     .returnFee(serviceDto.getReturnFee())
-                    .productPrice(serviceDto.getProductTotalPrice())
+                    .productTotalPrice(serviceDto.getProductTotalPrice())
                     .build();
         }
     }

@@ -12,48 +12,46 @@ public class RequestCancelHttp {
     @Getter
     @NoArgsConstructor
     public static class Response {
-        private List<ProductInfoResponse> productResponses;
-        private CancelRefundInfoResponse cancelRefundInfoResponse;
+        private List<ProductInfo> productInfos;
+        private CancelRefundInfo cancelRefundInfo;
 
         @Builder
-        private Response(List<ProductInfoResponse> productResponses, CancelRefundInfoResponse cancelRefundInfoResponse) {
-            this.productResponses = productResponses;
-            this.cancelRefundInfoResponse = cancelRefundInfoResponse;
+        private Response(List<ProductInfo> productInfos, CancelRefundInfo cancelRefundInfo) {
+            this.productInfos = productInfos;
+            this.cancelRefundInfo = cancelRefundInfo;
         }
 
         public static Response of(RequestCancelDto.Response serviceDto) {
             return Response.builder()
-                    .productResponses(
+                    .productInfos(
                             serviceDto.getProductInfos()
                                     .stream()
-                                    .map(ProductInfoResponse::of)
+                                    .map(ProductInfo::of)
                                     .toList()
                     )
-                    .cancelRefundInfoResponse(
-                            CancelRefundInfoResponse.of(serviceDto.getCancelRefundInfo())
-                    )
+                    .cancelRefundInfo(CancelRefundInfo.of(serviceDto.getCancelRefundInfo()))
                     .build();
         }
     }
 
     @Getter
     @NoArgsConstructor
-    public static class ProductInfoResponse {
+    public static class ProductInfo {
         private Long quantity;
         private String name;
         private Long price;
         private String image; // TODO 주문 취소 요청 이미지 반환
 
         @Builder
-        private ProductInfoResponse(Long quantity, String name, Long price, String image) {
+        private ProductInfo(Long quantity, String name, Long price, String image) {
             this.quantity = quantity;
             this.name = name;
             this.price = price;
             this.image = image;
         }
 
-        private static ProductInfoResponse of(RequestCancelDto.ProductInfo serviceDto) {
-            return ProductInfoResponse.builder()
+        public static ProductInfo of(RequestCancelDto.ProductInfo serviceDto) {
+            return ProductInfo.builder()
                     .quantity(serviceDto.getQuantity())
                     .name(serviceDto.getName())
                     .price(serviceDto.getPrice())
@@ -64,7 +62,7 @@ public class RequestCancelHttp {
 
     @Getter
     @NoArgsConstructor
-    public static class CancelRefundInfoResponse {
+    public static class CancelRefundInfo {
 
         private Long deliveryFee;
         private Long refundFee;
@@ -72,15 +70,15 @@ public class RequestCancelHttp {
         private Long totalPrice;
 
         @Builder
-        private CancelRefundInfoResponse(Long deliveryFee, Long refundFee, Long discountPrice, Long totalPrice) {
+        private CancelRefundInfo(Long deliveryFee, Long refundFee, Long discountPrice, Long totalPrice) {
             this.deliveryFee = deliveryFee;
             this.refundFee = refundFee;
             this.discountPrice = discountPrice;
             this.totalPrice = totalPrice;
         }
 
-        public static CancelRefundInfoResponse of(RequestCancelDto.CancelRefundInfo serviceDto) {
-            return CancelRefundInfoResponse.builder()
+        public static CancelRefundInfo of(RequestCancelDto.CancelRefundInfo serviceDto) {
+            return CancelRefundInfo.builder()
                     .deliveryFee(serviceDto.getDeliveryFee())
                     .refundFee(serviceDto.getRefundFee())
                     .discountPrice(serviceDto.getDiscountPrice())

@@ -1,7 +1,5 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.dto.GetCancelReturnDetailDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,18 +17,18 @@ public class GetCancelReturnDetailHttp {
         private LocalDateTime cancelDate;
         private String orderNo;
         private String cancelReason;
-        private List<ProductResponse> productResponseList;
-        private CancelRefundInfoResponse cancelRefundInfoResponse;
+        private List<ProductInfo> productInfos;
+        private CancelRefundInfo cancelRefundInfo;
 
 
         @Builder
-        private Response(LocalDateTime orderDate, String orderNo, List<ProductResponse> productResponseList, LocalDateTime cancelDate, String cancelReason, CancelRefundInfoResponse cancelRefundInfoResponse) {
+        private Response(LocalDateTime orderDate, String orderNo, List<ProductInfo> productInfos, LocalDateTime cancelDate, String cancelReason, CancelRefundInfo cancelRefundInfo) {
             this.orderDate = orderDate;
             this.orderNo = orderNo;
-            this.productResponseList = productResponseList;
+            this.productInfos = productInfos;
             this.cancelDate = cancelDate;
             this.cancelReason = cancelReason;
-            this.cancelRefundInfoResponse = cancelRefundInfoResponse;
+            this.cancelRefundInfo = cancelRefundInfo;
         }
 
         public static Response of(GetCancelReturnDetailDto.Response serviceDto) {
@@ -39,10 +37,10 @@ public class GetCancelReturnDetailHttp {
                     .cancelDate(serviceDto.getCancelDate())
                     .orderNo(serviceDto.getOrderNo())
                     .cancelReason(serviceDto.getCancelReason())
-                    .cancelRefundInfoResponse(CancelRefundInfoResponse.of(serviceDto.getCancelRefundInfo()))
-                    .productResponseList(
+                    .cancelRefundInfo(CancelRefundInfo.of(serviceDto.getCancelRefundInfo()))
+                    .productInfos(
                             serviceDto.getProductInfos().stream()
-                                    .map(ProductResponse::of)
+                                    .map(ProductInfo::of)
                                     .toList()
                     )
                     .build();
@@ -51,7 +49,7 @@ public class GetCancelReturnDetailHttp {
 
     @Getter
     @NoArgsConstructor
-    public static class ProductResponse {
+    public static class ProductInfo {
 
         private Long productId;
         private String productNo;
@@ -60,7 +58,7 @@ public class GetCancelReturnDetailHttp {
         private Long quantity;
 
         @Builder
-        private ProductResponse(Long productId, String productNo, String name, Long price,Long quantity) {
+        private ProductInfo(Long productId, String productNo, String name, Long price, Long quantity) {
             this.productId = productId;
             this.productNo = productNo;
             this.name = name;
@@ -68,28 +66,8 @@ public class GetCancelReturnDetailHttp {
             this.quantity = quantity;
         }
 
-        public static ProductResponse of(Product product, Long quantity) {
-            return ProductResponse.builder()
-                    .productId(product.getId())
-                    .name(product.getName())
-                    .price(product.getPrice())
-                    .quantity(quantity)
-                    .productNo(product.getProductNo())
-                    .build();
-        }
-
-        public static ProductResponse of(OrderDetail orderDetail) {
-            return ProductResponse.builder()
-                    .productId(orderDetail.getProduct().getId())
-                    .name(orderDetail.getProduct().getName())
-                    .price(orderDetail.getProduct().getPrice())
-                    .quantity(orderDetail.getQuantity())
-                    .productNo(orderDetail.getProduct().getProductNo())
-                    .build();
-        }
-
-        public static ProductResponse of(GetCancelReturnDetailDto.ProductInfo productListResponseDto) {
-            return ProductResponse.builder()
+        public static ProductInfo of(GetCancelReturnDetailDto.ProductInfo productListResponseDto) {
+            return ProductInfo.builder()
                     .productId(productListResponseDto.getProductId())
                     .name(productListResponseDto.getName())
                     .price(productListResponseDto.getPrice())
@@ -102,7 +80,7 @@ public class GetCancelReturnDetailHttp {
 
     @Getter
     @NoArgsConstructor
-    public static class CancelRefundInfoResponse {
+    public static class CancelRefundInfo {
 
         private Long deliveryFee;
         private Long refundFee;
@@ -110,15 +88,15 @@ public class GetCancelReturnDetailHttp {
         private Long totalPrice;
 
         @Builder
-        private CancelRefundInfoResponse(Long deliveryFee, Long refundFee, Long discountPrice, Long totalPrice) {
+        private CancelRefundInfo(Long deliveryFee, Long refundFee, Long discountPrice, Long totalPrice) {
             this.deliveryFee = deliveryFee;
             this.refundFee = refundFee;
             this.discountPrice = discountPrice;
             this.totalPrice = totalPrice;
         }
 
-        public static CancelRefundInfoResponse of(GetCancelReturnDetailDto.CancelRefundInfo serviceDto) {
-            return CancelRefundInfoResponse.builder()
+        public static CancelRefundInfo of(GetCancelReturnDetailDto.CancelRefundInfo serviceDto) {
+            return CancelRefundInfo.builder()
                     .deliveryFee(serviceDto.getDeliveryFee())
                     .refundFee(serviceDto.getRefundFee())
                     .discountPrice(serviceDto.getDiscountPrice())

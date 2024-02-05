@@ -3,8 +3,7 @@ package com.objects.marketbridge.mock;
 import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
-import com.objects.marketbridge.order.infra.dtio.DetailResponseDtio;
+import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
 import com.objects.marketbridge.order.service.dto.OrderDto;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import org.springframework.data.domain.Page;
@@ -19,13 +18,13 @@ import static com.objects.marketbridge.order.domain.StatusCodeType.RETURN_COMPLE
 
 public class FakeOrderDtoRepository extends BaseFakeOrderRepository implements OrderDtoRepository {
     @Override
-    public Page<CancelReturnResponseDtio> findOrdersByMemberId(Long memberId, Pageable pageable) {
-        List<CancelReturnResponseDtio> content = getOrderCancelReturnListResponses(memberId);
+    public Page<GetCancelReturnListDtio.Response> findOrdersByMemberId(Long memberId, Pageable pageable) {
+        List<GetCancelReturnListDtio.Response> content = getOrderCancelReturnListResponses(memberId);
 
         return PageableExecutionUtils.getPage(content, pageable, content::size);
     }
 
-    private List<CancelReturnResponseDtio> getOrderCancelReturnListResponses(Long memberId) {
+    private List<GetCancelReturnListDtio.Response> getOrderCancelReturnListResponses(Long memberId) {
 
         return getInstance().getData().stream()
                 .filter(order -> order.getMember().getId().equals(memberId))
@@ -33,21 +32,21 @@ public class FakeOrderDtoRepository extends BaseFakeOrderRepository implements O
                 .toList();
     }
 
-    private static CancelReturnResponseDtio getReturnResponseDtio(Order order) {
-        CancelReturnResponseDtio result = getCancelReturnResponseDtio(order);
+    private static GetCancelReturnListDtio.Response getReturnResponseDtio(Order order) {
+        GetCancelReturnListDtio.Response result = getCancelReturnResponseDtio(order);
 
-        List<DetailResponseDtio> detailList = order.getOrderDetails().stream()
+        List<GetCancelReturnListDtio.OrderDetailInfo> detailList = order.getOrderDetails().stream()
                 .filter(orderDetailStatusCond())
                 .map(FakeOrderDtoRepository::getDetailResponseDtio)
                 .toList();
 
-        result.changeDetailResponsDaos(detailList);
+        result.changeOrderDetailInfos(detailList);
 
         return result;
     }
 
-    private static CancelReturnResponseDtio getCancelReturnResponseDtio(Order order) {
-        return CancelReturnResponseDtio.builder()
+    private static GetCancelReturnListDtio.Response getCancelReturnResponseDtio(Order order) {
+        return GetCancelReturnListDtio.Response.builder()
                 .orderNo(order.getOrderNo())
                 .orderDate(order.getCreatedAt())
                 .cancelReceiptDate(order.getUpdatedAt())
@@ -59,8 +58,8 @@ public class FakeOrderDtoRepository extends BaseFakeOrderRepository implements O
                 || od.getStatusCode().equals(RETURN_COMPLETED.getCode());
     }
 
-    private static DetailResponseDtio getDetailResponseDtio(OrderDetail orderDetail) {
-        return DetailResponseDtio.builder()
+    private static GetCancelReturnListDtio.OrderDetailInfo getDetailResponseDtio(OrderDetail orderDetail) {
+        return GetCancelReturnListDtio.OrderDetailInfo.builder()
                 .orderNo(orderDetail.getOrderNo())
                 .productId(orderDetail.getProduct().getId())
                 .productNo(orderDetail.getProduct().getProductNo())

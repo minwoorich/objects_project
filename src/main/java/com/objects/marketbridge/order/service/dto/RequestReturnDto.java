@@ -95,7 +95,7 @@ public class RequestReturnDto {
                     .returnFee(refundFee)
                     .productTotalPrice(
                             orderDetails.stream()
-                                    .mapToLong(orderDetail -> orderDetail.getPrice() * orderDetail.getQuantity())
+                                    .mapToLong(OrderDetail::totalAmount)
                                     .sum()
                     )
                     .build();
