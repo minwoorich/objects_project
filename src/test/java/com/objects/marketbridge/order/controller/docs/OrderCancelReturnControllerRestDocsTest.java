@@ -2,8 +2,8 @@ package com.objects.marketbridge.order.controller.docs;
 
 
 import com.objects.marketbridge.common.RestDocsSupport;
-import com.objects.marketbridge.common.domain.Member;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.OrderCancelReturnController;
 import com.objects.marketbridge.order.controller.dto.ConfirmCancelReturnHttp;
