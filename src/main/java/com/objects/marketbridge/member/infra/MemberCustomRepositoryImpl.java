@@ -1,7 +1,7 @@
 package com.objects.marketbridge.member.infra;
 
-import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.common.domain.QMember;
+import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.domain.QMember;
 import com.objects.marketbridge.member.service.port.MemberCustomRepository;
 import com.objects.marketbridge.order.domain.QAddress;
 import com.querydsl.jpa.impl.JPAQueryFactory;

@@ -1,9 +1,9 @@
 package com.objects.marketbridge.order.service.dto;
 
-import com.objects.marketbridge.common.domain.Coupon;
+import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.mock.TestDateTimeHolder;
+import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
@@ -14,8 +14,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.common.domain.MembershipType.BASIC;
-import static com.objects.marketbridge.common.domain.MembershipType.WOW;
+import static com.objects.marketbridge.member.domain.MembershipType.BASIC;
+import static com.objects.marketbridge.member.domain.MembershipType.WOW;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 

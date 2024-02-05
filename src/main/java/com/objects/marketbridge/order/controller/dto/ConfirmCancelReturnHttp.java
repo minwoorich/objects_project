@@ -11,6 +11,8 @@ import java.util.List;
 
 public class ConfirmCancelReturnHttp {
 
+    @Getter
+    @NoArgsConstructor
     public static class Request {
 
         @NotNull

@@ -1,9 +1,8 @@
-[[order-cancel-return-list]]
-=== 반품/취소 주문 리스트
+==== 반품/취소 주문 리스트
 
-==== HTTP Request
+.*HTTP Request*
 include::{snippets}/order-cancel-return-list/http-request.adoc[]
 
-==== HTTP Response
+.*HTTP Response*
 include::{snippets}/order-cancel-return-list/http-response.adoc[]
 include::{snippets}/order-cancel-return-list/response-fields.adoc[]
