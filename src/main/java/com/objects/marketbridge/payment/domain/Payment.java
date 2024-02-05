@@ -1,6 +1,6 @@
 package com.objects.marketbridge.payment.domain;
 
-import com.objects.marketbridge.common.domain.BaseEntity;
+import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.order.domain.Order;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

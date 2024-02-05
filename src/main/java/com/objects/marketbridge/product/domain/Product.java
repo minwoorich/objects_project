@@ -3,6 +3,7 @@ package com.objects.marketbridge.product.domain;
 import com.objects.marketbridge.category.domain.Category;
 import com.objects.marketbridge.common.domain.BaseEntity;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
+import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import jakarta.persistence.*;

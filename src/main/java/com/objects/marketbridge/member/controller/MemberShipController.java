@@ -1,7 +1,7 @@
 package com.objects.marketbridge.member.controller;
 
 import com.objects.marketbridge.common.config.KakaoPayConfig;
-import com.objects.marketbridge.common.domain.Membership;
+import com.objects.marketbridge.member.domain.Membership;
 import com.objects.marketbridge.common.dto.*;
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;

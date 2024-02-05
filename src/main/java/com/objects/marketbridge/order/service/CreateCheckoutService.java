@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.service;
 
-import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.member.service.port.MemberRepository;

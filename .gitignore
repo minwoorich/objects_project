@@ -38,3 +38,7 @@ out/
 
 ### Qflie
 **/src/main/generated/
+
+spy.log
+
+.Ds_Store

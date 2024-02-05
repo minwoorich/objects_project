@@ -1,6 +1,6 @@
 package com.objects.marketbridge.member.infra;
 
-import com.objects.marketbridge.common.domain.Membership;
+import com.objects.marketbridge.member.domain.Membership;
 import com.objects.marketbridge.member.service.port.MembershipRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.objects.marketbridge.member.infra;
 
-import com.objects.marketbridge.common.domain.Membership;
+import com.objects.marketbridge.member.domain.Membership;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

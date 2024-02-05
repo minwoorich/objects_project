@@ -1,11 +1,9 @@
 package com.objects.marketbridge.product.infra;
 
-import com.objects.marketbridge.common.domain.Coupon;
-import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.common.domain.MemberCoupon;
+import com.objects.marketbridge.member.domain.Coupon;
+import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.product.infra.CouponRepository;
-import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +21,8 @@ class MemberCouponRepositoryImplTest {
 
     @Autowired
     MemberCouponRepository memberCouponRepository;
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
     @Autowired
     CouponRepository couponRepository;
 
