@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.objects.marketbridge.order.domain.StatusCodeType.*;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -32,7 +34,6 @@ public class CreateOrderService {
     private final OrderCommendRepository orderCommendRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
-    private final CouponRepository couponRepository;
     private final MemberCouponRepository memberCouponRepository;
     private final AddressRepository addressRepository;
     private final CalcTotalDiscountService calcTotalDiscountService;
@@ -77,16 +78,16 @@ public class CreateOrderService {
 
             Product product = productRepository.findById(productValue.getProductId());
             // 쿠폰이 적용안된 product 가 존재할 경우 그냥 null 저장
-            MemberCoupon memberCoupon = (productValue.getCouponId() != null) ? memberCouponRepository.findByMemberIdAndCouponId(productValue.getCouponId(), order.getMember().getId()) : null;
+            MemberCoupon memberCoupon = (productValue.getCouponId() != null) ? memberCouponRepository.findByMemberIdAndCouponId(order.getMember().getId(), productValue.getCouponId()) : null;
             String orderNo = order.getOrderNo();
             Long quantity = productValue.getQuantity();
-            Long price = product.getPrice();
             String tid = order.getTid();
+            Long price = product.getPrice();
             Long sellerId = productValue.getSellerId();
 
             // OrderDetail 엔티티 생성
             OrderDetail orderDetail =
-                    OrderDetail.create(tid, order, product, orderNo, memberCoupon, quantity, price, sellerId, StatusCodeType.ORDER_INIT.getCode());
+                    OrderDetail.create(tid, order, product, orderNo, memberCoupon,price, quantity, sellerId, ORDER_INIT.getCode());
 
             // orderDetails 에 추가
             orderDetails.add(orderDetail);

@@ -34,7 +34,7 @@ public class CalcTotalDiscountService{
         return 0L;
     }
 
-    // 추후에 기타 할인 서비스 도입하면 이것도 구현 필요
+    // TODO : 추후에 기타 할인 서비스 도입하면 이것도 구현 필요
     private Long calcAdditionalDiscount() {
         return 0L;
     }

@@ -1,19 +1,19 @@
 package com.objects.marketbridge.order.service;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MemberCoupon;
+import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.*;
+import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.order.service.port.AddressRepository;
+import com.objects.marketbridge.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.MemberCouponRepository;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.order.service.dto.CreateOrderDto;
-import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
-import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.product.infra.ProductJpaRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import jakarta.persistence.EntityManager;
@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT_OF_STOCK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -77,7 +76,6 @@ class CreateOrderServiceTest {
         coupons.get(1).addMemberCoupon(memberCoupons.get(1));
 
         couponRepository.saveAll(coupons);
-
     }
 
     private  Member createMember() {
@@ -198,7 +196,7 @@ class CreateOrderServiceTest {
         }
     }
 
-    @DisplayName("쿠폰을 사용한 OrderDetail 에는 사용했던 쿠폰이 등록되어있어야한다.")
+    @DisplayName("쿠폰을 사용한 OrderDetail 에는 사용했던 멤버쿠폰이 등록되어있어야한다.")
     @Test
     void OrderDetailWithCoupon(){
 
@@ -211,12 +209,13 @@ class CreateOrderServiceTest {
         //when
         createOrderService.create(createOrderDto);
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAll();
 
         //then
         assertThat(orderDetails.get(0).getMemberCoupon().getMember().getEmail()).isEqualTo("hong@email.com");
-        assertThat(orderDetails.get(0).getMemberCoupon().getCoupon().getId()).isEqualTo(1L);
+        assertThat(orderDetails.get(0).getMemberCoupon().getId()).isEqualTo(memberCoupons.get(0).getId());
         assertThat(orderDetails.get(1).getMemberCoupon().getMember().getEmail()).isEqualTo("hong@email.com");
-        assertThat(orderDetails.get(0).getMemberCoupon().getCoupon().getId()).isEqualTo(2L);
+        assertThat(orderDetails.get(1).getMemberCoupon().getId()).isEqualTo(memberCoupons.get(1).getId());
     }
 
     @DisplayName("쿠폰을 사용하지 않은 OrderDetail 들은 orderDetail.coupon 에 null 이 들어간다")
