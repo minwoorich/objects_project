@@ -1,14 +1,11 @@
 package com.objects.marketbridge.order.service.port;
 
-import com.objects.marketbridge.common.domain.AddressValue;
-import com.objects.marketbridge.common.domain.Coupon;
-import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
+import com.objects.marketbridge.member.domain.AddressValue;
+import com.objects.marketbridge.member.domain.Coupon;
+import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Address;
-import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
-import com.objects.marketbridge.order.infra.dtio.DetailResponseDtio;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;

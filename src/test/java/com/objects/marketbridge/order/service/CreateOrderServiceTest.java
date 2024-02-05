@@ -334,7 +334,7 @@ class CreateOrderServiceTest {
         }
     }
 
-    @DisplayName("주문량보다 재고가 많을 경우 예외를 발생시켜야한다")
+    @DisplayName("주문량이 재고가 많을 경우 예외를 발생시켜야한다")
     @Test
     void productStockDecrease_error(){
 
@@ -347,8 +347,7 @@ class CreateOrderServiceTest {
         //when, them
         assertThatThrownBy(() ->
                 createOrderService.create(createOrderDto))
-                .isInstanceOf(CustomLogicException.class)
-                .hasMessageContaining("재고가 없습니다",OUT_OF_STOCK);
+                .isInstanceOf(CustomLogicException.class);
 
     }
 

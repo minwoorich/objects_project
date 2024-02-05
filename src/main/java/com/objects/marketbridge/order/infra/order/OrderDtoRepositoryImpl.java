@@ -1,12 +1,9 @@
 package com.objects.marketbridge.order.infra.order;
 
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.infra.dtio.CancelReturnResponseDtio;
-import com.objects.marketbridge.order.infra.dtio.DetailResponseDtio;
-import com.objects.marketbridge.order.infra.dtio.QCancelReturnResponseDtio;
-import com.objects.marketbridge.order.infra.dtio.QDetailResponseDtio;
+import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
+import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_OrderDetailInfo;
+import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_Response;
 import com.objects.marketbridge.order.service.dto.OrderDto;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -26,10 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.objects.marketbridge.common.domain.QMember.member;
-import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.*;
-import static com.objects.marketbridge.order.domain.QAddress.address;
 import static com.objects.marketbridge.member.domain.QMember.member;
+import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
 import static com.objects.marketbridge.order.domain.QAddress.address;
 import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
@@ -89,7 +84,7 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     private Map<String, List<GetCancelReturnListDtio.OrderDetailInfo>> getOrderDetailResponseMap(List<String> toOrderIds) {
         List<GetCancelReturnListDtio.OrderDetailInfo> detailResponseDtioList = queryFactory
                 .select(
-                        new QGetCancelReturnListDtio_OrderDetailInfo (
+                        new QGetCancelReturnListDtio_OrderDetailInfo(
                                 orderDetail.orderNo,
                                 orderDetail.product.id,
                                 orderDetail.product.productNo,

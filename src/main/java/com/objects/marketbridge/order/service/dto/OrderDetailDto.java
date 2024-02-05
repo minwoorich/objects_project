@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.service.dto;
 
-import com.objects.marketbridge.common.domain.Coupon;
+import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.product.domain.Product;
 import lombok.Builder;
