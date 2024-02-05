@@ -128,16 +128,16 @@ class OrderDtoRepositoryTest {
         List<GetCancelReturnListDtio.OrderDetailInfo> detailResponses2Dao = content.get(1).getOrderDetailInfos();
 
         assertThat(detailResponses1Dao).hasSize(2)
-                .extracting("orderNo", "productId", "productNo", "name", "price", "quantity", "orderStatus")
+                .extracting("orderNo", "productNo", "name", "price", "quantity", "orderStatus")
                 .contains(
-                        tuple("123", 1L, "1", "옷", 1000L, 1L, RETURN_COMPLETED.getCode()),
-                        tuple("123", 2L, "2", "신발", 2000L, 2L, ORDER_CANCEL.getCode())
+                        tuple("123", "1", "옷", 1000L, 1L, RETURN_COMPLETED.getCode()),
+                        tuple("123", "2", "신발", 2000L, 2L, ORDER_CANCEL.getCode())
                 );
 
         assertThat(detailResponses2Dao).hasSize(1)
-                .extracting("orderNo", "productId", "productNo", "name", "price", "quantity", "orderStatus")
+                .extracting("orderNo", "productNo", "name", "price", "quantity", "orderStatus")
                 .contains(
-                        tuple("456", 3L, "3", "바지", 3000L, 3L, ORDER_CANCEL.getCode())
+                        tuple("456", "3", "바지", 3000L, 3L, ORDER_CANCEL.getCode())
                 );
 
     }
