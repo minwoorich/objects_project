@@ -3,7 +3,7 @@ package com.objects.marketbridge.order.infra;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.Address;
-import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.member.domain.Member;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

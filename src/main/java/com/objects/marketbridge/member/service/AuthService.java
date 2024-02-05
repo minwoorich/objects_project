@@ -1,6 +1,6 @@
 package com.objects.marketbridge.member.service;
 
-import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.dto.SignUpDto;
 import com.objects.marketbridge.member.service.port.AuthRepository;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.objects.marketbridge.common.domain;
+package com.objects.marketbridge.member.domain;
 
 import com.objects.marketbridge.member.dto.FindPointDto;
 import jakarta.persistence.*;

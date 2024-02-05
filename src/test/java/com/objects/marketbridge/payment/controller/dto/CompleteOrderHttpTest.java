@@ -1,6 +1,6 @@
 package com.objects.marketbridge.payment.controller.dto;
 
-import com.objects.marketbridge.common.domain.AddressValue;
+import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.order.domain.Address;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.payment.domain.Amount;

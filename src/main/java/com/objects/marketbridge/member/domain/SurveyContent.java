@@ -1,4 +1,4 @@
-package com.objects.marketbridge.common.domain;
+package com.objects.marketbridge.member.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

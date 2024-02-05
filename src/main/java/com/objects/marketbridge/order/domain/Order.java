@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.domain;
 
-import com.objects.marketbridge.common.domain.BaseEntity;
-import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.member.domain.BaseEntity;
+import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.payment.domain.Payment;
 import jakarta.persistence.*;
@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package com.objects.marketbridge.review.service;
 
-import com.objects.marketbridge.common.domain.Member;
+import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.review.domain.Review;
 import com.objects.marketbridge.member.service.port.MemberRepository;

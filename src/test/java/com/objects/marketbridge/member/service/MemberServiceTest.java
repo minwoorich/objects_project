@@ -1,8 +1,8 @@
 package com.objects.marketbridge.member.service;
 
-import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.common.domain.MembershipType;
-import com.objects.marketbridge.common.domain.SocialType;
+import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.domain.MembershipType;
+import com.objects.marketbridge.member.domain.SocialType;
 import com.objects.marketbridge.member.mock.FakeMemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,9 +1,9 @@
 package com.objects.marketbridge.member.dto;
 
 
-import com.objects.marketbridge.common.domain.Member;
-import com.objects.marketbridge.common.domain.MembershipType;
-import com.objects.marketbridge.common.domain.SocialType;
+import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.domain.MembershipType;
+import com.objects.marketbridge.member.domain.SocialType;
 import jakarta.validation.constraints.*;
 import lombok.*;
 @Getter
