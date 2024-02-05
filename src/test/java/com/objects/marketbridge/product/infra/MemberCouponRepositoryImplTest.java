@@ -31,14 +31,14 @@ class MemberCouponRepositoryImplTest {
         Member member = Member.builder().email("test@email.com").build();
         memberRepository.save(member);
         Coupon coupon = Coupon.builder().name("5000원짜리 쿠폰").build();
+        MemberCoupon memberCoupon = MemberCoupon.builder().member(member).build();
+        coupon.addMemberCoupon(memberCoupon);
         couponRepository.save(coupon);
-        MemberCoupon memberCoupon = MemberCoupon.builder().member(member).coupon(coupon).build();
-        memberCouponRepository.save(memberCoupon);
     }
 
     @DisplayName("멤버아이디와 쿠폰아이디로 멤버쿠폰을 가져올수 있다.")
     @Test
-    void findByMember_IdAndCoupon_Id(){
+    void findByMemberIdAndCouponId(){
         //given
         Member member = memberRepository.findByEmail("test@email.com");
         Coupon coupon = couponRepository.findAll().get(0);

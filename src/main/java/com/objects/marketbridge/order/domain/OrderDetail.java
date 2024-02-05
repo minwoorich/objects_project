@@ -39,7 +39,7 @@ public class OrderDetail extends BaseEntity {
 
     private String orderNo;
 
-    private Long price;
+    private Long price; // quantity * 상품 price
 
     private String statusCode;
 
@@ -79,7 +79,7 @@ public class OrderDetail extends BaseEntity {
         this.statusCode = statusCode;
     }
 
-    public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long quantity, Long price, Long sellerId, String statusCode) {
+    public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long quantity, Long sellerId, String statusCode) {
 
         return OrderDetail.builder()
                 .tid(tid)
@@ -88,7 +88,7 @@ public class OrderDetail extends BaseEntity {
                 .product(product)
                 .memberCoupon(memberCoupon)
                 .quantity(quantity)
-                .price(price)
+                .price(product.getPrice() * quantity)
                 .sellerId(sellerId)
                 .statusCode(statusCode)
                 .build();
