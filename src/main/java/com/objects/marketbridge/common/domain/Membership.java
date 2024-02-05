@@ -24,13 +24,6 @@ public class Membership extends BaseEntity{
 
     private String cid;
 
-    @JoinColumn(name = "partner_order_id")
-    private String partnerOrderId;
-
-    @JoinColumn(name = "partner_user_id")
-    private String partnerUserId;
-
-    @JoinColumn(name = "item_name")
     private String itemName;
 
     private Long quantity;
@@ -54,11 +47,9 @@ public class Membership extends BaseEntity{
     private Amount amount;
 
     @Builder
-    public Membership(Member member, String cid, String partnerOrderId, String partnerUserId, String itemName, Long quantity, String tid, String sid, String subsOrderNo, String statusCode, String paymentMethod, CardInfo cardInfo, Amount amount) {
+    public Membership(Member member, String cid, String itemName, Long quantity, String tid, String sid, String subsOrderNo, String statusCode, String paymentMethod, CardInfo cardInfo, Amount amount) {
         this.member = member;
         this.cid = cid;
-        this.partnerOrderId = partnerOrderId;
-        this.partnerUserId = partnerUserId;
         this.itemName = itemName;
         this.quantity = quantity;
         this.tid = tid;
@@ -79,12 +70,12 @@ public class Membership extends BaseEntity{
                 .build();
     }
 
-    public void update(String tid, String sid, String cid, String partnerOrderId,String partnerUserId, String itemName ,Long quantity, String paymentMethod, CardInfo cardInfo , Amount amount) {
+    public void update(Member member , String subsOrderNo,String tid, String sid, String cid, String itemName ,Long quantity, String paymentMethod, CardInfo cardInfo , Amount amount) {
+           this.member =member;
+           this.subsOrderNo=subsOrderNo;
            this.tid = tid;
            this.sid = sid;
            this.cid = cid;
-           this.partnerOrderId = partnerOrderId;
-           this.partnerUserId = partnerUserId;
            this.itemName = itemName;
            this.quantity = quantity;
            this.paymentMethod = paymentMethod;
