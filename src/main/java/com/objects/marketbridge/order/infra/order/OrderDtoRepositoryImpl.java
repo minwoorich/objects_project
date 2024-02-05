@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.objects.marketbridge.common.domain.QMember.member;
+import static com.objects.marketbridge.member.domain.QMember.member;
 import static com.objects.marketbridge.order.domain.QAddress.address;
 import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
