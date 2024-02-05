@@ -1,6 +1,5 @@
 package com.objects.marketbridge.order.infra.order;
 
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
 import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_OrderDetailInfo;
@@ -12,6 +11,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.objects.marketbridge.member.domain.QMember.member;
+import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
 import static com.objects.marketbridge.order.domain.QAddress.address;
 import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
@@ -33,6 +34,7 @@ import static com.objects.marketbridge.product.domain.QProduct.product;
 import static org.springframework.util.StringUtils.hasText;
 
 
+@Slf4j
 @Repository
 @Transactional(readOnly = true)
 public class OrderDtoRepositoryImpl implements OrderDtoRepository {
@@ -82,7 +84,7 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     private Map<String, List<GetCancelReturnListDtio.OrderDetailInfo>> getOrderDetailResponseMap(List<String> toOrderIds) {
         List<GetCancelReturnListDtio.OrderDetailInfo> detailResponseDtioList = queryFactory
                 .select(
-                        new QGetCancelReturnListDtio_OrderDetailInfo (
+                        new QGetCancelReturnListDtio_OrderDetailInfo(
                                 orderDetail.orderNo,
                                 orderDetail.product.id,
                                 orderDetail.product.productNo,
@@ -121,7 +123,7 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     }
 
     @Override
-    public Page<OrderDto> findByMemberIdWithMemberAddress(GetOrderHttp.Condition condition, Pageable pageable) {
+    public Page<OrderDto> findByMemberIdWithMemberAddress(Condition condition, Pageable pageable) {
         List<Order> orders = queryFactory
                 .selectFrom(order)
                 .join(order.address, address).fetchJoin()
@@ -133,6 +135,7 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                 .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetch();
 
+        // 엔티티 -> dto 로 변환
         List<OrderDto> orderDtos = orders.stream().map(OrderDto::of).toList();
 
         return new PageImpl<>(orderDtos, pageable, orderDtos.size());

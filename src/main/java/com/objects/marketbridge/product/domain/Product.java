@@ -9,7 +9,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,7 +125,12 @@ public class Product extends BaseEntity {
 
     private void verifyStockAvailable(Long quantity) {
         if (stock - quantity < 0) {
-            throw new CustomLogicException("재고가 없습니다",OUT_OF_STOCK);
+            throw CustomLogicException.builder()
+                    .errorCode(OUT_OF_STOCK)
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message("재고가 부족합니다")
+                    .timestamp(LocalDateTime.now())
+                    .build();
         }
     }
 }

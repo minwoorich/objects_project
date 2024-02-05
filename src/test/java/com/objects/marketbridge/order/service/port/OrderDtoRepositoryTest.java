@@ -1,8 +1,11 @@
 package com.objects.marketbridge.order.service.port;
 
+import com.objects.marketbridge.member.domain.AddressValue;
+import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
+import com.objects.marketbridge.order.domain.Address;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
@@ -146,7 +149,13 @@ class OrderDtoRepositoryTest {
 
         //given
         Member member = createMember("1");
+        Address address = createAddress("서울");
+        member.addAddress(address);
         memberRepository.save(member);
+
+        Coupon coupon = Coupon.builder()
+                .price(500L)
+                .build();
 
         Product product1 = createProduct(1000L, "1");
         Product product2 = createProduct(2000L, "2");
@@ -170,10 +179,10 @@ class OrderDtoRepositoryTest {
         OrderDetail orderDetail11 = createOrderDetail(product3, 4L, "4");
         OrderDetail orderDetail12 = createOrderDetail(product4, 4L, "4");
 
-        Order order1 = createOrder(member, "1", List.of(orderDetail1, orderDetail2, orderDetail3));
-        Order order2 = createOrder(member, "2", List.of(orderDetail4, orderDetail5, orderDetail6));
-        Order order3 = createOrder(member, "3", List.of(orderDetail7, orderDetail8, orderDetail9));
-        Order order4 = createOrder(member, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
+        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3));
+        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6));
+        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9));
+        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
         orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
 
         PageRequest page = PageRequest.of(0, 10);
@@ -187,12 +196,18 @@ class OrderDtoRepositoryTest {
 
         //when
         Page<OrderDto> orders = orderDtoRepository.findByMemberIdWithMemberAddress(condition1, page);
-        orderDtoRepository.findByMemberIdWithMemberAddress(condition2, page);
-        orderDtoRepository.findByMemberIdWithMemberAddress(condition3, page);
+        List<OrderDto> contents = orders.getContent();
 
         //then
-        assertThat(orders).hasSize(0);
+        assertThat(contents).hasSize(4);
+        assertThat(contents.get(0).getMemberId()).isEqualTo(1L);
+        assertThat(contents.get(0).getAddress().getCity()).isEqualTo("서울");
+        assertThat(contents.get(0).getOrderDetails()).hasSize(3);
+        assertThat(contents.get(0).getOrderDetails().get(0).getOrderNo()).isEqualTo("1");
+    }
 
+    private Address createAddress(String city) {
+        return Address.builder().addressValue(AddressValue.builder().city(city).build()).build();
     }
 
     @DisplayName("전체 주문 목록을 조회 할 경우 페이징이 가능하다")
@@ -201,6 +216,8 @@ class OrderDtoRepositoryTest {
 
         //given
         Member member = createMember("1");
+        Address address = createAddress("서울");
+        member.addAddress(address);
         memberRepository.save(member);
 
         Product product1 = createProduct(1000L, "1");
@@ -225,10 +242,10 @@ class OrderDtoRepositoryTest {
         OrderDetail orderDetail11 = createOrderDetail(product3, 4L, "4");
         OrderDetail orderDetail12 = createOrderDetail(product4, 4L, "4");
 
-        Order order1 = createOrder(member, "1", List.of(orderDetail1, orderDetail2, orderDetail3));
-        Order order2 = createOrder(member, "2", List.of(orderDetail4, orderDetail5, orderDetail6));
-        Order order3 = createOrder(member, "3", List.of(orderDetail7, orderDetail8, orderDetail9));
-        Order order4 = createOrder(member, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
+        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3));
+        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6));
+        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9));
+        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
         orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
 
         PageRequest pageSize1 = PageRequest.of(0, 1);
@@ -255,10 +272,11 @@ class OrderDtoRepositoryTest {
                 .build();
     }
 
-    private Order createOrder(Member member1, String orderNo, List<OrderDetail> orderDetails) {
+    private Order createOrder(Member member1, Address address, String orderNo, List<OrderDetail> orderDetails) {
 
         Order order = Order.builder()
                 .member(member1)
+                .address(address)
                 .orderNo(orderNo)
                 .build();
 
