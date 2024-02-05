@@ -1,9 +1,9 @@
     package com.objects.marketbridge.member.service;
 
-    import com.objects.marketbridge.common.domain.Member;
-    import com.objects.marketbridge.common.domain.Membership;
     import com.objects.marketbridge.common.dto.*;
     import com.objects.marketbridge.common.infra.KakaoPayService;
+    import com.objects.marketbridge.member.domain.Member;
+    import com.objects.marketbridge.member.domain.Membership;
     import com.objects.marketbridge.member.dto.CreateSubsDto;
     import com.objects.marketbridge.member.service.port.MemberRepository;
     import com.objects.marketbridge.member.service.port.MembershipRepository;
@@ -15,8 +15,7 @@
     import org.springframework.transaction.annotation.Transactional;
 
     import static com.objects.marketbridge.common.config.KakaoPayConfig.SUBS_CID;
-    import static com.objects.marketbridge.common.domain.MembershipType.BASIC;
-    import static com.objects.marketbridge.common.domain.MembershipType.WOW;
+    import static com.objects.marketbridge.member.domain.MembershipType.WOW;
 
     @Slf4j
     @Service
