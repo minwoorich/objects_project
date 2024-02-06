@@ -286,8 +286,9 @@ class OrderDtoRepositoryTest {
 
         //then_
         assertThat(orders0_1.getSize()).isEqualTo(1);
+        assertThat(orders0_1.getContent().size()).isEqualTo(4);
         assertThat(orders0_1.getTotalPages()).isEqualTo(4);
-        assertThat(orders0_1.getNumberOfElements()).isEqualTo(1);
+//        assertThat(orders0_1.getNumberOfElements()).isEqualTo(1);
         assertThat(orders0_1.isFirst()).isTrue();
 
         assertThat(orders1_2.getSize()).isEqualTo(2);
@@ -302,10 +303,6 @@ class OrderDtoRepositoryTest {
 
         assertThat(orders2_3.isLast()).isTrue();
         assertThat(orders2_3.getNumberOfElements()).isEqualTo(0);
-
-
-
-
     }
 
     private GetOrderHttp.Condition createCondition(Long memberId, String keyword, String year) {

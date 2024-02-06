@@ -23,6 +23,7 @@ public class GetOrderService {
     // TODO : 전체 주문 목록 조회 서비스코드 작성
     public Response find(Pageable pageable, Condition condition) {
         Page<OrderDto> pagedOrders = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageable);
+
         return null;
     }
 }

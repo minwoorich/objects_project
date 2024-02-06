@@ -4,6 +4,7 @@ import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
 import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_OrderDetailInfo;
 import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_Response;
+import com.objects.marketbridge.order.service.dto.OrderDetailDto;
 import com.objects.marketbridge.order.service.dto.OrderDto;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -17,8 +18,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.support.PageableUtils;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -133,18 +136,36 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                         eqMemberId(condition.getMemberId()),
                         eqYear(condition.getYear())
                 )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+//                .offset(pageable.getOffset())
+//                .limit(pageable.getPageSize())
                 .fetch();
 
         // 엔티티 -> dto 로 변환
         List<OrderDto> orderDtos = orders.stream().map(OrderDto::of).toList();
-        JPAQuery<Long> countQuery = createCountOrdersQuery(condition);
+        log.info("orderDtos 사이즈 : {}", orderDtos.size());
+        // 카운트 쿼리
+        JPAQuery<Long> countQuery = createCountOrdersQuery(condition, pageable);
 
-        return PageableExecutionUtils.getPage(orderDtos, pageable, countQuery::fetchOne);
+        List<OrderDto> filteredOrderDtos = filterByKeyword(condition.getKeyword(), orderDtos);
+        log.info("filteredOrderDtos 사이즈 : {}", filteredOrderDtos.size());
+
+//        return PageableExecutionUtils.getPage(filteredOrderDtos, pageable, countQuery::fetchOne);
+        return new PageImpl<>(filteredOrderDtos, pageable, filteredOrderDtos.size());
     }
 
-    private JPAQuery<Long> createCountOrdersQuery(Condition condition) {
+    private List<OrderDto> filterByKeyword(String keyword, List<OrderDto> orderDtos) {
+        // keyword 있으면 필터링 한것 반환, 없으면 그냥 그대로 orderDtos반환
+        return StringUtils.hasText(keyword) ?
+            orderDtos.stream()
+                .filter(orderDto ->
+                        // OrderDto의 OrderDetailsDto 리스트에서 ProductDto의 이름이 키워드를 포함하는지 여부 확인
+                        orderDto.getOrderDetails().stream()
+                                .anyMatch(orderDetailsDto ->
+                                        orderDetailsDto.getProduct().getName().contains(keyword))).toList()
+            :orderDtos;
+    }
+
+    private JPAQuery<Long> createCountOrdersQuery(Condition condition, Pageable pageable) {
         return queryFactory
                 .select(order.count())
                 .from(order)
