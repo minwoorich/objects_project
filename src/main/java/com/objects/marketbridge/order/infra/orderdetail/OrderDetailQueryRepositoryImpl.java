@@ -52,4 +52,9 @@ public class OrderDetailQueryRepositoryImpl implements OrderDetailQueryRepositor
         return orderDetailJpaRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
     }
 
+    @Override
+    public List<OrderDetail> findByIdIn(List<Long> orderDetailIds) {
+        return null;
+    }
+
 }

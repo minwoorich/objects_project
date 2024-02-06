@@ -1,8 +1,8 @@
 package com.objects.marketbridge.order.domain;
 
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.MemberCoupon;
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
@@ -61,35 +61,20 @@ class OrderTest {
         Product product2 = Product.builder()
                 .build();
 
-        Coupon coupon1 = Coupon.builder()
-                .product(product1)
-                .price(1000L)
-                .count(10L)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .product(product2)
-                .price(2000L)
-                .count(20L)
-                .build();
-
         OrderDetail orderDetail1 = OrderDetail.builder()
                 .order(order)
-                .coupon(coupon1)
                 .product(product1)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
                 .order(order)
-                .coupon(coupon2)
                 .product(product2)
                 .build();
 
         MemberCoupon memberCoupon1 = MemberCoupon.builder()
-                .coupon(coupon1)
                 .isUsed(true)
                 .usedDate(useDate)
                 .build();
         MemberCoupon memberCoupon2 = MemberCoupon.builder()
-                .coupon(coupon2)
                 .isUsed(true)
                 .usedDate(useDate)
                 .build();
@@ -99,10 +84,6 @@ class OrderTest {
         productRepository.saveAll(List.of(product1, product2));
         order.addOrderDetail(orderDetail1);
         order.addOrderDetail(orderDetail2);
-        coupon1.addMemberCoupon(memberCoupon1);
-        coupon2.addMemberCoupon(memberCoupon2);
-        couponRepository.save(coupon1);
-        couponRepository.save(coupon2);
         memberCouponRepository.save(memberCoupon1);
         memberCouponRepository.save(memberCoupon2);
 
@@ -116,8 +97,6 @@ class OrderTest {
         );
 
         // then
-        assertThat(coupon1.getCount()).isEqualTo(10L);
-        assertThat(coupon2.getCount()).isEqualTo(20L);
         assertThat(memberCoupon1.getUsedDate()).isNull();
         assertThat(memberCoupon2.getUsedDate()).isNull();
         assertThat(memberCoupon1.getIsUsed()).isFalse();

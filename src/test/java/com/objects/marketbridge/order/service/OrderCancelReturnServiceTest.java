@@ -1,14 +1,14 @@
 package com.objects.marketbridge.order.service;
 
-import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.order.mock.BaseFakeOrderDetailRepository;
-import com.objects.marketbridge.order.mock.TestContainer;
-import com.objects.marketbridge.order.mock.TestDateTimeHolder;
+import com.objects.marketbridge.order.controller.dto.ConfirmCancelReturnHttp;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.StatusCodeType;
+import com.objects.marketbridge.order.mock.BaseFakeOrderDetailRepository;
+import com.objects.marketbridge.order.mock.TestContainer;
+import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.service.dto.ConfirmCancelReturnDto;
 import com.objects.marketbridge.order.service.dto.GetCancelReturnDetailDto;
 import com.objects.marketbridge.order.service.dto.RequestCancelDto;
@@ -56,18 +56,7 @@ class OrderCancelReturnServiceTest {
                 .stock(5L)
                 .build();
 
-        Coupon coupon1 = Coupon.builder()
-                .name("빵빵이키링쿠폰")
-                .product(product1)
-                .price(1000L)
-                .count(10L)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .name("옥지얌키링쿠폰")
-                .product(product2)
-                .price(2000L)
-                .count(10L)
-                .build();
+        // TODO MemberCoupon
 
         Order order = Order.builder()
                 .orderNo("1")
@@ -83,8 +72,8 @@ class OrderCancelReturnServiceTest {
                 .quantity(2L)
                 .product(product1)
                 .price(1000L)
-                .coupon(coupon1)
                 .order(order)
+                .orderNo(order.getOrderNo())
                 .reason("단순변심")
                 .statusCode(StatusCodeType.ORDER_RECEIVED.getCode())
                 .tid("1")
@@ -94,8 +83,8 @@ class OrderCancelReturnServiceTest {
                 .quantity(3L)
                 .product(product2)
                 .price(2000L)
-                .coupon(coupon2)
                 .order(order)
+                .orderNo(order.getOrderNo())
                 .reason("단순변심")
                 .statusCode(StatusCodeType.DELIVERY_ING.getCode())
                 .tid("1")
@@ -120,8 +109,18 @@ class OrderCancelReturnServiceTest {
     @DisplayName("취소/반품 확정")
     public void confirmCancelReturn() {
         // given
+        ConfirmCancelReturnDto.OrderDetailInfo orderDetailInfo1 = ConfirmCancelReturnDto.OrderDetailInfo.builder()
+                .orderDetailId(1L)
+                .numberOfCancellation(1L)
+                .build();
+        ConfirmCancelReturnDto.OrderDetailInfo orderDetailInfo2 = ConfirmCancelReturnDto.OrderDetailInfo.builder()
+                .orderDetailId(2L)
+                .numberOfCancellation(2L)
+                .build();
+        List<ConfirmCancelReturnDto.OrderDetailInfo> orderDetailInfos = List.of(orderDetailInfo1, orderDetailInfo2);
+
         ConfirmCancelReturnDto.Request request = ConfirmCancelReturnDto.Request.builder()
-                .orderNo("1")
+                .orderDetailInfos(orderDetailInfos)
                 .cancelReason("단순변심")
                 .build();
 
@@ -140,12 +139,12 @@ class OrderCancelReturnServiceTest {
         assertThat(result.getCancellationDate()).isEqualTo(updateTime);
         assertThat(result.getRefundInfo())
                 .extracting("totalRefundAmount", "refundMethod", "refundProcessedAt")
-                .contains(8000L, "카드", cancelDate);
+                .contains(5000L, "카드", cancelDate);
         assertThat(result.getCancelledItems()).hasSize(2)
                 .extracting("productId", "productNo", "name", "price", "quantity")
                 .contains(
-                        tuple(1L, "1", "빵빵이키링", 1000L, 2L),
-                        tuple(2L, "2", "옥지얌키링", 2000L, 3L)
+                        tuple(1L, "1", "빵빵이키링", 1000L, 1L),
+                        tuple(2L, "2", "옥지얌키링", 2000L, 2L)
                 );
     }
 

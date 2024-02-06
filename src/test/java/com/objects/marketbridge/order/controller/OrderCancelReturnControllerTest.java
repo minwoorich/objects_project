@@ -1,16 +1,15 @@
 package com.objects.marketbridge.order.controller;
 
-import com.objects.marketbridge.member.domain.Coupon;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
+import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.order.controller.dto.*;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.mock.BaseFakeOrderDetailRepository;
 import com.objects.marketbridge.order.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.order.mock.TestContainer;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
-import com.objects.marketbridge.order.controller.dto.*;
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.product.domain.Product;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,19 +53,8 @@ public class OrderCancelReturnControllerTest {
                 .stock(5L)
                 .build();
 
-        Coupon coupon1 = Coupon.builder()
-                .name("빵빵이키링쿠폰")
-                .product(product1)
-                .price(1000L)
-                .count(10L)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .name("옥지얌키링쿠폰")
-                .product(product2)
-                .price(2000L)
-                .count(10L)
-                .build();
-
+        // TODO MemberCoupon 추가
+        
         Order order = Order.builder()
                 .member(member)
                 .orderNo("1")
@@ -82,7 +70,6 @@ public class OrderCancelReturnControllerTest {
                 .quantity(2L)
                 .product(product1)
                 .price(1000L)
-                .coupon(coupon1)
                 .order(order)
                 .reason("단순변심")
                 .orderNo("1")
@@ -95,7 +82,6 @@ public class OrderCancelReturnControllerTest {
                 .quantity(3L)
                 .product(product2)
                 .price(2000L)
-                .coupon(coupon2)
                 .order(order)
                 .reason("단순변심")
                 .orderNo("1")
@@ -128,7 +114,7 @@ public class OrderCancelReturnControllerTest {
         // given
         ConfirmCancelReturnHttp.Request request = ConfirmCancelReturnHttp.Request.builder()
                 .cancelReason("단순변심")
-                .orderNo("1")
+//                .orderNo("1")
                 .build();
 
         // when

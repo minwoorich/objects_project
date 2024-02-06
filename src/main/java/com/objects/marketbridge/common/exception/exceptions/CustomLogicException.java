@@ -22,6 +22,7 @@ public class CustomLogicException extends RuntimeException {
         this.errorCode = errorCode;
         this.timestamp = timestamp;
     }
+
     public CustomLogicException(String message) {
         super(message);
     }

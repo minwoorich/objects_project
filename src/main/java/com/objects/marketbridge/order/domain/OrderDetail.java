@@ -1,17 +1,20 @@
 package com.objects.marketbridge.order.domain;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.member.domain.BaseEntity;
-import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
+import static org.springframework.http.HttpStatus.*;
 
 @Entity
 @Getter
@@ -94,23 +97,44 @@ public class OrderDetail extends BaseEntity {
                 .build();
     }
 
-    public Integer changeReasonAndStatus(String reason, String statusCode) {
+    public Integer changeReasonAndStatus(String reason, String statusCode, Long numberOfCancellations) {
         // TODO 정책 정해야 함
         if (Objects.equals(this.statusCode, DELIVERY_COMPLETED.getCode())) {
-            throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
+            throw CustomLogicException.builder()
+                    .httpStatus(BAD_REQUEST)
+                    .message("취소가 불가능한 상품입니다.")
+                    .timestamp(LocalDateTime.now())
+                    .errorCode(NON_CANCELLABLE_PRODUCT)
+                    .build();
         }
-        this.statusCode = statusCode;
+        Integer totalAmount = totalAmount(numberOfCancellations, LocalDateTime.now());
+        this.quantity -= numberOfCancellations;
+        this.product.increase(numberOfCancellations);
         this.reason = reason;
-        this.product.increase(quantity);
-        return totalAmount();
+        this.statusCode = statusCode;
+        return totalAmount;
     }
 
-    public Integer totalAmount() {
+    public Integer totalAmount(Long quantity, LocalDateTime dateTime) {
+        if(quantity > this.quantity) {
+            throw CustomLogicException.builder()
+                    .errorCode(QUANTITY_EXCEEDED)
+                    .timestamp(dateTime)
+                    .message("수량이 초과 되었습니다.")
+                    .httpStatus(BAD_REQUEST)
+                    .build();
+        }
         return (int) (price * quantity);
     }
 
+    public Integer totalAmount() {
+        return totalAmount(this.quantity, LocalDateTime.now());
+    }
+
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
-        memberCoupon.changeUsageInfo(dateTimeHolder);
+        if (memberCoupon != null) {
+            memberCoupon.changeUsageInfo(dateTimeHolder);
+        }
     }
 
     public void setProduct(Product product) {

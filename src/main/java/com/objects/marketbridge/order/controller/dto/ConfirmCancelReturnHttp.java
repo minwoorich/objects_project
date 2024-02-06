@@ -16,20 +16,46 @@ public class ConfirmCancelReturnHttp {
     public static class Request {
 
         @NotNull
-        private String orderNo;
+        private List<OrderDetailInfo> orderDetailInfos;
         @NotNull
         private String cancelReason;
 
         @Builder
-        public Request(String orderNo, String cancelReason) {
-            this.orderNo = orderNo;
+        public Request(List<OrderDetailInfo> orderDetailInfos, String cancelReason) {
+            this.orderDetailInfos = orderDetailInfos;
             this.cancelReason = cancelReason;
         }
 
-        public ConfirmCancelReturnDto.Request toServiceRequest() {
+        public ConfirmCancelReturnDto.Request toDto() {
             return ConfirmCancelReturnDto.Request.builder()
-                    .orderNo(orderNo)
+                    .orderDetailInfos(getDtoOrderDetailInfos())
                     .cancelReason(cancelReason)
+                    .build();
+        }
+
+        private List<ConfirmCancelReturnDto.OrderDetailInfo> getDtoOrderDetailInfos() {
+            return orderDetailInfos.stream()
+                    .map(OrderDetailInfo::of)
+                    .toList();
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class OrderDetailInfo {
+        private Long orderDetailId;
+        private Long numberOfCancellation;
+
+        @Builder
+        public OrderDetailInfo(Long orderDetailId, Long numberOfCancellation) {
+            this.orderDetailId = orderDetailId;
+            this.numberOfCancellation = numberOfCancellation;
+        }
+
+        public static ConfirmCancelReturnDto.OrderDetailInfo of(OrderDetailInfo orderDetailInfo) {
+            return ConfirmCancelReturnDto.OrderDetailInfo.builder()
+                    .orderDetailId(orderDetailInfo.getOrderDetailId())
+                    .numberOfCancellation(orderDetailInfo.getNumberOfCancellation())
                     .build();
         }
     }

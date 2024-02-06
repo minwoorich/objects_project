@@ -1,16 +1,16 @@
 package com.objects.marketbridge.order.service.dto;
 
-import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
+import com.objects.marketbridge.product.domain.Product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public class ConfirmCancelReturnDto {
 
@@ -18,13 +18,26 @@ public class ConfirmCancelReturnDto {
     @NoArgsConstructor
     public static class Request {
 
-        private String orderNo;
+        private List<OrderDetailInfo> orderDetailInfos;
         private String cancelReason;
 
         @Builder
-        private Request(String orderNo, String cancelReason) {
-            this.orderNo = orderNo;
+        public Request(List<OrderDetailInfo> orderDetailInfos, String cancelReason) {
+            this.orderDetailInfos = orderDetailInfos;
             this.cancelReason = cancelReason;
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class OrderDetailInfo {
+        private Long orderDetailId;
+        private Long numberOfCancellation;
+
+        @Builder
+        public OrderDetailInfo(Long orderDetailId, Long numberOfCancellation) {
+            this.orderDetailId = orderDetailId;
+            this.numberOfCancellation = numberOfCancellation;
         }
     }
 
@@ -49,29 +62,24 @@ public class ConfirmCancelReturnDto {
             this.cancelledItems = cancelledItems;
         }
 
-        public static Response of(Order order, RefundDto refundDto, DateTimeHolder dateTimeHolder) {
+        public static Response of(ServiceDto serviceDto, DateTimeHolder dateTimeHolder) {
+            List<OrderDetail> orderDetails = serviceDto.getOrderDetails();
+            Map<Long, OrderDetailInfo> orderDetailInfoMap = serviceDto.getOrderDetailInfoMap();
+
             return Response.builder()
-                    .orderId(order.getId())
-                    .orderNo(order.getOrderNo())
-                    .totalPrice(
-                            order.getOrderDetails()
-                                    .stream()
-                                    .mapToLong(OrderDetail::totalAmount)
-                                    .sum()
-                    )
-                    .cancellationDate(dateTimeHolder.getUpdateTime(order))
-                    .refundInfo(RefundInfo.of(refundDto))
+                    .orderId(orderDetails.get(0).getOrder().getId())
+                    .orderNo(orderDetails.get(0).getOrderNo())
+                    .totalPrice(serviceDto.getTotalPrice())
+                    .cancellationDate(dateTimeHolder.getUpdateTime(orderDetails.get(0).getOrder()))
+                    .refundInfo(RefundInfo.of(serviceDto.getRefundDto()))
                     .cancelledItems(
-                            order.getOrderDetails().stream()
-                                    .map(Response::getProductInfo)
+                            orderDetails.stream()
+                                    .map(orderDetail -> ProductInfo.of(orderDetail, orderDetailInfoMap.get(orderDetail.getId())))
                                     .toList()
                     )
                     .build();
         }
 
-        private static ProductInfo getProductInfo(OrderDetail orderDetail) {
-            return ProductInfo.of(orderDetail.getProduct(), orderDetail.getQuantity());
-        }
     }
 
     @Getter
@@ -93,35 +101,15 @@ public class ConfirmCancelReturnDto {
             this.quantity = quantity;
         }
 
-        public static ProductInfo of(Product product, Long quantity) {
+        public static ProductInfo of(OrderDetail orderDetail, ConfirmCancelReturnDto.OrderDetailInfo orderDetailInfo) {
             return ProductInfo.builder()
-                    .productId(product.getId())
-                    .name(product.getName())
-                    .price(product.getPrice())
-                    .quantity(quantity)
-                    .productNo(product.getProductNo())
+                    .productId(orderDetail.getProduct().getId())
+                    .name(orderDetail.getProduct().getName())
+                    .price(orderDetail.getProduct().getPrice())
+                    .quantity(orderDetailInfo.getNumberOfCancellation())
+                    .productNo(orderDetail.getProduct().getProductNo())
                     .build();
         }
-
-//        public static ProductInfo of(OrderDetail orderDetail) {
-//            return ProductInfo.builder()
-//                    .productId(orderDetail.getProduct().getId())
-//                    .name(orderDetail.getProduct().getName())
-//                    .price(orderDetail.getProduct().getPrice())
-//                    .quantity(orderDetail.getQuantity())
-//                    .productNo(orderDetail.getProduct().getProductNo())
-//                    .build();
-//        }
-//
-//        public static ProductInfo of(GetCancelReturnDetailDto.ProductInfo productInfo) {
-//            return ProductInfo.builder()
-//                    .productId(productInfo.getProductId())
-//                    .name(productInfo.getName())
-//                    .price(productInfo.getPrice())
-//                    .quantity(productInfo.getQuantity())
-//                    .productNo(productInfo.getProductNo())
-//                    .build();
-//        }
     }
 
     @Getter

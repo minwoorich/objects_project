@@ -1,10 +1,8 @@
 package com.objects.marketbridge.order.service.dto;
 
-import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.MembershipType;
-
-import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -32,21 +30,12 @@ class RequestReturnDtoTest {
                 .thumbImg("옥지얌 이미지")
                 .build();
 
-        Coupon coupon1 = Coupon.builder()
-                .price(1000L)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
-                .build();
-
         OrderDetail orderDetail1 = OrderDetail.builder()
-                .coupon(coupon1)
                 .product(product1)
                 .price(1000L)
                 .quantity(2L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
-                .coupon(coupon2)
                 .product(product2)
                 .price(2000L)
                 .quantity(2L)
@@ -87,21 +76,12 @@ class RequestReturnDtoTest {
                 .thumbImg("옥지얌 이미지")
                 .build();
 
-        Coupon coupon1 = Coupon.builder()
-                .price(1000L)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
-                .build();
-
         OrderDetail orderDetail1 = OrderDetail.builder()
-                .coupon(coupon1)
                 .product(product1)
                 .price(1000L)
                 .quantity(2L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
-                .coupon(coupon2)
                 .product(product2)
                 .price(2000L)
                 .quantity(2L)
@@ -135,12 +115,7 @@ class RequestReturnDtoTest {
                 .thumbImg("빵빵이 이미지")
                 .build();
 
-        Coupon coupon = Coupon.builder()
-                .price(1000L)
-                .build();
-
         OrderDetail orderDetail = OrderDetail.builder()
-                .coupon(coupon)
                 .product(product)
                 .price(1000L)
                 .quantity(2L)

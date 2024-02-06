@@ -31,21 +31,12 @@ class RequestCancelDtoTest {
                 .thumbImg("옥지얌 이미지")
                 .build();
 
-        Coupon coupon1 = Coupon.builder()
-                .price(1000L)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
-                .build();
-
         OrderDetail orderDetail1 = OrderDetail.builder()
-                .coupon(coupon1)
                 .product(product1)
                 .price(1000L)
                 .quantity(2L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
-                .coupon(coupon2)
                 .product(product2)
                 .price(2000L)
                 .quantity(2L)
@@ -86,21 +77,12 @@ class RequestCancelDtoTest {
                 .thumbImg("옥지얌 이미지")
                 .build();
 
-        Coupon coupon1 = Coupon.builder()
-                .price(1000L)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
-                .build();
-
         OrderDetail orderDetail1 = OrderDetail.builder()
-                .coupon(coupon1)
                 .product(product1)
                 .price(1000L)
                 .quantity(2L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
-                .coupon(coupon2)
                 .product(product2)
                 .price(2000L)
                 .quantity(2L)
@@ -153,20 +135,11 @@ class RequestCancelDtoTest {
         // given
         String memberShip = MembershipType.BASIC.getText();
 
-        Coupon coupon1 = Coupon.builder()
-                .price(1000L)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
-                .build();
-
         OrderDetail orderDetail1 = OrderDetail.builder()
-                .coupon(coupon1)
                 .price(1000L)
                 .quantity(2L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
-                .coupon(coupon2)
                 .price(2000L)
                 .quantity(2L)
                 .build();
@@ -187,20 +160,11 @@ class RequestCancelDtoTest {
         // given
         String memberShip = MembershipType.WOW.getText();
 
-        Coupon coupon1 = Coupon.builder()
-                .price(1000L)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
-                .build();
-
         OrderDetail orderDetail1 = OrderDetail.builder()
-                .coupon(coupon1)
                 .price(1000L)
                 .quantity(2L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
-                .coupon(coupon2)
                 .price(2000L)
                 .quantity(2L)
                 .build();

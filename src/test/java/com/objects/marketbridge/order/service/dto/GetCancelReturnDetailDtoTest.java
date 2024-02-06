@@ -45,26 +45,15 @@ class GetCancelReturnDetailDtoTest {
                 .build();
         ReflectionTestUtils.setField(product2, "id", 2L, Long.class);
 
-        Coupon coupon1 = Coupon.builder()
-                .price(1000L)
-                .product(product1)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
-                .product(product2)
-                .build();
-
         OrderDetail orderDetail1 = OrderDetail.builder()
                 .product(product1)
                 .reason("단순변심")
-                .coupon(coupon1)
                 .price(product1.getPrice())
                 .quantity(1L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
                 .reason("단순변심")
                 .product(product2)
-                .coupon(coupon2)
                 .price(product2.getPrice())
                 .quantity(2L)
                 .build();
@@ -129,14 +118,12 @@ class GetCancelReturnDetailDtoTest {
         OrderDetail orderDetail1 = OrderDetail.builder()
                 .product(product1)
                 .reason("단순변심")
-                .coupon(coupon1)
                 .price(product1.getPrice())
                 .quantity(1L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
                 .reason("단순변심")
                 .product(product2)
-                .coupon(coupon2)
                 .price(product2.getPrice())
                 .quantity(2L)
                 .build();
@@ -242,14 +229,12 @@ class GetCancelReturnDetailDtoTest {
         OrderDetail orderDetail1 = OrderDetail.builder()
                 .product(product1)
                 .reason("단순변심")
-                .coupon(coupon1)
                 .price(1000L)
                 .quantity(1L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
                 .reason("단순변심")
                 .product(product2)
-                .coupon(coupon2)
                 .price(2000L)
                 .quantity(2L)
                 .build();
@@ -284,26 +269,15 @@ class GetCancelReturnDetailDtoTest {
                 .build();
         ReflectionTestUtils.setField(product2, "id", 2L, Long.class);
 
-        Coupon coupon1 = Coupon.builder()
-                .price(1000L)
-                .product(product1)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
-                .product(product2)
-                .build();
-
         OrderDetail orderDetail1 = OrderDetail.builder()
                 .product(product1)
                 .reason("단순변심")
-                .coupon(coupon1)
                 .price(1000L)
                 .quantity(1L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
                 .reason("단순변심")
                 .product(product2)
-                .coupon(coupon2)
                 .price(2000L)
                 .quantity(2L)
                 .build();

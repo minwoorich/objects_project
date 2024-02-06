@@ -12,20 +12,53 @@ import static org.assertj.core.api.Assertions.*;
 class ConfirmCancelReturnHttpTest {
 
     @Test
-    @DisplayName("serviceDto로 변환할 수 있다.")
-    public void toServiceRequest() {
+    @DisplayName("Dto로 변환할 수 있다.")
+    public void toDto() {
         // given
+        ConfirmCancelReturnHttp.OrderDetailInfo httpOrderDetailInfo1 = ConfirmCancelReturnHttp.OrderDetailInfo.builder()
+                .orderDetailId(1L)
+                .numberOfCancellation(1L)
+                .build();
+        ConfirmCancelReturnHttp.OrderDetailInfo httpOrderDetailInfo2 = ConfirmCancelReturnHttp.OrderDetailInfo.builder()
+                .orderDetailId(2L)
+                .numberOfCancellation(2L)
+                .build();
+        List<ConfirmCancelReturnHttp.OrderDetailInfo> httpOrderDetailInfos = List.of(httpOrderDetailInfo1, httpOrderDetailInfo2);
+
         ConfirmCancelReturnHttp.Request request = ConfirmCancelReturnHttp.Request.builder()
-                .orderNo("1")
-                .cancelReason("옥지보단 빵빵이")
+                .orderDetailInfos(httpOrderDetailInfos)
+                .cancelReason("단순변심")
+                .build();
+
+
+        // when
+        ConfirmCancelReturnDto.Request result = request.toDto();
+
+        // then
+        assertThat(result.getOrderDetailInfos()).hasSize(2);
+        assertThat(result.getOrderDetailInfos().get(0).getOrderDetailId()).isEqualTo(1L);
+        assertThat(result.getOrderDetailInfos().get(0).getNumberOfCancellation()).isEqualTo(1L);
+        assertThat(result.getOrderDetailInfos().get(1).getOrderDetailId()).isEqualTo(2L);
+        assertThat(result.getOrderDetailInfos().get(1).getNumberOfCancellation()).isEqualTo(2L);
+
+        assertThat(result.getCancelReason()).isEqualTo("단순변심");
+    }
+
+    @Test
+    @DisplayName("Http.orderDetailInfo가 주어지면 dto.orderDetailInfo로 변환한다.")
+    public void orderDetailInfo_of() {
+        // given
+        ConfirmCancelReturnHttp.OrderDetailInfo httpOrderDetailInfo = ConfirmCancelReturnHttp.OrderDetailInfo.builder()
+                .orderDetailId(1L)
+                .numberOfCancellation(1L)
                 .build();
 
         // when
-        ConfirmCancelReturnDto.Request result = request.toServiceRequest();
+        ConfirmCancelReturnDto.OrderDetailInfo dtoOrderDetailInfo = ConfirmCancelReturnHttp.OrderDetailInfo.of(httpOrderDetailInfo);
 
         // then
-        assertThat(result).extracting("orderNo", "cancelReason")
-                .contains("1", "옥지보단 빵빵이");
+        assertThat(dtoOrderDetailInfo.getOrderDetailId()).isEqualTo(1L);
+        assertThat(dtoOrderDetailInfo.getNumberOfCancellation()).isEqualTo(1L);
     }
 
     @Test

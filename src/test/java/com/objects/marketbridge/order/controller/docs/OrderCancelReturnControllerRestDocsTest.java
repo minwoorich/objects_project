@@ -81,9 +81,11 @@ public class OrderCancelReturnControllerRestDocsTest extends RestDocsSupport {
     public void confirmCancelReturn() throws Exception {
         // given
         ConfirmCancelReturnHttp.Request request = ConfirmCancelReturnHttp.Request.builder()
-                .orderNo("1")
-                .cancelReason("빵빵아! 옥지얌!")
+//                .orderDetailIds(List.of(1L, 2L))
+                .cancelReason("단순변심")
+//                .numberOfCancellations(2L)
                 .build();
+
 
         LocalDateTime cancellationDate = LocalDateTime.of(2024, 1, 18, 12, 26);
         LocalDateTime refundProcessedAt = LocalDateTime.of(2024, 1, 18, 12, 26);

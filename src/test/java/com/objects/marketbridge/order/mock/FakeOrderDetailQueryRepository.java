@@ -39,4 +39,11 @@ public class FakeOrderDetailQueryRepository extends BaseFakeOrderDetailRepositor
                         && productIds.contains(od.getProduct().getId()))
                 .toList();
     }
+
+    @Override
+    public List<OrderDetail> findByIdIn(List<Long> orderDetailIds) {
+        return getInstance().getData().stream()
+                .filter(orderDetail -> orderDetailIds.contains(orderDetail.getId()))
+                .toList();
+    }
 }

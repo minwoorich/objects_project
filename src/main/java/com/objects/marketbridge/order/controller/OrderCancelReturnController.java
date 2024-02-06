@@ -28,8 +28,10 @@ public class OrderCancelReturnController {
     private final DateTimeHolder dateTimeHolder;
 
     @PostMapping("/cancel-return-flow/thank-you")
-    public ApiResponse<ConfirmCancelReturnHttp.Response> confirmCancelReturn(@RequestBody @Valid ConfirmCancelReturnHttp.Request request) {
-        return ApiResponse.ok(ConfirmCancelReturnHttp.Response.of(orderCancelReturnService.confirmCancelReturn(request.toServiceRequest(), dateTimeHolder)));
+    public ApiResponse<ConfirmCancelReturnHttp.Response> confirmCancelReturn(
+            @RequestBody @Valid ConfirmCancelReturnHttp.Request request
+    ) {
+        return ApiResponse.ok(ConfirmCancelReturnHttp.Response.of(orderCancelReturnService.confirmCancelReturn(request.toDto(), dateTimeHolder)));
     }
 
     @GetMapping("/cancel-flow")
@@ -56,6 +58,11 @@ public class OrderCancelReturnController {
 
         PageRequest pageRequest = PageRequest.of(page, size);
         return ApiResponse.ok(GetCancelReturnListHttp.Response.of(orderDtoRepository.findOrdersByMemberId(memberId, pageRequest)));
+    }
+
+    @PostMapping("/cancel-return/list")
+    public ApiResponse<ReturnRecantationHttp.Response> returnRecantation() {
+        return null;
     }
 
     @GetMapping("/cancel-return/{orderNo}")
