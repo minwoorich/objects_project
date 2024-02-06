@@ -59,8 +59,7 @@ public class MemberShipController {
 
     //정기결제 2회차
     @PostMapping("/subscription")
-    public ApiResponse<KakaoPayApproveResponse> kakaoPaySubsPayment()
-    {
+    public ApiResponse<KakaoPayApproveResponse> kakaoPaySubsPayment() {
         //TODO 배치로 DB에서 필요한 값을 받아서 처리를 해야함
 
         KakaoPayApproveResponse response = memberShipService.kakaoPaySubsApprove();
