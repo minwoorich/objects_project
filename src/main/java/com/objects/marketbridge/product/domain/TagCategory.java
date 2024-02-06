@@ -13,24 +13,24 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OptionCategory extends BaseEntity {
+public class TagCategory  extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "option_category_id")
+    @Column(name = "tag_category_id")
     private Long id;
-
     private String name;
 
-    @OneToMany(mappedBy = "optionCategory")
-    private List<Option> options = new ArrayList<>();
+    @OneToMany(mappedBy = "tagCategory")
+    private List<Tag> tags = new ArrayList<>();
 
     @Builder
-    private OptionCategory(String name) {
+    private TagCategory(String name) {
         this.name = name;
     }
 
-    public void addOptions(Option option){
-        options.add(option);
+    public void addTags(Tag tag){
+        tags.add(tag);
     }
+
 }

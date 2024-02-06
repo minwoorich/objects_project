@@ -25,6 +25,7 @@ public class OptionRepositoryImpl implements OptionRepository {
 
     @Override
     public Option findByName(String name) {
-        return optionJpaRepository.findByName(name);
+        // 없는 경우 기본값 EMPTY로 반환
+        return optionJpaRepository.findByName(name).orElseGet(()-> Option.builder().name("EMPTY").build());
     }
 }

@@ -44,9 +44,11 @@ public class CreateProductRequestDto {
 
     private Map<String,String> optionInfo =  new HashMap<>();
 
+    private Map<String,String> tagInfo = new HashMap<>();
+
 
     @Builder
-    public CreateProductRequestDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, List<String> itemImgUrls, List<String> detailImgUrls, Long discountRate, List<String> optionNames, String productNo, Map<String,String> optionInfo) {
+    public CreateProductRequestDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, List<String> itemImgUrls, List<String> detailImgUrls, Long discountRate, List<String> optionNames, String productNo, Map<String,String> optionInfo, Map<String,String> tagInfo) {
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
@@ -59,5 +61,6 @@ public class CreateProductRequestDto {
         this.discountRate = discountRate;
         this.optionInfo = optionInfo;
         this.productNo = productNo;
+        this.tagInfo = tagInfo;
     }
 }
