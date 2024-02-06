@@ -564,18 +564,18 @@ CREATE TABLE product (
                          deleted_at	datetime(6)
 );
 
-# DROP TABLE IF EXISTS point;
-# CREATE TABLE point (
-#                        point_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-#                        member_id BIGINT,
-#                        in_point BIGINT,
-#                        out_point BIGINT,
-#                        balance BIGINT,
-#                        comments VARCHAR(255),
-#                        created_at	datetime(6)	,
-#                        updated_at	datetime(6)	,
-#                        deleted_at	datetime(6)
-# );
+/*DROP TABLE IF EXISTS point;
+CREATE TABLE point (
+                       point_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                       member_id BIGINT,
+                       in_point BIGINT,
+                       out_point BIGINT,
+                       balance BIGINT,
+                       comments VARCHAR(255),
+                       created_at	datetime(6)	,
+                       updated_at	datetime(6)	,
+                       deleted_at	datetime(6)
+);*/
 
 /*DROP TABLE IF EXISTS seller_account;
 

@@ -270,10 +270,10 @@ class OrderDtoRepositoryTest {
         Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
         orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
 
-        PageRequest pageSize0_1 = PageRequest.of(0, 1);
-        PageRequest pageSize1_2 = PageRequest.of(1, 2);
-        PageRequest pageSize1_3 = PageRequest.of(1, 3);
-        PageRequest pageSize2_3 = PageRequest.of(2, 3);
+        PageRequest pageSize0_1 = PageRequest.of(0, 1); // 페이지 : 0, 1, 2, 3
+        PageRequest pageSize1_2 = PageRequest.of(1, 2); // 페이지 : 0, 1
+        PageRequest pageSize1_3 = PageRequest.of(1, 3); // 페이지 : 0, 1
+        PageRequest pageSize2_3 = PageRequest.of(2, 3); // 페이지 : 0, 1
 
         GetOrderHttp.Condition condition
                 = createCondition(member.getId(), null, String.valueOf(LocalDateTime.now().getYear()));
@@ -287,14 +287,23 @@ class OrderDtoRepositoryTest {
         //then_
         assertThat(orders0_1.getSize()).isEqualTo(1);
         assertThat(orders0_1.getTotalPages()).isEqualTo(4);
+        assertThat(orders0_1.getNumberOfElements()).isEqualTo(1);
         assertThat(orders0_1.isFirst()).isTrue();
+
         assertThat(orders1_2.getSize()).isEqualTo(2);
         assertThat(orders1_2.getTotalPages()).isEqualTo(2);
+        assertThat(orders1_2.getNumberOfElements()).isEqualTo(2);
         assertThat(orders1_2.isLast()).isTrue();
-//        assertThat(orders1_3.hasNext()).isFalse();
-        log.info("사이즈 : {}",orders2_3.getSize());
-        log.info("현재페이지 : {}",orders2_3.getNumber());
-        log.info("다음페이지 존재 : {}",orders2_3.hasNext());
+
+        assertThat(orders1_3.getSize()).isEqualTo(3);
+        assertThat(orders1_3.getTotalPages()).isEqualTo(2);
+        assertThat(orders1_3.getNumberOfElements()).isEqualTo(1);
+        assertThat(orders1_3.isLast()).isTrue();
+
+        assertThat(orders2_3.isLast()).isTrue();
+        assertThat(orders2_3.getNumberOfElements()).isEqualTo(0);
+
+
 
 
     }

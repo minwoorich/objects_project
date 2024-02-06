@@ -77,26 +77,14 @@ public class OrderController {
     }
 
 //    // TODO : 전체 주문 목록 조회 컨트롤러 완성해야함
-//    @GetMapping("/orders/list")
-//    public ApiResponse<GetOrderHttp.Response> getOrders(
-//            @AuthMemberId Long memberId,
-//            GetOrderHttp.Condition condition,
-//            Pageable pageable
-//    ) {
-//        condition.setMemberId(memberId);
-////        GetOrderHttp.Response response = getOrderService.find(pageable, condition);
-//        return null;
-//    }
-
     @GetMapping("/orders/list")
-    public ApiResponse<Page<OrderDto>> getOrders(
+    public ApiResponse<GetOrderHttp.Response> getOrders(
             @AuthMemberId Long memberId,
             GetOrderHttp.Condition condition,
             Pageable pageable
     ) {
         condition.setMemberId(memberId);
-        Page<OrderDto> orders = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageable);
-
-        return ApiResponse.ok(orders);
+        GetOrderHttp.Response response = getOrderService.find(pageable, condition);
+        return null;
     }
 }
