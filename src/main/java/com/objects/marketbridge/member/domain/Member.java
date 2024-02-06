@@ -40,9 +40,6 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
-    @OneToOne(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
-    private Point point;
-
     @Builder
     public Member(Long id, String socialType, String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
         this.id = id;
@@ -64,9 +61,6 @@ public class Member extends BaseEntity {
         address.setMember(this);
     }
 
-    public void changePoint(Point point) {
-        this.point = point;
-    }
 
 //    public static Member fromDto(CreateMember createMember){
 //        return Member.builder()

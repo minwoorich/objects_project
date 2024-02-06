@@ -360,7 +360,7 @@ CREATE TABLE survey_content (
                                 deleted_at	datetime(6)
 );
 
-DROP TABLE IF EXISTS board;
+/*DROP TABLE IF EXISTS board;
 
 CREATE TABLE board (
                        board_id	bigint auto_increment
@@ -403,7 +403,7 @@ CREATE TABLE help_desk (
                            created_at	datetime(6)	,
                            updated_at	datetime(6)	,
                            deleted_at	datetime(6)
-);
+);*/
 
 DROP TABLE IF EXISTS delivery;
 
@@ -469,22 +469,6 @@ CREATE TABLE coupon (
                         deleted_at	datetime(6)
 );
 
-DROP TABLE IF EXISTS point;
-
-CREATE TABLE point (
-                       point_id	bigint auto_increment
-                           primary key,
-
-                       member_id	bigint	,
-                       in_point	bigint	,
-                       out_point	bigint	,
-                       balance	bigint	,
-                       type	varchar(255)	,
-                       comments	varchar(255)	,
-                       created_at	datetime(6)	,
-                       updated_at	datetime(6)	,
-                       deleted_at	datetime(6)
-);
 
 DROP TABLE IF EXISTS member_coupon;
 
@@ -551,18 +535,6 @@ CREATE TABLE prod_subs (
 
 
 
-DROP TABLE IF EXISTS order_temp;
-
-CREATE TABLE order_temp (
-                            order_temp_id	bigint auto_increment
-                                primary key,
-
-                            order_no	varchar(255)	,
-                            amount	bigint	,
-                            address_id bigint,
-                            product	varchar(255)
-);
-
 DROP TABLE IF EXISTS prod_option;
 
 CREATE TABLE prod_option (
@@ -592,7 +564,20 @@ CREATE TABLE product (
                          deleted_at	datetime(6)
 );
 
-DROP TABLE IF EXISTS seller_account;
+# DROP TABLE IF EXISTS point;
+# CREATE TABLE point (
+#                        point_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+#                        member_id BIGINT,
+#                        in_point BIGINT,
+#                        out_point BIGINT,
+#                        balance BIGINT,
+#                        comments VARCHAR(255),
+#                        created_at	datetime(6)	,
+#                        updated_at	datetime(6)	,
+#                        deleted_at	datetime(6)
+# );
+
+/*DROP TABLE IF EXISTS seller_account;
 
 create table seller_account
 (
@@ -603,6 +588,6 @@ create table seller_account
     balance           BIGINT null,
     detail           varchar(255)
 
-);
+);*/
 
 
