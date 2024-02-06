@@ -96,6 +96,9 @@ public class OrderController {
     ) {
         condition.setMemberId(memberId);
         Page<OrderDto> orders = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageable);
+        log.info("orderNo : {}",orders.getContent().get(0).getOrderNo());
+        log.info("orderNo : {}",orders.getContent().get(4).getOrderNo());
+        log.info("orderNo : {}",orders.getContent().get(9).getOrderNo());
         return ApiResponse.ok(orders);
     }
 }

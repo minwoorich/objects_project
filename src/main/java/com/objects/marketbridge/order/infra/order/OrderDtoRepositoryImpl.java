@@ -139,9 +139,7 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
         List<OrderDto> orderDtos = orders.stream().map(OrderDto::of).toList();
         JPAQuery<Long> countQuery = createCountOrdersQuery(condition);
 
-        PageableExecutionUtils.getPage(orderDtos, pageable, countQuery::fetchOne);
-
-        return new PageImpl<>(orderDtos, pageable, orderDtos.size());
+        return PageableExecutionUtils.getPage(orderDtos, pageable, countQuery::fetchOne);
     }
 
     private JPAQuery<Long> createCountOrdersQuery(Condition condition) {
