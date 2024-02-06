@@ -11,8 +11,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -40,20 +38,6 @@ public class ExControllerAdvice  {
 
         return ApiErrorResponse.of(e.getHttpStatus().value(), e.getHttpStatus(), httpRequest.getRequestURI(), errorResult);
     }
-//    @ExceptionHandler(value = CustomLogicException.class)
-//    @ResponseStatus(BAD_REQUEST)
-//    public ApiErrorResponse<ErrorResult> customExHandler(CustomLogicException e) {
-//        log.error("[exceptionHandler] {} ", e.getMessage());
-//        log.error("[exceptionHandler] {} ", Arrays.toString(e.getStackTrace()));
-//
-//        ErrorResult errorResult = ErrorResult.builder()
-//                .errorCode(e.getErrorCode())
-//                .timestamp(e.getTimestamp().toString())
-//                .message(e.getMessage())
-//                .build();
-//
-//        return ApiErrorResponse.of(e.getHttpStatus().value(), e.getHttpStatus(), null, errorResult);
-//    }
 
     // @Valid 에러 주로 유효하지 않은 범위의 값을 입력할 경우 발생
     @ExceptionHandler(value = {MethodArgumentNotValidException.class, BindException.class})
@@ -88,6 +72,7 @@ public class ExControllerAdvice  {
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ApiErrorResponse<String> serverExHandler(Exception e) {
         log.error("[exceptionHandler] ex : {}", e.getMessage());
+        log.error("[exceptionHandler] {} ", e);
         return ApiErrorResponse.of(INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR, null, null);
     }
 }
