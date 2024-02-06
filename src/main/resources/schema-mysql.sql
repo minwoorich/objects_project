@@ -182,13 +182,23 @@ CREATE TABLE options (
                          updated_at	datetime(6)	,
                          deleted_at	datetime(6)
 );
+DROP TABLE IF EXISTS tag_category;
+CREATE TABLE tag_category (
+                    tag_category_id	bigint auto_increment
+                         primary key,
+
+                     name	varchar(255)	,
+                     created_at	datetime(6)	,
+                     updated_at	datetime(6)	,
+                     deleted_at	datetime(6)
+);
 
 DROP TABLE IF EXISTS tag;
 
 CREATE TABLE tag (
                      tag_id	bigint auto_increment
                          primary key,
-
+                     tag_category_id	bigint	,
                      name	varchar(255)	,
                      created_at	datetime(6)	,
                      updated_at	datetime(6)	,

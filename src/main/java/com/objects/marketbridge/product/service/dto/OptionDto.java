@@ -14,7 +14,7 @@ public class OptionDto {
     private String name;
 
     @Builder
-    public OptionDto(String optionCategory, String name) {
+    private OptionDto(String optionCategory, String name) {
         this.optionCategory = optionCategory;
         this.name = name;
     }

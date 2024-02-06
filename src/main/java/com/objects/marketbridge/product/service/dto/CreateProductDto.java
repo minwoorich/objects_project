@@ -30,9 +30,10 @@ public class CreateProductDto {
     private String productNo;
     private List<ProductImageDto> productImageList;
     private List<OptionDto> optionInfoList;
+    private List<ProdTagDto> prodTagList;
 
     @Builder
-    public CreateProductDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate, String productNo,List<ProductImageDto> productImageList,List<OptionDto> optionInfoList) {
+    public CreateProductDto(Long categoryId, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate, String productNo,List<ProductImageDto> productImageList,List<OptionDto> optionInfoList,List<ProdTagDto> prodTagList) {
         this.categoryId = categoryId;
         this.isOwn = isOwn;
         this.name = name;
@@ -44,6 +45,7 @@ public class CreateProductDto {
         this.productNo = productNo;
         this.productImageList = productImageList;
         this.optionInfoList = optionInfoList;
+        this.prodTagList = prodTagList;
     }
 
     public static CreateProductDto fromRequest(CreateProductRequestDto request){
@@ -61,11 +63,24 @@ public class CreateProductDto {
                 .discountRate(request.getDiscountRate())
                 .productNo(request.getProductNo())
                 .productImageList(productImageList)
+                .prodTagList(toProdTagDto(request.getTagInfo()))
                 .optionInfoList(toOptionDto(request.getOptionInfo()))
                 .build();
     }
 
-    public static List<OptionDto> toOptionDto(Map<String,String> optionInfo){
+    private static List<ProdTagDto> toProdTagDto(Map<String,String> tagInfo){
+        List<ProdTagDto> prodTagDtos = new ArrayList<>();
+        JSONObject jsonObject = new JSONObject(tagInfo);
+
+        Iterator<String> keys = jsonObject.keySet().iterator();
+        while (keys.hasNext()){
+            String k = keys.next();
+            prodTagDtos.add(new ProdTagDto().create(k,jsonObject.getString(k)));
+        }
+        return prodTagDtos;
+    }
+
+    private static List<OptionDto> toOptionDto(Map<String,String> optionInfo){
         List<OptionDto> optionDtos = new ArrayList<>();
         JSONObject jsonObject = new JSONObject(optionInfo);
 
@@ -78,7 +93,7 @@ public class CreateProductDto {
         return optionDtos;
     }
 
-    public static List<ProductImageDto> toProductImageDto(List<String> imgUrls,String type){
+    private static List<ProductImageDto> toProductImageDto(List<String> imgUrls,String type){
         List<ProductImageDto> productImageDtos = new ArrayList<>();
         for (int i = 0; i < imgUrls.size(); i++) {
             productImageDtos.add(new ProductImageDto().create(imgUrls.get(i),type,Long.valueOf(i)));
