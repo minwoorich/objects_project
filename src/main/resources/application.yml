@@ -79,15 +79,15 @@ spring:
     secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
 
   datasource:
-#    url: jdbc:h2:tcp://localhost/~/Marketbridge
-    url: jdbc:h2:mem:~/Marketbridge
+    url: jdbc:h2:tcp://localhost/~/Marketbridge
+#    url: jdbc:h2:mem:~/Marketbridge
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true

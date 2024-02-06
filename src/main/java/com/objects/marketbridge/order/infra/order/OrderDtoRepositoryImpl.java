@@ -136,43 +136,53 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                         eqMemberId(condition.getMemberId()),
                         eqYear(condition.getYear())
                 )
-//                .offset(pageable.getOffset())
-//                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         // 엔티티 -> dto 로 변환
         List<OrderDto> orderDtos = orders.stream().map(OrderDto::of).toList();
         log.info("orderDtos 사이즈 : {}", orderDtos.size());
-        // 카운트 쿼리
-        JPAQuery<Long> countQuery = createCountOrdersQuery(condition, pageable);
 
+        // orderDtos -> keyword 로 필터링
         List<OrderDto> filteredOrderDtos = filterByKeyword(condition.getKeyword(), orderDtos);
         log.info("filteredOrderDtos 사이즈 : {}", filteredOrderDtos.size());
+        log.info("filteredOrderDtos.getOrderDetails 사이즈 : {}", filteredOrderDtos.get(0).getOrderDetails().size());
+        log.info("filteredOrderDtos.getOrderDetails.product이름1 : {}", filteredOrderDtos.get(0).getOrderDetails().get(0).getProduct().getName());
+        log.info("filteredOrderDtos.getOrderDetails.product이름2 : {}", filteredOrderDtos.get(0).getOrderDetails().get(1).getProduct().getName());
+        log.info("filteredOrderDtos.getOrderDetails.product이름3 : {}", filteredOrderDtos.get(0).getOrderDetails().get(2).getProduct().getName());
 
-//        return PageableExecutionUtils.getPage(filteredOrderDtos, pageable, countQuery::fetchOne);
-        return new PageImpl<>(filteredOrderDtos, pageable, filteredOrderDtos.size());
+        // 카운트 쿼리
+        JPAQuery<Long> countQuery = createCountOrdersQuery(condition);
+
+        return PageableExecutionUtils.getPage(filteredOrderDtos, pageable, countQuery::fetchOne);
     }
 
+    // TODO : private -> public 으로 해놓고 filterByKeyword 테스트 코드 작성해봐야함
+    // TODO : 계속 이부분 관련해서 테스트 실패 발생
+    // TODO : 파라미터로 주입받는 orderDtos 가 이미 사이즈가 1이기 때문에 문제발생. filter -> 페이징 순으로 해야 에러 해결할듯
     private List<OrderDto> filterByKeyword(String keyword, List<OrderDto> orderDtos) {
-        // keyword 있으면 필터링 한것 반환, 없으면 그냥 그대로 orderDtos반환
+        // keyword 있으면 필터링 한것 반환, 없으면 그냥 그대로 orderDtos 반환
         return StringUtils.hasText(keyword) ?
-            orderDtos.stream()
+                orderDtos.stream()
                 .filter(orderDto ->
                         // OrderDto의 OrderDetailsDto 리스트에서 ProductDto의 이름이 키워드를 포함하는지 여부 확인
                         orderDto.getOrderDetails().stream()
-                                .anyMatch(orderDetailsDto ->
-                                        orderDetailsDto.getProduct().getName().contains(keyword))).toList()
+                                .anyMatch(orderDetailDto ->
+                                        orderDetailDto.getProduct().getName().contains(keyword))).toList()
             :orderDtos;
     }
 
-    private JPAQuery<Long> createCountOrdersQuery(Condition condition, Pageable pageable) {
+    private JPAQuery<Long> createCountOrdersQuery(Condition condition) {
         return queryFactory
-                .select(order.count())
+                .select(order.id.countDistinct())
                 .from(order)
-                .join(order.member, member)
+                .innerJoin(order.orderDetails, orderDetail)
+                .innerJoin(orderDetail.product, product)
                 .where(
+                        eqYear(condition.getYear()),
                         eqMemberId(condition.getMemberId()),
-                        eqYear(condition.getYear())
+                        containsKeyword(condition.getKeyword())
                 );
     }
 
@@ -180,7 +190,12 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
         return hasText(year) ? order.createdAt.year().eq(Integer.parseInt(year)) : null;
     }
 
+    private BooleanExpression containsKeyword(String keyword) {
+        return hasText(keyword) ? orderDetail.product.name.like(keyword) : null;
+    }
+
     private BooleanExpression eqMemberId(Long memberId) {
         return order.member.id.eq(memberId);
     }
+
 }
