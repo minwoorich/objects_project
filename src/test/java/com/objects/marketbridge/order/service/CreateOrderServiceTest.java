@@ -7,8 +7,8 @@ import com.objects.marketbridge.order.domain.*;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.CouponRepository;
-import com.objects.marketbridge.product.infra.MemberCouponRepository;
+import com.objects.marketbridge.product.infra.coupon.CouponRepository;
+import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT_OF_STOCK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

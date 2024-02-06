@@ -10,7 +10,7 @@ import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
-import com.objects.marketbridge.product.infra.CouponRepository;
+import com.objects.marketbridge.product.infra.coupon.CouponRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
