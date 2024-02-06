@@ -133,6 +133,8 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                         eqMemberId(condition.getMemberId()),
                         eqYear(condition.getYear())
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         // 엔티티 -> dto 로 변환
