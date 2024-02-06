@@ -133,7 +133,6 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                         eqMemberId(condition.getMemberId()),
                         eqYear(condition.getYear())
                 )
-                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetch();
 
         // 엔티티 -> dto 로 변환

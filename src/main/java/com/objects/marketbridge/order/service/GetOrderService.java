@@ -1,5 +1,6 @@
 package com.objects.marketbridge.order.service;
 
+import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Respons
 public class GetOrderService {
 
     private final OrderQueryRepository orderQueryRepository;
+    private final OrderDtoRepository orderDtoRepository;
 
     // TODO : 전체 주문 목록 조회 서비스코드 작성
     public Response find(Pageable pageable, Condition condition) {
