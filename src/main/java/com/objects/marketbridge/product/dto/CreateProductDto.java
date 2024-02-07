@@ -1,13 +1,10 @@
-package com.objects.marketbridge.product.service.dto;
+package com.objects.marketbridge.product.dto;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.member.domain.ImageType;
-import com.objects.marketbridge.product.domain.ProductImage;
 import com.objects.marketbridge.product.controller.request.CreateProductRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

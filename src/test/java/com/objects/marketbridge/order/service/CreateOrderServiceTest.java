@@ -14,8 +14,8 @@ import com.objects.marketbridge.common.exception.exceptions.CustomLogicException
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
-import com.objects.marketbridge.product.infra.ProductJpaRepository;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.infra.product.ProductJpaRepository;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;

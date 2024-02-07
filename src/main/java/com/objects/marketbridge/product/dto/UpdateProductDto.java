@@ -1,4 +1,4 @@
-package com.objects.marketbridge.product.service.dto;
+package com.objects.marketbridge.product.dto;
 
 import com.objects.marketbridge.product.domain.ProductImage;
 import com.objects.marketbridge.product.controller.request.UpdateProductRequestDto;

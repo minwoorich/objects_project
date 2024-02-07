@@ -1,6 +1,5 @@
 package com.objects.marketbridge.product.controller.request;
 
-import com.objects.marketbridge.product.service.dto.OptionDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,12 +13,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 public class CreateProductRequestDto {
-//    private Long productId;
-
     @NotNull
     private Long categoryId;
-
-    //    private List<ProdOrderDetail> prodOrderDetails = new ArrayList<>();
 
     @NotNull
     private Boolean isOwn; // 로켓 true , 오픈 마켓 false
