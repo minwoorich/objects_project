@@ -24,27 +24,25 @@ CREATE TABLE membership (
                             membership_id	bigint auto_increment
                                 primary key,
 
-                            member_id	varchar(255)	,
-                            cid varchar(255)	,
-                            tid	varchar(255)	,
-                            sid	varchar(255)	,
-                            item_name varchar(255),
-                            subs_order_no	varchar(255)	,
-                            partner_order_id varchar(255)   ,
-                            partner_user_id varchar(255)   ,
-                            status_code	varchar(255)	,
-                            payment_method	varchar(255)	,
-                            quantity bigint ,
-                            total_amount bigint,
-                            discount_amount bigint,
-                            tax_free_amount bigint,
-                            card_issuer_name	varchar(255)	,
-                            card_purchase_name	varchar(255)	,
-                            card_no	varchar(255)	,
-                            card_install_month	BIGINT	,
-                            created_at	datetime(6)	,
-                            updated_at	datetime(6)	,
-                            deleted_at	datetime(6)
+                        member_id	varchar(255)	,
+                        cid varchar(255)	,
+                        tid	varchar(255)	,
+                        sid	varchar(255)	,
+                        item_name varchar(255),
+                        subs_order_no	varchar(255)	,
+                        status_code	varchar(255)	,
+                        payment_method	varchar(255)	,
+                        quantity bigint ,
+                        total_amount bigint,
+                        discount_amount bigint,
+                        tax_free_amount bigint,
+                        card_issuer_name	varchar(255)	,
+                        card_purchase_name	varchar(255)	,
+                        card_no	varchar(255)	,
+                        card_install_month	BIGINT	,
+                        created_at	datetime(6)	,
+                        updated_at	datetime(6)	,
+                        deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS seller;
@@ -299,6 +297,7 @@ CREATE TABLE review (
 
                         member_id	bigint	,
                         product_id	bigint	,
+                        order_detail_id bigint,
                         content	text	,
                         rating	bigint	,
                         created_at	datetime(6)	,
@@ -312,8 +311,9 @@ CREATE TABLE review_image (
                               review_image_id bigint auto_increment
                                   primary key,
 
-                              review_id	bigint	,
-                              image_id	bigint	,
+                                review_id	bigint	,
+                                image_id	bigint	,
+                                seq_no bigint,
                               created_at	datetime(6)	,
                               updated_at	datetime(6)	,
                               deleted_at	datetime(6)

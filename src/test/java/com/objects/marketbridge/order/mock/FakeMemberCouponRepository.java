@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.mock;
 
 import com.objects.marketbridge.member.domain.MemberCoupon;
-import com.objects.marketbridge.product.infra.MemberCouponRepository;
+import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
 
 import java.util.List;
 

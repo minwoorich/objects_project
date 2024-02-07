@@ -30,8 +30,6 @@ CREATE TABLE membership (
                         sid	varchar(255)	,
                         item_name varchar(255),
                         subs_order_no	varchar(255)	,
-                        partner_order_id varchar(255)   ,
-                        partner_user_id varchar(255)   ,
                         status_code	varchar(255)	,
                         payment_method	varchar(255)	,
                         quantity bigint ,
@@ -184,13 +182,23 @@ CREATE TABLE options (
                          updated_at	datetime(6)	,
                          deleted_at	datetime(6)
 );
+DROP TABLE IF EXISTS tag_category;
+CREATE TABLE tag_category (
+                    tag_category_id	bigint auto_increment
+                         primary key,
+
+                     name	varchar(255)	,
+                     created_at	datetime(6)	,
+                     updated_at	datetime(6)	,
+                     deleted_at	datetime(6)
+);
 
 DROP TABLE IF EXISTS tag;
 
 CREATE TABLE tag (
                      tag_id	bigint auto_increment
                          primary key,
-
+                     tag_category_id	bigint	,
                      name	varchar(255)	,
                      created_at	datetime(6)	,
                      updated_at	datetime(6)	,
@@ -299,6 +307,7 @@ CREATE TABLE review (
 
                         member_id	bigint	,
                         product_id	bigint	,
+                        order_detail_id bigint,
                         content	text	,
                         rating	bigint	,
                         created_at	datetime(6)	,
@@ -314,6 +323,7 @@ CREATE TABLE review_image (
 
                               review_id	bigint	,
                               image_id	bigint	,
+                              seq_no bigint,
                               created_at	datetime(6)	,
                               updated_at	datetime(6)	,
                               deleted_at	datetime(6)
