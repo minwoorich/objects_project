@@ -72,6 +72,7 @@ public class OrderController {
         return request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
     }
 
+    // TODO : 이거 api search랑 findall 두개로 나눠야함
     @GetMapping("/orders/list")
     public ApiResponse<GetOrderHttp.Response> getOrders(
             @AuthMemberId Long memberId,

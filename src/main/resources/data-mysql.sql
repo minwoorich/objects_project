@@ -232,18 +232,18 @@ VALUES
     ('SellerName9', 'BIZNO9', 'Owner9', 'Category9', 'Detail9', 'Address9', 'LicenseNo9', 'email9@example.com', 'AccountNo9', 900000, NOW(), NOW(), NULL),
     ('SellerName10', 'BIZNO10', 'Owner10', 'Category10', 'Detail10', 'Address10', 'LicenseNo10', 'email10@example.com', 'AccountNo10', 1000000, NOW(), NOW(), NULL);
 
-INSERT INTO membership (member_id, cid, tid, sid, item_name, subs_order_no, partner_order_id, partner_user_id, status_code, payment_method, quantity, total_amount, discount_amount, tax_free_amount, card_issuer_name, card_purchase_name, card_no, card_install_month, created_at, updated_at, deleted_at)
+INSERT INTO membership (member_id, cid, tid, sid, item_name, subs_order_no,  status_code, payment_method, quantity, total_amount, discount_amount, tax_free_amount, card_issuer_name, card_purchase_name, card_no, card_install_month, created_at, updated_at, deleted_at)
 VALUES
-    (1, 'CID1', 'TID1', 'SID1', 'ItemName1', 'SubsOrderNo1', 'PartnerOrderID1', 'PartnerUserID1', 'StatusCode1', 'PaymentMethod1', 1, 1000, 100, 50, 'CardIssuerName1', 'CardPurchaseName1', 'CardNo1', 12, NOW(), NOW(), NULL),
-    (2, 'CID2', 'TID2', 'SID2', 'ItemName2', 'SubsOrderNo2', 'PartnerOrderID2', 'PartnerUserID2', 'StatusCode2', 'PaymentMethod2', 2, 2000, 200, 100, 'CardIssuerName2', 'CardPurchaseName2', 'CardNo2', 6, NOW(), NOW(), NULL),
-    (3, 'CID3', 'TID3', 'SID3', 'ItemName3', 'SubsOrderNo3', 'PartnerOrderID3', 'PartnerUserID3', 'StatusCode3', 'PaymentMethod3', 3, 3000, 300, 150, 'CardIssuerName3', 'CardPurchaseName3', 'CardNo3', 3, NOW(), NOW(), NULL),
-    (4, 'CID4', 'TID4', 'SID4', 'ItemName4', 'SubsOrderNo4', 'PartnerOrderID4', 'PartnerUserID4', 'StatusCode4', 'PaymentMethod4', 4, 4000, 400, 200, 'CardIssuerName4', 'CardPurchaseName4', 'CardNo4', 9, NOW(), NOW(), NULL),
-    (5, 'CID5', 'TID5', 'SID5', 'ItemName5', 'SubsOrderNo5', 'PartnerOrderID5', 'PartnerUserID5', 'StatusCode5', 'PaymentMethod5', 5, 5000, 500, 250, 'CardIssuerName5', 'CardPurchaseName5', 'CardNo5', 6, NOW(), NOW(), NULL),
-    (6, 'CID6', 'TID6', 'SID6', 'ItemName6', 'SubsOrderNo6', 'PartnerOrderID6', 'PartnerUserID6', 'StatusCode6', 'PaymentMethod6', 6, 6000, 600, 300, 'CardIssuerName6', 'CardPurchaseName6', 'CardNo6', 12, NOW(), NOW(), NULL),
-    (7, 'CID7', 'TID7', 'SID7', 'ItemName7', 'SubsOrderNo7', 'PartnerOrderID7', 'PartnerUserID7', 'StatusCode7', 'PaymentMethod7', 7, 7000, 700, 350, 'CardIssuerName7', 'CardPurchaseName7', 'CardNo7', 3, NOW(), NOW(), NULL),
-    (8, 'CID8', 'TID8', 'SID8', 'ItemName8', 'SubsOrderNo8', 'PartnerOrderID8', 'PartnerUserID8', 'StatusCode8', 'PaymentMethod8', 8, 8000, 800, 400, 'CardIssuerName8', 'CardPurchaseName8', 'CardNo8', 6, NOW(), NOW(), NULL),
-    (9, 'CID9', 'TID9', 'SID9', 'ItemName9', 'SubsOrderNo9', 'PartnerOrderID9', 'PartnerUserID9', 'StatusCode9', 'PaymentMethod9', 9, 9000, 900, 450, 'CardIssuerName9', 'CardPurchaseName9', 'CardNo9', 9, NOW(), NOW(), NULL),
-    (10, 'CID10', 'TID10', 'SID10', 'ItemName10', 'SubsOrderNo10', 'PartnerOrderID10', 'PartnerUserID10', 'StatusCode10', 'PaymentMethod10', 10, 10000, 1000, 500, 'CardIssuerName10', 'CardPurchaseName10', 'CardNo10', 12, NOW(), NOW(), NULL);
+    (1, 'CID1', 'TID1', 'SID1', 'ItemName1', 'SubsOrderNo1',  'StatusCode1', 'PaymentMethod1', 1, 1000, 100, 50, 'CardIssuerName1', 'CardPurchaseName1', 'CardNo1', 12, NOW(), NOW(), NULL),
+    (2, 'CID2', 'TID2', 'SID2', 'ItemName2', 'SubsOrderNo2',  'StatusCode2', 'PaymentMethod2', 2, 2000, 200, 100, 'CardIssuerName2', 'CardPurchaseName2', 'CardNo2', 6, NOW(), NOW(), NULL),
+    (3, 'CID3', 'TID3', 'SID3', 'ItemName3', 'SubsOrderNo3',  'StatusCode3', 'PaymentMethod3', 3, 3000, 300, 150, 'CardIssuerName3', 'CardPurchaseName3', 'CardNo3', 3, NOW(), NOW(), NULL),
+    (4, 'CID4', 'TID4', 'SID4', 'ItemName4', 'SubsOrderNo4',  'StatusCode4', 'PaymentMethod4', 4, 4000, 400, 200, 'CardIssuerName4', 'CardPurchaseName4', 'CardNo4', 9, NOW(), NOW(), NULL),
+    (5, 'CID5', 'TID5', 'SID5', 'ItemName5', 'SubsOrderNo5',  'StatusCode5', 'PaymentMethod5', 5, 5000, 500, 250, 'CardIssuerName5', 'CardPurchaseName5', 'CardNo5', 6, NOW(), NOW(), NULL),
+    (6, 'CID6', 'TID6', 'SID6', 'ItemName6', 'SubsOrderNo6',  'StatusCode6', 'PaymentMethod6', 6, 6000, 600, 300, 'CardIssuerName6', 'CardPurchaseName6', 'CardNo6', 12, NOW(), NOW(), NULL),
+    (7, 'CID7', 'TID7', 'SID7', 'ItemName7', 'SubsOrderNo7',  'StatusCode7', 'PaymentMethod7', 7, 7000, 700, 350, 'CardIssuerName7', 'CardPurchaseName7', 'CardNo7', 3, NOW(), NOW(), NULL),
+    (8, 'CID8', 'TID8', 'SID8', 'ItemName8', 'SubsOrderNo8',  'StatusCode8', 'PaymentMethod8', 8, 8000, 800, 400, 'CardIssuerName8', 'CardPurchaseName8', 'CardNo8', 6, NOW(), NOW(), NULL),
+    (9, 'CID9', 'TID9', 'SID9', 'ItemName9', 'SubsOrderNo9',  'StatusCode9', 'PaymentMethod9', 9, 9000, 900, 450, 'CardIssuerName9', 'CardPurchaseName9', 'CardNo9', 9, NOW(), NOW(), NULL),
+    (10, 'CID10', 'TID10', 'SID10', 'ItemName10', 'SubsOrderNo10',  'StatusCode10', 'PaymentMethod10', 10, 10000, 1000, 500, 'CardIssuerName10', 'CardPurchaseName10', 'CardNo10', 12, NOW(), NOW(), NULL);
 
 INSERT INTO member (social_type, member_type, membership, email, password, name, phone_no, is_alert, is_agree, created_at, updated_at, deleted_at)
 VALUES
