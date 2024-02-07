@@ -47,6 +47,5 @@ public class OrderDto {
                 .realPrice(order.getRealPrice())
                 .orderDetails(order.getOrderDetails().stream().map(OrderDetailDto::of).collect(Collectors.toList()))
                 .build();
-
     }
 }

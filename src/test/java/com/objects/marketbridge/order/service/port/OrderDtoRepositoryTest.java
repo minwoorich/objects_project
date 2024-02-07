@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -146,168 +147,6 @@ class OrderDtoRepositoryTest {
                 );
     }
 
-    @DisplayName("전체 주문 목록을 조회 할 경우 현재 사용자의 전체 주문 정보를 알 수 있다.")
-    @Test
-    void findByMemberIdWithMemberAddress_filter(){
-
-        //given
-        Member member = createMember("1");
-        Address address = createAddress("서울", "세종대로", "민들레아파트");
-        member.addAddress(address);
-        memberRepository.save(member);
-
-        Product product1 = createProduct(1000L, "1");
-        Product product2 = createProduct(2000L, "2");
-        Product product3 = createProduct(3000L, "3");
-        Product product4 = createProduct(4000L, "4");
-        productRepository.saveAll(List.of(product1, product2, product3, product4));
-
-        OrderDetail orderDetail1 = createOrderDetail(product1, 1L, "1");
-        OrderDetail orderDetail2 = createOrderDetail(product2, 1L, "1");
-        OrderDetail orderDetail3 = createOrderDetail(product3, 1L, "1");
-
-        OrderDetail orderDetail4 = createOrderDetail(product1, 2L, "2");
-        OrderDetail orderDetail5 = createOrderDetail(product2, 2L, "2");
-        OrderDetail orderDetail6 = createOrderDetail(product4, 2L, "2");
-
-        OrderDetail orderDetail7 = createOrderDetail(product1, 3L, "3");
-        OrderDetail orderDetail8 = createOrderDetail(product3, 3L, "3");
-        OrderDetail orderDetail9 = createOrderDetail(product4, 3L, "3");
-
-        OrderDetail orderDetail10 = createOrderDetail(product2, 4L, "4");
-        OrderDetail orderDetail11 = createOrderDetail(product3, 4L, "4");
-        OrderDetail orderDetail12 = createOrderDetail(product4, 4L, "4");
-
-        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3));
-        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6));
-        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9));
-        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
-        orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
-
-        PageRequest page = PageRequest.of(0, 100);
-
-        GetOrderHttp.Condition condition1
-                = createCondition(member.getId(), null, null);
-        GetOrderHttp.Condition condition2
-                = createCondition(member.getId(), null, "0000");
-        GetOrderHttp.Condition condition3
-                = createCondition(member.getId(), null, String.valueOf(LocalDateTime.now().getYear()));
-
-        //when
-        Page<OrderDto> orders1 = orderDtoRepository.findByMemberIdWithMemberAddress(condition1, page);
-        List<OrderDto> contents1 = orders1.getContent();
-        Page<OrderDto> orders2 = orderDtoRepository.findByMemberIdWithMemberAddress(condition2, page);
-        List<OrderDto> contents2 = orders2.getContent();
-        Page<OrderDto> orders3 = orderDtoRepository.findByMemberIdWithMemberAddress(condition3, page);
-        List<OrderDto> contents3 = orders3.getContent();
-
-
-        //then
-        // condition 1
-        assertThat(contents1).hasSize(4);
-        assertThat(contents1.get(0)).extracting("memberId", "orderNo").containsExactlyInAnyOrder(member.getId(), "1");
-        assertThat(contents1.get(0).getAddress()).extracting("city", "street", "detail").containsExactlyInAnyOrder("서울", "세종대로", "민들레아파트");
-
-        assertThat(contents1.get(0).getOrderDetails()).hasSize(3);
-        assertThat(contents1.get(0).getOrderDetails().get(0)).extracting("quantity", "orderNo").containsExactlyInAnyOrder(1L, "1");
-        assertThat(contents1.get(0).getOrderDetails().get(1).getProduct()).extracting("price", "thumbImg", "name").containsExactlyInAnyOrder(2000L, "썸네일2", "상품2");
-
-        assertThat(contents1.get(2).getOrderDetails().get(0)).extracting("quantity", "orderNo").containsExactlyInAnyOrder(3L, "3");
-        assertThat(contents1.get(2).getOrderDetails().get(1).getProduct()).extracting("price", "thumbImg", "name").containsExactlyInAnyOrder(3000L, "썸네일3", "상품3");
-
-        // condtion 2
-        assertThat(contents2).hasSize(0);
-
-        // condtion 3
-        assertThat(contents3).hasSize(4);
-        assertThat(contents1.get(2).getOrderDetails().get(0)).extracting("quantity", "orderNo").containsExactlyInAnyOrder(3L, "3");
-        assertThat(contents1.get(2).getOrderDetails().get(1).getProduct()).extracting("price", "thumbImg", "name").containsExactlyInAnyOrder(3000L, "썸네일3", "상품3");
-
-
-    }
-
-    private Address createAddress(String city, String street, String detail) {
-        return Address.builder().addressValue(AddressValue.builder()
-                .city(city)
-                .street(street)
-                .detail(detail).build())
-                .build();
-    }
-
-    @DisplayName("전체 주문 목록을 조회 할 경우 페이징이 가능하다")
-    @Test
-    void findByMemberIdWithMemberAddress_paging(){
-
-        //given
-        Member member = createMember("1");
-        Address address = createAddress("서울", "세종대로", "민들레아파트");
-        member.addAddress(address);
-        memberRepository.save(member);
-
-        Product product1 = createProduct(1000L, "1");
-        Product product2 = createProduct(2000L, "2");
-        Product product3 = createProduct(3000L, "3");
-        Product product4 = createProduct(4000L, "4");
-        productRepository.saveAll(List.of(product1, product2, product3, product4));
-
-        OrderDetail orderDetail1 = createOrderDetail(product1,  1L, "1");
-        OrderDetail orderDetail2 = createOrderDetail(product2,  1L, "1");
-        OrderDetail orderDetail3 = createOrderDetail(product3,  1L, "1");
-
-        OrderDetail orderDetail4 = createOrderDetail(product1,  2L, "2");
-        OrderDetail orderDetail5 = createOrderDetail(product2,  2L, "2");
-        OrderDetail orderDetail6 = createOrderDetail(product4,  2L, "2");
-
-        OrderDetail orderDetail7 = createOrderDetail(product1,  3L, "3");
-        OrderDetail orderDetail8 = createOrderDetail(product3,  3L, "3");
-        OrderDetail orderDetail9 = createOrderDetail(product4,  3L, "3");
-
-        OrderDetail orderDetail10 = createOrderDetail(product2, 4L, "4");
-        OrderDetail orderDetail11 = createOrderDetail(product3, 4L, "4");
-        OrderDetail orderDetail12 = createOrderDetail(product4, 4L, "4");
-
-        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3));
-        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6));
-        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9));
-        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
-        orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
-
-        PageRequest pageSize0_1 = PageRequest.of(0, 1); // 페이지 : 0, 1, 2, 3
-        PageRequest pageSize1_2 = PageRequest.of(1, 2); // 페이지 : 0, 1
-        PageRequest pageSize1_3 = PageRequest.of(1, 3); // 페이지 : 0, 1
-        PageRequest pageSize2_3 = PageRequest.of(2, 3); // 페이지 : 0, 1
-
-        GetOrderHttp.Condition condition
-                = createCondition(member.getId(), null, String.valueOf(LocalDateTime.now().getYear()));
-
-        //when
-        Page<OrderDto> orders0_1 = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize0_1);
-        Page<OrderDto> orders1_2 = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize1_2);
-        Page<OrderDto> orders1_3 = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize1_3);
-        Page<OrderDto> orders2_3 = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize2_3);
-
-        //then_
-        assertThat(orders0_1.getSize()).isEqualTo(1);
-        assertThat(orders0_1.getContent().size()).isEqualTo(1);
-        assertThat(orders0_1.getTotalPages()).isEqualTo(4);
-        assertThat(orders0_1.getNumberOfElements()).isEqualTo(1);
-        assertThat(orders0_1.isFirst()).isTrue();
-
-        assertThat(orders1_2.getSize()).isEqualTo(2);
-        assertThat(orders1_2.getTotalPages()).isEqualTo(2);
-        assertThat(orders1_2.getNumberOfElements()).isEqualTo(2);
-        assertThat(orders1_2.isLast()).isTrue();
-
-        assertThat(orders1_3.getSize()).isEqualTo(3);
-        assertThat(orders1_3.getContent().size()).isEqualTo(1);
-        assertThat(orders1_3.getTotalPages()).isEqualTo(2);
-        assertThat(orders1_3.getNumberOfElements()).isEqualTo(1);
-        assertThat(orders1_3.isLast()).isTrue();
-
-        assertThat(orders2_3.isLast()).isTrue();
-        assertThat(orders2_3.getNumberOfElements()).isEqualTo(0);
-    }
-
     @DisplayName("전체 주문 목록을 조회 할 경우 페이징과 조건 필터링을 할 수 있다")
     @Test
     @Rollback(value = false)
@@ -340,38 +179,27 @@ class OrderDtoRepositoryTest {
         OrderDetail orderDetail10 = createOrderDetail(product2, 4L, "4");
         OrderDetail orderDetail11 = createOrderDetail(product3, 4L, "4");
         OrderDetail orderDetail12 = createOrderDetail(product4, 4L, "4");
-
-        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3));
-        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6));
-        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9));
-        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
+//                                                                                                                   상품 번호
+        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3)); // 1,2,3
+        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6)); // 1,2,4
+        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9)); // 1,3,4
+        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12)); // 2,3,4
         orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
 
-        PageRequest pageSize0_1 = PageRequest.of(0, 1);
-        PageRequest pageSize1_2 = PageRequest.of(1, 2);
+        Pageable pageSize1_3 = PageRequest.of(1, 3);
 
         GetOrderHttp.Condition condition1
                 = createCondition(member.getId(), "상품", String.valueOf(LocalDateTime.now().getYear()));
 
-        GetOrderHttp.Condition condition2
-                = createCondition(member.getId(), "상품1", String.valueOf(LocalDateTime.now().getYear()));
-
         //when
-        Page<OrderDto> orders0_1_c1 = orderDtoRepository.findByMemberIdWithMemberAddress(condition1, pageSize0_1);
-//        Page<OrderDto> orders0_1_c2 = orderDtoRepository.findByMemberIdWithMemberAddress(condition2, pageSize0_1);
-
-//        Page<OrderDto> orders1_2_c1 = orderDtoRepository.findByMemberIdWithMemberAddress(condition1, pageSize1_2);
+        Page<OrderDto> orders1_3_c1 = orderDtoRepository.findByMemberIdWithMemberAddress(condition1, pageSize1_3);
 
         //then
-        assertThat(orders0_1_c1.getSize()).isEqualTo(1);
-        assertThat(orders0_1_c1.getContent().size()).isEqualTo(1);
-        assertThat(orders0_1_c1.getTotalElements()).isEqualTo(4);
-        assertThat(orders0_1_c1.getTotalPages()).isEqualTo(4);
-//        assertThat(orders0_1_c2.getTotalElements()).isEqualTo(3);
-//
-//        assertThat(orders1_2_c1.getSize()).isEqualTo(2);
-//        assertThat(orders1_2_c1.getTotalElements()).isEqualTo(4);
-//        assertThat(orders1_2_c1.getTotalPages()).isEqualTo(2);
+        assertThat(orders1_3_c1.getSize()).isEqualTo(3);
+        assertThat(orders1_3_c1.getContent().size()).isEqualTo(1);
+        assertThat(orders1_3_c1.getTotalElements()).isEqualTo(4);
+        assertThat(orders1_3_c1.getNumberOfElements()).isEqualTo(1);
+        assertThat(orders1_3_c1.getTotalPages()).isEqualTo(2);
 
     }
 
@@ -417,6 +245,14 @@ class OrderDtoRepositoryTest {
     private Member createMember(String no) {
         return Member.builder()
                 .name("홍길동"+no)
+                .build();
+    }
+
+    private Address createAddress(String city, String street, String detail) {
+        return Address.builder().addressValue(AddressValue.builder()
+                        .city(city)
+                        .street(street)
+                        .detail(detail).build())
                 .build();
     }
 

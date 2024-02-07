@@ -577,7 +577,7 @@ CREATE TABLE point (
                        deleted_at	datetime(6)
 );*/
 
-/*DROP TABLE IF EXISTS seller_account;
+DROP TABLE IF EXISTS seller_account;
 
 create table seller_account
 (
@@ -588,6 +588,6 @@ create table seller_account
     balance           BIGINT null,
     detail           varchar(255)
 
-);*/
+);
 
 

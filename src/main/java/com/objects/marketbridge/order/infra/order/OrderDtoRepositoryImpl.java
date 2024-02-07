@@ -1,24 +1,22 @@
 package com.objects.marketbridge.order.infra.order;
 
 import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.QOrder;
 import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
 import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_OrderDetailInfo;
 import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_Response;
-import com.objects.marketbridge.order.service.dto.OrderDetailDto;
 import com.objects.marketbridge.order.service.dto.OrderDto;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.LockModeType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.support.PageableUtils;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -35,6 +33,8 @@ import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;
 import static com.objects.marketbridge.order.domain.StatusCodeType.RETURN_COMPLETED;
 import static com.objects.marketbridge.product.domain.QProduct.product;
+import static com.querydsl.core.types.ExpressionUtils.count;
+import static com.querydsl.jpa.JPAExpressions.*;
 import static org.springframework.util.StringUtils.hasText;
 
 
@@ -130,59 +130,53 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     public Page<OrderDto> findByMemberIdWithMemberAddress(Condition condition, Pageable pageable) {
         List<Order> orders = queryFactory
                 .selectFrom(order)
-                .join(order.address, address).fetchJoin()
-                .join(order.member, member).fetchJoin()
+                .innerJoin(order.address, address)
+                .innerJoin(order.member, member)
                 .where(
+                        selectOne()
+                                .from(orderDetail)
+                                .innerJoin(orderDetail.product, product)
+                                .where(
+                                        orderDetail.order.id.eq(order.id),
+                                        containsKeyword(condition.getKeyword())
+                                ).exists()
+                        ,
                         eqMemberId(condition.getMemberId()),
                         eqYear(condition.getYear())
                 )
-                .offset(pageable.getOffset())
+                .orderBy(
+                        order.createdAt.desc()
+                )
                 .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
                 .fetch();
 
         // 엔티티 -> dto 로 변환
         List<OrderDto> orderDtos = orders.stream().map(OrderDto::of).toList();
         log.info("orderDtos 사이즈 : {}", orderDtos.size());
-
-        // orderDtos -> keyword 로 필터링
-        List<OrderDto> filteredOrderDtos = filterByKeyword(condition.getKeyword(), orderDtos);
-        log.info("filteredOrderDtos 사이즈 : {}", filteredOrderDtos.size());
-        log.info("filteredOrderDtos.getOrderDetails 사이즈 : {}", filteredOrderDtos.get(0).getOrderDetails().size());
-        log.info("filteredOrderDtos.getOrderDetails.product이름1 : {}", filteredOrderDtos.get(0).getOrderDetails().get(0).getProduct().getName());
-        log.info("filteredOrderDtos.getOrderDetails.product이름2 : {}", filteredOrderDtos.get(0).getOrderDetails().get(1).getProduct().getName());
-        log.info("filteredOrderDtos.getOrderDetails.product이름3 : {}", filteredOrderDtos.get(0).getOrderDetails().get(2).getProduct().getName());
+        log.info("orderDtos.memberId : {}", orderDtos.get(0).getMemberId());
 
         // 카운트 쿼리
         JPAQuery<Long> countQuery = createCountOrdersQuery(condition);
 
-        return PageableExecutionUtils.getPage(filteredOrderDtos, pageable, countQuery::fetchOne);
-    }
-
-    // TODO : private -> public 으로 해놓고 filterByKeyword 테스트 코드 작성해봐야함
-    // TODO : 계속 이부분 관련해서 테스트 실패 발생
-    // TODO : 파라미터로 주입받는 orderDtos 가 이미 사이즈가 1이기 때문에 문제발생. filter -> 페이징 순으로 해야 에러 해결할듯
-    private List<OrderDto> filterByKeyword(String keyword, List<OrderDto> orderDtos) {
-        // keyword 있으면 필터링 한것 반환, 없으면 그냥 그대로 orderDtos 반환
-        return StringUtils.hasText(keyword) ?
-                orderDtos.stream()
-                .filter(orderDto ->
-                        // OrderDto의 OrderDetailsDto 리스트에서 ProductDto의 이름이 키워드를 포함하는지 여부 확인
-                        orderDto.getOrderDetails().stream()
-                                .anyMatch(orderDetailDto ->
-                                        orderDetailDto.getProduct().getName().contains(keyword))).toList()
-            :orderDtos;
+        return PageableExecutionUtils.getPage(orderDtos, pageable, countQuery::fetchOne);
     }
 
     private JPAQuery<Long> createCountOrdersQuery(Condition condition) {
         return queryFactory
-                .select(order.id.countDistinct())
+                .select(count(order))
                 .from(order)
-                .innerJoin(order.orderDetails, orderDetail)
-                .innerJoin(orderDetail.product, product)
                 .where(
-                        eqYear(condition.getYear()),
+                        selectOne()
+                                .from(orderDetail)
+                                .innerJoin(orderDetail.product, product)
+                                .where(
+                                        orderDetail.order.eq(order),
+                                        containsKeyword(condition.getKeyword())
+                                ).exists()
+                        ,
                         eqMemberId(condition.getMemberId()),
-                        containsKeyword(condition.getKeyword())
+                        eqYear(condition.getYear())
                 );
     }
 
@@ -191,11 +185,10 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     }
 
     private BooleanExpression containsKeyword(String keyword) {
-        return hasText(keyword) ? orderDetail.product.name.like(keyword) : null;
+        return hasText(keyword) ? orderDetail.product.name.contains(keyword) : null;
     }
 
     private BooleanExpression eqMemberId(Long memberId) {
         return order.member.id.eq(memberId);
     }
-
 }
