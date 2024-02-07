@@ -1,6 +1,5 @@
-package com.objects.marketbridge.product.service.dto;
+package com.objects.marketbridge.product.dto;
 
-import com.objects.marketbridge.product.domain.ProductImage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

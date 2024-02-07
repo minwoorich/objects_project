@@ -3,8 +3,8 @@ package com.objects.marketbridge.product.service;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.category.domain.Category;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.ProductRepository;
-import com.objects.marketbridge.product.service.dto.CreateProductDto;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.dto.CreateProductDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,9 @@ class CreateProductServiceTest {
     @Test
     void 상품_엔티티를_만들_수_있다(){
         Category category = Category.builder()
-                .parentId(2L)
+                .parentId(null)
                 .name("의류")
-                .level(2L)
+                .level(0L)
                 .build();
         categoryRepository.save(category);
 
@@ -46,6 +46,6 @@ class CreateProductServiceTest {
                 .build();
         Product product = createProductService.createProduct(createProductDto);
 
-        Assertions.assertThat(product.getCategory().getLevel()).isEqualTo(2L);
+        Assertions.assertThat(product.getCategory().getLevel()).isEqualTo(0L);
     }
 }

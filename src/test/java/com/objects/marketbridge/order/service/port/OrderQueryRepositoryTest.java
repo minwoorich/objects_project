@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.service.port;
 
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -26,7 +26,7 @@ VALUES
     (1, 'token123', NOW(), NOW(), NULL),
     (2, 'token456', NOW(), NOW(), NULL);
 
--- Insert statements for category table
+Insert statements for category table
 INSERT INTO marketbridge.category (parent_id, level, name, created_at, updated_at, deleted_at)
 VALUES
     (NULL, 0, 'Electronics', NOW(), NOW(), NULL),

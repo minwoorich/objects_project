@@ -1,10 +1,8 @@
-package com.objects.marketbridge.product.service.dto;
+package com.objects.marketbridge.product.dto;
 
-import com.objects.marketbridge.product.controller.request.CreateProductRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @NoArgsConstructor
 @Getter
