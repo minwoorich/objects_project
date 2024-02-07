@@ -58,6 +58,7 @@ public class TestContainer {
                 .dateTimeHolder(dateTimeHolder)
                 .orderCancelReturnService(orderCancelReturnService)
                 .orderDtoRepository(orderDtoRepository)
+                .memberRepository(memberRepository)
                 .build();
 
     }

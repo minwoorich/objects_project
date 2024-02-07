@@ -57,4 +57,9 @@ public class OrderDetailQueryRepositoryImpl implements OrderDetailQueryRepositor
         return null;
     }
 
+    @Override
+    public List<OrderDetail> findByOrderNoAndOrderDetail_In(String orderNo, List<Long> orderDetailIds) {
+        return orderDetailJpaRepository.findByOrderNoAndOrderDetail_IdIn(orderNo, orderDetailIds);
+    }
+
 }

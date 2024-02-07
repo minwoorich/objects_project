@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Objects;
 
 import static com.objects.marketbridge.order.domain.MemberShipPrice.BASIC;
@@ -17,25 +16,22 @@ public class RequestReturnDto {
     @Getter
     @NoArgsConstructor
     public static class Response {
-        private List<ProductInfo> productInfos;
+        private ProductInfo productInfo;
         private ReturnRefundInfo returnRefundInfo;
 
         @Builder
-        private Response(List<ProductInfo> productInfos, ReturnRefundInfo returnRefundInfo) {
-            this.productInfos = productInfos;
+        private Response(ProductInfo productInfo, ReturnRefundInfo returnRefundInfo) {
+            this.productInfo = productInfo;
             this.returnRefundInfo = returnRefundInfo;
         }
 
-        public static Response of(List<OrderDetail> orderDetails, String memberType) {
+        public static Response of(OrderDetail orderDetail, Long numberOfReturns, String membership) {
             return Response.builder()
-                    .productInfos(
-                            orderDetails.stream()
-                                    .map(ProductInfo::of)
-                                    .toList()
-                    )
-                    .returnRefundInfo(ReturnRefundInfo.of(orderDetails, memberType))
+                    .productInfo(ProductInfo.of(orderDetail, numberOfReturns))
+                    .returnRefundInfo(ReturnRefundInfo.of(orderDetail, numberOfReturns, membership))
                     .build();
         }
+
     }
 
     @Getter
@@ -54,9 +50,9 @@ public class RequestReturnDto {
             this.image = image;
         }
 
-        public static ProductInfo of(OrderDetail orderDetail) {
+        public static ProductInfo of(OrderDetail orderDetail, Long numberOfReturns) {
             return ProductInfo.builder()
-                    .quantity(orderDetail.getQuantity())
+                    .quantity(numberOfReturns)
                     .name(orderDetail.getProduct().getName())
                     .price(orderDetail.getProduct().getPrice())
                     .image(orderDetail.getProduct().getThumbImg())
@@ -78,26 +74,22 @@ public class RequestReturnDto {
             this.productTotalPrice = productTotalPrice;
         }
 
-        public static ReturnRefundInfo of(List<OrderDetail> orderDetails, String memberShip) {
+        public static ReturnRefundInfo of(OrderDetail orderDetail, Long quantity, String memberShip) {
             if (isBasicMember(memberShip)) {
-                return createDto(orderDetails, BASIC.getDeliveryFee(), BASIC.getReturnFee());
+                return createDto(orderDetail, BASIC.getDeliveryFee(), BASIC.getReturnFee(), quantity);
             }
-            return createDto(orderDetails, WOW.getDeliveryFee(), WOW.getReturnFee());
+            return createDto(orderDetail, WOW.getDeliveryFee(), WOW.getReturnFee(), quantity);
         }
 
         private static boolean isBasicMember(String memberShip) {
             return Objects.equals(memberShip, MembershipType.BASIC.getText());
         }
 
-        private static ReturnRefundInfo createDto(List<OrderDetail> orderDetails, Long deliveryFee, Long refundFee) {
+        private static ReturnRefundInfo createDto(OrderDetail orderDetail, Long deliveryFee, Long refundFee, Long quantity) {
             return ReturnRefundInfo.builder()
                     .deliveryFee(deliveryFee)
                     .returnFee(refundFee)
-                    .productTotalPrice(
-                            orderDetails.stream()
-                                    .mapToLong(OrderDetail::totalAmount)
-                                    .sum()
-                    )
+                    .productTotalPrice(Long.valueOf(orderDetail.totalAmount(quantity)))
                     .build();
         }
     }

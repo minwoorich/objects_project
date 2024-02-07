@@ -38,11 +38,11 @@ public class GetCancelReturnDetailDto {
             this.cancelRefundInfo = cancelRefundInfo;
         }
 
-        public static Response of(Order order, List<OrderDetail> orderDetails, String memberShip, DateTimeHolder dateTimeHolder) {
+        public static Response of(List<OrderDetail> orderDetails, String memberShip, DateTimeHolder dateTimeHolder) {
             return Response.builder()
-                    .orderDate(dateTimeHolder.getCreateTime(order))
-                    .cancelDate(dateTimeHolder.getUpdateTime(order))
-                    .orderNo(order.getOrderNo())
+                    .orderDate(dateTimeHolder.getCreateTime(orderDetails.get(0).getOrder()))
+                    .cancelDate(dateTimeHolder.getUpdateTime(orderDetails.get(0).getOrder()))
+                    .orderNo(orderDetails.get(0).getOrderNo())
                     .cancelReason(orderDetails.get(0).getReason())
                     .productInfos(
                             orderDetails.stream()
@@ -74,15 +74,15 @@ public class GetCancelReturnDetailDto {
             this.quantity = quantity;
         }
 
-        public static ProductInfo of(Product product, Long quantity) {
-            return ProductInfo.builder()
-                    .productId(product.getId())
-                    .productNo(product.getProductNo())
-                    .name(product.getName())
-                    .price(product.getPrice())
-                    .quantity(quantity)
-                    .build();
-        }
+//        public static ProductInfo of(Product product, Long quantity) {
+//            return ProductInfo.builder()
+//                    .productId(product.getId())
+//                    .productNo(product.getProductNo())
+//                    .name(product.getName())
+//                    .price(product.getPrice())
+//                    .quantity(quantity)
+//                    .build();
+//        }
 
         public static ProductInfo of(OrderDetail orderDetail) {
             return ProductInfo.builder()

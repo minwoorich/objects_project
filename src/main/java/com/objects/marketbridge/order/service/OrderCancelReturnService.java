@@ -23,11 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
+import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;
+import static org.springframework.http.HttpStatus.*;
 
 
 @Service
@@ -51,45 +54,43 @@ public class OrderCancelReturnService {
     @Transactional
     public ConfirmCancelReturnDto.Response confirmCancelReturn(ConfirmCancelReturnDto.Request request, DateTimeHolder dateTimeHolder) {
         // TODO Order fetchJoin
-        List<OrderDetail> orderDetails = vaildOrderDetail(createOrderDetailIdsBy(request));
-        Map<Long, OrderDetail> orderDetailMap = createOrderDetailMapBy(orderDetails);
-        Map<Long, ConfirmCancelReturnDto.OrderDetailInfo> orderDetailInfoMap = createOrderDetailInfoMapBy(request);
-
-        Long totalPrice = getTotalPrice(orderDetails);
-        Integer cancelAmount = ChangeOrderDetailStatusAndGetCancelAmount(request, orderDetailMap, orderDetailInfoMap);
-        // TODO ERROR 발생시 대처
-        RefundDto refundDto = vaildRefundDto(orderDetails, cancelAmount);
-
-        orderDetails.forEach(orderDetail -> orderDetail.changeMemberCouponInfo(null));
-
-        // TODO 판매자 계좌의 금액 감소(동시성 고려)
-
-        ServiceDto serviceDto = ServiceDto.of(totalPrice, orderDetails, refundDto, orderDetailMap, orderDetailInfoMap);
-
-        return ConfirmCancelReturnDto.Response.of(serviceDto, dateTimeHolder);
+//        List<OrderDetail> orderDetails = valifyOrderDetatils(createOrderDetailIdsBy(request));
+//        Map<Long, OrderDetail> orderDetailMap = createOrderDetailMapBy(orderDetails);
+//        Map<Long, ConfirmCancelReturnDto.OrderDetailInfo> orderDetailInfoMap = createOrderDetailInfoMapBy(request);
+//
+//        Long totalPrice = getTotalPrice(orderDetails);
+//        Integer cancelAmount = ChangeOrderDetailStatusAndGetCancelAmount(request, orderDetailMap, orderDetailInfoMap);
+//        // TODO ERROR 발생시 대처
+//        RefundDto refundDto = vailfyRefundDto(orderDetails, cancelAmount);
+//
+//        orderDetails.forEach(orderDetail -> orderDetail.changeMemberCouponInfo(null));
+//
+//        // TODO 판매자 계좌의 금액 감소(동시성 고려)
+//
+//        ServiceDto serviceDto = ServiceDto.of(totalPrice, orderDetails, refundDto, orderDetailMap, orderDetailInfoMap);
+//
+//        return ConfirmCancelReturnDto.Response.of(serviceDto, dateTimeHolder);
+        return null;
     }
 
-    private Long getTotalPrice(List<OrderDetail> orderDetails) {
-        return orderDetails.stream().mapToLong(OrderDetail::totalAmount).sum();
+    public RequestCancelDto.Response findCancelInfo(Long orderDetailId, Long numberOfCancellation, String membership) {
+        // TODO fetchJoin으로 변경 (Product 까지)
+        OrderDetail orderDetail = valifyOrderDetatil(orderDetailId);
+
+        return RequestCancelDto.Response.of(orderDetail, numberOfCancellation, membership);
     }
 
-    public RequestCancelDto.Response findCancelInfo(String orderNo, List<Long> productIds, String membership) {
-        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
+    public RequestReturnDto.Response findReturnInfo(Long orderDetailId, Long numberOfReturns, String membership) {
+        // TODO fetchJoin으로 변경
+        OrderDetail orderDetail = valifyOrderDetatil(orderDetailId);
 
-        return RequestCancelDto.Response.of(orderDetails, membership); // TODO 맴버 조회해서 타입 넣기
+        return RequestReturnDto.Response.of(orderDetail, numberOfReturns, membership);
     }
 
-    public RequestReturnDto.Response findReturnInfo(String orderNo, List<Long> productIds, String membership) {
-        List<OrderDetail> orderDetails = validOrderDetails(orderNo, productIds);
+    public GetCancelReturnDetailDto.Response findCancelReturnDetail(List<Long> orderDetailIds, String membership, DateTimeHolder dateTimeHolder) {
+        List<OrderDetail> orderDetails = valifyOrderDetails(orderDetailIds);
 
-        return RequestReturnDto.Response.of(orderDetails, membership); // TODO 맴버 조회해서 타입 넣기
-    }
-
-    public GetCancelReturnDetailDto.Response findCancelReturnDetail(String orderNo, List<Long> productIds, String membership, DateTimeHolder dateTimeHolder) {
-        Order order = validOrder(orderNo);
-        List<OrderDetail> orderDetails = validOrderDetails(orderNo, productIds);
-
-        return GetCancelReturnDetailDto.Response.of(order, orderDetails, membership, dateTimeHolder); // TODO 맴버 조회해서 타입 넣기
+        return GetCancelReturnDetailDto.Response.of(orderDetails, membership, dateTimeHolder);
     }
 
 
@@ -97,19 +98,6 @@ public class OrderCancelReturnService {
         return request.getOrderDetailInfos().stream()
                 .map(ConfirmCancelReturnDto.OrderDetailInfo::getOrderDetailId)
                 .toList();
-    }
-
-    private List<OrderDetail> vaildOrderDetail(List<Long> orderDetailIds) {
-        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByIdIn(orderDetailIds);
-        if (orderDetails.isEmpty()) {
-            throw CustomLogicException.builder()
-                    .httpStatus(HttpStatus.NOT_FOUND)
-                    .message("주문 상세 정보를 찾을 수 없습니다.")
-                    .timestamp(LocalDateTime.now())
-                    .errorCode(ORDERDETAIL_NOT_FOUND)
-                    .build();
-        }
-        return orderDetails;
     }
 
     private Map<Long, OrderDetail> createOrderDetailMapBy(List<OrderDetail> orderDetails) {
@@ -122,6 +110,10 @@ public class OrderCancelReturnService {
                 .collect(Collectors.toMap(ConfirmCancelReturnDto.OrderDetailInfo::getOrderDetailId, Function.identity()));
     }
 
+    private Long getTotalPrice(List<OrderDetail> orderDetails) {
+        return orderDetails.stream().mapToLong(OrderDetail::totalAmount).sum();
+    }
+
     private Integer ChangeOrderDetailStatusAndGetCancelAmount(ConfirmCancelReturnDto.Request request, Map<Long, OrderDetail> orderDetailMap, Map<Long, ConfirmCancelReturnDto.OrderDetailInfo> requestMap) {
         return orderDetailMap.keySet().stream().mapToInt(key -> orderDetailMap.get(key).changeReasonAndStatus(
                         request.getCancelReason(),
@@ -131,24 +123,7 @@ public class OrderCancelReturnService {
         ).sum();
     }
 
-    private String getTid(List<OrderDetail> orderDetails) {
-        return orderDetails.get(0).getOrder().getTid();
-    }
-
-    private List<OrderDetail> validOrderDetails(String orderNo, List<Long> productIds) {
-        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
-        if (orderDetails.isEmpty()) {
-            throw CustomLogicException.builder()
-                    .httpStatus(HttpStatus.NOT_FOUND)
-                    .message("주문 상세 정보 리스트를 찾을 수 없습니다.")
-                    .timestamp(LocalDateTime.now())
-                    .errorCode(ORDERDETAIL_NOT_FOUND)
-                    .build();
-        }
-        return orderDetails;
-    }
-
-    private RefundDto vaildRefundDto(List<OrderDetail> orderDetails, Integer cancelAmount) {
+    private RefundDto vailfyRefundDto(List<OrderDetail> orderDetails, Integer cancelAmount) {
         try {
             return refundClient.refund(getTid(orderDetails), cancelAmount);
         } catch (Exception e) {
@@ -157,11 +132,55 @@ public class OrderCancelReturnService {
         }
     }
 
-    private Order validOrder(String orderNo) {
+    private String getTid(List<OrderDetail> orderDetails) {
+        return orderDetails.get(0).getOrder().getTid();
+    }
+
+    private OrderDetail valifyOrderDetatil(Long orderDetailId) {
+        OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
+        if (orderDetail == null) {
+            throw CustomLogicException.builder()
+                    .httpStatus(NOT_FOUND)
+                    .message("주문 상세 정보를 찾을 수 없습니다.")
+                    .timestamp(LocalDateTime.now())
+                    .errorCode(ORDERDETAIL_NOT_FOUND)
+                    .build();
+        }
+
+        if(cancelAndReturnImpossible(orderDetail)) {
+            throw CustomLogicException.builder()
+                    .httpStatus(BAD_REQUEST)
+                    .message("취소/반품이 불가능한 상품입니다.")
+                    .timestamp(LocalDateTime.now())
+                    .errorCode(NON_CANCELLABLE_RETURNABLE_PRODUCT)
+                    .build();
+        }
+
+        return orderDetail;
+    }
+
+    private boolean cancelAndReturnImpossible(OrderDetail orderDetail) {
+        return Objects.equals(orderDetail.getStatusCode(), DELIVERY_COMPLETED.getCode());
+    }
+
+    private List<OrderDetail> valifyOrderDetails(List<Long> orderDetailIds) {
+        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByIdIn(orderDetailIds);
+        if (orderDetails.isEmpty()) {
+            throw CustomLogicException.builder()
+                    .httpStatus(NOT_FOUND)
+                    .message("주문 상세 정보 리스트를 찾을 수 없습니다.")
+                    .timestamp(LocalDateTime.now())
+                    .errorCode(ORDERDETAIL_NOT_FOUND)
+                    .build();
+        }
+        return orderDetails;
+    }
+
+    private Order valifyOrder(String orderNo) {
         Order order = orderQueryRepository.findByOrderNo(orderNo);
         if (order == null) {
             throw CustomLogicException.builder()
-                    .httpStatus(HttpStatus.NOT_FOUND)
+                    .httpStatus(NOT_FOUND)
                     .message("주문 정보를 찾을 수 없습니다.")
                     .timestamp(LocalDateTime.now())
                     .errorCode(ORDER_NOT_FOUND)

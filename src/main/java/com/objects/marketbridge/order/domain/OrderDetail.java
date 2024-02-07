@@ -131,6 +131,10 @@ public class OrderDetail extends BaseEntity {
         return totalAmount(this.quantity, LocalDateTime.now());
     }
 
+    public Integer totalAmount(Long quantity) {
+       return totalAmount(quantity, LocalDateTime.now());
+    }
+
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
         if (memberCoupon != null) {
             memberCoupon.changeUsageInfo(dateTimeHolder);
