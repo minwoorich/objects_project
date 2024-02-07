@@ -8,7 +8,7 @@ import com.objects.marketbridge.order.domain.Address;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
-import com.objects.marketbridge.order.service.dto.OrderDto;
+import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.tuple;
 @Transactional
 @SpringBootTest
 @Slf4j
-class OrderDtoRepositoryTest {
+class OrderDtioRepositoryTest {
 
     @Autowired
     OrderCommendRepository orderCommendRepository;
@@ -192,7 +192,7 @@ class OrderDtoRepositoryTest {
                 = createCondition(member.getId(), "상품", String.valueOf(LocalDateTime.now().getYear()));
 
         //when
-        Page<OrderDto> orders1_3_c1 = orderDtoRepository.findByMemberIdWithMemberAddress(condition1, pageSize1_3);
+        Page<OrderDtio> orders1_3_c1 = orderDtoRepository.findByMemberIdWithMemberAddress(condition1, pageSize1_3);
 
         //then
         assertThat(orders1_3_c1.getSize()).isEqualTo(3);

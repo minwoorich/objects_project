@@ -1,6 +1,7 @@
 package com.objects.marketbridge.order.service;
 
-import com.objects.marketbridge.order.service.dto.OrderDto;
+import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
+import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import lombok.AllArgsConstructor;
@@ -17,13 +18,16 @@ import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Respons
 @AllArgsConstructor
 public class GetOrderService {
 
-    private final OrderQueryRepository orderQueryRepository;
     private final OrderDtoRepository orderDtoRepository;
 
     // TODO : 전체 주문 목록 조회 서비스코드 작성
-    public Response find(Pageable pageable, Condition condition) {
-        Page<OrderDto> pagedOrders = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageable);
+    public Response search(Pageable pageable, Condition condition) {
+        Page<OrderDtio> pagedOrders = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageable);
+        return Response.of(pagedOrders.getContent());
+    }
 
-        return null;
+    public Response findAll(Pageable pageable, Long memberId) {
+        Page<OrderDtio> pagedOrders = orderDtoRepository.findByMemberIdWithMemberAddressNoFilter(memberId, pageable);
+        return Response.of(pagedOrders.getContent());
     }
 }

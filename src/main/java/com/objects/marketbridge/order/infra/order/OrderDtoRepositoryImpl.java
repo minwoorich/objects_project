@@ -1,15 +1,12 @@
 package com.objects.marketbridge.order.infra.order;
 
 import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.QOrder;
 import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
 import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_OrderDetailInfo;
 import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_Response;
-import com.objects.marketbridge.order.service.dto.OrderDto;
+import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -19,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -127,7 +123,32 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     }
 
     @Override
-    public Page<OrderDto> findByMemberIdWithMemberAddress(Condition condition, Pageable pageable) {
+    public Page<OrderDtio> findByMemberIdWithMemberAddressNoFilter(Long memberId, Pageable pageable) {
+        List<Order> orders = queryFactory
+                .selectFrom(order)
+                .innerJoin(order.address, address)
+                .innerJoin(order.member, member)
+                .where(
+                        eqMemberId(memberId)
+                )
+                .orderBy(
+                        order.createdAt.desc()
+                )
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        // 엔티티 -> dto 로 변환
+        List<OrderDtio> orderDtios = orders.stream().map(OrderDtio::of).toList();
+
+        // 카운트 쿼리
+        JPAQuery<Long> countQuery = createCountOrdersQueryNoFilter(memberId);
+
+        return PageableExecutionUtils.getPage(orderDtios, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public Page<OrderDtio> findByMemberIdWithMemberAddress(Condition condition, Pageable pageable) {
         List<Order> orders = queryFactory
                 .selectFrom(order)
                 .innerJoin(order.address, address)
@@ -152,14 +173,12 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                 .fetch();
 
         // 엔티티 -> dto 로 변환
-        List<OrderDto> orderDtos = orders.stream().map(OrderDto::of).toList();
-        log.info("orderDtos 사이즈 : {}", orderDtos.size());
-        log.info("orderDtos.memberId : {}", orderDtos.get(0).getMemberId());
+        List<OrderDtio> orderDtios = orders.stream().map(OrderDtio::of).toList();
 
         // 카운트 쿼리
         JPAQuery<Long> countQuery = createCountOrdersQuery(condition);
 
-        return PageableExecutionUtils.getPage(orderDtos, pageable, countQuery::fetchOne);
+        return PageableExecutionUtils.getPage(orderDtios, pageable, countQuery::fetchOne);
     }
 
     private JPAQuery<Long> createCountOrdersQuery(Condition condition) {
@@ -177,6 +196,15 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                         ,
                         eqMemberId(condition.getMemberId()),
                         eqYear(condition.getYear())
+                );
+    }
+
+    private JPAQuery<Long> createCountOrdersQueryNoFilter(Long memberId) {
+        return queryFactory
+                .select(count(order))
+                .from(order)
+                .where(
+                        eqMemberId(memberId)
                 );
     }
 

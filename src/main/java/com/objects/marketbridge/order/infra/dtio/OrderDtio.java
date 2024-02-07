@@ -1,4 +1,4 @@
-package com.objects.marketbridge.order.service.dto;
+package com.objects.marketbridge.order.infra.dtio;
 
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.order.domain.Order;
@@ -6,13 +6,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
-public class OrderDto {
+public class OrderDtio {
 
     private Long memberId;
     private AddressValue address;
@@ -21,11 +21,12 @@ public class OrderDto {
     private Long totalDiscount; // 총 할인 금액 (쿠폰,포인트,멤버쉽)
     private Long totalPrice; // 총 금액
     private Long realPrice; // 실 결제 금액
+    private LocalDateTime createdAt; // 주문 생성 시간
 
-    private List<OrderDetailDto> orderDetails;
+    private List<OrderDetailDtio> orderDetails;
 
     @Builder
-    private OrderDto(Long memberId, AddressValue address, String orderName, String orderNo, Long totalDiscount, Long totalPrice, Long realPrice, List<OrderDetailDto> orderDetails) {
+    private OrderDtio(Long memberId, AddressValue address, String orderName, String orderNo, Long totalDiscount, Long totalPrice, Long realPrice, LocalDateTime createdAt, List<OrderDetailDtio> orderDetails) {
         this.memberId = memberId;
         this.address = address;
         this.orderName = orderName;
@@ -33,11 +34,12 @@ public class OrderDto {
         this.totalDiscount = totalDiscount;
         this.totalPrice = totalPrice;
         this.realPrice = realPrice;
+        this.createdAt = createdAt;
         this.orderDetails = orderDetails;
     }
 
-    public static OrderDto of(Order order) {
-        return OrderDto.builder()
+    public static OrderDtio of(Order order) {
+        return OrderDtio.builder()
                 .memberId(order.getMember().getId())
                 .address(order.getAddress().getAddressValue())
                 .orderName(order.getOrderName())
@@ -45,7 +47,8 @@ public class OrderDto {
                 .totalDiscount(order.getTotalDiscount())
                 .totalPrice(order.getTotalPrice())
                 .realPrice(order.getRealPrice())
-                .orderDetails(order.getOrderDetails().stream().map(OrderDetailDto::of).collect(Collectors.toList()))
+                .createdAt(order.getCreatedAt())
+                .orderDetails(order.getOrderDetails().stream().map(OrderDetailDtio::of).collect(Collectors.toList()))
                 .build();
     }
 }

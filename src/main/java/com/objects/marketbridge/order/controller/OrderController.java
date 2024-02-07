@@ -12,17 +12,14 @@ import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.GetOrderService;
-import com.objects.marketbridge.order.service.dto.OrderDto;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -38,7 +35,6 @@ public class OrderController {
     private final GetOrderService getOrderService;
     private final KakaoPayService kakaoPayService;
     private final KakaoPayConfig kakaoPayConfig;
-    private final OrderDtoRepository orderDtoRepository;
 
     @GetMapping("/orders/checkout")
     public ApiResponse<CreateCheckoutHttp.Response> createCheckout(
@@ -76,25 +72,34 @@ public class OrderController {
         return request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
     }
 
-//    // TODO : 전체 주문 목록 조회 컨트롤러 완성해야함
-//    @GetMapping("/orders/list")
-//    public ApiResponse<GetOrderHttp.Response> getOrders(
-//            @AuthMemberId Long memberId,
-//            GetOrderHttp.Condition condition,
-//            Pageable pageable
-//    ) {
-//        condition.setMemberId(memberId);
-//        GetOrderHttp.Response response = getOrderService.find(pageable, condition);
-//        return null;
-//    }
     @GetMapping("/orders/list")
-    public ApiResponse<Page<OrderDto>> getOrders(
+    public ApiResponse<GetOrderHttp.Response> getOrders(
             @AuthMemberId Long memberId,
-            GetOrderHttp.Condition condition,
-            Pageable pageable
-    ) {
-        condition.setMemberId(memberId);
-        Page<OrderDto> orderDtos = orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageable);
-        return ApiResponse.ok(orderDtos);
+            @RequestParam(name = "isSearch") @NotNull Boolean isSearch,
+            @RequestParam(name = "year") String year,
+            @RequestParam(name = "keyword") String keyword,
+            @PageableDefault(value = 5) Pageable pageable) {
+
+        // 1. 조건들을 담은 condition 객체 생성
+        GetOrderHttp.Condition condition = createCondition(isSearch, year, keyword, memberId);
+
+        // 2. 검색 일 경우
+        if (condition.getIsSearch()) {
+            log.info("search 호출");
+            return ApiResponse.ok(getOrderService.search(pageable, condition));
+        }
+
+        // 3. 그냥 전체 조회일 경우
+        log.info("findAll 호출");
+        return ApiResponse.ok(getOrderService.findAll(pageable, memberId));
+    }
+
+    private GetOrderHttp.Condition createCondition(Boolean isSearch, String year, String keyword, Long memberId) {
+        return GetOrderHttp.Condition.builder()
+                .keyword(keyword)
+                .year(year)
+                .isSearch(isSearch)
+                .memberId(memberId)
+                .build();
     }
 }

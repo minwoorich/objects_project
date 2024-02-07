@@ -39,7 +39,7 @@ public class OrderDetail extends BaseEntity {
 
     private String orderNo;
 
-    private Long price; // quantity * 상품 price
+    private Long price;
 
     private String statusCode;
 
