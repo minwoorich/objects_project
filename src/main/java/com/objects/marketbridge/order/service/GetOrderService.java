@@ -1,9 +1,7 @@
 package com.objects.marketbridge.order.service;
 
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
 import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
-import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

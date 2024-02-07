@@ -14,7 +14,6 @@ import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.GetOrderService;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
-import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -62,7 +61,6 @@ public class OrderControllerRestDocsTest  {
     @MockBean KakaoPayConfig kakaoPayConfig;
     @MockBean KakaoPayService kakaoPayService;
     @MockBean GetOrderService getOrderService;
-    @MockBean OrderDtoRepository orderDtoRepository;
 
 
     @BeforeEach
