@@ -1,6 +1,6 @@
 package com.objects.marketbridge.product.dto;
 
-import com.objects.marketbridge.product.domain.ImageType;
+import com.objects.marketbridge.image.domain.ImageType;
 import com.objects.marketbridge.product.controller.request.CreateProductRequestDto;
 import lombok.Builder;
 import lombok.Getter;

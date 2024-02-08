@@ -17,8 +17,8 @@ VALUES
 -- Insert statements for category table
 INSERT INTO marketbridge.category (parent_id, level, name, created_at, updated_at, deleted_at)
 VALUES
-    (NULL, 0, 'Electronics', NOW(), NOW(), NULL),
-    (NULL, 0, 'Clothing', NOW(), NOW(), NULL);
+    (NULL, 1, 'Electronics', NOW(), NOW(), NULL),
+    (NULL, 1, 'Clothing', NOW(), NOW(), NULL);
 
 -- Insert statements for product_image table
 INSERT INTO marketbridge.product_image (product_id, image_id, created_at, updated_at, deleted_at)

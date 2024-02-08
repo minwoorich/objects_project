@@ -1,6 +1,6 @@
-package com.objects.marketbridge.product.service.port;
+package com.objects.marketbridge.image.infra;
 
-import com.objects.marketbridge.product.domain.Image;
+import com.objects.marketbridge.image.domain.Image;
 
 public interface ImageRepository {
 
