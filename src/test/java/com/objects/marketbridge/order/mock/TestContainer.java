@@ -8,7 +8,7 @@ import com.objects.marketbridge.payment.service.port.RefundClient;
 import com.objects.marketbridge.order.service.port.*;
 import com.objects.marketbridge.product.infra.coupon.CouponRepository;
 import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.Builder;
 
 public class TestContainer {

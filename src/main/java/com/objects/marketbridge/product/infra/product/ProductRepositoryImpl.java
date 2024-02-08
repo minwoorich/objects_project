@@ -1,4 +1,4 @@
-package com.objects.marketbridge.product.infra;
+package com.objects.marketbridge.product.infra.product;
 
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.EntityNotFoundException;

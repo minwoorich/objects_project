@@ -1,4 +1,4 @@
-package com.objects.marketbridge.product.service.dto;
+package com.objects.marketbridge.product.dto;
 
 import lombok.Builder;
 import lombok.Getter;
