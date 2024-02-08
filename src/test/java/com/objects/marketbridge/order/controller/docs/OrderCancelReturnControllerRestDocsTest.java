@@ -1,85 +1,159 @@
-//package com.objects.marketbridge.order.controller.docs;
-//
-//
-//import com.objects.marketbridge.common.RestDocsSupport;
-//import com.objects.marketbridge.common.service.port.DateTimeHolder;
-//import com.objects.marketbridge.member.domain.Member;
-//import com.objects.marketbridge.member.service.port.MemberRepository;
-//import com.objects.marketbridge.order.controller.OrderCancelReturnController;
-//import com.objects.marketbridge.order.controller.dto.ConfirmCancelReturnHttp;
-//import com.objects.marketbridge.order.domain.Order;
-//import com.objects.marketbridge.order.domain.OrderDetail;
-//import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
-//import com.objects.marketbridge.order.service.OrderCancelReturnService;
-//import com.objects.marketbridge.order.service.dto.ConfirmCancelReturnDto;
-//import com.objects.marketbridge.order.service.dto.GetCancelReturnDetailDto;
-//import com.objects.marketbridge.order.service.dto.RequestCancelDto;
-//import com.objects.marketbridge.order.service.dto.RequestReturnDto;
-//import com.objects.marketbridge.order.service.port.OrderCommendRepository;
-//import com.objects.marketbridge.order.service.port.OrderDtoRepository;
-//import com.objects.marketbridge.order.service.port.OrderQueryRepository;
-//import com.objects.marketbridge.payment.service.dto.RefundDto;
-//import com.objects.marketbridge.product.domain.Product;
-//import com.objects.marketbridge.product.infra.ProductRepository;
-//import jakarta.persistence.EntityManager;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.PageImpl;
-//import org.springframework.data.domain.PageRequest;
-//import org.springframework.http.MediaType;
-//import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-//import org.springframework.restdocs.payload.JsonFieldType;
-//import org.springframework.test.context.ActiveProfiles;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.time.LocalDateTime;
-//import java.util.List;
-//
-//import static com.objects.marketbridge.order.domain.StatusCodeType.*;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.BDDMockito.given;
-//import static org.mockito.BDDMockito.mock;
-//import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-//import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-//import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-//import static org.springframework.restdocs.request.RequestDocumentation.*;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-//
-//@Transactional
-//@SpringBootTest
-//@ActiveProfiles("test")
-//public class OrderCancelReturnControllerRestDocsTest extends RestDocsSupport {
-//
-//    private final OrderCancelReturnService orderCancelReturnService = mock(OrderCancelReturnService.class);
-//    private final OrderDtoRepository orderDtoRepository = mock(OrderDtoRepository.class);
-//    private final MemberRepository memberRepository = mock(MemberRepository.class);
-//    private final DateTimeHolder dateTimeHolder = mock(DateTimeHolder.class);
-//
-//    @Override
-//    protected Object initController() {
-//        return OrderCancelReturnController.builder()
-//                .orderCancelReturnService(orderCancelReturnService)
-//                .orderDtoRepository(orderDtoRepository)
-//                .memberRepository(memberRepository)
-//                .dateTimeHolder(dateTimeHolder)
-//                .build();
-//    }
-//
-//    @Autowired
-//    OrderQueryRepository orderQueryRepository;
-//    @Autowired
-//    OrderCommendRepository orderCommendRepository;
-//    @Autowired
-//    ProductRepository productRepository;
-//    @Autowired
-//    EntityManager entityManager;
-//
+package com.objects.marketbridge.order.controller.docs;
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.domain.MembershipType;
+import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.order.controller.OrderCancelReturnController;
+import com.objects.marketbridge.order.service.OrderCancelReturnService;
+import com.objects.marketbridge.order.service.dto.RequestCancelDto;
+import com.objects.marketbridge.order.service.port.OrderDtoRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@Slf4j
+@ActiveProfiles("test")
+@WebMvcTest(OrderCancelReturnController.class)
+@ExtendWith(RestDocumentationExtension.class)
+public class OrderCancelReturnControllerRestDocsTest {
+
+    @Autowired
+    MockMvc mockMvc;
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @MockBean
+    OrderCancelReturnService orderCancelReturnService;
+    @MockBean
+    OrderDtoRepository orderDtoRepository;
+    @MockBean
+    MemberRepository memberRepository;
+    @MockBean
+    DateTimeHolder dateTimeHolder;
+
+    @BeforeEach
+    public void setUp(WebApplicationContext webApplicationContext,
+                      RestDocumentationContextProvider restDocumentationContextProvider) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(documentationConfiguration(restDocumentationContextProvider))
+                .build();
+    }
+
+    @Test
+    @DisplayName("주문 취소 요청 API")
+    @WithMockCustomUser
+    public void requestCancel() throws Exception {
+        // given
+        RequestCancelDto.Response response = RequestCancelDto.Response.builder()
+                .cancelRefundInfo(
+                        RequestCancelDto.CancelRefundInfo.builder()
+                                .deliveryFee(0L)
+                                .refundFee(0L)
+                                .totalPrice(2000L)
+                                .discountPrice(0L)
+                                .build()
+                )
+                .productInfo(
+                        RequestCancelDto.ProductInfo.builder()
+                                .name("빵빵이키링")
+                                .quantity(2L)
+                                .price(1000L)
+                                .image("빵빵이썸네일")
+                                .build()
+                )
+                .build();
+
+        Member member = Member.builder()
+                .membership(MembershipType.WOW.getText())
+                .build();
+
+        given(memberRepository.findById(anyLong())).willReturn(member);
+        given(orderCancelReturnService.findCancelInfo(anyLong(), anyLong(), anyString()))
+                .willReturn(response);
+
+        // when // then
+        mockMvc.perform(
+                        get("/orders/cancel-flow")
+                                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .param("orderDetailId", "1")
+                                .param("numberOfCancellation", "2")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("order-cancel-request",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("orderDetailId")
+                                        .description("주문 상세 ID"),
+                                parameterWithName("numberOfCancellation")
+                                        .description("취소 수량")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.productInfo").type(JsonFieldType.OBJECT)
+                                        .description("취소 상품 정보"),
+                                fieldWithPath("data.productInfo.quantity").type(JsonFieldType.NUMBER)
+                                        .description("취소 상품 수량"),
+                                fieldWithPath("data.productInfo.name").type(JsonFieldType.STRING)
+                                        .description("취소 상품 이름"),
+                                fieldWithPath("data.productInfo.price").type(JsonFieldType.NUMBER)
+                                        .description("취소 상품 가격"),
+                                fieldWithPath("data.productInfo.image").type(JsonFieldType.STRING)
+                                        .description("취소 상품 썸네일"),
+                                fieldWithPath("data.cancelRefundInfo").type(JsonFieldType.OBJECT)
+                                        .description("취소 상품 썸네일"),
+                                fieldWithPath("data.cancelRefundInfo.deliveryFee").type(JsonFieldType.NUMBER)
+                                        .description("환불 배송비"),
+                                fieldWithPath("data.cancelRefundInfo.refundFee").type(JsonFieldType.NUMBER)
+                                        .description("환불 금액"),
+                                fieldWithPath("data.cancelRefundInfo.discountPrice").type(JsonFieldType.NUMBER)
+                                        .description("할인 금액"),
+                                fieldWithPath("data.cancelRefundInfo.totalPrice").type(JsonFieldType.NUMBER)
+                                        .description("상품 전체 금액")
+                        )));
+    }
+
 //    @Test
 //    @DisplayName("주문 취소 확정 API")
 //    public void confirmCancelReturn() throws Exception {
@@ -197,113 +271,9 @@
 //                        )
 //                ));
 //    }
-//
-//    @Test
-//    @DisplayName("주문 취소 요청 API")
-//    public void requestCancel() throws Exception {
-//        // given
-//
-//        Product product1 = Product.builder()
-//                .price(1000L)
-//                .thumbImg("썸네일1")
-//                .name("옷")
-//                .build();
-//        Product product2 = Product.builder()
-//                .name("바지")
-//                .price(2000L)
-//                .thumbImg("썸네일2")
-//                .build();
-//        Product product3 = Product.builder()
-//                .name("신발")
-//                .price(3000L)
-//                .thumbImg("썸네일3")
-//                .build();
-//
-//        OrderDetail orderDetail1 = OrderDetail.builder()
-//                .product(product1)
-//                .quantity(2L)
-//                .price(product1.getPrice() * 2L)
-//                .build();
-//        OrderDetail orderDetail2 = OrderDetail.builder()
-//                .product(product2)
-//                .quantity(3L)
-//                .price(product2.getPrice() * 3L)
-//                .build();
-//        OrderDetail orderDetail3 = OrderDetail.builder()
-//                .product(product3)
-//                .quantity(4L)
-//                .price(product3.getPrice() * 4L)
-//                .build();
-//
-//        given(orderCancelReturnService.findCancelInfo(any(List.class), any(Long.class), any(String.class)))
-//                .willReturn(RequestCancelDto.Response.builder()
-//                        .cancelRefundInfo(RequestCancelDto.CancelRefundInfo.builder()
-//                                .deliveryFee(0L)
-//                                .refundFee(0L)
-//                                .totalPrice(20000L)
-//                                .discountPrice(0L)
-//                                .build()
-//                        )
-//                        .productInfos(List.of(
-//                                        RequestCancelDto.ProductInfo.of(orderDetail1, 1L),
-//                                        RequestCancelDto.ProductInfo.of(orderDetail2, 2L),
-//                                        RequestCancelDto.ProductInfo.of(orderDetail3, 2L)
-//                                )
-//                        )
-//                        .build()
-//
-//                );
-//
-//        // when // then
-//        mockMvc.perform(
-//                        get("/orders/cancel-flow")
-//                                .accept(MediaType.APPLICATION_JSON)
-//                                .param("orderNo", "1")
-//                                .param("productIds", "1", "2", "3")
-//                )
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andDo(document("order-cancel-request",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        queryParameters(
-//                                parameterWithName("orderNo")
-//                                        .description("주문 번호"),
-//                                parameterWithName("productIds")
-//                                        .description("취소 상품ID 리스트")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-//                                        .description("코드"),
-//                                fieldWithPath("status").type(JsonFieldType.STRING)
-//                                        .description("상태"),
-//                                fieldWithPath("message").type(JsonFieldType.STRING)
-//                                        .description("메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-//                                        .description("응답 데이터"),
-//                                fieldWithPath("data.productInfos").type(JsonFieldType.ARRAY)
-//                                        .description("취소 상품 리스트"),
-//                                fieldWithPath("data.productInfos[].quantity").type(JsonFieldType.NUMBER)
-//                                        .description("취소 상품 수량"),
-//                                fieldWithPath("data.productInfos[].name").type(JsonFieldType.STRING)
-//                                        .description("취소 상품 이름"),
-//                                fieldWithPath("data.productInfos[].price").type(JsonFieldType.NUMBER)
-//                                        .description("취소 상품 가격"),
-//                                fieldWithPath("data.productInfos[].image").type(JsonFieldType.STRING)
-//                                        .description("취소 상품 썸네일"),
-//                                fieldWithPath("data.cancelRefundInfo").type(JsonFieldType.OBJECT)
-//                                        .description("취소 상품 썸네일"),
-//                                fieldWithPath("data.cancelRefundInfo.deliveryFee").type(JsonFieldType.NUMBER)
-//                                        .description("환불 배송비"),
-//                                fieldWithPath("data.cancelRefundInfo.refundFee").type(JsonFieldType.NUMBER)
-//                                        .description("환불 금액"),
-//                                fieldWithPath("data.cancelRefundInfo.discountPrice").type(JsonFieldType.NUMBER)
-//                                        .description("할인 금액"),
-//                                fieldWithPath("data.cancelRefundInfo.totalPrice").type(JsonFieldType.NUMBER)
-//                                        .description("상품 전체 금액")
-//                        )));
-//    }
-//
+
+
+
 //    @Test
 //    @DisplayName("주문 반품 요청 API")
 //    public void requestReturnOrder() throws Exception {
@@ -744,4 +714,4 @@
 //                                        .description("상품 할인 전 금액 합계")
 //                        )));
 //    }
-//}
+}

@@ -2,6 +2,7 @@ package com.objects.marketbridge.order.mock;
 
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class FakeMemberRepository implements MemberRepository {
     public Member findById(Long id) {
         return data.stream()
                 .filter(member -> member.getId().equals(id))
-                .findAny().orElseThrow(() -> new IllegalArgumentException("존재하지 않은 회원입니다."));
+                .findAny().orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

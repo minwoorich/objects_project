@@ -27,8 +27,8 @@ public class OrderCancelReturnController {
 
     private final OrderCancelReturnService orderCancelReturnService;
     private final OrderDtoRepository orderDtoRepository;
-    private final DateTimeHolder dateTimeHolder;
     private final MemberRepository memberRepository;
+    private final DateTimeHolder dateTimeHolder;
 
     @PostMapping("/cancel-return-flow/thank-you")
     public ApiResponse<ConfirmCancelReturnHttp.Response> confirmCancelReturn(
