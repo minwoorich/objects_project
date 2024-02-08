@@ -38,15 +38,14 @@ public class MemberService {
         return addresses.stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
-    public AddAddressResponseDto addMemberAddress(Long id , AddAddressRequestDto addAddressRequestDto){
+    public void addMemberAddress(Long id , AddAddressRequestDto addAddressRequestDto){
         Member member = memberRepository.findById(id);
-        member.addAddress(addAddressRequestDto.toEntity(addAddressRequestDto));
-        return AddAddressResponseDto.createDto(member.getAddresses());
+        member.addAddress(addAddressRequestDto.toEntity());
     }
 
     public void updateMemberAddress(Long memberId,AddAddressRequestDto request){
-        Address addressValueByAddressId = addressRepository.findAddressValueByAddressId(request.getAddress().getId(),memberId);
-        addressValueByAddressId.update(request.getAddress().getAddressValue());
+//        Address addressValueByAddressId = addressRepository.findAddressValueByAddressId(request.getAddress().getId(),memberId);
+//        addressValueByAddressId.update(request.getAddress().getAddressValue());
     }
 
 

@@ -31,17 +31,18 @@ public class MemberController {
     }
 
     @PostMapping("/add-address")
-    public ApiResponse<AddAddressResponseDto> addAddressValue(
+    public ApiResponse<List<GetAddressesResponse>> addAddressValue(
             @AuthMemberId Long memberId,
             @Valid @RequestBody AddAddressRequestDto request){
-        AddAddressResponseDto addAddressResponseDto = memberService.addMemberAddress(memberId,request);
-       return ApiResponse.ok(addAddressResponseDto);
+        memberService.addMemberAddress(memberId,request);
+        List<GetAddressesResponse> addressesResponses =memberService.findByMemberId(memberId);
+       return ApiResponse.ok(addressesResponses);
     }
 
     @PatchMapping("/update-address")
     public ApiResponse<List<GetAddressesResponse>> updateAddress(
             @AuthMemberId Long memberId ,@Valid @RequestBody AddAddressRequestDto request){
-        memberService.updateMemberAddress(memberId,request);
+//        memberService.updateMemberAddress(memberId,request);
         List<GetAddressesResponse> addressesResponses =memberService.findByMemberId(memberId);
         return ApiResponse.ok(addressesResponses);
     }
