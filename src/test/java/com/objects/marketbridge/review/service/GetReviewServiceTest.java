@@ -40,7 +40,7 @@ public class GetReviewServiceTest {
 
     @Test
     @DisplayName("리뷰를_조회하면_조회된다.")
-    void createReviewServiceTest() {
+    void getReviewServiceTest() {
 
         //given
         Member testMember = Member.builder().build();

@@ -41,7 +41,8 @@ public class Review extends BaseEntity {
     private String content;
 
     @Builder
-    public Review(Member member, Product product, Long orderDetailId, List<ReviewImage> reviewImages, Integer rating, String content) {
+    public Review(Member member, Product product, Long orderDetailId,
+                  List<ReviewImage> reviewImages, Integer rating, String content) {
         this.member = member;
         this.product = product;
         this.orderDetailId = orderDetailId;

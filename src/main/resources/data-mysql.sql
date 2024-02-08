@@ -104,16 +104,23 @@ VALUES
     (2, 'REC456', 'Order 456', 'ORD456', 'TRANSKEY456', 'Debit Card', 'MasterCard', 300, 50, 'PAYKEY456', 'Settled', 'Paid', NULL, 'Jane Doe', 'BANK456', '1234567890', NULL, NULL, 'ISSUER456', 'CARDNO456', 2, 'APPROVE456', 'ACC456', 'VACC456', '2024-03-01', 0, NULL, NULL, NULL, NOW(), NULL, NOW());*/
 
 -- Insert statements for review table
-INSERT INTO marketbridge.review (member_id, product_id, content, rating, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.review (member_id, product_id, rating, content, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, 'Great product!', 5, NOW(), NOW(), NULL),
-    (2, 2, 'Good quality', 4, NOW(), NOW(), NULL);
+    (1, 1, 5, 'Great product!', NOW(), NOW(), NULL),
+    (2, 2, 4, 'Good quality!', NOW(), NOW(), NULL);
 
 -- Insert statements for review_image table
 INSERT INTO marketbridge.review_image (review_id, image_id, created_at, updated_at, deleted_at)
 VALUES
     (1, 1, NOW(), NOW(), NULL),
     (2, 2, NOW(), NOW(), NULL);
+
+-- Insert statements for review_image table
+INSERT INTO marketbridge.review_likes (review_id, member_id, likes, created_at, updated_at, deleted_at)
+VALUES
+    (1, 1, 1, NOW(), NOW(), NULL),
+    (2, 2, 2, NOW(), NOW(), NULL);
+
 
 -- Insert statements for review_survey table
 INSERT INTO marketbridge.review_survey (review_id, review_survey_category_id, survey_content_id, created_at, updated_at, deleted_at)

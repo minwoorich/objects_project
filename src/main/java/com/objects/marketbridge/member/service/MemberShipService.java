@@ -1,62 +1,69 @@
-package com.objects.marketbridge.member.service;
+    package com.objects.marketbridge.member.service;
 
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.domain.Membership;
-import com.objects.marketbridge.member.domain.MembershipType;
-import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
-import com.objects.marketbridge.member.dto.CreateSubsDto;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.member.service.port.MembershipRepository;
-import com.objects.marketbridge.payment.domain.Amount;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+    import com.objects.marketbridge.common.dto.*;
+    import com.objects.marketbridge.common.infra.KakaoPayService;
+    import com.objects.marketbridge.member.domain.Member;
+    import com.objects.marketbridge.member.domain.Membership;
+    import com.objects.marketbridge.member.dto.CreateSubsDto;
+    import com.objects.marketbridge.member.service.port.MemberRepository;
+    import com.objects.marketbridge.member.service.port.MembershipRepository;
+    import com.objects.marketbridge.payment.domain.Amount;
+    import lombok.Builder;
+    import lombok.RequiredArgsConstructor;
+    import lombok.extern.slf4j.Slf4j;
+    import org.springframework.stereotype.Service;
+    import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
-@Service
-@Builder
-@RequiredArgsConstructor
-public class MemberShipService {
+    import static com.objects.marketbridge.common.config.KakaoPayConfig.SUBS_CID;
+    import static com.objects.marketbridge.member.domain.MembershipType.WOW;
+
+    @Slf4j
+    @Service
+    @Builder
+    @RequiredArgsConstructor
+    public class MemberShipService {
 
     private final MembershipRepository membershipRepository;
     private final MemberRepository memberRepository;
 
+    private final KakaoPayService kakaoPayService;
+
     @Transactional
-    public void changeMemberShip(Long id) {
-
-        // 이제 orElseThrow 는 전부 MemberRepositoryImpl 에서 처리하기로 했습니다. by 정민우
-//        Member findMember = memberRepository.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id)); // id 를 통한 조회실패 예외발생
-
+    public void changeMemberShip(Long id) { //WOW회원 멤버십 해지시 basic 돌리는 메서드 필요
         Member findMember = memberRepository.findById(id);
-
-        if (findMember.getMembership().equals("BASIC")) {//멤버십 WOW 등록
-            findMember.setMembership(MembershipType.WOW.toString());
-            memberRepository.save(findMember);
-        } else {// 멤버십 BASIC으로 해제
-            findMember.setMembership(MembershipType.BASIC.toString());
-            memberRepository.save(findMember);
-        }
+        findMember.setMembership(WOW.toString());
+           
+        memberRepository.save(findMember);
     }
 
-        @Transactional
-        public void savePayReadyData(CreateSubsDto createSubsDto) { //CreateorderService
-
-            // 1. sid 정보 저장
-            Membership membership = membershipRepository.save(createSubscribtion(createSubsDto));
-
-        }
-
+    public KakaoPayReadyResponse kakaoPayReady(KakaoPayReadyRequest request){
+       return kakaoPayService.ready(request);
+    }
 
     @Transactional
-    public void saveAprrovalResponse(KakaoPayApproveResponse response){
-        Membership membership = membershipRepository.findBySubsOrderNo(response.getPartnerOrderId());
-        membership.update(response.getTid(),response.getSid(),response.getCid(),response.getPartnerOrderId(),response.getPartnerUserId(),response.getOrderName(),response.getQuantity(),response.getPaymentMethodType(),response.getCardInfo(),response.getAmount());
+    public void savePayReadyData(CreateSubsDto createSubsDto) {
+        // 1. sid 정보 저장
+        Membership membership = membershipRepository.save(createSubscription(createSubsDto));
+    }
+    //정기결제 1회차 승인
+    public KakaoPayApproveResponse kakaoPayApprove(String pgToken, String orderNo){
+        Membership membership = membershipRepository.findBySubsOrderNo(orderNo);
+       return kakaoPayService.approve(createKakaoRequest(membership, pgToken));
+    }
+    //정기결제 2회차 sid 이용한 승인
+    public KakaoPayApproveResponse kakaoPaySubsApprove(){
+        Membership membership = membershipRepository.findById(1L);
+       return kakaoPayService.subsApprove(createSubsApprove(membership));
     }
 
-    private Membership createSubscribtion(CreateSubsDto createSubsDto) {
+    @Transactional
+    public void saveApprovalResponse(KakaoPayApproveResponse response){
+        Membership membership = membershipRepository.findBySubsOrderNo(response.getPartnerOrderId());
+        Member member = memberRepository.findById(Long.parseLong(response.getPartnerUserId()));
+        membership.update(member,response.getPartnerOrderId(),response.getTid(),response.getSid(),response.getCid(),response.getOrderName(),response.getQuantity(),response.getPaymentMethodType(),response.getCardInfo(),response.getAmount());
+    }
+
+    private Membership createSubscription(CreateSubsDto createSubsDto) {
         Member member = memberRepository.findById(createSubsDto.getMemberId());
         String subsOrderNo = createSubsDto.getSubsOrderNo();
         String tid = createSubsDto.getTid();
@@ -65,20 +72,28 @@ public class MemberShipService {
         return Membership.create(member,subsOrderNo, tid,amount);
     }
 
-//    private Membership updateMembership(KakaoPaySubsApproveResponse response, Membership membership){
-//        String tid = response.getTid();
-//        String sid = response.getSid();
-//        String cid = response.getCid();
-//        String orderNo = response.getPartnerOrderId();
-//        String partnerUserId = response.getPartnerUserId();
-//        String itemName = response.getOrderName();
-//        Long quantity = response.getQuantity();
-//        String paymentMethod = response.getPaymentMethodType();
-//        CardInfo cardInfo = response.getCardInfo();
-//        Amount amount = response.getAmount();
-//
-//        return Membership.createPayment(tid, sid, cid, orderNo,partnerUserId ,itemName ,quantity, paymentMethod, cardInfo, amount);
-//    }
-
+    private KakaoPayApproveRequest createKakaoRequest(Membership membership, String pgToken) {
+        return KakaoPayApproveRequest.builder()
+                .pgToken(pgToken)
+                .partnerOrderId(membership.getSubsOrderNo())
+                .partnerUserId(membership.getMember().getId().toString())
+                .tid(membership.getTid())
+                .totalAmount(membership.getAmount().getTotalAmount())
+                .cid(SUBS_CID)
+                .build();
     }
+
+    private KakaoPaySubsApproveRequest createSubsApprove(Membership membership){
+        return KakaoPaySubsApproveRequest.builder()
+                .cid(membership.getCid())
+                .sid(membership.getSid())
+                .partnerOrderId(membership.getSubsOrderNo())
+                .partnerUserId(membership.getMember().getId().toString())
+                .itemName(membership.getItemName())
+                .quantity(membership.getQuantity())
+                .totalAmount(membership.getAmount().getTotalAmount())
+                .taxFreeAmount(membership.getAmount().getTaxFreeAmount())
+                .build();
+    }
+}
 

@@ -30,8 +30,6 @@ CREATE TABLE membership (
                         sid	varchar(255)	,
                         item_name varchar(255),
                         subs_order_no	varchar(255)	,
-                        partner_order_id varchar(255)   ,
-                        partner_user_id varchar(255)   ,
                         status_code	varchar(255)	,
                         payment_method	varchar(255)	,
                         quantity bigint ,
@@ -319,6 +317,20 @@ CREATE TABLE review_image (
                                 created_at	timestamp	,
                                 updated_at	timestamp	,
                                 deleted_at	timestamp	
+);
+
+DROP TABLE IF EXISTS review_likes;
+
+CREATE TABLE review_likes (
+                        review_likes_id	bigint auto_increment
+                            primary key,
+
+                        review_id	bigint	,
+                        member_id	bigint	,
+                        likes bigint,
+                        created_at	timestamp	,
+                        updated_at	timestamp	,
+                        deleted_at	timestamp
 );
 
 DROP TABLE IF EXISTS review_survey;
