@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Qflie
+**/src/main/generated/
+
+spy.log
+
+.Ds_Store
