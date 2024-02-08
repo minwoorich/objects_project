@@ -1,7 +1,6 @@
-package com.objects.marketbridge.product.infra.image;
+package com.objects.marketbridge.image.infra;
 
-import com.objects.marketbridge.product.domain.Image;
-import com.objects.marketbridge.product.service.port.ImageRepository;
+import com.objects.marketbridge.image.domain.Image;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
