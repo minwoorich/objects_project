@@ -308,8 +308,8 @@ CREATE TABLE review (
                         member_id	bigint	,
                         product_id	bigint	,
                         order_detail_id bigint,
-                        content	text	,
                         rating	bigint	,
+                        content	text	,
                         created_at	datetime(6)	,
                         updated_at	datetime(6)	,
                         deleted_at	datetime(6)
@@ -327,6 +327,20 @@ CREATE TABLE review_image (
                               created_at	datetime(6)	,
                               updated_at	datetime(6)	,
                               deleted_at	datetime(6)
+);
+
+DROP TABLE IF EXISTS review_likes;
+
+CREATE TABLE review_likes (
+                        review_likes_id	bigint auto_increment
+                            primary key,
+
+                        review_id	bigint	,
+                        member_id	bigint	,
+                        likes bigint,
+                        created_at	datetime(6)	,
+                        updated_at	datetime(6)	,
+                        deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS review_survey;

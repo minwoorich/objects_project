@@ -319,6 +319,20 @@ CREATE TABLE review_image (
                                 deleted_at	timestamp	
 );
 
+DROP TABLE IF EXISTS review_likes;
+
+CREATE TABLE review_likes (
+                        review_likes_id	bigint auto_increment
+                            primary key,
+
+                        review_id	bigint	,
+                        member_id	bigint	,
+                        likes bigint,
+                        created_at	timestamp	,
+                        updated_at	timestamp	,
+                        deleted_at	timestamp
+);
+
 DROP TABLE IF EXISTS review_survey;
 
 CREATE TABLE review_survey (
