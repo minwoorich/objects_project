@@ -6,7 +6,7 @@ import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import com.objects.marketbridge.review.domain.Review;
 import com.objects.marketbridge.review.dto.CreateReviewDto;
 import com.objects.marketbridge.review.dto.ReviewIdDto;
@@ -17,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +33,6 @@ public class UpdateReviewServiceTest {
     MemberRepository memberRepository;
     @Autowired
     ProductRepository productRepository;
-//    @Autowired
-//    OrderDetailQueryRepository orderDetailQueryRepository;
     @Autowired
     OrderDetailCommendRepository orderDetailCommendRepository;
     @Autowired
@@ -97,5 +96,50 @@ public class UpdateReviewServiceTest {
         Assertions.assertThat(result.getRating()).isEqualTo(4);
         Assertions.assertThat(result.getContent()).isEqualTo("리뷰수정된내용");
         Assertions.assertThat(result.getReviewImages().get(0).getImage().getUrl()).isEqualTo(updatedReviewImgUrls.get(0));
+    }
+
+
+
+    @Test
+    @DisplayName("리뷰를_삭제하면_삭제된다.")
+    void deleteReviewServiceTest(){
+
+        //given
+        Member testMember = Member.builder().build();
+        memberRepository.save(testMember);
+        Long testMemberId = testMember.getId();
+
+        Product testProduct = Product.builder().build();
+        productRepository.save(testProduct);
+        Long testProductId = testProduct.getId();
+
+        OrderDetail testOrderDetail = OrderDetail.builder()
+                .statusCode(StatusCodeType.DELIVERY_COMPLETED.toString())
+                .build();
+        orderDetailCommendRepository.save(testOrderDetail);
+        Long testOrderDetailId = testOrderDetail.getId();
+
+        List<String> testReviewImgUrls = new ArrayList<>();
+        testReviewImgUrls.add("0001.jpg");
+        testReviewImgUrls.add("0002.jpg");
+        testReviewImgUrls.add("0003.jpg");
+
+        CreateReviewDto testRequest = CreateReviewDto.builder()
+                .productId(testProductId)
+                .orderDetailId(testOrderDetailId)
+                .rating(5)
+                .content("리뷰내용")
+                .reviewImgUrls(testReviewImgUrls)
+                .build();
+
+        Long testReviewId = reviewService.createReview(testRequest, testMemberId);
+        Review testReview = reviewRepository.findById(testReviewId);
+
+        //when
+        reviewService.deleteReview(testReviewId, testMemberId);
+
+        //then
+        Assertions.assertThatThrownBy(() -> reviewRepository.findById(testReviewId))
+                .isInstanceOf(JpaObjectRetrievalFailureException.class);
     }
 }

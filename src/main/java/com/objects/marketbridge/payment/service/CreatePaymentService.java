@@ -8,8 +8,6 @@ import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.payment.service.port.PaymentRepository;
-import com.objects.marketbridge.seller.service.port.SellerAccountRepository;
-import com.objects.marketbridge.seller.service.port.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +22,6 @@ public class CreatePaymentService {
 
     private final PaymentRepository paymentRepository;
     private final OrderQueryRepository orderQueryRepository;
-    private final SellerRepository sellerRepository;
-    private final SellerAccountRepository sellerAccountRepository;
 
     @Transactional
     public CompleteOrderHttp.Response create(KakaoPayApproveResponse response) {

@@ -6,7 +6,7 @@ import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import com.objects.marketbridge.review.domain.Review;
 import com.objects.marketbridge.review.dto.CreateReviewDto;
 import com.objects.marketbridge.review.dto.ReviewAllValuesDto;
@@ -40,7 +40,7 @@ public class GetReviewServiceTest {
 
     @Test
     @DisplayName("리뷰를_조회하면_조회된다.")
-    void createReviewServiceTest() {
+    void getReviewServiceTest() {
 
         //given
         Member testMember = Member.builder().build();

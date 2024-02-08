@@ -4,15 +4,9 @@ VALUES
     (2, 'Clothing');*/
 
 -- Insert statements for member table
-INSERT INTO marketbridge.member (member_type, social_type, membership, email, password, name, phone_no,  is_alert, is_agree, created_at, updated_at, deleted_at)
-VALUES ('Regular', 'Email', 'Silver', 'member1@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member One', '010-1234-5678',  1, 1, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
-('VIP', 'Facebook', 'Gold', 'member2@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member Two', '010-9876-5432',  1, 1, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
-
--- Insert statements for seller table
-INSERT INTO marketbridge.seller (name, biz_no, owner, category, detail, address, license_no, email, account_no, created_at, updated_at, deleted_at)
-VALUES
-    ('ABC Electronics', '123456789', 'David Lee', 'Electronics', 'Electronics seller', '123 Main St', '987654321', 'abc@example.com', '1234567890123456', NOW(), NOW(), NULL),
-    ('XYZ Clothing', '987654321', 'Emma Kim', 'Clothing', 'Clothing seller', '456 Oak St', '123456789', 'xyz@example.com', '6543210987654321', NOW(), NOW(), NULL);
+INSERT INTO marketbridge.member (membership, email, password, name, phone_no,  is_alert, is_agree, created_at, updated_at, deleted_at)
+VALUES ('Silver', 'member1@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member One', '010-1234-5678',  1, 1, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
+('Gold', 'member2@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member Two', '010-9876-5432',  1, 1, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
 
 -- Insert statements for address table
 INSERT INTO marketbridge.address (member_id, alias, name, phone_no, city, street, zipcode, is_default, created_at, updated_at, deleted_at)
@@ -20,29 +14,11 @@ VALUES
     (1, 'Home', 'John Doe', '1234567890', 'Seoul', '123 Main St', '12345', 1, NOW(), NOW(), NULL),
     (2, 'Office', 'Jane Doe', '9876543210', 'Busan', '456 Oak St', '54321', 1, NOW(), NOW(), NULL);
 
--- Insert statements for social_credential table
-INSERT INTO marketbridge.social_credential (member_id, token_id, created_at, updated_at, deleted_at)
-VALUES
-    (1, 'token123', NOW(), NOW(), NULL),
-    (2, 'token456', NOW(), NOW(), NULL);
-
 -- Insert statements for category table
 INSERT INTO marketbridge.category (parent_id, level, name, created_at, updated_at, deleted_at)
 VALUES
     (NULL, 0, 'Electronics', NOW(), NOW(), NULL),
     (NULL, 0, 'Clothing', NOW(), NOW(), NULL);
-
--- Insert statements for reward_policy table
-INSERT INTO marketbridge.reward_policy (type, rate, created_at, updated_at, deleted_at)
-VALUES
-    ('Cashback', 5, NOW(), NOW(), NULL),
-    ('Discount', 10, NOW(), NOW(), NULL);
-
--- Insert statements for seller_product table
-INSERT INTO marketbridge.seller_product (seller_id, product_id, created_at, updated_at, deleted_at)
-VALUES
-    (1, 1, NOW(), NOW(), NULL),
-    (2, 2, NOW(), NOW(), NULL);
 
 -- Insert statements for product_image table
 INSERT INTO marketbridge.product_image (product_id, image_id, created_at, updated_at, deleted_at)
@@ -104,16 +80,23 @@ VALUES
     (2, 'REC456', 'Order 456', 'ORD456', 'TRANSKEY456', 'Debit Card', 'MasterCard', 300, 50, 'PAYKEY456', 'Settled', 'Paid', NULL, 'Jane Doe', 'BANK456', '1234567890', NULL, NULL, 'ISSUER456', 'CARDNO456', 2, 'APPROVE456', 'ACC456', 'VACC456', '2024-03-01', 0, NULL, NULL, NULL, NOW(), NULL, NOW());*/
 
 -- Insert statements for review table
-INSERT INTO marketbridge.review (member_id, product_id, content, rating, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.review (member_id, product_id, rating, content, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, 'Great product!', 5, NOW(), NOW(), NULL),
-    (2, 2, 'Good quality', 4, NOW(), NOW(), NULL);
+    (1, 1, 5, 'Great product!', NOW(), NOW(), NULL),
+    (2, 2, 4, 'Good quality!', NOW(), NOW(), NULL);
 
 -- Insert statements for review_image table
 INSERT INTO marketbridge.review_image (review_id, image_id, created_at, updated_at, deleted_at)
 VALUES
     (1, 1, NOW(), NOW(), NULL),
     (2, 2, NOW(), NOW(), NULL);
+
+-- Insert statements for review_image table
+INSERT INTO marketbridge.review_likes (review_id, member_id, likes, created_at, updated_at, deleted_at)
+VALUES
+    (1, 1, 1, NOW(), NOW(), NULL),
+    (2, 2, 2, NOW(), NOW(), NULL);
+
 
 -- Insert statements for review_survey table
 INSERT INTO marketbridge.review_survey (review_id, review_survey_category_id, survey_content_id, created_at, updated_at, deleted_at)
@@ -133,41 +116,7 @@ VALUES
     (1, 1, 'How satisfied are you with the product?', NOW(), NOW(), NULL),
     (2, 1, 'How was the delivery time?', NOW(), NOW(), NULL);
 
--- Insert statements for board table
-INSERT INTO marketbridge.board (type, subject, contents, created_at, updated_at, deleted_at)
-VALUES
-    ('General', 'Hello World', 'This is the first post!', NOW(), NOW(), NULL),
-    ('News', 'Exciting Update', 'Check out our latest news!', NOW(), NOW(), NULL);
 
--- Insert statements for qna table
-INSERT INTO marketbridge.qna (seller_id, member_id, content_type, content, created_at, updated_at, deleted_at)
-VALUES
-    (1, 1, 'Product', 'Do you have this product in different colors?', NOW(), NOW(), NULL),
-    (2, 2, 'Shipping', 'When will my order be delivered?', NOW(), NOW(), NULL);
-
--- Insert statements for help_desk table
-INSERT INTO marketbridge.help_desk (member_id, product_id, order_id, contents_type, content, created_at, updated_at, deleted_at)
-VALUES
-    (1, 1, 1, 'Product Inquiry', 'I have a question about this product.', NOW(), NOW(), NULL),
-    (2, 2, 2, 'Order Issue', 'I need assistance with my order.', NOW(), NOW(), NULL);
-
--- Insert statements for delivery table
-INSERT INTO marketbridge.delivery (seller_id, address_id, order_detail_id, type, carrier, tracking_no, status, ship_date, delivered_date, created_at, updated_at, deleted_at)
-VALUES
-    (1, 1, 1, 'Standard', 'UPS', '1234567890', 'In Transit', NOW(), NULL, NOW(), NOW(), NULL),
-    (2, 2, 2, 'Express', 'FedEx', '9876543210', 'Delivered', NOW(), NOW(), NOW(), NOW(), NULL);
-
--- Insert statements for estimated_time table
-INSERT INTO marketbridge.estimated_time (hours, add_day, created_at, updated_at, deleted_at)
-VALUES
-    (24, 2, NOW(), NOW(), NULL),
-    (48, 1, NOW(), NOW(), NULL);
-
--- Insert statements for coupon_budget table
-INSERT INTO marketbridge.coupon_budget (seller_id, balance, outgoing, incoming, created_at, updated_at, deleted_at)
-VALUES
-    (1, 500, 50, 100, NOW(), NOW(), NULL),
-    (2, 300, 30, 80, NOW(), NOW(), NULL);
 
 -- Insert statements for coupon table
 INSERT INTO marketbridge.coupon (product_id, name, price, count, minimum_price, start_date, end_date, created_at, updated_at, deleted_at)
@@ -175,23 +124,12 @@ VALUES
     (1, 'Discount Coupon', '50', 100, 200, '2024-02-01', '2024-03-01', NOW(), NOW(), NULL),
     (2, 'Free Shipping Coupon', '30', 50, 100, '2024-03-01', '2024-04-01', NOW(), NOW(), NULL);
 
--- Insert statements for point table
-INSERT INTO marketbridge.point (member_id, in_point, out_point, balance, type, comments, created_at, updated_at, deleted_at)
-VALUES
-    (1, 100, 50, 50, 'Credit', 'Reward points for order', NOW(), NOW(), NULL),
-    (2, 80, 30, 50, 'Credit', 'Reward points for order', NOW(), NOW(), NULL);
 
 -- Insert statements for member_coupon table
 INSERT INTO marketbridge.member_coupon (member_id, coupon_id, is_used, used_date, end_date, created_at, updated_at, deleted_at)
 VALUES
     (1, 1, 0, NULL, '2024-03-01', NOW(), NOW(), NULL),
     (2, 2, 0, NULL, '2024-04-01', NOW(), NOW(), NULL);
-
--- Insert statements for admin table
-INSERT INTO marketbridge.admin (emp_no, password, name, level, created_at, updated_at, deleted_at)
-VALUES
-    ('EMP001', 'admin123', 'Admin member', 1, NOW(), NOW(), NULL),
-    ('EMP002', 'admin456', 'Super Admin', 2, NOW(), NOW(), NULL);
 
 -- Insert statements for cart table
 INSERT INTO marketbridge.cart (member_id, product_id, is_subs, quantity)

@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.infra.address;
 
-import com.objects.marketbridge.order.domain.Address;
+import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;

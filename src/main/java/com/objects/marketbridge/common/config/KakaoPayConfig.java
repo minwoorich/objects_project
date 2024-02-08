@@ -26,16 +26,6 @@ public class KakaoPayConfig {
 
     public static final String AUTH_SCHEME = "DEV_SECRET_KEY ";
 
-
-    @Value("${payment.kakao.client_id}")
-    private String clientId;
-
-    @Value("${payment.kakao.client_secret}")
-    private String clientSecret;
-
-    @Value("${payment.kakao.secret_key}")
-    private String secretKey;
-
     @Value("${payment.kakao.secret_key_dev}")
     private String secretKeyDev;
 
