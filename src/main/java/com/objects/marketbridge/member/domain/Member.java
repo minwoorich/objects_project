@@ -18,7 +18,6 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    private String socialType;
     @Setter
     private String membership;
 
@@ -32,6 +31,7 @@ public class Member extends BaseEntity {
 
     // 알림
     private Boolean isAlert;
+
     // 약관동의
     private Boolean isAgree;
 
@@ -41,9 +41,8 @@ public class Member extends BaseEntity {
     private List<Address> addresses = new ArrayList<>();
 
     @Builder
-    public Member(Long id, String socialType, String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
+    public Member(Long id, String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
         this.id = id;
-        this.socialType = socialType;
         this.membership = membership;
         this.email = email;
         this.password = password;
@@ -61,15 +60,6 @@ public class Member extends BaseEntity {
         address.setMember(this);
     }
 
-
-//    public static Member fromDto(CreateMember createMember){
-//        return Member.builder()
-//                .email(createMember.getEmail())
-//                .name(createMember.getName())
-//                .phoneNo(createMember.getPhoneNo())
-//                .password(createMember.getPassword())
-//                .isAgree(createMember.getIsAgree()).build();
-//    }
 }
 
 

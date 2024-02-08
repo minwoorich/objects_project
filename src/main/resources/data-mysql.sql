@@ -24,19 +24,6 @@ VALUES
     (9, 'CouponName9', 'CouponPrice9', 9, 900, NOW(), NOW(), NOW(), NOW(), NULL),
     (10, 'CouponName10', 'CouponPrice10', 10, 1000, NOW(), NOW(), NOW(), NOW(), NULL);
 
-INSERT INTO delivery (seller_id, address_id, order_detail_id, type, carrier, tracking_no, status, ship_date, delivered_date, created_at, updated_at, deleted_at)
-VALUES
-    (1, 1, 1, 'Type1', 'Carrier1', 'TrackingNo1', 'Status1', NOW(), NOW(), NOW(), NOW(), NULL),
-    (2, 2, 2, 'Type2', 'Carrier2', 'TrackingNo2', 'Status2', NOW(), NOW(), NOW(), NOW(), NULL),
-    (3, 3, 3, 'Type3', 'Carrier3', 'TrackingNo3', 'Status3', NOW(), NOW(), NOW(), NOW(), NULL),
-    (4, 4, 4, 'Type4', 'Carrier4', 'TrackingNo4', 'Status4', NOW(), NOW(), NOW(), NOW(), NULL),
-    (5, 5, 5, 'Type5', 'Carrier5', 'TrackingNo5', 'Status5', NOW(), NOW(), NOW(), NOW(), NULL),
-    (6, 6, 6, 'Type6', 'Carrier6', 'TrackingNo6', 'Status6', NOW(), NOW(), NOW(), NOW(), NULL),
-    (7, 7, 7, 'Type7', 'Carrier7', 'TrackingNo7', 'Status7', NOW(), NOW(), NOW(), NOW(), NULL),
-    (8, 8, 8, 'Type8', 'Carrier8', 'TrackingNo8', 'Status8', NOW(), NOW(), NOW(), NOW(), NULL),
-    (9, 9, 9, 'Type9', 'Carrier9', 'TrackingNo9', 'Status9', NOW(), NOW(), NOW(), NOW(), NULL),
-    (10, 10, 10, 'Type10', 'Carrier10', 'TrackingNo10', 'Status10', NOW(), NOW(), NOW(), NOW(), NULL);
-
 INSERT INTO review_image (review_id, image_id, created_at, updated_at, deleted_at)
 VALUES
     (1, 1, NOW(), NOW(), NULL),
@@ -219,19 +206,6 @@ VALUES
     (9, 'Alias9', 'Name9', '123456789', 'City9', 'Street9', 'Zipcode9', 'Detail9', 1, NOW(), NOW(), NULL),
     (10, 'Alias10', 'Name10', '123456789', 'City10', 'Street10', 'Zipcode10', 'Detail10', 1, NOW(), NOW(), NULL);
 
-INSERT INTO seller (name, biz_no, owner, category, detail, address, license_no, email, account_no, balance, created_at, updated_at, deleted_at)
-VALUES
-    ('SellerName1', 'BIZNO1', 'Owner1', 'Category1', 'Detail1', 'Address1', 'LicenseNo1', 'email1@example.com', 'AccountNo1', 100000, NOW(), NOW(), NULL),
-    ('SellerName2', 'BIZNO2', 'Owner2', 'Category2', 'Detail2', 'Address2', 'LicenseNo2', 'email2@example.com', 'AccountNo2', 200000, NOW(), NOW(), NULL),
-    ('SellerName3', 'BIZNO3', 'Owner3', 'Category3', 'Detail3', 'Address3', 'LicenseNo3', 'email3@example.com', 'AccountNo3', 300000, NOW(), NOW(), NULL),
-    ('SellerName4', 'BIZNO4', 'Owner4', 'Category4', 'Detail4', 'Address4', 'LicenseNo4', 'email4@example.com', 'AccountNo4', 400000, NOW(), NOW(), NULL),
-    ('SellerName5', 'BIZNO5', 'Owner5', 'Category5', 'Detail5', 'Address5', 'LicenseNo5', 'email5@example.com', 'AccountNo5', 500000, NOW(), NOW(), NULL),
-    ('SellerName6', 'BIZNO6', 'Owner6', 'Category6', 'Detail6', 'Address6', 'LicenseNo6', 'email6@example.com', 'AccountNo6', 600000, NOW(), NOW(), NULL),
-    ('SellerName7', 'BIZNO7', 'Owner7', 'Category7', 'Detail7', 'Address7', 'LicenseNo7', 'email7@example.com', 'AccountNo7', 700000, NOW(), NOW(), NULL),
-    ('SellerName8', 'BIZNO8', 'Owner8', 'Category8', 'Detail8', 'Address8', 'LicenseNo8', 'email8@example.com', 'AccountNo8', 800000, NOW(), NOW(), NULL),
-    ('SellerName9', 'BIZNO9', 'Owner9', 'Category9', 'Detail9', 'Address9', 'LicenseNo9', 'email9@example.com', 'AccountNo9', 900000, NOW(), NOW(), NULL),
-    ('SellerName10', 'BIZNO10', 'Owner10', 'Category10', 'Detail10', 'Address10', 'LicenseNo10', 'email10@example.com', 'AccountNo10', 1000000, NOW(), NOW(), NULL);
-
 INSERT INTO membership (member_id, cid, tid, sid, item_name, subs_order_no,  status_code, payment_method, quantity, total_amount, discount_amount, tax_free_amount, card_issuer_name, card_purchase_name, card_no, card_install_month, created_at, updated_at, deleted_at)
 VALUES
     (1, 'CID1', 'TID1', 'SID1', 'ItemName1', 'SubsOrderNo1',  'StatusCode1', 'PaymentMethod1', 1, 1000, 100, 50, 'CardIssuerName1', 'CardPurchaseName1', 'CardNo1', 12, NOW(), NOW(), NULL),
@@ -245,18 +219,18 @@ VALUES
     (9, 'CID9', 'TID9', 'SID9', 'ItemName9', 'SubsOrderNo9',  'StatusCode9', 'PaymentMethod9', 9, 9000, 900, 450, 'CardIssuerName9', 'CardPurchaseName9', 'CardNo9', 9, NOW(), NOW(), NULL),
     (10, 'CID10', 'TID10', 'SID10', 'ItemName10', 'SubsOrderNo10',  'StatusCode10', 'PaymentMethod10', 10, 10000, 1000, 500, 'CardIssuerName10', 'CardPurchaseName10', 'CardNo10', 12, NOW(), NOW(), NULL);
 
-INSERT INTO member (social_type, member_type, membership, email, password, name, phone_no, is_alert, is_agree, created_at, updated_at, deleted_at)
+INSERT INTO member ( membership, email, password, name, phone_no, is_alert, is_agree, created_at, updated_at, deleted_at)
 VALUES
-    ('SocialType1', 'MemberType1', 'Membership1', 'email1@example.com', 'password1', 'MemberName1', '123456789', 1, 1, NOW(), NOW(), NULL),
-    ('SocialType2', 'MemberType2', 'Membership2', 'email2@example.com', 'password2', 'MemberName2', '123456789', 1, 1, NOW(), NOW(), NULL),
-    ('SocialType3', 'MemberType3', 'Membership3', 'email3@example.com', 'password3', 'MemberName3', '123456789', 1, 1, NOW(), NOW(), NULL),
-    ('SocialType4', 'MemberType4', 'Membership4', 'email4@example.com', 'password4', 'MemberName4', '123456789', 1, 1, NOW(), NOW(), NULL),
-    ('SocialType5', 'MemberType5', 'Membership5', 'email5@example.com', 'password5', 'MemberName5', '123456789', 1, 1, NOW(), NOW(), NULL),
-    ('SocialType6', 'MemberType6', 'Membership6', 'email6@example.com', 'password6', 'MemberName6', '123456789', 1, 1, NOW(), NOW(), NULL),
-    ('SocialType7', 'MemberType7', 'Membership7', 'email7@example.com', 'password7', 'MemberName7', '123456789', 1, 1, NOW(), NOW(), NULL),
-    ('SocialType8', 'MemberType8', 'Membership8', 'email8@example.com', 'password8', 'MemberName8', '123456789', 1, 1, NOW(), NOW(), NULL),
-    ('SocialType9', 'MemberType9', 'Membership9', 'email9@example.com', 'password9', 'MemberName9', '123456789', 1, 1, NOW(), NOW(), NULL),
-    ('SocialType10', 'MemberType10', 'Membership10', 'email10@example.com', 'password10', 'MemberName10', '123456789', 1, 1, NOW(), NOW(), NULL);
+    ( 'Membership1', 'email1@example.com', 'password1', 'MemberName1', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ('Membership2', 'email2@example.com', 'password2', 'MemberName2', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership3', 'email3@example.com', 'password3', 'MemberName3', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ('Membership4', 'email4@example.com', 'password4', 'MemberName4', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership5', 'email5@example.com', 'password5', 'MemberName5', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership6', 'email6@example.com', 'password6', 'MemberName6', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership7', 'email7@example.com', 'password7', 'MemberName7', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership8', 'email8@example.com', 'password8', 'MemberName8', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership9', 'email9@example.com', 'password9', 'MemberName9', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ('Membership10', 'email10@example.com', 'password10', 'MemberName10', '123456789', 1, 1, NOW(), NOW(), NULL);
 
 INSERT INTO prod_option (product_id, option_id, created_at, updated_at, deleted_at)
 VALUES

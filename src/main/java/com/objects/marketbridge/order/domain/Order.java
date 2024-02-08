@@ -1,5 +1,6 @@
 package com.objects.marketbridge.order.domain;
 
+import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;

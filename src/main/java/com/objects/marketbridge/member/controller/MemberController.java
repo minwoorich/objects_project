@@ -5,7 +5,7 @@ import com.objects.marketbridge.member.service.MemberService;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.domain.Address;
+import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

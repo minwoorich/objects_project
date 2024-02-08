@@ -3,8 +3,7 @@ package com.objects.marketbridge.product.service;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.category.domain.Category;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.controller.request.DeleteProductRequestDto;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -62,12 +61,8 @@ public class DeleteProductServiceTest {
 
 
         //when
-        DeleteProductRequestDto deleteProductRequestDto
-                = DeleteProductRequestDto.builder()
-                .productId(product.getId())
-                .build();
 
-        deleteProductService.delete(deleteProductRequestDto);
+        deleteProductService.delete(product.getId());
 
         //then
         System.out.println("product = " + product);
