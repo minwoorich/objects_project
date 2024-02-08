@@ -65,11 +65,6 @@ public class OrderCancelReturnController {
         return ApiResponse.ok(GetCancelReturnListHttp.Response.of(orderDtoRepository.findOrdersByMemberId(memberId, pageRequest)));
     }
 
-    @PostMapping("/cancel-return/list")
-    public ApiResponse<ReturnRecantationHttp.Response> returnRecantation() {
-        return null;
-    }
-
     @GetMapping("/cancel-return/{orderNo}")
     public ApiResponse<GetCancelReturnDetailHttp.Response> getCancelReturnDetail(
             @RequestParam(name = "orderDetailIds") List<Long> orderDetailIds,
@@ -78,4 +73,11 @@ public class OrderCancelReturnController {
         String membership = memberRepository.findById(memberId).getMembership();
         return ApiResponse.ok(GetCancelReturnDetailHttp.Response.of(orderCancelReturnService.findCancelReturnDetail(orderDetailIds, membership, dateTimeHolder)));
     }
+
+    @PostMapping("/cancel-return/list")
+    public ApiResponse<ReturnRecantationHttp.Response> returnRecantation() {
+        return null;
+    }
+
+
 }

@@ -49,7 +49,7 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public Page<GetCancelReturnListDtio.Response> findOrdersByMemberId(Long memberId, Pageable pageable) {
         List<GetCancelReturnListDtio.Response> content = getOrderCancelReturnListResponses(memberId);
         Map<String, List<GetCancelReturnListDtio.OrderDetailInfo>> orderDetailResponseMap = getOrderDetailResponseMap(findOrderNos(content));
@@ -61,9 +61,9 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     }
 
     private List<GetCancelReturnListDtio.Response> getOrderCancelReturnListResponses(Long memberId) {
-        List<GetCancelReturnListDtio.Response> content = queryFactory
+        return queryFactory
                 .select(
-                        new QGetCancelReturnListDtio_Response (
+                        new QGetCancelReturnListDtio_Response(
                                 order.updatedAt,
                                 order.createdAt,
                                 order.orderNo
@@ -71,14 +71,12 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                 ).from(order)
                 .where(order.member.id.eq(memberId))
                 .fetch();
-        return content;
     }
 
     private List<String> findOrderNos(List<GetCancelReturnListDtio.Response> content) {
-        List<String> toOrderNos = content.stream()
+        return content.stream()
                 .map(GetCancelReturnListDtio.Response::getOrderNo)
                 .toList();
-        return toOrderNos;
     }
 
     private Map<String, List<GetCancelReturnListDtio.OrderDetailInfo>> getOrderDetailResponseMap(List<String> toOrderIds) {
@@ -111,15 +109,15 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     }
 
     private JPAQuery<GetCancelReturnListDtio.Response> getCountQuery(Long memberId) {
-        JPAQuery<GetCancelReturnListDtio.Response> countQuery = queryFactory
-                .select(new QGetCancelReturnListDtio_Response(
+        return queryFactory
+                .select(
+                        new QGetCancelReturnListDtio_Response(
                                 order.updatedAt,
                                 order.createdAt,
                                 order.orderNo
                         )
                 ).from(order)
                 .where(order.member.id.eq(memberId));
-        return countQuery;
     }
 
     @Override
