@@ -71,13 +71,7 @@ public class FakeOrderDtoRepository extends BaseFakeOrderRepository implements O
     }
 
     @Override
-    public Page<OrderDtio> findByMemberIdWithMemberAddress(GetOrderHttp.Condition condition, Pageable pageable) {
-        // TODO : 구현해야함 - 민우
-        return null;
-    }
-
-    @Override
-    public Page<OrderDtio> findByMemberIdWithMemberAddressNoFilter(Long memberId, Pageable pageable) {
+    public Page<OrderDtio> findAllPaged(GetOrderHttp.Condition condition, Pageable pageable) {
         // TODO : 구현해야함 - 민우
         return null;
     }

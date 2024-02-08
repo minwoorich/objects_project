@@ -192,7 +192,7 @@ class OrderDtioRepositoryTest {
                 = createCondition(member.getId(), "상품", String.valueOf(LocalDateTime.now().getYear()));
 
         //when
-        Page<OrderDtio> orders1_3_c1 = orderDtoRepository.findByMemberIdWithMemberAddress(condition1, pageSize1_3);
+        Page<OrderDtio> orders1_3_c1 = orderDtoRepository.findAllPaged(condition1, pageSize1_3);
 
         //then
         assertThat(orders1_3_c1.getSize()).isEqualTo(3);

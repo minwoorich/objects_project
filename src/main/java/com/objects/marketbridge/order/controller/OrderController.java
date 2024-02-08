@@ -9,6 +9,7 @@ import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
 import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
+import com.objects.marketbridge.order.controller.dto.SortDto;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.GetOrderService;
@@ -18,6 +19,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,34 +75,22 @@ public class OrderController {
         return request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
     }
 
-    // TODO : 이거 api search랑 findall 두개로 나눠야함
-    @GetMapping("/orders/list")
+    @GetMapping("/orders")
     public ApiResponse<GetOrderHttp.Response> getOrders(
             @AuthMemberId Long memberId,
-            @RequestParam(name = "isSearch") @NotNull Boolean isSearch,
             @RequestParam(name = "year") String year,
             @RequestParam(name = "keyword") String keyword,
-            @PageableDefault(value = 5) Pageable pageable) {
+            @PageableDefault(value = 5, sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
 
-        // 1. 조건들을 담은 condition 객체 생성
-        GetOrderHttp.Condition condition = createCondition(isSearch, year, keyword, memberId);
+        GetOrderHttp.Response result = getOrderService.search(pageable, createCondition(year, keyword, memberId));
 
-        // 2. 검색 일 경우
-        if (condition.getIsSearch()) {
-            log.info("search 호출");
-            return ApiResponse.ok(getOrderService.search(pageable, condition));
-        }
-
-        // 3. 그냥 전체 조회일 경우
-        log.info("findAll 호출");
-        return ApiResponse.ok(getOrderService.findAll(pageable, memberId));
+        return ApiResponse.ok(result);
     }
 
-    private GetOrderHttp.Condition createCondition(Boolean isSearch, String year, String keyword, Long memberId) {
+    private GetOrderHttp.Condition createCondition(String year, String keyword, Long memberId) {
         return GetOrderHttp.Condition.builder()
                 .keyword(keyword)
                 .year(year)
-                .isSearch(isSearch)
                 .memberId(memberId)
                 .build();
     }

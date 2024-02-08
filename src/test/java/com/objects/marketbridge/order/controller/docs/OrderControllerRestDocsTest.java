@@ -245,32 +245,31 @@ public class OrderControllerRestDocsTest  {
     @Test
     @WithMockCustomUser
     void getOrders() throws Exception {
+
         // given
-        Long memberId = 1L;
         Response response = create(createOrderInfos(createOrderDetailInfos()));
         given(getOrderService.search(PageRequest.of(0, 10), Condition.builder().build())).willReturn(response);
-        given(getOrderService.findAll(PageRequest.of(0, 10), memberId)).willReturn(response);
 
 
         // when
-        mockMvc.perform(get("/orders/list")
+        mockMvc.perform(get("/orders")
                         .param("page", "0")
                         .param("size", "10")
+                        .param("sort", "createdAt,DESC")
                         .param("year", "2024")
                         .param("keyword", "자전거")
-                        .param("isSearch", "true")
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("order-list",
                                 preprocessResponse(prettyPrint()),
-                                queryParameters(
-                                    parameterWithName("page").description("페이지 번호"),
-                                    parameterWithName("size").description("페이지 사이즈"),
-                                    parameterWithName("year").description("연도"),
-                                    parameterWithName("keyword").description("검색 키워드"),
-                                    parameterWithName("isSearch").description("검색 조회인지 아닌지 판단하는 값")
-                                ),
+//                                queryParameters(
+//                                    parameterWithName("page").description("페이지 번호"),
+//                                    parameterWithName("size").description("페이지 사이즈"),
+//                                    parameterWithName("sort").description("정렬기준,정렬순서"),
+//                                    parameterWithName("year").description("연도"),
+//                                    parameterWithName("keyword").description("검색 키워드")
+//                                ),
                                 responseFields(
                                         fieldWithPath("code").type(JsonFieldType.NUMBER)
                                                 .description("응답 코드"),

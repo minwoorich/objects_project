@@ -1,6 +1,5 @@
 package com.objects.marketbridge.member.domain;
 
-import com.objects.marketbridge.order.domain.Address;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

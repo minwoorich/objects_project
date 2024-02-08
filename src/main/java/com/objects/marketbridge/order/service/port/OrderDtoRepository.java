@@ -11,7 +11,6 @@ public interface OrderDtoRepository {
 
     Page<GetCancelReturnListDtio.Response> findOrdersByMemberId(Long memberId, Pageable pageable);
 
-    Page<OrderDtio> findByMemberIdWithMemberAddress(Condition condition, Pageable pageable);
-    Page<OrderDtio> findByMemberIdWithMemberAddressNoFilter(Long memberId, Pageable pageable);
+    Page<OrderDtio> findAllPaged(Condition condition, Pageable pageable);
 
 }

@@ -1,11 +1,13 @@
 package com.objects.marketbridge.order.infra.order;
 
+import com.objects.marketbridge.common.utils.MyQueryDslUtil;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
+import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_OrderDetailInfo;
 import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_Response;
-import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,10 +15,12 @@ import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,7 +34,7 @@ import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;
 import static com.objects.marketbridge.order.domain.StatusCodeType.RETURN_COMPLETED;
 import static com.objects.marketbridge.product.domain.QProduct.product;
 import static com.querydsl.core.types.ExpressionUtils.count;
-import static com.querydsl.jpa.JPAExpressions.*;
+import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.springframework.util.StringUtils.hasText;
 
 
@@ -123,32 +127,8 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     }
 
     @Override
-    public Page<OrderDtio> findByMemberIdWithMemberAddressNoFilter(Long memberId, Pageable pageable) {
-        List<Order> orders = queryFactory
-                .selectFrom(order)
-                .innerJoin(order.address, address)
-                .innerJoin(order.member, member)
-                .where(
-                        eqMemberId(memberId)
-                )
-                .orderBy(
-                        order.createdAt.desc()
-                )
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetch();
-
-        // 엔티티 -> dto 로 변환
-        List<OrderDtio> orderDtios = orders.stream().map(OrderDtio::of).toList();
-
-        // 카운트 쿼리
-        JPAQuery<Long> countQuery = createCountOrdersQueryNoFilter(memberId);
-
-        return PageableExecutionUtils.getPage(orderDtios, pageable, countQuery::fetchOne);
-    }
-
-    @Override
-    public Page<OrderDtio> findByMemberIdWithMemberAddress(Condition condition, Pageable pageable) {
+    public Page<OrderDtio> findAllPaged(Condition condition, Pageable pageable) {
+        OrderSpecifier[] orderSpecifiers = createOrderSpecifierArray(pageable.getSort());
         List<Order> orders = queryFactory
                 .selectFrom(order)
                 .innerJoin(order.address, address)
@@ -165,9 +145,7 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                         eqMemberId(condition.getMemberId()),
                         eqYear(condition.getYear())
                 )
-                .orderBy(
-                        order.createdAt.desc()
-                )
+                .orderBy(orderSpecifiers)
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();
@@ -179,6 +157,23 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
         JPAQuery<Long> countQuery = createCountOrdersQuery(condition);
 
         return PageableExecutionUtils.getPage(orderDtios, pageable, countQuery::fetchOne);
+    }
+
+    private OrderSpecifier[] createOrderSpecifierArray(Sort sort) {
+        ArrayList<OrderSpecifier> orderSpecifiers = new ArrayList<>();
+        sort.forEach(o -> {
+            switch (o.getProperty()) {
+                case "createdAt" :
+                    orderSpecifiers.add(MyQueryDslUtil.getSortedColumn(o, order, "createdAt"));
+                    break;
+
+                default:
+                    break;
+            }
+        });
+
+        // 0 으로 하면 자동으로 배열의 크기를 지정해줌
+        return orderSpecifiers.toArray(new OrderSpecifier[0]);
     }
 
     private JPAQuery<Long> createCountOrdersQuery(Condition condition) {
@@ -196,15 +191,6 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                         ,
                         eqMemberId(condition.getMemberId()),
                         eqYear(condition.getYear())
-                );
-    }
-
-    private JPAQuery<Long> createCountOrdersQueryNoFilter(Long memberId) {
-        return queryFactory
-                .select(count(order))
-                .from(order)
-                .where(
-                        eqMemberId(memberId)
                 );
     }
 
