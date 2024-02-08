@@ -1,6 +1,6 @@
 package com.objects.marketbridge.product.infra.image;
 
-import com.objects.marketbridge.member.domain.Image;
+import com.objects.marketbridge.product.domain.Image;
 import com.objects.marketbridge.product.service.port.ImageRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

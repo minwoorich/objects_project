@@ -2,10 +2,9 @@ package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
-import com.objects.marketbridge.order.domain.Address;
+import com.objects.marketbridge.member.domain.Address;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

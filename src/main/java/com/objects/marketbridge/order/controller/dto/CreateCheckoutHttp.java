@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.order.domain.Address;
+import com.objects.marketbridge.member.domain.Address;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
