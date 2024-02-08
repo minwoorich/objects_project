@@ -10,6 +10,7 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.OrderCancelReturnController;
 import com.objects.marketbridge.order.service.OrderCancelReturnService;
 import com.objects.marketbridge.order.service.dto.RequestCancelDto;
+import com.objects.marketbridge.order.service.dto.RequestReturnDto;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -154,6 +155,86 @@ public class OrderCancelReturnControllerRestDocsTest {
                         )));
     }
 
+    @Test
+    @DisplayName("주문 반품 요청 API")
+    @WithMockCustomUser
+    public void requestReturnOrder() throws Exception {
+        // given
+        RequestReturnDto.Response response = RequestReturnDto.Response.builder()
+                .returnRefundInfo(
+                        RequestReturnDto.ReturnRefundInfo.builder()
+                                .returnFee(0L)
+                                .deliveryFee(0L)
+                                .productTotalPrice(2000L)
+                                .build()
+                )
+                .productInfo(
+                        RequestReturnDto.ProductInfo.builder()
+                                .quantity(2L)
+                                .name("빵빵이키링")
+                                .price(1000L)
+                                .image("빵빵이썸네일")
+                                .build()
+                )
+                .build();
+
+        Member member = Member.builder()
+                .membership(MembershipType.WOW.getText())
+                .build();
+
+        given(memberRepository.findById(anyLong())).willReturn(member);
+        given(orderCancelReturnService.findReturnInfo(anyLong(), anyLong(), anyString()))
+                .willReturn(response);
+
+        // when // then
+        mockMvc.perform(
+                        get("/orders/return-flow")
+                                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .param("orderDetailId", "1")
+                                .param("numberOfReturns", "2")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("order-return-request",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("orderDetailId")
+                                        .description("주문 상세 ID"),
+                                parameterWithName("numberOfReturns")
+                                        .description("취소 수량")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.productInfo").type(JsonFieldType.OBJECT)
+                                        .description("반품 상품 정보"),
+                                fieldWithPath("data.productInfo.quantity").type(JsonFieldType.NUMBER)
+                                        .description("반품 상품 수량"),
+                                fieldWithPath("data.productInfo.name").type(JsonFieldType.STRING)
+                                        .description("반품 상품 이름"),
+                                fieldWithPath("data.productInfo.price").type(JsonFieldType.NUMBER)
+                                        .description("반품 상품 가격"),
+                                fieldWithPath("data.productInfo.image").type(JsonFieldType.STRING)
+                                        .description("반품 상품 썸네일"),
+                                fieldWithPath("data.returnRefundInfo").type(JsonFieldType.OBJECT)
+                                        .description("반품 환불 정보"),
+                                fieldWithPath("data.returnRefundInfo.deliveryFee").type(JsonFieldType.NUMBER)
+                                        .description("환불 배송비"),
+                                fieldWithPath("data.returnRefundInfo.returnFee").type(JsonFieldType.NUMBER)
+                                        .description("반품 배송비"),
+                                fieldWithPath("data.returnRefundInfo.productTotalPrice").type(JsonFieldType.NUMBER)
+                                        .description("환불(상품) 금액")
+                        )));
+    }
+
 //    @Test
 //    @DisplayName("주문 취소 확정 API")
 //    public void confirmCancelReturn() throws Exception {
@@ -274,109 +355,7 @@ public class OrderCancelReturnControllerRestDocsTest {
 
 
 
-//    @Test
-//    @DisplayName("주문 반품 요청 API")
-//    public void requestReturnOrder() throws Exception {
-//        // given
-//        Long orderId = 1L;
-//        List<Long> productIds = List.of(1L, 2L, 3L);
-//
-//        Product product1 = Product.builder()
-//                .price(1000L)
-//                .thumbImg("썸네일1")
-//                .name("옷")
-//                .build();
-//        Product product2 = Product.builder()
-//                .name("바지")
-//                .price(2000L)
-//                .thumbImg("썸네일2")
-//                .build();
-//        Product product3 = Product.builder()
-//                .name("신발")
-//                .price(3000L)
-//                .thumbImg("썸네일3")
-//                .build();
-//
-//        OrderDetail orderDetail1 = OrderDetail.builder()
-//                .product(product1)
-//                .quantity(10L)
-//                .price(10000L)
-//                .build();
-//        OrderDetail orderDetail2 = OrderDetail.builder()
-//                .product(product2)
-//                .quantity(3L)
-//                .price(product2.getPrice() * 3L)
-//                .build();
-//        OrderDetail orderDetail3 = OrderDetail.builder()
-//                .product(product3)
-//                .quantity(4L)
-//                .price(product3.getPrice() * 4L)
-//                .build();
-//
-//        Long numberOfReturns = 2L;
-//
-//        given(orderCancelReturnService.findReturnInfo(any(List.class), any(Long.class), any(String.class)))
-//                .willReturn(RequestReturnDto.Response.builder()
-//                        .returnRefundInfo(
-//                                RequestReturnDto.ReturnRefundInfo.builder()
-//                                        .returnFee(0L)
-//                                        .deliveryFee(0L)
-//                                        .productTotalPrice(10000L)
-//                                        .build()
-//                        )
-//                        .productInfos(List.of(RequestReturnDto.ProductInfo.of(orderDetail1, numberOfReturns)))
-//                        .build()
-//
-//                );
-//
-//        // when // then
-//        mockMvc.perform(
-//                        get("/orders/return-flow")
-//                                .accept(MediaType.APPLICATION_JSON)
-//                                .param("orderNo", "1")
-//                                .param("productIds", "1", "2", "3")
-//
-//                )
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andDo(document("order-return-request",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        queryParameters(
-//                                parameterWithName("orderNo")
-//                                        .description("주문 번호"),
-//                                parameterWithName("productIds")
-//                                        .description("취소 상품ID 리스트")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-//                                        .description("코드"),
-//                                fieldWithPath("status").type(JsonFieldType.STRING)
-//                                        .description("상태"),
-//                                fieldWithPath("message").type(JsonFieldType.STRING)
-//                                        .description("메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-//                                        .description("응답 데이터"),
-//                                fieldWithPath("data.productInfos").type(JsonFieldType.ARRAY)
-//                                        .description("반품 상품 리스트"),
-//                                fieldWithPath("data.productInfos[].quantity").type(JsonFieldType.NUMBER)
-//                                        .description("반품 상품 수량"),
-//                                fieldWithPath("data.productInfos[].name").type(JsonFieldType.STRING)
-//                                        .description("반품 상품 이름"),
-//                                fieldWithPath("data.productInfos[].price").type(JsonFieldType.NUMBER)
-//                                        .description("반품 상품 가격"),
-//                                fieldWithPath("data.productInfos[].image").type(JsonFieldType.STRING)
-//                                        .description("반품 상품 썸네일"),
-//                                fieldWithPath("data.returnRefundInfo").type(JsonFieldType.OBJECT)
-//                                        .description("반품 환불 정보"),
-//                                fieldWithPath("data.returnRefundInfo.deliveryFee").type(JsonFieldType.NUMBER)
-//                                        .description("환불 배송비"),
-//                                fieldWithPath("data.returnRefundInfo.returnFee").type(JsonFieldType.NUMBER)
-//                                        .description("반품 배송비"),
-//                                fieldWithPath("data.returnRefundInfo.productTotalPrice").type(JsonFieldType.NUMBER)
-//                                        .description("환불(상품) 금액")
-//                        )));
-//    }
+
 //
 //    @Test
 //    @DisplayName("주문 취소/반품 리스트 반환 API")

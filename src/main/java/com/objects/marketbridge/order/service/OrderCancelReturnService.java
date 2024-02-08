@@ -74,14 +74,14 @@ public class OrderCancelReturnService {
 
     public RequestCancelDto.Response findCancelInfo(Long orderDetailId, Long numberOfCancellation, String membership) {
         // TODO fetchJoin으로 변경 (Product 까지)
-        OrderDetail orderDetail = valifyOrderDetail(orderDetailId);
+        OrderDetail orderDetail = valifyCancelOrderDetail(orderDetailId);
 
         return RequestCancelDto.Response.of(orderDetail, numberOfCancellation, membership);
     }
 
     public RequestReturnDto.Response findReturnInfo(Long orderDetailId, Long numberOfReturns, String membership) {
         // TODO fetchJoin으로 변경
-        OrderDetail orderDetail = valifyOrderDetail(orderDetailId);
+        OrderDetail orderDetail = valifyReturnOrderDetail(orderDetailId);
 
         return RequestReturnDto.Response.of(orderDetail, numberOfReturns, membership);
     }
@@ -136,6 +136,32 @@ public class OrderCancelReturnService {
         return orderDetails.get(0).getOrder().getTid();
     }
 
+    private OrderDetail valifyCancelOrderDetail(Long orderDetailId) {
+        OrderDetail orderDetail = valifyOrderDetail(orderDetailId);
+        if(cancelImpossible(orderDetail)) {
+            throw CustomLogicException.builder()
+                    .httpStatus(BAD_REQUEST)
+                    .message("취소가 불가능한 상품입니다.")
+                    .timestamp(LocalDateTime.now())
+                    .errorCode(NON_CANCELLABLE_PRODUCT)
+                    .build();
+        }
+        return orderDetail;
+    }
+
+    private OrderDetail valifyReturnOrderDetail(Long orderDetailId) {
+        OrderDetail orderDetail = valifyOrderDetail(orderDetailId);
+        if(returnImpossible(orderDetail)) {
+            throw CustomLogicException.builder()
+                    .httpStatus(BAD_REQUEST)
+                    .message("반품이 불가능한 상품입니다.")
+                    .timestamp(LocalDateTime.now())
+                    .errorCode(NON_RETURNABLE_PRODUCT)
+                    .build();
+        }
+        return orderDetail;
+    }
+
     private OrderDetail valifyOrderDetail(Long orderDetailId) {
         OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
         if (orderDetail == null) {
@@ -146,21 +172,15 @@ public class OrderCancelReturnService {
                     .errorCode(ORDERDETAIL_NOT_FOUND)
                     .build();
         }
-
-        if(cancelAndReturnImpossible(orderDetail)) {
-            throw CustomLogicException.builder()
-                    .httpStatus(BAD_REQUEST)
-                    .message("취소/반품이 불가능한 상품입니다.")
-                    .timestamp(LocalDateTime.now())
-                    .errorCode(NON_CANCELLABLE_RETURNABLE_PRODUCT)
-                    .build();
-        }
-
         return orderDetail;
     }
 
-    private boolean cancelAndReturnImpossible(OrderDetail orderDetail) {
+    private boolean cancelImpossible(OrderDetail orderDetail) {
         return Objects.equals(orderDetail.getStatusCode(), DELIVERY_COMPLETED.getCode());
+    }
+
+    private boolean returnImpossible(OrderDetail orderDetail) {
+        return !Objects.equals(orderDetail.getStatusCode(), DELIVERY_COMPLETED.getCode());
     }
 
     private List<OrderDetail> valifyOrderDetails(List<Long> orderDetailIds) {
@@ -174,19 +194,6 @@ public class OrderCancelReturnService {
                     .build();
         }
         return orderDetails;
-    }
-
-    private Order valifyOrder(String orderNo) {
-        Order order = orderQueryRepository.findByOrderNo(orderNo);
-        if (order == null) {
-            throw CustomLogicException.builder()
-                    .httpStatus(NOT_FOUND)
-                    .message("주문 정보를 찾을 수 없습니다.")
-                    .timestamp(LocalDateTime.now())
-                    .errorCode(ORDER_NOT_FOUND)
-                    .build();
-        }
-        return order;
     }
 
     //    // TODO 객체로 따로 빼야함(임시로 사용)
