@@ -8,9 +8,12 @@ import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MembershipType;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.OrderCancelReturnController;
+import com.objects.marketbridge.order.domain.StatusCodeType;
+import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
 import com.objects.marketbridge.order.service.OrderCancelReturnService;
 import com.objects.marketbridge.order.service.dto.RequestCancelDto;
 import com.objects.marketbridge.order.service.dto.RequestReturnDto;
+import com.objects.marketbridge.order.service.port.OrderDetailDtoRepository;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +23,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -30,8 +35,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.objects.marketbridge.order.domain.StatusCodeType.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -58,7 +66,7 @@ public class OrderCancelReturnControllerRestDocsTest {
     @MockBean
     OrderCancelReturnService orderCancelReturnService;
     @MockBean
-    OrderDtoRepository orderDtoRepository;
+    OrderDetailDtoRepository orderDetailDtoRepository;
     @MockBean
     MemberRepository memberRepository;
     @MockBean
@@ -143,7 +151,7 @@ public class OrderCancelReturnControllerRestDocsTest {
                                 fieldWithPath("data.productInfo.image").type(JsonFieldType.STRING)
                                         .description("취소 상품 썸네일"),
                                 fieldWithPath("data.cancelRefundInfo").type(JsonFieldType.OBJECT)
-                                        .description("취소 상품 썸네일"),
+                                        .description("취소 환불 정보"),
                                 fieldWithPath("data.cancelRefundInfo.deliveryFee").type(JsonFieldType.NUMBER)
                                         .description("환불 배송비"),
                                 fieldWithPath("data.cancelRefundInfo.refundFee").type(JsonFieldType.NUMBER)
@@ -232,6 +240,141 @@ public class OrderCancelReturnControllerRestDocsTest {
                                         .description("반품 배송비"),
                                 fieldWithPath("data.returnRefundInfo.productTotalPrice").type(JsonFieldType.NUMBER)
                                         .description("환불(상품) 금액")
+                        )));
+    }
+
+    @Test
+    @DisplayName("주문 취소/반품 리스트 반환 API")
+    @WithMockCustomUser
+    public void getCancelReturnList() throws Exception {
+        // given
+        LocalDateTime orderDate1 = LocalDateTime.of(2024, 2, 8, 11, 39);
+        LocalDateTime cancelDate1 = LocalDateTime.of(2024, 2, 8, 11, 40);
+        GetCancelReturnListDtio.Response content1 = GetCancelReturnListDtio.Response.builder()
+                .orderDate(orderDate1)
+                .cancelReceiptDate(cancelDate1)
+                .orderDetailInfo(
+                        GetCancelReturnListDtio.OrderDetailInfo.builder()
+                                .orderNo("1")
+                                .productId(1L)
+                                .productNo("1")
+                                .name("빵빵이키링")
+                                .price(1000L)
+                                .quantity(2L)
+                                .orderStatus(ORDER_CANCEL.getCode())
+                                .build()
+                )
+                .build();
+
+        LocalDateTime orderDate2 = LocalDateTime.of(2024, 2, 8, 11, 39);
+        LocalDateTime cancelDate2 = LocalDateTime.of(2024, 2, 8, 11, 40);
+        GetCancelReturnListDtio.Response content2 = GetCancelReturnListDtio.Response.builder()
+                .orderDate(orderDate2)
+                .cancelReceiptDate(cancelDate2)
+                .orderDetailInfo(
+                        GetCancelReturnListDtio.OrderDetailInfo.builder()
+                                .orderNo("1")
+                                .productId(2L)
+                                .productNo("2")
+                                .name("옥지얌키링")
+                                .price(2000L)
+                                .quantity(4L)
+                                .orderStatus(ORDER_CANCEL.getCode())
+                                .build()
+                )
+                .build();
+
+        List<GetCancelReturnListDtio.Response> contents = List.of(content1, content2);
+
+        PageRequest pageRequest = PageRequest.of(0, 5);
+        given(orderDetailDtoRepository.findCancelReturnListDtio(anyLong(), any(PageRequest.class)))
+                .willReturn(new PageImpl<>(contents, pageRequest, 2));
+
+        // when // then
+        mockMvc.perform(
+                        get("/orders/cancel-return/list")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                                .param("page", "0")
+                                .param("size", "5")
+
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("order-cancel-return-list",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("page")
+                                        .description("페이지 번호"),
+                                parameterWithName("size")
+                                        .description("사이즈 크기")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.content[].cancelReceiptDate").type(JsonFieldType.STRING)
+                                        .description("주문 취소 날짜"),
+                                fieldWithPath("data.content[].orderDate").type(JsonFieldType.STRING)
+                                        .description("주문 날짜"),
+                                fieldWithPath("data.content[].orderDetailInfo.orderNo").type(JsonFieldType.STRING)
+                                        .description("주문 번호"),
+                                fieldWithPath("data.content[].orderDetailInfo.productId").type(JsonFieldType.NUMBER)
+                                        .description("상품 Id"),
+                                fieldWithPath("data.content[].orderDetailInfo.productNo").type(JsonFieldType.STRING)
+                                        .description("상품 번호"),
+                                fieldWithPath("data.content[].orderDetailInfo.name").type(JsonFieldType.STRING)
+                                        .description("상품 이름"),
+                                fieldWithPath("data.content[].orderDetailInfo.price").type(JsonFieldType.NUMBER)
+                                        .description("상품 가격"),
+                                fieldWithPath("data.content[].orderDetailInfo.quantity").type(JsonFieldType.NUMBER)
+                                        .description("상품 주문 수량"),
+                                fieldWithPath("data.content[].orderDetailInfo.orderStatus").type(JsonFieldType.STRING)
+                                        .description("주문 상태"),
+                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER)
+                                        .description("페이지 번호"),
+                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER)
+                                        .description("페이지당 요소 수"),
+                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬이 비어 있는지 여부"),
+                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬이 되어 있는지 여부"),
+                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬이 되어 있지 않은지 여부"),
+                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER)
+                                        .description("페이지 오프셋"),
+                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN)
+                                        .description("페이지가 있는지 여부"),
+                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN)
+                                        .description("페이지가 없는지 여부"),
+                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
+                                        .description("마지막 페이지 여부"),
+                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
+                                        .description("전체 페이지 수"),
+                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
+                                        .description("전체 요소 수"),
+                                fieldWithPath("data.size").type(JsonFieldType.NUMBER)
+                                        .description("페이지 크기"),
+                                fieldWithPath("data.number").type(JsonFieldType.NUMBER)
+                                        .description("페이지 번호"),
+                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬이 비어 있는지 여부"),
+                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬이 되어 있는지 여부"),
+                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬이 되어 있지 않은지 여부"),
+                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
+                                        .description("첫 페이지 여부"),
+                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
+                                        .description("현재 페이지의 요소 수"),
+                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
+                                        .description("컨텐츠가 비어 있는지 여부")
                         )));
     }
 
@@ -356,240 +499,7 @@ public class OrderCancelReturnControllerRestDocsTest {
 
 
 
-//
-//    @Test
-//    @DisplayName("주문 취소/반품 리스트 반환 API")
-//    public void getCancelReturnList() throws Exception {
-//        // given
-//        Member member = Member.builder().build();
-//
-//        Order order1 = Order.builder()
-//                .member(member)
-//                .orderNo("123")
-//                .build();
-//
-//        Order order2 = Order.builder()
-//                .member(member)
-//                .orderNo("456")
-//                .build();
-//
-//        Product product1 = Product.builder()
-//                .productNo("1")
-//                .name("옷")
-//                .price(1000L)
-//                .build();
-//        Product product2 = Product.builder()
-//                .productNo("2")
-//                .name("신발")
-//                .price(2000L)
-//                .build();
-//        Product product3 = Product.builder()
-//                .productNo("3")
-//                .name("바지")
-//                .price(3000L)
-//                .build();
-//
-//        OrderDetail orderDetail1 = OrderDetail.builder()
-//                .order(order1)
-//                .product(product1)
-//                .quantity(1L)
-//                .price(product1.getPrice())
-//                .orderNo(order1.getOrderNo())
-//                .statusCode(RETURN_COMPLETED.getCode())
-//                .build();
-//        OrderDetail orderDetail2 = OrderDetail.builder()
-//                .order(order1)
-//                .product(product2)
-//                .quantity(2L)
-//                .orderNo(order1.getOrderNo())
-//                .price(product2.getPrice())
-//                .statusCode(ORDER_CANCEL.getCode())
-//                .build();
-//        OrderDetail orderDetail3 = OrderDetail.builder()
-//                .order(order2)
-//                .product(product3)
-//                .quantity(3L)
-//                .orderNo(order2.getOrderNo())
-//                .price(product3.getPrice())
-//                .statusCode(ORDER_CANCEL.getCode())
-//                .build();
-//        OrderDetail orderDetail4 = OrderDetail.builder()
-//                .order(order2)
-//                .product(product2)
-//                .quantity(4L)
-//                .orderNo(order2.getOrderNo())
-//                .statusCode(DELIVERY_ING.getCode())
-//                .price(product2.getPrice())
-//                .build();
-//
-//        order1.addOrderDetail(orderDetail1);
-//        order1.addOrderDetail(orderDetail2);
-//        order2.addOrderDetail(orderDetail3);
-//        order2.addOrderDetail(orderDetail4);
-//
-//        productRepository.saveAll(List.of(product1, product2, product3));
-//        memberRepository.save(member);
-//        orderCommendRepository.save(order1);
-//        orderCommendRepository.save(order2);
-//
-//        Page<GetCancelReturnListDtio.Response> orderCancelReturnListResponsePage = orderDtoRepository.findOrdersByMemberId(member.getId(), PageRequest.of(0, 3));
-//
-//        LocalDateTime orderDate1 = LocalDateTime.of(2024, 2, 5, 2, 11);
-//        LocalDateTime orderDate2 = LocalDateTime.of(2024, 2, 5, 2, 12);
-//        LocalDateTime cancelReceiptDate1 = LocalDateTime.of(2024, 2, 5, 2, 13);
-//        LocalDateTime cancelReceiptDate2 = LocalDateTime.of(2024, 2, 5, 2, 14);
-//        GetCancelReturnListDtio.Response dtio1 = GetCancelReturnListDtio.Response.builder()
-//                .cancelReceiptDate(cancelReceiptDate1)
-//                .orderDate(orderDate1)
-//                .orderNo("123")
-//                .build();
-//        GetCancelReturnListDtio.Response dtio2 = GetCancelReturnListDtio.Response.builder()
-//                .cancelReceiptDate(cancelReceiptDate2)
-//                .orderDate(orderDate2)
-//                .orderNo("123")
-//                .build();
-//        GetCancelReturnListDtio.OrderDetailInfo orderDetailInfo1 = GetCancelReturnListDtio.OrderDetailInfo.builder()
-//                .orderNo(orderDetail1.getOrderNo())
-//                .productId(orderDetail1.getProduct().getId())
-//                .productNo(orderDetail1.getProduct().getProductNo())
-//                .name(orderDetail1.getProduct().getName())
-//                .price(orderDetail1.getPrice())
-//                .quantity(orderDetail1.getQuantity())
-//                .orderStatus(orderDetail1.getStatusCode())
-//                .build();
-//        GetCancelReturnListDtio.OrderDetailInfo orderDetailInfo2 = GetCancelReturnListDtio.OrderDetailInfo.builder()
-//                .orderNo(orderDetail2.getOrderNo())
-//                .productId(orderDetail2.getProduct().getId())
-//                .productNo(orderDetail2.getProduct().getProductNo())
-//                .name(orderDetail2.getProduct().getName())
-//                .price(orderDetail2.getPrice())
-//                .quantity(orderDetail2.getQuantity())
-//                .orderStatus(orderDetail2.getStatusCode())
-//                .build();
-//        GetCancelReturnListDtio.OrderDetailInfo orderDetailInfo3 = GetCancelReturnListDtio.OrderDetailInfo.builder()
-//                .orderNo(orderDetail3.getOrderNo())
-//                .productId(orderDetail3.getProduct().getId())
-//                .productNo(orderDetail3.getProduct().getProductNo())
-//                .name(orderDetail3.getProduct().getName())
-//                .price(orderDetail3.getPrice())
-//                .quantity(orderDetail3.getQuantity())
-//                .orderStatus(orderDetail3.getStatusCode())
-//                .build();
-//        GetCancelReturnListDtio.OrderDetailInfo orderDetailInfo4 = GetCancelReturnListDtio.OrderDetailInfo.builder()
-//                .orderNo(orderDetail4.getOrderNo())
-//                .productId(orderDetail4.getProduct().getId())
-//                .productNo(orderDetail4.getProduct().getProductNo())
-//                .name(orderDetail4.getProduct().getName())
-//                .price(orderDetail4.getPrice())
-//                .quantity(orderDetail4.getQuantity())
-//                .orderStatus(orderDetail4.getStatusCode())
-//                .build();
-//
-//        List<GetCancelReturnListDtio.OrderDetailInfo> orderDetailInfos1 = List.of(orderDetailInfo1, orderDetailInfo2);
-//        List<GetCancelReturnListDtio.OrderDetailInfo> orderDetailInfos2 = List.of(orderDetailInfo3, orderDetailInfo4);
-//
-//        dtio1.changeOrderDetailInfos(orderDetailInfos1);
-//        dtio2.changeOrderDetailInfos(orderDetailInfos2);
-//
-//        List<GetCancelReturnListDtio.Response> contents = List.of(dtio1, dtio2);
-//
-//        PageRequest pageRequest = PageRequest.of(0, 5);
-//        given(orderDtoRepository.findOrdersByMemberId(any(Long.class), any(PageRequest.class)))
-//                .willReturn(new PageImpl<>(contents, pageRequest, 2));
-//
-//        // when // then
-//        mockMvc.perform(
-//                        get("/orders/cancel-return/list")
-//                                .accept(MediaType.APPLICATION_JSON)
-//                                .param("memberId", "1")
-//                                .param("page", "0")
-//                                .param("size", "5")
-//
-//                )
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andDo(document("order-cancel-return-list",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        queryParameters(
-//                                parameterWithName("memberId")
-//                                        .description("유저 ID"),
-//                                parameterWithName("page")
-//                                        .description("페이지 번호"),
-//                                parameterWithName("size")
-//                                        .description("사이즈 크기")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-//                                        .description("코드"),
-//                                fieldWithPath("status").type(JsonFieldType.STRING)
-//                                        .description("상태"),
-//                                fieldWithPath("message").type(JsonFieldType.STRING)
-//                                        .description("메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-//                                        .description("응답 데이터"),
-//                                fieldWithPath("data.content[].cancelReceiptDate")
-//                                        .description("주문 취소 날짜"),
-//                                fieldWithPath("data.content[].orderDate")
-//                                        .description("주문 날짜"),
-//                                fieldWithPath("data.content[].orderNo").type(JsonFieldType.STRING)
-//                                        .description("주문 번호"),
-//                                fieldWithPath("data.content[].orderDetailInfos[].orderNo").type(JsonFieldType.STRING)
-//                                        .description("주문 번호"),
-//                                fieldWithPath("data.content[].orderDetailInfos[].productId").type(JsonFieldType.NUMBER)
-//                                        .description("상품 Id"),
-//                                fieldWithPath("data.content[].orderDetailInfos[].productNo").type(JsonFieldType.STRING)
-//                                        .description("상품 번호"),
-//                                fieldWithPath("data.content[].orderDetailInfos[].name").type(JsonFieldType.STRING)
-//                                        .description("상품 이름"),
-//                                fieldWithPath("data.content[].orderDetailInfos[].price").type(JsonFieldType.NUMBER)
-//                                        .description("상품 가격"),
-//                                fieldWithPath("data.content[].orderDetailInfos[].quantity").type(JsonFieldType.NUMBER)
-//                                        .description("상품 주문 수량"),
-//                                fieldWithPath("data.content[].orderDetailInfos[].orderStatus").type(JsonFieldType.STRING)
-//                                        .description("주문 상태"),
-//                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER)
-//                                        .description("페이지 번호"),
-//                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER)
-//                                        .description("페이지당 요소 수"),
-//                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
-//                                        .description("정렬이 비어 있는지 여부"),
-//                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
-//                                        .description("정렬이 되어 있는지 여부"),
-//                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
-//                                        .description("정렬이 되어 있지 않은지 여부"),
-//                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER)
-//                                        .description("페이지 오프셋"),
-//                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN)
-//                                        .description("페이지가 있는지 여부"),
-//                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN)
-//                                        .description("페이지가 없는지 여부"),
-//                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
-//                                        .description("마지막 페이지 여부"),
-//                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
-//                                        .description("전체 페이지 수"),
-//                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
-//                                        .description("전체 요소 수"),
-//                                fieldWithPath("data.size").type(JsonFieldType.NUMBER)
-//                                        .description("페이지 크기"),
-//                                fieldWithPath("data.number").type(JsonFieldType.NUMBER)
-//                                        .description("페이지 번호"),
-//                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN)
-//                                        .description("정렬이 비어 있는지 여부"),
-//                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
-//                                        .description("정렬이 되어 있는지 여부"),
-//                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN)
-//                                        .description("정렬이 되어 있지 않은지 여부"),
-//                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
-//                                        .description("첫 페이지 여부"),
-//                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
-//                                        .description("현재 페이지의 요소 수"),
-//                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
-//                                        .description("컨텐츠가 비어 있는지 여부")
-//
-//
-//                        )));
-//    }
+
 //
 //    @Test
 //    @DisplayName("")

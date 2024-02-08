@@ -12,6 +12,7 @@ import com.objects.marketbridge.order.controller.dto.*;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.domain.QOrder;
 import com.objects.marketbridge.order.mock.BaseFakeOrderDetailRepository;
 import com.objects.marketbridge.order.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.order.mock.TestContainer;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +34,8 @@ import java.util.List;
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
 import static com.objects.marketbridge.member.domain.MembershipType.*;
 import static com.objects.marketbridge.order.domain.MemberShipPrice.WOW;
+import static com.objects.marketbridge.order.domain.QOrder.order;
+import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -40,182 +44,6 @@ import static org.springframework.http.HttpStatus.*;
 public class OrderCancelReturnControllerTest {
 
     private TestContainer testContainer = TestContainer.builder().build();
-
-//    @BeforeEach
-    void beforeEach() {
-        Member member1 = Member.builder()
-                .membership(MembershipType.WOW.getText())
-                .build();
-        Member member2 = Member.builder()
-                .membership(BASIC.getText())
-                .build();
-
-        Product product1 = Product.builder()
-                .name("빵빵이키링")
-                .productNo("1")
-                .price(1000L)
-                .thumbImg("빵빵이썸네일")
-                .stock(5L)
-                .build();
-        Product product2 = Product.builder()
-                .name("옥지얌키링")
-                .productNo("2")
-                .price(2000L)
-                .thumbImg("옥지얌썸네일")
-                .stock(5L)
-                .build();
-
-        Coupon coupon1 = Coupon.builder()
-                .product(product1)
-                .price(500L)
-                .name("빵빵이키링 쿠폰")
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .product(product2)
-                .price(1000L)
-                .name("옥지얌키링 쿠폰")
-                .build();
-
-        MemberCoupon memberCoupon1 = MemberCoupon.builder()
-                .coupon(coupon1)
-                .member(member1)
-                .isUsed(true)
-                .build();
-        MemberCoupon memberCoupon2 = MemberCoupon.builder()
-                .coupon(coupon2)
-                .isUsed(true)
-                .member(null)
-                .build();
-
-        Order order1 = Order.builder()
-                .member(member1)
-                .orderNo("1")
-                .tid("1")
-                .totalDiscount(0L)
-                .totalPrice(30000L)
-                .realPrice(30000L)
-                .build();
-
-        LocalDateTime cancelledAt = LocalDateTime.of(2024, 1, 31, 3, 33);
-        OrderDetail orderDetail1 = OrderDetail.builder()
-                .memberCoupon(memberCoupon1)
-                .cancelledAt(cancelledAt)
-                .quantity(10L)
-                .product(product1)
-                .price(1000L)
-                .order(order1)
-                .reason("단순변심")
-                .orderNo("1")
-//                .statusCode(ORDER_RECEIVED.getCode())
-                .statusCode(ORDER_CANCEL.getCode())
-                .tid("1")
-                .build();
-        OrderDetail orderDetail2 = OrderDetail.builder()
-                .cancelledAt(cancelledAt)
-                .quantity(10L)
-                .product(product2)
-                .price(2000L)
-                .order(order1)
-                .reason("단순변심")
-                .orderNo("1")
-//                .statusCode(DELIVERY_ING.getCode())
-                .statusCode(ORDER_CANCEL.getCode())
-                .tid("1")
-                .build();
-
-        order1.addOrderDetail(orderDetail1);
-        order1.addOrderDetail(orderDetail2);
-
-        Product product3 = Product.builder()
-                .name("빵빵이키링3")
-                .productNo("3")
-                .price(1000L)
-                .thumbImg("빵빵이썸네일3")
-                .stock(5L)
-                .build();
-        Product product4 = Product.builder()
-                .name("옥지얌키링4")
-                .productNo("4")
-                .price(2000L)
-                .thumbImg("옥지얌썸네일4")
-                .stock(5L)
-                .build();
-
-        Coupon coupon3 = Coupon.builder()
-                .product(product3)
-                .price(500L)
-                .name("빵빵이키링1 쿠폰")
-                .build();
-        Coupon coupon4 = Coupon.builder()
-                .product(product4)
-                .price(1000L)
-                .name("옥지얌키링1 쿠폰")
-                .build();
-
-        MemberCoupon memberCoupon3 = MemberCoupon.builder()
-                .coupon(coupon3)
-                .member(member2)
-                .isUsed(true)
-                .build();
-        MemberCoupon memberCoupon4 = MemberCoupon.builder()
-                .coupon(coupon4)
-                .isUsed(true)
-                .member(member2)
-                .build();
-
-        Order order2 = Order.builder()
-                .member(member2)
-                .orderNo("2")
-                .tid("2")
-                .totalDiscount(0L)
-                .totalPrice(30000L)
-                .realPrice(30000L)
-                .build();
-
-        LocalDateTime cancelledAt2 = LocalDateTime.of(2024, 1, 31, 3, 33);
-        OrderDetail orderDetail3 = OrderDetail.builder()
-                .memberCoupon(memberCoupon3)
-                .cancelledAt(cancelledAt2)
-                .quantity(10L)
-                .product(product3)
-                .price(1000L)
-                .order(order2)
-                .reason("단순변심")
-                .orderNo("2")
-//                .statusCode(ORDER_RECEIVED.getCode())
-                .statusCode(ORDER_CANCEL.getCode())
-                .tid("2")
-                .build();
-        OrderDetail orderDetail4 = OrderDetail.builder()
-                .memberCoupon(memberCoupon4)
-                .cancelledAt(cancelledAt2)
-                .quantity(10L)
-                .product(product4)
-                .price(2000L)
-                .order(order2)
-                .reason("단순변심")
-                .orderNo("2")
-//                .statusCode(DELIVERY_ING.getCode())
-                .statusCode(ORDER_CANCEL.getCode())
-                .tid("2")
-                .build();
-
-        order2.addOrderDetail(orderDetail3);
-        order2.addOrderDetail(orderDetail4);
-
-        testContainer.productRepository.save(product1);
-        testContainer.productRepository.save(product2);
-        testContainer.productRepository.save(product3);
-        testContainer.productRepository.save(product4);
-        testContainer.orderDetailCommendRepository.save(orderDetail1);
-        testContainer.orderDetailCommendRepository.save(orderDetail2);
-        testContainer.orderDetailCommendRepository.save(orderDetail3);
-        testContainer.orderDetailCommendRepository.save(orderDetail4);
-        testContainer.orderCommendRepository.save(order1);
-        testContainer.orderCommendRepository.save(order2);
-        testContainer.memberRepository.save(member1);
-        testContainer.memberRepository.save(member2);
-    }
 
     @AfterEach
     void afterEach() {
@@ -722,41 +550,101 @@ public class OrderCancelReturnControllerTest {
                 });
     }
 
-//    @Test
-//    @DisplayName("")
-//    public void getCancelReturnList() {
-//        // given
-//        Long memberId = 1L;
-//        Integer page = 0;
-//        Integer size = 5;
-//
-//        // when
-//        ApiResponse<Page<GetCancelReturnListHttp.Response>> result = orderCancelReturnController.getCancelReturnList(memberId, page, size);
-//
-//        // then
-//        assertThat(result.getCode()).isEqualTo(OK.value());
-//        assertThat(result.getStatus()).isEqualTo(OK);
-//        assertThat(result.getMessage()).isEqualTo(OK.name());
-//        assertThat(result.getData().getContent().size()).isEqualTo(1);
-//        assertThat(result.getData().getContent().get(0).getOrderNo()).isEqualTo("1");
-//
-//        List<GetCancelReturnListHttp.OrderDetailInfo> dtios = result.getData().getContent().get(0).getOrderDetailInfos();
-//        assertThat(dtios.get(0).getOrderNo()).isEqualTo("1");
-//        assertThat(dtios.get(0).getProductId()).isEqualTo(1L);
-//        assertThat(dtios.get(0).getProductNo()).isEqualTo("1");
-//        assertThat(dtios.get(0).getName()).isEqualTo("빵빵이키링");
-//        assertThat(dtios.get(0).getPrice()).isEqualTo(1000L);
-//        assertThat(dtios.get(0).getQuantity()).isEqualTo(2L);
-//        assertThat(dtios.get(0).getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
-//
-//        assertThat(dtios.get(1).getOrderNo()).isEqualTo("1");
-//        assertThat(dtios.get(1).getProductId()).isEqualTo(2L);
-//        assertThat(dtios.get(1).getProductNo()).isEqualTo("2");
-//        assertThat(dtios.get(1).getName()).isEqualTo("옥지얌키링");
-//        assertThat(dtios.get(1).getPrice()).isEqualTo(2000L);
-//        assertThat(dtios.get(1).getQuantity()).isEqualTo(3L);
-//        assertThat(dtios.get(1).getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
-//    }
+    @Test
+    @DisplayName("취소/반품한 상품들을 조회할 수 있다.")
+    public void getCancelReturnList() {
+        // given
+        Member member = Member.builder()
+                .membership(MembershipType.BASIC.getText())
+                .build();
+
+        Product product1 = Product.builder()
+                .name("빵빵이키링")
+                .thumbImg("빵빵이썸네일")
+                .productNo("1")
+                .build();
+        Product product2 = Product.builder()
+                .name("옥지얌키링")
+                .thumbImg("옥지얌썸네일")
+                .productNo("2")
+                .build();
+
+        LocalDateTime orderDate1 = LocalDateTime.of(2024, 2, 8, 9, 30);
+        LocalDateTime orderDate2 = LocalDateTime.of(2024, 2, 8, 9, 31);
+        LocalDateTime cancelDate1 = LocalDateTime.of(2024, 2, 8, 9, 32);
+        LocalDateTime cancelDate2 = LocalDateTime.of(2024, 2, 8, 9, 33);
+
+        Order order = Order.builder()
+                .member(member)
+                .orderNo("1")
+                .build();
+
+        OrderDetail orderDetail1 = OrderDetail.builder()
+                .order(order)
+                .orderNo("1")
+                .quantity(10L)
+                .product(product1)
+                .price(1000L)
+                .statusCode(ORDER_CANCEL.getCode())
+                .cancelledAt(cancelDate1)
+                .build();
+        ReflectionTestUtils.setField(orderDetail1, "createdAt", orderDate1, LocalDateTime.class);
+        OrderDetail orderDetail2 = OrderDetail.builder()
+                .order(order)
+                .orderNo("1")
+                .quantity(10L)
+                .product(product2)
+                .price(2000L)
+                .statusCode(ORDER_CANCEL.getCode())
+                .cancelledAt(cancelDate2)
+                .build();
+        ReflectionTestUtils.setField(orderDetail2, "createdAt", orderDate2, LocalDateTime.class);
+
+        order.addOrderDetail(orderDetail1);
+        order.addOrderDetail(orderDetail2);
+
+        testContainer.orderCommendRepository.save(order);
+        testContainer.productRepository.save(product1);
+        testContainer.productRepository.save(product2);
+        testContainer.orderDetailCommendRepository.save(orderDetail1);
+        testContainer.orderDetailCommendRepository.save(orderDetail2);
+        testContainer.memberRepository.save(member);
+
+        Integer page = 0;
+        Integer size = 5;
+        Long memberId = 1L;
+
+        // when
+        ApiResponse<Page<GetCancelReturnListHttp.Response>> result = testContainer.orderCancelReturnController.getCancelReturnList(page, size, memberId);
+
+        // then
+        assertThat(result.getCode()).isEqualTo(OK.value());
+        assertThat(result.getStatus()).isEqualTo(OK);
+        assertThat(result.getMessage()).isEqualTo(OK.name());
+        assertThat(result.getData().getContent().size()).isEqualTo(2);
+        assertThat(result.getData().getContent().get(0).getCancelReceiptDate()).isEqualTo(cancelDate1);
+        assertThat(result.getData().getContent().get(0).getOrderDate()).isEqualTo(orderDate1);
+        assertThat(result.getData().getContent().get(1).getCancelReceiptDate()).isEqualTo(cancelDate2);
+        assertThat(result.getData().getContent().get(1).getOrderDate()).isEqualTo(orderDate2);
+
+        GetCancelReturnListHttp.OrderDetailInfo orderDetailInfo1 = result.getData().getContent().get(0).getOrderDetailInfo();
+        assertThat(orderDetailInfo1.getOrderNo()).isEqualTo("1");
+        assertThat(orderDetailInfo1.getProductId()).isEqualTo(1L);
+        assertThat(orderDetailInfo1.getProductNo()).isEqualTo("1");
+        assertThat(orderDetailInfo1.getName()).isEqualTo("빵빵이키링");
+        assertThat(orderDetailInfo1.getPrice()).isEqualTo(1000L);
+        assertThat(orderDetailInfo1.getQuantity()).isEqualTo(10L);
+        assertThat(orderDetailInfo1.getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
+
+        GetCancelReturnListHttp.OrderDetailInfo orderDetailInfo2 = result.getData().getContent().get(1).getOrderDetailInfo();
+        assertThat(orderDetailInfo2.getOrderNo()).isEqualTo("1");
+        assertThat(orderDetailInfo2.getProductId()).isEqualTo(2L);
+        assertThat(orderDetailInfo2.getProductNo()).isEqualTo("2");
+        assertThat(orderDetailInfo2.getName()).isEqualTo("옥지얌키링");
+        assertThat(orderDetailInfo2.getPrice()).isEqualTo(2000L);
+        assertThat(orderDetailInfo2.getQuantity()).isEqualTo(10L);
+        assertThat(orderDetailInfo2.getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
+    }
 //
 //    @Test
 //    @DisplayName("")

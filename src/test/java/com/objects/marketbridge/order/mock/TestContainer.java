@@ -4,8 +4,8 @@ import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.OrderCancelReturnController;
 import com.objects.marketbridge.order.service.OrderCancelReturnService;
-import com.objects.marketbridge.payment.service.port.RefundClient;
 import com.objects.marketbridge.order.service.port.*;
+import com.objects.marketbridge.payment.service.port.RefundClient;
 import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
@@ -16,17 +16,18 @@ public class TestContainer {
     public final OrderCancelReturnController orderCancelReturnController;
 
     public final OrderCancelReturnService orderCancelReturnService;
-    public final RefundClient refundClient;
 
     public final OrderQueryRepository orderQueryRepository;
     public final OrderCommendRepository orderCommendRepository;
     public final OrderDetailQueryRepository orderDetailQueryRepository;
     public final OrderDetailCommendRepository orderDetailCommendRepository;
     public final OrderDtoRepository orderDtoRepository;
+    public final OrderDetailDtoRepository orderDetailDtoRepository;
     public final ProductRepository productRepository;
     public final CouponRepository couponRepository;
     public final MemberCouponRepository memberCouponRepository;
     public final MemberRepository memberRepository;
+    public final RefundClient refundClient;
 
     @Builder
     public TestContainer(DateTimeHolder dateTimeHolder) {
@@ -40,9 +41,10 @@ public class TestContainer {
         this.couponRepository = new FakeCouponRepository();
         this.memberCouponRepository = new FakeMemberCouponRepository();
         this.memberRepository = new FakeMemberRepository();
+        this.orderDetailDtoRepository = new FakeOrderDetailDtoRepository();
+        this.refundClient = new FakeRefundClient(dateTimeHolder);
 
         // Service
-        this.refundClient = new FakeRefundClient(dateTimeHolder);
         this.orderCancelReturnService = OrderCancelReturnService.builder()
                 .dateTimeHolder(dateTimeHolder)
                 .orderDetailQueryRepository(this.orderDetailQueryRepository)
@@ -56,9 +58,9 @@ public class TestContainer {
         // Controller
         this.orderCancelReturnController = OrderCancelReturnController.builder()
                 .dateTimeHolder(dateTimeHolder)
-                .orderCancelReturnService(orderCancelReturnService)
-                .orderDtoRepository(orderDtoRepository)
-                .memberRepository(memberRepository)
+                .orderCancelReturnService(this.orderCancelReturnService)
+                .orderDetailDtoRepository(this.orderDetailDtoRepository)
+                .memberRepository(this.memberRepository)
                 .build();
 
     }

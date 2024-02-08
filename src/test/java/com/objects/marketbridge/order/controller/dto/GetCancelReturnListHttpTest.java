@@ -22,13 +22,7 @@ class GetCancelReturnListHttpTest {
         LocalDateTime cancelReceiptDate = LocalDateTime.of(2024, 2, 8, 4, 59);
         LocalDateTime orderDate = LocalDateTime.of(2024, 2, 8, 4, 58);
 
-        GetCancelReturnListDtio.Response response = GetCancelReturnListDtio.Response.builder()
-                .cancelReceiptDate(cancelReceiptDate)
-                .orderDate(orderDate)
-                .orderNo("1")
-                .build();
-
-        GetCancelReturnListDtio.OrderDetailInfo orderDetailInfo1 = GetCancelReturnListDtio.OrderDetailInfo.builder()
+        GetCancelReturnListDtio.OrderDetailInfo orderDetailInfo = GetCancelReturnListDtio.OrderDetailInfo.builder()
                 .orderNo("1")
                 .productId(1L)
                 .productNo("1")
@@ -37,18 +31,12 @@ class GetCancelReturnListHttpTest {
                 .quantity(2L)
                 .orderStatus(ORDER_CANCEL.getCode())
                 .build();
-        GetCancelReturnListDtio.OrderDetailInfo orderDetailInfo2 = GetCancelReturnListDtio.OrderDetailInfo.builder()
-                .orderNo("1")
-                .productId(2L)
-                .productNo("2")
-                .name("옥지얌키링")
-                .price(2000L)
-                .quantity(3L)
-                .orderStatus(ORDER_CANCEL.getCode())
-                .build();
-        List<GetCancelReturnListDtio.OrderDetailInfo> orderDetailInfos = List.of(orderDetailInfo1, orderDetailInfo2);
 
-        response.changeOrderDetailInfos(orderDetailInfos);
+        GetCancelReturnListDtio.Response response = GetCancelReturnListDtio.Response.builder()
+                .cancelReceiptDate(cancelReceiptDate)
+                .orderDate(orderDate)
+                .orderDetailInfo(orderDetailInfo)
+                .build();
 
         // when
         GetCancelReturnListHttp.Response result = GetCancelReturnListHttp.Response.of(response);
@@ -56,37 +44,21 @@ class GetCancelReturnListHttpTest {
         // then
         assertThat(result.getCancelReceiptDate()).isEqualTo(cancelReceiptDate);
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
-        assertThat(result.getOrderNo()).isEqualTo("1");
-        assertThat(result.getOrderDetailInfos()).hasSize(2);
-        assertThat(result.getOrderDetailInfos().get(0).getOrderNo()).isEqualTo("1");
-        assertThat(result.getOrderDetailInfos().get(0).getProductId()).isEqualTo(1L);
-        assertThat(result.getOrderDetailInfos().get(0).getProductNo()).isEqualTo("1");
-        assertThat(result.getOrderDetailInfos().get(0).getName()).isEqualTo("빵빵이키링");
-        assertThat(result.getOrderDetailInfos().get(0).getPrice()).isEqualTo(1000L);
-        assertThat(result.getOrderDetailInfos().get(0).getQuantity()).isEqualTo(2L);
-        assertThat(result.getOrderDetailInfos().get(0).getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
-
-        assertThat(result.getOrderDetailInfos().get(1).getOrderNo()).isEqualTo("1");
-        assertThat(result.getOrderDetailInfos().get(1).getProductId()).isEqualTo(2L);
-        assertThat(result.getOrderDetailInfos().get(1).getProductNo()).isEqualTo("2");
-        assertThat(result.getOrderDetailInfos().get(1).getName()).isEqualTo("옥지얌키링");
-        assertThat(result.getOrderDetailInfos().get(1).getPrice()).isEqualTo(2000L);
-        assertThat(result.getOrderDetailInfos().get(1).getQuantity()).isEqualTo(3L);
-        assertThat(result.getOrderDetailInfos().get(1).getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
+        assertThat(result.getOrderDetailInfo().getOrderNo()).isEqualTo("1");
+        assertThat(result.getOrderDetailInfo().getProductId()).isEqualTo(1L);
+        assertThat(result.getOrderDetailInfo().getProductNo()).isEqualTo("1");
+        assertThat(result.getOrderDetailInfo().getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getOrderDetailInfo().getPrice()).isEqualTo(1000L);
+        assertThat(result.getOrderDetailInfo().getQuantity()).isEqualTo(2L);
+        assertThat(result.getOrderDetailInfo().getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
     }
 
     @Test
     @DisplayName("(page)dtio.Response 주어지면 Http.Response 변환한다.")
-    public void response_page_of() {
+    public void response_of_page() {
         // given
         LocalDateTime cancelReceiptDate1 = LocalDateTime.of(2024, 2, 8, 4, 59);
         LocalDateTime orderDate1 = LocalDateTime.of(2024, 2, 8, 4, 58);
-
-        GetCancelReturnListDtio.Response response1 = GetCancelReturnListDtio.Response.builder()
-                .cancelReceiptDate(cancelReceiptDate1)
-                .orderDate(orderDate1)
-                .orderNo("1")
-                .build();
 
         GetCancelReturnListDtio.OrderDetailInfo orderDetailInfo1 = GetCancelReturnListDtio.OrderDetailInfo.builder()
                 .orderNo("1")
@@ -97,18 +69,15 @@ class GetCancelReturnListHttpTest {
                 .quantity(2L)
                 .orderStatus(ORDER_CANCEL.getCode())
                 .build();
-        List<GetCancelReturnListDtio.OrderDetailInfo> orderDetailInfos1 = List.of(orderDetailInfo1);
 
-        response1.changeOrderDetailInfos(orderDetailInfos1);
+        GetCancelReturnListDtio.Response response1 = GetCancelReturnListDtio.Response.builder()
+                .cancelReceiptDate(cancelReceiptDate1)
+                .orderDate(orderDate1)
+                .orderDetailInfo(orderDetailInfo1)
+                .build();
 
         LocalDateTime cancelReceiptDate2 = LocalDateTime.of(2024, 2, 8, 4, 59);
         LocalDateTime orderDate2 = LocalDateTime.of(2024, 2, 8, 4, 58);
-
-        GetCancelReturnListDtio.Response response2 = GetCancelReturnListDtio.Response.builder()
-                .cancelReceiptDate(cancelReceiptDate2)
-                .orderDate(orderDate2)
-                .orderNo("2")
-                .build();
 
         GetCancelReturnListDtio.OrderDetailInfo orderDetailInfo2 = GetCancelReturnListDtio.OrderDetailInfo.builder()
                 .orderNo("2")
@@ -119,9 +88,12 @@ class GetCancelReturnListHttpTest {
                 .quantity(3L)
                 .orderStatus(ORDER_CANCEL.getCode())
                 .build();
-        List<GetCancelReturnListDtio.OrderDetailInfo> orderDetailInfos2 = List.of(orderDetailInfo2);
 
-        response2.changeOrderDetailInfos(orderDetailInfos2);
+        GetCancelReturnListDtio.Response response2 = GetCancelReturnListDtio.Response.builder()
+                .cancelReceiptDate(cancelReceiptDate2)
+                .orderDate(orderDate2)
+                .orderDetailInfo(orderDetailInfo2)
+                .build();
 
         List<GetCancelReturnListDtio.Response> responses = List.of(response1, response2);
 
@@ -134,25 +106,23 @@ class GetCancelReturnListHttpTest {
         assertThat(result).hasSize(2);
         assertThat(result.getContent().get(0).getCancelReceiptDate()).isEqualTo(cancelReceiptDate1);
         assertThat(result.getContent().get(0).getOrderDate()).isEqualTo(orderDate1);
-        assertThat(result.getContent().get(0).getOrderNo()).isEqualTo("1");
-        assertThat(result.getContent().get(0).getOrderDetailInfos().get(0).getOrderNo()).isEqualTo("1");
-        assertThat(result.getContent().get(0).getOrderDetailInfos().get(0).getProductId()).isEqualTo(1L);
-        assertThat(result.getContent().get(0).getOrderDetailInfos().get(0).getProductNo()).isEqualTo("1");
-        assertThat(result.getContent().get(0).getOrderDetailInfos().get(0).getName()).isEqualTo("빵빵이키링");
-        assertThat(result.getContent().get(0).getOrderDetailInfos().get(0).getPrice()).isEqualTo(1000L);
-        assertThat(result.getContent().get(0).getOrderDetailInfos().get(0).getQuantity()).isEqualTo(2L);
-        assertThat(result.getContent().get(0).getOrderDetailInfos().get(0).getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
+        assertThat(result.getContent().get(0).getOrderDetailInfo().getOrderNo()).isEqualTo("1");
+        assertThat(result.getContent().get(0).getOrderDetailInfo().getProductId()).isEqualTo(1L);
+        assertThat(result.getContent().get(0).getOrderDetailInfo().getProductNo()).isEqualTo("1");
+        assertThat(result.getContent().get(0).getOrderDetailInfo().getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getContent().get(0).getOrderDetailInfo().getPrice()).isEqualTo(1000L);
+        assertThat(result.getContent().get(0).getOrderDetailInfo().getQuantity()).isEqualTo(2L);
+        assertThat(result.getContent().get(0).getOrderDetailInfo().getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
 
         assertThat(result.getContent().get(1).getCancelReceiptDate()).isEqualTo(cancelReceiptDate2);
         assertThat(result.getContent().get(1).getOrderDate()).isEqualTo(orderDate2);
-        assertThat(result.getContent().get(1).getOrderNo()).isEqualTo("2");
-        assertThat(result.getContent().get(1).getOrderDetailInfos().get(0).getOrderNo()).isEqualTo("2");
-        assertThat(result.getContent().get(1).getOrderDetailInfos().get(0).getProductId()).isEqualTo(2L);
-        assertThat(result.getContent().get(1).getOrderDetailInfos().get(0).getProductNo()).isEqualTo("2");
-        assertThat(result.getContent().get(1).getOrderDetailInfos().get(0).getName()).isEqualTo("옥지얌키링");
-        assertThat(result.getContent().get(1).getOrderDetailInfos().get(0).getPrice()).isEqualTo(2000L);
-        assertThat(result.getContent().get(1).getOrderDetailInfos().get(0).getQuantity()).isEqualTo(3L);
-        assertThat(result.getContent().get(1).getOrderDetailInfos().get(0).getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
+        assertThat(result.getContent().get(1).getOrderDetailInfo().getOrderNo()).isEqualTo("2");
+        assertThat(result.getContent().get(1).getOrderDetailInfo().getProductId()).isEqualTo(2L);
+        assertThat(result.getContent().get(1).getOrderDetailInfo().getProductNo()).isEqualTo("2");
+        assertThat(result.getContent().get(1).getOrderDetailInfo().getName()).isEqualTo("옥지얌키링");
+        assertThat(result.getContent().get(1).getOrderDetailInfo().getPrice()).isEqualTo(2000L);
+        assertThat(result.getContent().get(1).getOrderDetailInfo().getQuantity()).isEqualTo(3L);
+        assertThat(result.getContent().get(1).getOrderDetailInfo().getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
     }
 
     @Test

@@ -7,6 +7,7 @@ import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.*;
 import com.objects.marketbridge.order.service.OrderCancelReturnService;
+import com.objects.marketbridge.order.service.port.OrderDetailDtoRepository;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import jakarta.validation.Valid;
 import lombok.Builder;
@@ -24,7 +25,7 @@ import java.util.List;
 public class OrderCancelReturnController {
 
     private final OrderCancelReturnService orderCancelReturnService;
-    private final OrderDtoRepository orderDtoRepository;
+    private final OrderDetailDtoRepository orderDetailDtoRepository;
     private final MemberRepository memberRepository;
     private final DateTimeHolder dateTimeHolder;
 
@@ -57,12 +58,12 @@ public class OrderCancelReturnController {
 
     @GetMapping("/cancel-return/list")
     public ApiResponse<Page<GetCancelReturnListHttp.Response>> getCancelReturnList (
-            @RequestParam(name = "memberId") Long memberId,
             @RequestParam(name = "page") Integer page,
-            @RequestParam(name = "size") Integer size) {
-
+            @RequestParam(name = "size") Integer size,
+            @AuthMemberId Long memberId
+    ) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return ApiResponse.ok(GetCancelReturnListHttp.Response.of(orderDtoRepository.findOrdersByMemberId(memberId, pageRequest)));
+        return ApiResponse.ok(GetCancelReturnListHttp.Response.of(orderDetailDtoRepository.findCancelReturnListDtio(memberId, pageRequest)));
     }
 
     @GetMapping("/cancel-return/{orderNo}")

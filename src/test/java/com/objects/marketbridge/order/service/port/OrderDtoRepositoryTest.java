@@ -1,7 +1,6 @@
 package com.objects.marketbridge.order.service.port;
 
 import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
@@ -29,7 +28,6 @@ import java.util.List;
 
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 @ActiveProfiles("test")
 @Transactional
@@ -49,102 +47,6 @@ class OrderDtoRepositoryTest {
     CouponRepository couponRepository;
     @Autowired
     EntityManager entityManager;
-
-    @Test
-    @DisplayName("유저가 반품, 취소한 상품들을 조회할 수 있다.")
-    public void findOrdersByMemberId() {
-        // given
-        Member member = Member.builder().build();
-
-        Order order1 = Order.builder()
-                .member(member)
-                .orderNo("123")
-                .build();
-
-        Order order2 = Order.builder()
-                .member(member)
-                .orderNo("456")
-                .build();
-
-        Product product1 = Product.builder()
-                .productNo("1")
-                .name("옷")
-                .price(1000L)
-                .build();
-        Product product2 = Product.builder()
-                .productNo("2")
-                .name("신발")
-                .price(2000L)
-                .build();
-        Product product3 = Product.builder()
-                .productNo("3")
-                .name("바지")
-                .price(3000L)
-                .build();
-
-        OrderDetail orderDetail1 = OrderDetail.builder()
-                .order(order1)
-                .product(product1)
-                .quantity(1L)
-                .orderNo(order1.getOrderNo())
-                .statusCode(RETURN_COMPLETED.getCode())
-                .build();
-        OrderDetail orderDetail2 = OrderDetail.builder()
-                .order(order1)
-                .product(product2)
-                .quantity(2L)
-                .orderNo(order1.getOrderNo())
-                .statusCode(ORDER_CANCEL.getCode())
-                .build();
-        OrderDetail orderDetail3 = OrderDetail.builder()
-                .order(order2)
-                .product(product3)
-                .quantity(3L)
-                .orderNo(order2.getOrderNo())
-                .statusCode(ORDER_CANCEL.getCode())
-                .build();
-        OrderDetail orderDetail4 = OrderDetail.builder()
-                .order(order2)
-                .product(product2)
-                .quantity(4L)
-                .orderNo(order2.getOrderNo())
-                .statusCode(DELIVERY_ING.getCode())
-                .build();
-
-        order1.addOrderDetail(orderDetail1);
-        order1.addOrderDetail(orderDetail2);
-        order2.addOrderDetail(orderDetail3);
-        order2.addOrderDetail(orderDetail4);
-
-        productRepository.saveAll(List.of(product1, product2, product3));
-        memberRepository.save(member);
-        orderCommendRepository.save(order1);
-        orderCommendRepository.save(order2);
-
-        // when
-        Page<GetCancelReturnListDtio.Response> orderCancelReturnListResponsePage = orderDtoRepository.findOrdersByMemberId(member.getId(), PageRequest.of(0, 3));
-        List<GetCancelReturnListDtio.Response> content = orderCancelReturnListResponsePage.getContent();
-        // then
-        assertThat(content).hasSize(2)
-                .extracting("orderNo")
-                .contains("123", "456");
-
-        List<GetCancelReturnListDtio.OrderDetailInfo> detailResponses1Dao = content.get(0).getOrderDetailInfos();
-        List<GetCancelReturnListDtio.OrderDetailInfo> detailResponses2Dao = content.get(1).getOrderDetailInfos();
-
-        assertThat(detailResponses1Dao).hasSize(2)
-                .extracting("orderNo", "productNo", "name", "price", "quantity", "orderStatus")
-                .contains(
-                        tuple("123", "1", "옷", 1000L, 1L, RETURN_COMPLETED.getCode()),
-                        tuple("123", "2", "신발", 2000L, 2L, ORDER_CANCEL.getCode())
-                );
-
-        assertThat(detailResponses2Dao).hasSize(1)
-                .extracting("orderNo", "productNo", "name", "price", "quantity", "orderStatus")
-                .contains(
-                        tuple("456", "3", "바지", 3000L, 3L, ORDER_CANCEL.getCode())
-                );
-    }
 
     @DisplayName("전체 주문 목록을 조회 할 경우 현재 사용자의 전체 주문 정보를 알 수 있다.")
     @Test
