@@ -51,9 +51,6 @@ logging:
 
 payment:
   kakao:
-    client_id : "AE7564ADF66B30123C2A"
-    client_secret : "94B65EF567BCB6E860B4"
-    secret_key: "PRD4A3CDADAF6C09168BA3E4725A3C678A78B271"
     secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
 
 host: "http://localhost:8080"
@@ -105,9 +102,6 @@ logging:
 
 payment:
   kakao:
-    client_id : "AE7564ADF66B30123C2A"
-    client_secret : "94B65EF567BCB6E860B4"
-    secret_key: "PRD4A3CDADAF6C09168BA3E4725A3C678A78B271"
     secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
 
 host: "http://localhost:8080/"

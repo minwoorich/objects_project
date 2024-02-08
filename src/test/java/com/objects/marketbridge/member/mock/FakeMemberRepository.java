@@ -65,7 +65,6 @@ public class FakeMemberRepository implements MemberRepository {
                     .isAgree(member.getIsAgree())
                     .isAlert(member.getIsAlert())
                     .membership(member.getMembership())
-                    .socialType(member.getSocialType())
                     .build();
             data.add(newMember);
             return newMember;

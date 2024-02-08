@@ -1,7 +1,7 @@
 package com.objects.marketbridge.review.service;
 
-import com.objects.marketbridge.member.domain.Image;
-import com.objects.marketbridge.member.domain.ImageType;
+import com.objects.marketbridge.product.domain.Image;
+import com.objects.marketbridge.product.domain.ImageType;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.OrderDetail;

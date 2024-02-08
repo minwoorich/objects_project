@@ -5,7 +5,7 @@ import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.domain.Address;
+import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
