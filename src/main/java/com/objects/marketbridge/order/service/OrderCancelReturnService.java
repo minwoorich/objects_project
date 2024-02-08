@@ -16,7 +16,6 @@ import com.objects.marketbridge.product.infra.ProductRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,22 +74,23 @@ public class OrderCancelReturnService {
 
     public RequestCancelDto.Response findCancelInfo(Long orderDetailId, Long numberOfCancellation, String membership) {
         // TODO fetchJoin으로 변경 (Product 까지)
-        OrderDetail orderDetail = valifyOrderDetatil(orderDetailId);
+        OrderDetail orderDetail = valifyOrderDetail(orderDetailId);
 
         return RequestCancelDto.Response.of(orderDetail, numberOfCancellation, membership);
     }
 
     public RequestReturnDto.Response findReturnInfo(Long orderDetailId, Long numberOfReturns, String membership) {
         // TODO fetchJoin으로 변경
-        OrderDetail orderDetail = valifyOrderDetatil(orderDetailId);
+        OrderDetail orderDetail = valifyOrderDetail(orderDetailId);
 
         return RequestReturnDto.Response.of(orderDetail, numberOfReturns, membership);
     }
 
     public GetCancelReturnDetailDto.Response findCancelReturnDetail(List<Long> orderDetailIds, String membership, DateTimeHolder dateTimeHolder) {
-        List<OrderDetail> orderDetails = valifyOrderDetails(orderDetailIds);
-
-        return GetCancelReturnDetailDto.Response.of(orderDetails, membership, dateTimeHolder);
+//        List<OrderDetail> orderDetails = valifyOrderDetails(orderDetailIds);
+//
+//        return GetCancelReturnDetailDto.Response.of(orderDetails, membership, dateTimeHolder);
+        return null;
     }
 
 
@@ -136,7 +136,7 @@ public class OrderCancelReturnService {
         return orderDetails.get(0).getOrder().getTid();
     }
 
-    private OrderDetail valifyOrderDetatil(Long orderDetailId) {
+    private OrderDetail valifyOrderDetail(Long orderDetailId) {
         OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
         if (orderDetail == null) {
             throw CustomLogicException.builder()

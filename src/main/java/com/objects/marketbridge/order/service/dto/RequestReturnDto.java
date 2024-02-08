@@ -54,7 +54,7 @@ public class RequestReturnDto {
             return ProductInfo.builder()
                     .quantity(numberOfReturns)
                     .name(orderDetail.getProduct().getName())
-                    .price(orderDetail.getProduct().getPrice())
+                    .price(orderDetail.getPrice())
                     .image(orderDetail.getProduct().getThumbImg())
                     .build();
         }

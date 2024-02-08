@@ -13,9 +13,6 @@ class RequestCancelHttpTest {
     @Test
     @DisplayName("Dto.Response 주어지면 Http.Response 반환한다.")
     public void response_of() {
-        LocalDateTime orderDate = LocalDateTime.of(2024, 2, 3, 3, 9);
-        LocalDateTime cancelDate = LocalDateTime.of(2024, 2, 3, 4, 4);
-
         RequestCancelDto.ProductInfo productInfoDto = RequestCancelDto.ProductInfo.builder()
                 .name("빵빵이키링")
                 .price(1000L)

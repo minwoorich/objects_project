@@ -9,10 +9,12 @@ import com.objects.marketbridge.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.QUANTITY_EXCEEDED;
 import static com.objects.marketbridge.order.domain.MemberShipPrice.BASIC;
 import static com.objects.marketbridge.order.domain.MemberShipPrice.WOW;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 class RequestCancelDtoTest {
 
@@ -186,7 +188,12 @@ class RequestCancelDtoTest {
         // when // then
         assertThatThrownBy(() -> RequestCancelDto.Response.of(orderDetail, numberOfCancellation, memberShip))
                 .isInstanceOf(CustomLogicException.class)
-                .hasMessage("수량이 초과 되었습니다.");
+                .hasMessage("수량이 초과 되었습니다.")
+                .satisfies(exception -> {
+                    CustomLogicException customLogicException = (CustomLogicException) exception;
+                    assertThat(customLogicException.getErrorCode()).isEqualTo(QUANTITY_EXCEEDED);
+                    assertThat(customLogicException.getHttpStatus()).isEqualTo(BAD_REQUEST);
+                });
     }
 
     @Test
@@ -215,7 +222,7 @@ class RequestCancelDtoTest {
     }
 
     @Test
-    @DisplayName("주문 상세 리스트와 멤버십이 주어지면 CancelRefundInfo를 반한다.(BASIC and NoCoupon)")
+    @DisplayName("주문 상세 리스트와 멤버십이 주어지면 CancelRefundInfo를 반환한다.(BASIC and NoCoupon)")
     public void CancelRefundInfo_of_BASIC_and_NoCoupon() {
         // given
         String memberShip = MembershipType.BASIC.getText();
@@ -335,7 +342,13 @@ class RequestCancelDtoTest {
         // when // then
         assertThatThrownBy(() -> RequestCancelDto.CancelRefundInfo.of(orderDetail, memberShip, numberOfCancellation))
                 .isInstanceOf(CustomLogicException.class)
-                .hasMessage("수량이 초과 되었습니다.");
+                .hasMessage("수량이 초과 되었습니다.")
+                .satisfies(exception -> {
+                    CustomLogicException customLogicException = (CustomLogicException) exception;
+                    assertThat(customLogicException.getErrorCode()).isEqualTo(QUANTITY_EXCEEDED);
+                    assertThat(customLogicException.getHttpStatus()).isEqualTo(BAD_REQUEST);
+                });
+
     }
 
 }
