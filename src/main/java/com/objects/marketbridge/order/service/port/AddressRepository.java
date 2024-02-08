@@ -1,5 +1,6 @@
 package com.objects.marketbridge.order.service.port;
 
+import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.order.domain.Address;
 
 import java.util.List;
@@ -11,6 +12,8 @@ public interface AddressRepository {
     List<Address> findByMemberId(Long memberId);
 
     void save(Address address);
+
+    Address findAddressValueByAddressId(Long addressId ,Long memberId);
 
     void saveAll(List<Address> addresses);
 
