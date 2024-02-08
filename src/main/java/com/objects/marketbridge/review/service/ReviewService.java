@@ -17,7 +17,6 @@ import com.objects.marketbridge.review.dto.*;
 import com.objects.marketbridge.review.infra.ReviewImageRepository;
 import com.objects.marketbridge.review.infra.ReviewLikesRepository;
 import com.objects.marketbridge.review.infra.ReviewRepository;
-import com.objects.marketbridge.seller.domain.SellerProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
