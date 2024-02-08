@@ -8,7 +8,7 @@ import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import com.objects.marketbridge.product.service.port.ImageRepository;
 import com.objects.marketbridge.review.domain.Review;
 import com.objects.marketbridge.review.domain.ReviewImage;
