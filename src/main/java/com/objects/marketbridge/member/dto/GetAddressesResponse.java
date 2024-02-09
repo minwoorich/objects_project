@@ -1,7 +1,7 @@
 package com.objects.marketbridge.member.dto;
 
+import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.order.domain.Address;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

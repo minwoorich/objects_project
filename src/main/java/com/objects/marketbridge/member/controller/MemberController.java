@@ -3,7 +3,6 @@ package com.objects.marketbridge.member.controller;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.member.dto.AddAddressRequestDto;
-import com.objects.marketbridge.member.dto.AddAddressResponseDto;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
 import com.objects.marketbridge.member.dto.GetAddressesResponse;
 import com.objects.marketbridge.member.service.MemberService;
@@ -34,16 +33,15 @@ public class MemberController {
     public ApiResponse<List<GetAddressesResponse>> addAddressValue(
             @AuthMemberId Long memberId,
             @Valid @RequestBody AddAddressRequestDto request){
-        memberService.addMemberAddress(memberId,request);
-        List<GetAddressesResponse> addressesResponses =memberService.findByMemberId(memberId);
+        List<GetAddressesResponse> addressesResponses = memberService.addMemberAddress(memberId,request);
        return ApiResponse.ok(addressesResponses);
     }
 
     @PatchMapping("/update-address")
     public ApiResponse<List<GetAddressesResponse>> updateAddress(
             @AuthMemberId Long memberId ,@Valid @RequestBody AddAddressRequestDto request){
-//        memberService.updateMemberAddress(memberId,request);
-        List<GetAddressesResponse> addressesResponses =memberService.findByMemberId(memberId);
+//
+        List<GetAddressesResponse> addressesResponses = memberService.updateMemberAddress(memberId,request);
         return ApiResponse.ok(addressesResponses);
     }
 

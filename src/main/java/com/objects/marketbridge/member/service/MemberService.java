@@ -1,13 +1,12 @@
 package com.objects.marketbridge.member.service;
 
-import com.objects.marketbridge.member.domain.AddressValue;
+import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.dto.AddAddressRequestDto;
-import com.objects.marketbridge.member.dto.AddAddressResponseDto;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
 import com.objects.marketbridge.member.dto.GetAddressesResponse;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.domain.Address;
+
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -38,16 +37,19 @@ public class MemberService {
         return addresses.stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
-    public void addMemberAddress(Long id , AddAddressRequestDto addAddressRequestDto){
+    public List<GetAddressesResponse> addMemberAddress(Long id , AddAddressRequestDto addAddressRequestDto){
         Member member = memberRepository.findById(id);
         member.addAddress(addAddressRequestDto.toEntity());
+        memberRepository.save(member);
+        return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
-    public void updateMemberAddress(Long memberId,AddAddressRequestDto request){
-//        Address addressValueByAddressId = addressRepository.findAddressValueByAddressId(request.getAddress().getId(),memberId);
+    public List<GetAddressesResponse> updateMemberAddress(Long memberId,AddAddressRequestDto request){
+        Member member = memberRepository.findById(memberId);
+        //        Address addressValueByAddressId = addressRepository.findAddressValueByAddressId(request.getAddress().getId(),memberId);
 //        addressValueByAddressId.update(request.getAddress().getAddressValue());
+        return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
-
 
     @Transactional
     public void save(Member member) {

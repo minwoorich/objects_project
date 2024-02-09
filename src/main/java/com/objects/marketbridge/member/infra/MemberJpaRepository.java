@@ -1,9 +1,7 @@
 package com.objects.marketbridge.member.infra;
 
-import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.dto.AuthMember;
-import com.objects.marketbridge.order.domain.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
