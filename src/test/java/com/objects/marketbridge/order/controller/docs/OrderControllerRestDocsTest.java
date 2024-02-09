@@ -10,8 +10,7 @@ import com.objects.marketbridge.order.controller.OrderController;
 import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
 import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Response;
-import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Response.OrderInfo;
-import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Response.OrderInfo.OrderDetailInfo;
+import com.objects.marketbridge.order.controller.dto.select.OrderInfo;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
@@ -41,6 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Condition;
+import static com.objects.marketbridge.order.controller.dto.select.OrderInfo.*;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -322,7 +322,7 @@ public class OrderControllerRestDocsTest  {
     }
 
     private List<OrderInfo> createOrderInfosSizeOne(List<OrderDetailInfo> orderDetailInfos) {
-        OrderInfo o1 = OrderInfo.create("2024.01.19", "AAAA-1111-1111-1111", orderDetailInfos);
+        OrderInfo o1 = create("2024.01.19", "AAAA-1111-1111-1111", orderDetailInfos);
 
         return List.of(o1);
     }
