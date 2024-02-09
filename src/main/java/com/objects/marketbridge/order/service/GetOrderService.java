@@ -26,6 +26,8 @@ public class GetOrderService {
     }
 
     public GetOrderDetailHttp.Response getOrderDetails(String orderNo) {
-        return null;
+        OrderDtio orderDtio = orderDtoRepository.findByOrderNo(orderNo);
+
+        return GetOrderDetailHttp.Response.of(orderDtio);
     }
 }
