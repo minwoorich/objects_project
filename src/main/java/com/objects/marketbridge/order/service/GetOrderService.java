@@ -1,5 +1,7 @@
 package com.objects.marketbridge.order.service;
 
+import com.objects.marketbridge.order.controller.dto.select.GetOrderDetailHttp;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +19,13 @@ import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.
 public class GetOrderService {
 
     private final OrderDtoRepository orderDtoRepository;
-    public Response search(Pageable pageable, Condition condition) {
 
+    public GetOrderHttp.Response search(Pageable pageable, Condition condition) {
         Page<OrderDtio> pagedOrders = orderDtoRepository.findAllPaged(condition, pageable);
-
         return Response.of(pagedOrders.getContent());
+    }
+
+    public GetOrderDetailHttp.Response getOrderDetails(Long memberId, String orderNo) {
+
     }
 }
