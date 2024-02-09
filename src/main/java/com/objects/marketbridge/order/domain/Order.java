@@ -88,7 +88,7 @@ public class Order extends BaseEntity {
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
 
         orderDetails.stream()
-                .filter(o -> o.getCoupon() != null)
+                .filter(o -> o.getMemberCoupon() != null)
                 .forEach(o -> o.changeMemberCouponInfo(dateTimeHolder));
     }
 

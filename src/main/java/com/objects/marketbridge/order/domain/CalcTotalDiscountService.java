@@ -19,8 +19,8 @@ public class CalcTotalDiscountService{
 
     private Long calcUsedCoupon(List<OrderDetail> orderDetails) {
         return orderDetails.stream()
-                .filter(o -> o.getCoupon() != null)
-                .mapToLong(o -> o.getCoupon().getPrice())
+                .filter(o -> o.getMemberCoupon() != null)
+                .mapToLong(o -> o.getMemberCoupon().getCoupon().getPrice())
                 .sum();
     }
 
@@ -34,7 +34,7 @@ public class CalcTotalDiscountService{
         return 0L;
     }
 
-    // 추후에 기타 할인 서비스 도입하면 이것도 구현 필요
+    // TODO : 추후에 기타 할인 서비스 도입하면 이것도 구현 필요
     private Long calcAdditionalDiscount() {
         return 0L;
     }

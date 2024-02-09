@@ -58,7 +58,9 @@ public class Coupon extends BaseEntity {
         memberCoupon.setCoupon(this);
     }
 
-    public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
-        memberCoupons.forEach(memberCoupon -> memberCoupon.changeUsageInfo(dateTimeHolder));
+    public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder, Long memberId) {
+        memberCoupons.stream()
+                .filter(m -> m.getMember().getId().equals(memberId))
+                        .forEach(m -> m.changeUsageInfo(dateTimeHolder));
     }
 }

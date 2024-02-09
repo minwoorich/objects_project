@@ -1,6 +1,5 @@
-package com.objects.marketbridge.order.service.dto;
+package com.objects.marketbridge.order.infra.dtio;
 
-import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.product.domain.Product;
 import lombok.Builder;
@@ -11,11 +10,10 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class OrderDetailDto {
+public class OrderDetailDtio {
 
+    private Long orderDetailId;
     private ProductDto product;
-    private CouponDto coupon;
-    private Long discountPrice;
     private Long quantity;
     private String orderNo;
     private Long price;
@@ -25,9 +23,9 @@ public class OrderDetailDto {
     private LocalDateTime cancelledAt;
 
     @Builder
-    public OrderDetailDto(ProductDto product, Long discountPrice, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime deliveredDate, Long sellerId, LocalDateTime cancelledAt) {
+    public OrderDetailDtio(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime deliveredDate, Long sellerId, LocalDateTime cancelledAt) {
+        this.orderDetailId = orderDetailId;
         this.product = product;
-        this.discountPrice = discountPrice;
         this.quantity = quantity;
         this.orderNo = orderNo;
         this.price = price;
@@ -37,9 +35,9 @@ public class OrderDetailDto {
         this.cancelledAt = cancelledAt;
     }
 
-    public static OrderDetailDto of(OrderDetail orderDetail) {
-        return OrderDetailDto.builder()
-                .discountPrice(orderDetail.getCoupon().getPrice())
+    public static OrderDetailDtio of(OrderDetail orderDetail) {
+        return OrderDetailDtio.builder()
+                .orderDetailId(orderDetail.getId())
                 .quantity(orderDetail.getQuantity())
                 .orderNo(orderDetail.getOrderNo())
                 .price(orderDetail.getPrice())
@@ -55,6 +53,7 @@ public class OrderDetailDto {
     @NoArgsConstructor
     public static class ProductDto{
 
+        private Long productId;
         private String optionName;
         private Boolean isOwn; // 로켓 true , 오픈 마켓 false
         private String name;
@@ -63,7 +62,8 @@ public class OrderDetailDto {
         private String productNo;
 
         @Builder
-        private ProductDto(String optionName, Boolean isOwn, String name, Long price, String thumbImg, String productNo) {
+        private ProductDto(Long productId, String optionName, Boolean isOwn, String name, Long price, String thumbImg, String productNo) {
+            this.productId = productId;
             this.optionName = optionName;
             this.isOwn = isOwn;
             this.name = name;
@@ -74,6 +74,7 @@ public class OrderDetailDto {
 
         public static ProductDto of(Product product) {
             return ProductDto.builder()
+                    .productId(product.getId())
                     .name(product.getName())
                     .isOwn(product.getIsOwn())
                     .price(product.getPrice())
@@ -81,23 +82,6 @@ public class OrderDetailDto {
                     .productNo(product.getProductNo())
                     .build();
 
-        }
-    }
-
-    @Getter
-    @NoArgsConstructor
-    private static class CouponDto{
-        private Long price;
-
-        @Builder
-        private CouponDto(Long price) {
-            this.price = price;
-        }
-
-        public static CouponDto of(Coupon coupon) {
-            return CouponDto.builder()
-                    .price(coupon.getPrice())
-                    .build();
         }
     }
 }

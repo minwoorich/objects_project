@@ -127,8 +127,8 @@ public class GetCancelReturnDetailDto {
             return CancelRefundInfo.builder()
                     .discountPrice(
                             orderDetails.stream()
-                                    .filter(detail -> detail != null && detail.getCoupon() != null)
-                                    .mapToLong(detail -> detail.getCoupon().getPrice())
+                                    .filter(detail -> detail != null && detail.getMemberCoupon() != null)
+                                    .mapToLong(detail -> detail.getMemberCoupon().getCoupon().getPrice())
                                     .sum()
                     )
                     .totalPrice(
