@@ -7,8 +7,12 @@ import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.order.controller.OrderController;
-import com.objects.marketbridge.order.controller.dto.*;
+import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
+import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
+import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
 import com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response;
+import com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response.OrderInfo;
+import com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response.OrderInfo.OrderDetailInfo;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
@@ -20,14 +24,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -42,12 +42,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
-import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response.create;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -247,16 +246,9 @@ public class OrderControllerRestDocsTest  {
     @Test
     @WithMockCustomUser
     void getOrders() throws Exception {
-        // given
-//
-//        List<OrderDetailInfo> orderDetailInfosSizeOne = createOrderDetailInfosSizeOne();
-//        List<OrderInfo> orderInfosSizeOne = createOrderInfosSizeOne(orderDetailInfosSizeOne);
-//        GetOrderHttp.Response response = create(orderInfosSizeOne);
-//        Condition condition = createCondition();
-//        Pageable pageable = PageRequest.of(0, 5, Sort.by("createdAt"));
 
-        List<OrderInfo> orderInfos = createOrderInfosSizeOne(createOrderDetailInfosSizeOne());
-        GetOrderHttp.Response expectedResponse = GetOrderHttp.Response.builder().orderInfos(orderInfos).build();
+        // given
+        Response expectedResponse = Response.create(createOrderInfosSizeOne(createOrderDetailInfosSizeOne()));
 
         given(getOrderService.search(any(Pageable.class), any(GetOrderHttp.Condition.class)))
                 .willReturn(expectedResponse);
@@ -324,56 +316,11 @@ public class OrderControllerRestDocsTest  {
 
     }
 
-    private Condition createCondition() {
-        return Condition.builder()
-                .year("2024")
-                .keyword(null)
-                .memberId(1L)
-                .build();
-    }
-
-    private List<OrderDetailInfo> createOrderDetailInfos() {
-        OrderDetailInfo od1 =
-                OrderDetailInfo.create("AAAA-1111-1111-1111", 1L, 1L, 2L, 1000L, PAYMENT_COMPLETED.getCode(), "2024.01.23", "http://example/product/thumb1", "자전거", true);
-        OrderDetailInfo od2 =
-                OrderDetailInfo.create("AAAA-1111-1111-1111", 2L, 2L, 2L, 1000L, ORDER_INIT.getCode(), "2024.01.22", "http://example/product/thumb2", "밥솥", true);
-        OrderDetailInfo od3 =
-                OrderDetailInfo.create("AAAA-1111-1111-1111", 3L, 3L, 2L, 1000L, RETURN_COMPLETED.getCode(), "2024.01.21", "http://example/product/thumb3", "책", false);
-
-        OrderDetailInfo od4 =
-                OrderDetailInfo.create("BBBB-2222-2222-2222", 4L, 1L, 2L, 1000L, PAYMENT_COMPLETED.getCode(), "2024.02.23", "http://example/product/thumb1", "자전거", true);
-        OrderDetailInfo od5 =
-                OrderDetailInfo.create("BBBB-2222-2222-2222", 5L, 2L, 2L, 1000L, ORDER_INIT.getCode(), "2024.02.22", "http://example/product/thumb2", "밥솥", true);
-        OrderDetailInfo od6 =
-                OrderDetailInfo.create("BBBB-2222-2222-2222", 6L, 3L, 2L, 1000L, RETURN_COMPLETED.getCode(), "2024.02.21", "http://example/product/thumb3", "책", false);
-
-        OrderDetailInfo od7 =
-                OrderDetailInfo.create("CCCC-3333-3333-3333", 7L, 1L, 2L, 1000L, PAYMENT_COMPLETED.getCode(), "2024.03.23", "http://example/product/thumb1", "자전거", true);
-        OrderDetailInfo od8 =
-                OrderDetailInfo.create("CCCC-3333-3333-3333", 8L, 2L, 2L, 1000L, ORDER_INIT.getCode(), "2024.03.22", "http://example/product/thumb2", "밥솥", true);
-        OrderDetailInfo od9 =
-                OrderDetailInfo.create("CCCC-3333-3333-3333", 9L, 3L, 2L, 1000L, RETURN_COMPLETED.getCode(), "2024.03.21", "http://example/product/thumb3", "책", false);
-
-        return Arrays.asList(od1, od2, od3, od4, od5, od6, od7, od8, od9);
-    }
-
     private List<OrderDetailInfo> createOrderDetailInfosSizeOne() {
         OrderDetailInfo od1 =
                 OrderDetailInfo.create("AAAA-1111-1111-1111", 1L, 1L, 2L, 1000L, PAYMENT_COMPLETED.getCode(), "2024.01.23", "http://example/product/thumb1", "자전거", true);
 
         return Arrays.asList(od1);
-    }
-
-    private List<OrderInfo> createOrderInfos(List<OrderDetailInfo> orderDetailInfos) {
-        List<OrderDetailInfo> firstThree = orderDetailInfos.subList(0, 3);
-        List<OrderDetailInfo> nextThree = orderDetailInfos.subList(3, 6);
-        List<OrderDetailInfo> lastThree = orderDetailInfos.subList(6, 9);
-
-        OrderInfo o1 = OrderInfo.create("2024.01.19", "AAAA-1111-1111-1111", firstThree);
-        OrderInfo o2 = OrderInfo.create("2024.02.19", "BBBB-2222-2222-2222", nextThree);
-        OrderInfo o3 = OrderInfo.create("2024.03.19", "CCCC-3333-3333-3333", lastThree);
-
-        return List.of(o1, o2, o3);
     }
 
     private List<OrderInfo> createOrderInfosSizeOne(List<OrderDetailInfo> orderDetailInfos) {
