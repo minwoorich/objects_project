@@ -90,4 +90,12 @@ public class OrderController {
                 .memberId(memberId)
                 .build();
     }
+
+    @GetMapping("/orders/{orderNo}")
+    public ApiResponse<GetOrderHttp.Response> getOrderDetails(
+            @AuthMemberId Long memberId){
+
+
+        return ApiResponse.ok();
+    }
 }
