@@ -1,34 +1,37 @@
 package com.objects.marketbridge.order.controller.dto;
 
+import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GetOrderHttp {
 
     @Getter
     @NoArgsConstructor
     public static class Response {
-        private LocalDateTime createdAt;
-        private Long orderId;
-        private List<OrderDetailInfo> orderDetailInfo;
-    }
+        List<OrderInfo> orderInfos;
 
-    @Getter
-    @NoArgsConstructor
-    private static class OrderDetailInfo{
-        private Long orderDetailId;
-        private Long productId;
-        private Long quantity;
-        private Long price;
-        private Long statusCode;
-        private LocalDateTime deliveredDate;
-        private String productThumbImageUrl;
-        private String productName;
-        private Boolean isOwn;
+        @Builder
+        private Response(List<OrderInfo> orderInfos) {
+            this.orderInfos = orderInfos;
+        }
+
+        public static Response of(List<OrderDtio> orderDtios) {
+            return Response.builder()
+                    .orderInfos(orderDtios.stream().map(OrderInfo::of).collect(Collectors.toList()))
+                    .build();
+        }
+
+        public static Response create(List<OrderInfo> orderInfos) {
+            return Response.builder()
+                    .orderInfos(orderInfos)
+                    .build();
+        }
+
     }
 
     @Getter
@@ -37,14 +40,11 @@ public class GetOrderHttp {
         private String keyword;
         private String year;
         private Long memberId;
+
         @Builder
         public Condition(String keyword, String year, Long memberId) {
             this.keyword = keyword;
             this.year = year;
-            this.memberId = memberId;
-        }
-
-        public void setMemberId(Long memberId) {
             this.memberId = memberId;
         }
     }

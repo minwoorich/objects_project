@@ -193,7 +193,7 @@ CREATE TABLE order_detail (
                               order_id	bigint	,
                               product_id	bigint	,
                               order_no varchar(255),
-                              coupon_id	bigint	,
+                              member_coupon_id	bigint	,
                               reward_type	varchar(255)	,
                               quantity	bigint	,
                               price	bigint	,
@@ -334,6 +334,7 @@ CREATE TABLE coupon (
                         deleted_at	datetime(6)
 );
 
+
 DROP TABLE IF EXISTS member_coupon;
 
 CREATE TABLE member_coupon (
@@ -347,6 +348,7 @@ CREATE TABLE member_coupon (
                                updated_at	datetime(6)	,
                                deleted_at	datetime(6)
 );
+
 
 DROP TABLE IF EXISTS cart;
 

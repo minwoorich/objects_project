@@ -1,16 +1,16 @@
 package com.objects.marketbridge.order.service.port;
 
+import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
-import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
-import com.objects.marketbridge.order.service.dto.OrderDto;
+import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.product.infra.coupon.CouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
@@ -33,7 +36,7 @@ import static org.assertj.core.api.Assertions.tuple;
 @Transactional
 @SpringBootTest
 @Slf4j
-class OrderDtoRepositoryTest {
+class OrderDtioRepositoryTest {
 
     @Autowired
     OrderCommendRepository orderCommendRepository;
@@ -43,6 +46,8 @@ class OrderDtoRepositoryTest {
     MemberRepository memberRepository;
     @Autowired
     OrderDtoRepository orderDtoRepository;
+    @Autowired
+    CouponRepository couponRepository;
     @Autowired
     EntityManager entityManager;
 
@@ -140,22 +145,18 @@ class OrderDtoRepositoryTest {
                 .contains(
                         tuple("456", "3", "바지", 3000L, 3L, ORDER_CANCEL.getCode())
                 );
-
     }
 
-    @DisplayName("전체 주문 목록을 조회 할 경우 현재 사용자의 전체 주문 정보를 알 수 있다.")
+    @DisplayName("전체 주문 목록을 조회 할 경우 페이징과 조건 필터링을 할 수 있다")
     @Test
-    void findByMemberIdWithMemberAddress(){
+    @Rollback(value = false)
+    void findByMemberIdWithMemberAddress_paging_filter(){
 
         //given
         Member member = createMember("1");
-        Address address = createAddress("서울");
+        Address address = createAddress("서울", "세종대로", "민들레아파트");
         member.addAddress(address);
         memberRepository.save(member);
-
-        Coupon coupon = Coupon.builder()
-                .price(500L)
-                .build();
 
         Product product1 = createProduct(1000L, "1");
         Product product2 = createProduct(2000L, "2");
@@ -163,104 +164,42 @@ class OrderDtoRepositoryTest {
         Product product4 = createProduct(4000L, "4");
         productRepository.saveAll(List.of(product1, product2, product3, product4));
 
-        OrderDetail orderDetail1 = createOrderDetail(product1, 1L, "1");
-        OrderDetail orderDetail2 = createOrderDetail(product2, 1L, "1");
-        OrderDetail orderDetail3 = createOrderDetail(product3, 1L, "1");
+        OrderDetail orderDetail1 = createOrderDetail(product1,  1L, "1");
+        OrderDetail orderDetail2 = createOrderDetail(product2,  1L, "1");
+        OrderDetail orderDetail3 = createOrderDetail(product3,  1L, "1");
 
-        OrderDetail orderDetail4 = createOrderDetail(product1, 2L, "2");
-        OrderDetail orderDetail5 = createOrderDetail(product2, 2L, "2");
-        OrderDetail orderDetail6 = createOrderDetail(product4, 2L, "2");
+        OrderDetail orderDetail4 = createOrderDetail(product1,  2L, "2");
+        OrderDetail orderDetail5 = createOrderDetail(product2,  2L, "2");
+        OrderDetail orderDetail6 = createOrderDetail(product4,  2L, "2");
 
-        OrderDetail orderDetail7 = createOrderDetail(product1, 3L, "3");
-        OrderDetail orderDetail8 = createOrderDetail(product3, 3L, "3");
-        OrderDetail orderDetail9 = createOrderDetail(product4, 3L, "3");
+        OrderDetail orderDetail7 = createOrderDetail(product1,  3L, "3");
+        OrderDetail orderDetail8 = createOrderDetail(product3,  3L, "3");
+        OrderDetail orderDetail9 = createOrderDetail(product4,  3L, "3");
 
         OrderDetail orderDetail10 = createOrderDetail(product2, 4L, "4");
         OrderDetail orderDetail11 = createOrderDetail(product3, 4L, "4");
         OrderDetail orderDetail12 = createOrderDetail(product4, 4L, "4");
-
-        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3));
-        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6));
-        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9));
-        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
+//                                                                                                                   상품 번호
+        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3)); // 1,2,3
+        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6)); // 1,2,4
+        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9)); // 1,3,4
+        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12)); // 2,3,4
         orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
 
-        PageRequest page = PageRequest.of(0, 10);
+        Pageable pageSize1_3 = PageRequest.of(1, 3);
 
         GetOrderHttp.Condition condition1
-                = createCondition(1L, null, null);
-        GetOrderHttp.Condition condition2
-                = createCondition(1L, null, "1998");
-        GetOrderHttp.Condition condition3
-                = createCondition(1L, null, "2024");
+                = createCondition(member.getId(), "상품", String.valueOf(LocalDateTime.now().getYear()));
 
         //when
-        Page<OrderDto> orders = orderDtoRepository.findByMemberIdWithMemberAddress(condition1, page);
-        List<OrderDto> contents = orders.getContent();
+        Page<OrderDtio> orders1_3_c1 = orderDtoRepository.findAllPaged(condition1, pageSize1_3);
 
         //then
-        assertThat(contents).hasSize(4);
-        assertThat(contents.get(0).getMemberId()).isEqualTo(1L);
-        assertThat(contents.get(0).getAddress().getCity()).isEqualTo("서울");
-        assertThat(contents.get(0).getOrderDetails()).hasSize(3);
-        assertThat(contents.get(0).getOrderDetails().get(0).getOrderNo()).isEqualTo("1");
-    }
-
-    private Address createAddress(String city) {
-        return Address.builder().addressValue(AddressValue.builder().city(city).build()).build();
-    }
-
-    @DisplayName("전체 주문 목록을 조회 할 경우 페이징이 가능하다")
-    @Test
-    void findByMemberIdWithMemberAddress_paging(){
-
-        //given
-        Member member = createMember("1");
-        Address address = createAddress("서울");
-        member.addAddress(address);
-        memberRepository.save(member);
-
-        Product product1 = createProduct(1000L, "1");
-        Product product2 = createProduct(2000L, "2");
-        Product product3 = createProduct(3000L, "3");
-        Product product4 = createProduct(4000L, "4");
-        productRepository.saveAll(List.of(product1, product2, product3, product4));
-
-        OrderDetail orderDetail1 = createOrderDetail(product1, 1L, "1");
-        OrderDetail orderDetail2 = createOrderDetail(product2, 1L, "1");
-        OrderDetail orderDetail3 = createOrderDetail(product3, 1L, "1");
-
-        OrderDetail orderDetail4 = createOrderDetail(product1, 2L, "2");
-        OrderDetail orderDetail5 = createOrderDetail(product2, 2L, "2");
-        OrderDetail orderDetail6 = createOrderDetail(product4, 2L, "2");
-
-        OrderDetail orderDetail7 = createOrderDetail(product1, 3L, "3");
-        OrderDetail orderDetail8 = createOrderDetail(product3, 3L, "3");
-        OrderDetail orderDetail9 = createOrderDetail(product4, 3L, "3");
-
-        OrderDetail orderDetail10 = createOrderDetail(product2, 4L, "4");
-        OrderDetail orderDetail11 = createOrderDetail(product3, 4L, "4");
-        OrderDetail orderDetail12 = createOrderDetail(product4, 4L, "4");
-
-        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3));
-        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6));
-        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9));
-        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12));
-        orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
-
-        PageRequest pageSize1 = PageRequest.of(0, 1);
-        PageRequest pageSize2 = PageRequest.of(0, 2);
-        PageRequest pageSize2_1 = PageRequest.of(1, 2);
-
-        GetOrderHttp.Condition condition
-                = createCondition(1L, null, "2024");
-
-        //when
-//        orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize1);
-//        orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize2);
-        orderDtoRepository.findByMemberIdWithMemberAddress(condition, pageSize2_1);
-
-        //then
+        assertThat(orders1_3_c1.getSize()).isEqualTo(3);
+        assertThat(orders1_3_c1.getContent().size()).isEqualTo(1);
+        assertThat(orders1_3_c1.getTotalElements()).isEqualTo(4);
+        assertThat(orders1_3_c1.getNumberOfElements()).isEqualTo(1);
+        assertThat(orders1_3_c1.getTotalPages()).isEqualTo(2);
 
     }
 
@@ -286,7 +225,7 @@ class OrderDtoRepositoryTest {
         return order;
     }
 
-    private OrderDetail createOrderDetail(Product product, Long quantity, String orderNo) {
+    private OrderDetail createOrderDetail(Product product,  Long quantity, String orderNo) {
         return OrderDetail.builder()
                 .product(product)
                 .quantity(quantity)
@@ -306,6 +245,14 @@ class OrderDtoRepositoryTest {
     private Member createMember(String no) {
         return Member.builder()
                 .name("홍길동"+no)
+                .build();
+    }
+
+    private Address createAddress(String city, String street, String detail) {
+        return Address.builder().addressValue(AddressValue.builder()
+                        .city(city)
+                        .street(street)
+                        .detail(detail).build())
                 .build();
     }
 

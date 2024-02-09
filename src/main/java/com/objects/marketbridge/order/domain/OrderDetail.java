@@ -2,6 +2,7 @@ package com.objects.marketbridge.order.domain;
 
 import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.member.domain.Coupon;
+import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import jakarta.persistence.*;
@@ -30,9 +31,9 @@ public class OrderDetail extends BaseEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coupon_id")
-    private Coupon coupon;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_coupon_id")
+    private MemberCoupon memberCoupon;
 
     private Long quantity;
 
@@ -53,12 +54,12 @@ public class OrderDetail extends BaseEntity {
     private LocalDateTime cancelledAt;
 
     @Builder
-    private OrderDetail(Order order, String orderNo, String tid, Product product, Coupon coupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, Long sellerId, LocalDateTime cancelledAt) {
+    private OrderDetail(Order order, String orderNo, String tid, Product product, MemberCoupon memberCoupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, Long sellerId, LocalDateTime cancelledAt) {
         this.orderNo = orderNo;
         this.tid = tid;
         this.order = order;
         this.product = product;
-        this.coupon = coupon;
+        this.memberCoupon = memberCoupon;
         this.quantity = quantity;
         this.price = price;
         this.statusCode = statusCode;
@@ -78,14 +79,14 @@ public class OrderDetail extends BaseEntity {
         this.statusCode = statusCode;
     }
 
-    public static OrderDetail create(String tid, Order order, Product product, String orderNo, Coupon coupon, Long quantity, Long price, Long sellerId, String statusCode) {
+    public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long price, Long quantity, Long sellerId, String statusCode) {
 
         return OrderDetail.builder()
                 .tid(tid)
                 .order(order)
                 .orderNo(orderNo)
                 .product(product)
-                .coupon(coupon)
+                .memberCoupon(memberCoupon)
                 .quantity(quantity)
                 .price(price)
                 .sellerId(sellerId)
@@ -109,7 +110,7 @@ public class OrderDetail extends BaseEntity {
     }
 
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
-        coupon.changeMemberCouponInfo(dateTimeHolder);
+        memberCoupon.changeUsageInfo(dateTimeHolder);
     }
 
     public void setProduct(Product product) {
