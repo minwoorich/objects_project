@@ -205,4 +205,27 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
     private BooleanExpression eqMemberId(Long memberId) {
         return order.member.id.eq(memberId);
     }
+
+    private BooleanExpression eqOrderNo(String orderNo) {
+        return order.orderNo.eq(orderNo);
+    }
+
+    @Override
+    public OrderDtio findByOrderNo(String orderNo) {
+        Order orderEntity = queryFactory
+                .selectFrom(order)
+                .innerJoin(order.address, address)
+                .innerJoin(order.member, member)
+                .innerJoin(order.orderDetails, orderDetail).fetchJoin()
+                .innerJoin(orderDetail.product, product).fetchJoin()
+                .where(
+                        eqOrderNo(orderNo)
+                )
+                .fetchOne();
+
+        // 엔티티 -> dto 로 변환
+        assert orderEntity != null;
+
+        return OrderDtio.of(orderEntity);
+    }
 }
