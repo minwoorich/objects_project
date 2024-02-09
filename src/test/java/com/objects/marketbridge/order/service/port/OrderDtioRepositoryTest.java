@@ -181,11 +181,14 @@ class OrderDtioRepositoryTest {
         OrderDetail orderDetail10 = createOrderDetail(product2, 4L, "4");
         OrderDetail orderDetail11 = createOrderDetail(product3, 4L, "4");
         OrderDetail orderDetail12 = createOrderDetail(product4, 4L, "4");
-//                                                                                                                   상품 번호
-        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3), null); // 1,2,3
-        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6), null); // 1,2,4
-        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9), null); // 1,3,4
-        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12), null); // 2,3,4
+
+        Payment payment = createPayment("카드", "카카오뱅크");
+
+                                                                                                                                   // 상품 번호
+        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3), payment); // 1,2,3
+        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6), payment); // 1,2,4
+        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9), payment); // 1,3,4
+        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12), payment); // 2,3,4
         orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
 
         Pageable pageSize1_3 = PageRequest.of(1, 3);
@@ -283,7 +286,9 @@ class OrderDtioRepositoryTest {
         orderDetails.forEach(order::addOrderDetail);
 
         // payment <-> payment 연관관계
-        order.linkPayment(payment);
+        if (payment != null) {
+            order.linkPayment(payment);
+        }
 
         return order;
     }
