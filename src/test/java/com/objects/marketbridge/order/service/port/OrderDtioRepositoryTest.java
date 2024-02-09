@@ -211,6 +211,48 @@ class OrderDtioRepositoryTest {
                 .build();
     }
 
+
+
+    @DisplayName("상세 주문 조회 하기(member, address, orderDetails, product 전부 fetch join)")
+    @Test
+    void getOrderDetails() {
+        // given
+        Member member = createMember("1");
+        Address address = createAddress("서울", "세종대로", "민들레아파트");
+        member.addAddress(address);
+        memberRepository.save(member);
+
+        Product product1 = createProduct(1000L, "1");
+        Product product2 = createProduct(2000L, "2");
+        Product product3 = createProduct(3000L, "3");
+        productRepository.saveAll(List.of(product1, product2, product3));
+
+        OrderDetail orderDetail1 = createOrderDetail(product1,  1L, "1");
+        OrderDetail orderDetail2 = createOrderDetail(product2,  1L, "1");
+        OrderDetail orderDetail3 = createOrderDetail(product3,  1L, "1");
+
+        Order order = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3));
+
+        orderCommendRepository.save(order);
+
+        // when
+        OrderDtio orderDtio = orderDtoRepository.findByOrderNo(order.getOrderNo());
+
+        //then
+        assertThat(orderDtio.getMemberId()).isEqualTo(member.getId());
+        assertThat(orderDtio.getAddress()).isEqualTo(address.getAddressValue());
+
+        assertThat(orderDtio.getOrderDetails()).hasSize(3);
+        assertThat(orderDtio.getOrderDetails().get(0).getOrderDetailId()).isEqualTo(orderDetail1.getId());
+        assertThat(orderDtio.getOrderDetails().get(1).getOrderDetailId()).isEqualTo(orderDetail2.getId());
+        assertThat(orderDtio.getOrderDetails().get(2).getOrderDetailId()).isEqualTo(orderDetail3.getId());
+
+        assertThat(orderDtio.getOrderDetails().get(0).getProduct().getProductId()).isEqualTo(product1.getId());
+        assertThat(orderDtio.getOrderDetails().get(1).getProduct().getProductId()).isEqualTo(product2.getId());
+        assertThat(orderDtio.getOrderDetails().get(2).getProduct().getProductId()).isEqualTo(product3.getId());
+
+    }
+
     private Order createOrder(Member member1, Address address, String orderNo, List<OrderDetail> orderDetails) {
 
         Order order = Order.builder()

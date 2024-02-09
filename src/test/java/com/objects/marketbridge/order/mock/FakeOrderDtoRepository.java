@@ -75,4 +75,10 @@ public class FakeOrderDtoRepository extends BaseFakeOrderRepository implements O
         // TODO : 구현해야함 - 민우
         return null;
     }
+
+    @Override
+    public OrderDtio findByOrderNo(String orderNo) {
+        // TODO : 구현해야함 - 민우
+        return null;
+    }
 }
