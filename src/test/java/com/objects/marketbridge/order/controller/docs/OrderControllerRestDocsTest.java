@@ -250,8 +250,13 @@ public class OrderControllerRestDocsTest  {
         List<OrderDetailInfo> orderDetailInfos = createOrderDetailInfos();
         List<OrderInfo> orderInfos = createOrderInfos(orderDetailInfos);
         Response response = create(orderInfos);
+        Condition condition = Condition.builder()
+                .year("2024")
+                .keyword("자전거")
+                .memberId(1L)
+                .build();
 
-        given(getOrderService.search(PageRequest.of(0, 10), Condition.builder().build())).willReturn(response);
+        given(getOrderService.search(PageRequest.of(0, 10), condition)).willReturn(response);
 
 
         //then, when
