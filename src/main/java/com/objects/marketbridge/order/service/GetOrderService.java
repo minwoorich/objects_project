@@ -25,7 +25,7 @@ public class GetOrderService {
         return Response.of(pagedOrders.getContent());
     }
 
-    public GetOrderDetailHttp.Response getOrderDetails(Long memberId, String orderNo) {
+    public GetOrderDetailHttp.Response getOrderDetails(String orderNo) {
         return null;
     }
 }

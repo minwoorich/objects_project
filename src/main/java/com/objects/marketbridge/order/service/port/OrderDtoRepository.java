@@ -13,4 +13,6 @@ public interface OrderDtoRepository {
 
     Page<OrderDtio> findAllPaged(Condition condition, Pageable pageable);
 
+    OrderDtio findByOrderNo(String orderNo);
+
 }
