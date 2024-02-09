@@ -2,7 +2,8 @@ package com.objects.marketbridge.product.service;
 
 import com.objects.marketbridge.category.domain.Category;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
-import com.objects.marketbridge.product.domain.Image;
+import com.objects.marketbridge.image.domain.Image;
+import com.objects.marketbridge.image.infra.ImageRepository;
 import com.objects.marketbridge.product.controller.request.CreateProductRequestDto;
 import com.objects.marketbridge.product.domain.*;
 import com.objects.marketbridge.product.infra.product.ProductRepository;

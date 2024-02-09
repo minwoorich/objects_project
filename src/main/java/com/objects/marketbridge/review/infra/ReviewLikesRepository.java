@@ -14,4 +14,8 @@ public interface ReviewLikesRepository {
     Page<ReviewLikes> findAllByReview_Product_Id(Long productId, Pageable pageable);
 
     Page<ReviewLikes> findAllByReview_Member_Id(Long memberId, Pageable pageable);
+
+    void delete(ReviewLikes reviewLikes);
+
+    void deleteById(Long reviewLikesId);
 }

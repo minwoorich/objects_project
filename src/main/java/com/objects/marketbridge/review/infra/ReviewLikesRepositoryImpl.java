@@ -31,4 +31,14 @@ public class ReviewLikesRepositoryImpl implements ReviewLikesRepository{
     public Page<ReviewLikes> findAllByReview_Member_Id(Long memberId, Pageable pageable) {
         return reviewLikesJpaRepository.findAllByReview_Member_Id(memberId, pageable);
     }
+
+    @Override
+    public void delete(ReviewLikes reviewLikes) {
+        reviewLikesJpaRepository.delete(reviewLikes);
+    }
+
+    @Override
+    public void deleteById(Long reviewLikesId) {
+        reviewLikesJpaRepository.deleteById(reviewLikesId);
+    }
 }

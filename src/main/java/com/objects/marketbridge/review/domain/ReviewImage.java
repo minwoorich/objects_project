@@ -1,7 +1,7 @@
 package com.objects.marketbridge.review.domain;
 
 import com.objects.marketbridge.member.domain.BaseEntity;
-import com.objects.marketbridge.product.domain.Image;
+import com.objects.marketbridge.image.domain.Image;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
