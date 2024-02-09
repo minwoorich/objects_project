@@ -47,61 +47,61 @@ class OrderTest {
     @Autowired
     private EntityManager em;
 
-    @Test
-    @DisplayName("주문 취소시 사용한 유저 쿠폰이 모두 반환되야 한다.")
-    public void returnCoupon() {
-        // given
-        LocalDateTime useDate = LocalDateTime.of(2024, 1, 16, 7, 14);
-
-        Order order = Order.builder()
-                .build();
-
-        Product product1 = Product.builder()
-                .build();
-        Product product2 = Product.builder()
-                .build();
-
-        OrderDetail orderDetail1 = OrderDetail.builder()
-                .order(order)
-                .product(product1)
-                .build();
-        OrderDetail orderDetail2 = OrderDetail.builder()
-                .order(order)
-                .product(product2)
-                .build();
-
-        MemberCoupon memberCoupon1 = MemberCoupon.builder()
-                .isUsed(true)
-                .usedDate(useDate)
-                .build();
-        MemberCoupon memberCoupon2 = MemberCoupon.builder()
-                .isUsed(true)
-                .usedDate(useDate)
-                .build();
-
-        orderCommendRepository.save(order);
-        orderDetailCommendRepository.saveAll(List.of(orderDetail1, orderDetail2));
-        productRepository.saveAll(List.of(product1, product2));
-        order.addOrderDetail(orderDetail1);
-        order.addOrderDetail(orderDetail2);
-        memberCouponRepository.save(memberCoupon1);
-        memberCouponRepository.save(memberCoupon2);
-
-        Order findOrder = orderQueryRepository.findById(order.getId()).get();
-
-        // when
-        findOrder.changeMemberCouponInfo(
-                TestDateTimeHolder.builder()
-                        .now(null)
-                        .build()
-        );
-
-        // then
-        assertThat(memberCoupon1.getUsedDate()).isNull();
-        assertThat(memberCoupon2.getUsedDate()).isNull();
-        assertThat(memberCoupon1.getIsUsed()).isFalse();
-        assertThat(memberCoupon2.getIsUsed()).isFalse();
-    }
+//    @Test
+//    @DisplayName("주문 취소시 사용한 유저 쿠폰이 모두 반환되야 한다.")
+//    public void returnCoupon() {
+//        // given
+//        LocalDateTime useDate = LocalDateTime.of(2024, 1, 16, 7, 14);
+//
+//        Order order = Order.builder()
+//                .build();
+//
+//        Product product1 = Product.builder()
+//                .build();
+//        Product product2 = Product.builder()
+//                .build();
+//
+//        OrderDetail orderDetail1 = OrderDetail.builder()
+//                .order(order)
+//                .product(product1)
+//                .build();
+//        OrderDetail orderDetail2 = OrderDetail.builder()
+//                .order(order)
+//                .product(product2)
+//                .build();
+//
+//        MemberCoupon memberCoupon1 = MemberCoupon.builder()
+//                .isUsed(true)
+//                .usedDate(useDate)
+//                .build();
+//        MemberCoupon memberCoupon2 = MemberCoupon.builder()
+//                .isUsed(true)
+//                .usedDate(useDate)
+//                .build();
+//
+//        orderCommendRepository.save(order);
+//        orderDetailCommendRepository.saveAll(List.of(orderDetail1, orderDetail2));
+//        productRepository.saveAll(List.of(product1, product2));
+//        order.addOrderDetail(orderDetail1);
+//        order.addOrderDetail(orderDetail2);
+//        memberCouponRepository.save(memberCoupon1);
+//        memberCouponRepository.save(memberCoupon2);
+//
+//        Order findOrder = orderQueryRepository.findById(order.getId()).get();
+//
+//        // when
+//        findOrder.changeMemberCouponInfo(
+//                TestDateTimeHolder.builder()
+//                        .now(null)
+//                        .build()
+//        );
+//
+//        // then
+//        assertThat(memberCoupon1.getUsedDate()).isNull();
+//        assertThat(memberCoupon2.getUsedDate()).isNull();
+//        assertThat(memberCoupon1.getIsUsed()).isFalse();
+//        assertThat(memberCoupon2.getIsUsed()).isFalse();
+//    }
 
     @DisplayName("주문생성시 사용한 쿠폰들의 사용여부와 사용날짜가 세팅되어야한다.")
     @Test

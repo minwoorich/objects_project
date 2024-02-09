@@ -3,7 +3,6 @@ package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.dto.*;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
@@ -51,7 +50,7 @@ public class OrderCancelReturnService {
 
     // TODO 트랜잭션 위치 고려해야함
     @Transactional
-    public ConfirmCancelReturnDto.Response confirmCancelReturn(ConfirmCancelReturnDto.Request request, DateTimeHolder dateTimeHolder) {
+    public ConfirmCancelReturnDto.Response confirmCancelReturn(ConfirmCancelReturnDto.Request request) {
         // TODO Order fetchJoin
 //        List<OrderDetail> orderDetails = valifyOrderDetatils(createOrderDetailIdsBy(request));
 //        Map<Long, OrderDetail> orderDetailMap = createOrderDetailMapBy(orderDetails);
@@ -86,13 +85,17 @@ public class OrderCancelReturnService {
         return RequestReturnDto.Response.of(orderDetail, numberOfReturns, membership);
     }
 
-    public GetCancelReturnDetailDto.Response findCancelReturnDetail(List<Long> orderDetailIds, String membership, DateTimeHolder dateTimeHolder) {
-//        List<OrderDetail> orderDetails = valifyOrderDetails(orderDetailIds);
-//
-//        return GetCancelReturnDetailDto.Response.of(orderDetails, membership, dateTimeHolder);
-        return null;
+    public GetCancelDetailDto.Response findCancelDetail(Long orderDetailId, String membership) {
+        OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
+
+        return GetCancelDetailDto.Response.of(orderDetail, membership, dateTimeHolder);
     }
 
+    public GetCancelDetailDto.Response findReturnDetail(Long orderDetailId, String membership) {
+        OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
+
+        return GetCancelDetailDto.Response.of(orderDetail, membership, dateTimeHolder);
+    }
 
     private List<Long> createOrderDetailIdsBy(ConfirmCancelReturnDto.Request request) {
         return request.getOrderDetailInfos().stream()
@@ -137,7 +140,7 @@ public class OrderCancelReturnService {
     }
 
     private OrderDetail valifyCancelOrderDetail(Long orderDetailId) {
-        OrderDetail orderDetail = valifyOrderDetail(orderDetailId);
+        OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
         if(cancelImpossible(orderDetail)) {
             throw CustomLogicException.builder()
                     .httpStatus(BAD_REQUEST)
@@ -150,26 +153,13 @@ public class OrderCancelReturnService {
     }
 
     private OrderDetail valifyReturnOrderDetail(Long orderDetailId) {
-        OrderDetail orderDetail = valifyOrderDetail(orderDetailId);
+        OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
         if(returnImpossible(orderDetail)) {
             throw CustomLogicException.builder()
                     .httpStatus(BAD_REQUEST)
                     .message("반품이 불가능한 상품입니다.")
                     .timestamp(LocalDateTime.now())
                     .errorCode(NON_RETURNABLE_PRODUCT)
-                    .build();
-        }
-        return orderDetail;
-    }
-
-    private OrderDetail valifyOrderDetail(Long orderDetailId) {
-        OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
-        if (orderDetail == null) {
-            throw CustomLogicException.builder()
-                    .httpStatus(NOT_FOUND)
-                    .message("주문 상세 정보를 찾을 수 없습니다.")
-                    .timestamp(LocalDateTime.now())
-                    .errorCode(ORDERDETAIL_NOT_FOUND)
                     .build();
         }
         return orderDetail;

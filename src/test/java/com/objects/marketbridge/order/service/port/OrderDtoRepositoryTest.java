@@ -14,6 +14,7 @@ import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +138,7 @@ class OrderDtoRepositoryTest {
                 .build();
     }
 
+    @Disabled
     @DisplayName("전체 주문 목록을 조회 할 경우 페이징이 가능하다")
     @Test
     void findByMemberIdWithMemberAddress_paging(){

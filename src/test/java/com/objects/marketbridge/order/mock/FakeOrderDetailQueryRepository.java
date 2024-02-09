@@ -4,6 +4,7 @@ import com.objects.marketbridge.common.exception.exceptions.CustomLogicException
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,12 +19,7 @@ public class FakeOrderDetailQueryRepository extends BaseFakeOrderDetailRepositor
                 .filter(od -> od.getId().equals(id))
                 .findAny()
                 .orElseThrow(
-                        () -> CustomLogicException.builder()
-                                .httpStatus(NOT_FOUND)
-                                .message("주문 상세 정보를 찾을 수 없습니다.")
-                                .timestamp(LocalDateTime.now())
-                                .errorCode(ORDERDETAIL_NOT_FOUND)
-                                .build()
+                        () -> new EntityNotFoundException("엔티티가 존재하지 않습니다")
                 );
     }
 

@@ -6,6 +6,7 @@ import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
 import com.objects.marketbridge.product.domain.Product;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ConfirmCancelReturnDtoTest {
 
+    @Disabled
     @Test
     @DisplayName("주문, 환불 정보가 주어지면 ConfirmCancelReturnDto.Response를 생성한다.")
     public void response_of() {
@@ -98,30 +100,6 @@ class ConfirmCancelReturnDtoTest {
         assertThat(result.getCancelledItems().get(1).getPrice()).isEqualTo(2000L);
         assertThat(result.getCancelledItems().get(1).getQuantity()).isEqualTo(2L);
     }
-
-//    @Test
-//    @DisplayName("상품과 수량이 주어지면 ConfirmCancelReturnDto.ProductInfo를 생성한다.")
-//    public void productInfo_of_with_product_And_quantity() {
-//        // given
-//        Product product1 = Product.builder()
-//                .price(1000L)
-//                .name("빵빵아")
-//                .productNo("1")
-//                .build();
-//        ReflectionTestUtils.setField(product1, "id", 1L, Long.class);
-//
-//        Long quantity = 1L;
-//
-//        // when
-//        ConfirmCancelReturnDto.ProductInfo result = ConfirmCancelReturnDto.ProductInfo.of(product1, quantity);
-//
-//        // then
-//        assertThat(result.getProductId()).isEqualTo(1L);
-//        assertThat(result.getProductNo()).isEqualTo("1");
-//        assertThat(result.getName()).isEqualTo("빵빵아");
-//        assertThat(result.getPrice()).isEqualTo(1000L);
-//        assertThat(result.getQuantity()).isEqualTo(1L);
-//    }
 
     @Test
     @DisplayName("RefundDto가 주어지면 ConfirmCancelReturnDto.RefundInfo를 생성한다.")

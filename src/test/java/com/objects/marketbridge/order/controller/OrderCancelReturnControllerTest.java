@@ -2,40 +2,30 @@ package com.objects.marketbridge.order.controller;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.member.domain.MembershipType;
-import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.*;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.domain.QOrder;
 import com.objects.marketbridge.order.mock.BaseFakeOrderDetailRepository;
 import com.objects.marketbridge.order.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.order.mock.TestContainer;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
-import com.objects.marketbridge.order.service.dto.ConfirmCancelReturnDto;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
-import static com.objects.marketbridge.member.domain.MembershipType.*;
 import static com.objects.marketbridge.order.domain.MemberShipPrice.WOW;
-import static com.objects.marketbridge.order.domain.QOrder.order;
-import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -43,7 +33,14 @@ import static org.springframework.http.HttpStatus.*;
 
 public class OrderCancelReturnControllerTest {
 
-    private TestContainer testContainer = TestContainer.builder().build();
+    private LocalDateTime orderDate = LocalDateTime.of(2024, 2, 9, 3, 9);
+    private TestContainer testContainer = TestContainer.builder()
+            .dateTimeHolder(
+                    TestDateTimeHolder.builder()
+                            .createTime(orderDate)
+                            .build()
+            )
+            .build();
 
     @AfterEach
     void afterEach() {
@@ -327,7 +324,7 @@ public class OrderCancelReturnControllerTest {
 
     @Test
     @DisplayName("저장된 주문 상세가 없을 때 취소 요청을 하면 에러가 발생한다.")
-    public void requestCancel_NoOrderDetail_ERROR() {
+    public void requestCancel_ENTITY_NOT_FOUND_ERROR() {
 
         // given
         Member member = Member.builder()
@@ -341,12 +338,8 @@ public class OrderCancelReturnControllerTest {
 
         // when // then
         assertThatThrownBy(() -> testContainer.orderCancelReturnController.requestCancel(orderDetailId, numberOfCancellation, memberId))
-                .isInstanceOf(CustomLogicException.class)
-                .hasMessage("주문 상세 정보를 찾을 수 없습니다.")
-                .satisfies(exception -> { CustomLogicException customLogicException = (CustomLogicException) exception;
-                    assertThat(customLogicException.getErrorCode()).isEqualTo(ORDERDETAIL_NOT_FOUND);
-                    assertThat(customLogicException.getHttpStatus()).isEqualTo(NOT_FOUND);
-                });
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("엔티티가 존재하지 않습니다");
 
     }
 
@@ -492,7 +485,7 @@ public class OrderCancelReturnControllerTest {
 
     @Test
     @DisplayName("저장된 주문 상세가 없을 때 취소 요청을 하면 에러가 발생한다.")
-    public void requestReturn_NoOrderDetail_ERROR() {
+    public void requestReturn_ENTITY_NOT_FOUND_ERROR() {
         // given
         Member member = Member.builder()
                 .membership(MembershipType.BASIC.getText())
@@ -505,12 +498,8 @@ public class OrderCancelReturnControllerTest {
 
         // when // then
         assertThatThrownBy(() -> testContainer.orderCancelReturnController.requestReturn(orderDetailId, numberOfCancellation, memberId))
-                .isInstanceOf(CustomLogicException.class)
-                .hasMessage("주문 상세 정보를 찾을 수 없습니다.")
-                .satisfies(exception -> { CustomLogicException customLogicException = (CustomLogicException) exception;
-                    assertThat(customLogicException.getErrorCode()).isEqualTo(ORDERDETAIL_NOT_FOUND);
-                    assertThat(customLogicException.getHttpStatus()).isEqualTo(NOT_FOUND);
-                });
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("엔티티가 존재하지 않습니다");
     }
 
     @Test
@@ -645,37 +634,278 @@ public class OrderCancelReturnControllerTest {
         assertThat(orderDetailInfo2.getQuantity()).isEqualTo(10L);
         assertThat(orderDetailInfo2.getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
     }
-//
-//    @Test
-//    @DisplayName("")
-//    public void getCancelReturnDetail() {
-//        // given
-//        List<Long> orderDetailIds = List.of(1L, 2L);
-//        Long memberId = 1L;
-//
-//        // when
-//        ApiResponse<GetCancelReturnDetailHttp.Response> result = orderCancelReturnController.getCancelReturnDetail(orderDetailIds, memberId);
-//
-//        // then
-//        assertThat(result.getCode()).isEqualTo(OK.value());
-//        assertThat(result.getStatus()).isEqualTo(OK);
-//        assertThat(result.getMessage()).isEqualTo(OK.name());
-////        assertThat(result.getData().getOrderDate()).isEqualTo()
-////        assertThat(result.getData().getCancelDate()).isEqualTo()
-//        assertThat(result.getData().getOrderNo()).isEqualTo("1");
-//        assertThat(result.getData().getCancelReason()).isEqualTo("단순변심");
-//
-//        assertThat(result.getData().getProductInfos().size()).isEqualTo(2);
-//        assertThat(result.getData().getProductInfos().get(0).getProductId()).isEqualTo(1L);
-//        assertThat(result.getData().getProductInfos().get(0).getProductNo()).isEqualTo("1");
-//        assertThat(result.getData().getProductInfos().get(0).getName()).isEqualTo("빵빵이키링");
-//        assertThat(result.getData().getProductInfos().get(0).getPrice()).isEqualTo(1000L);
-//        assertThat(result.getData().getProductInfos().get(0).getQuantity()).isEqualTo(2L);
-//
-//        assertThat(result.getData().getProductInfos().get(1).getProductId()).isEqualTo(2L);
-//        assertThat(result.getData().getProductInfos().get(1).getProductNo()).isEqualTo("2");
-//        assertThat(result.getData().getProductInfos().get(1).getName()).isEqualTo("옥지얌키링");
-//        assertThat(result.getData().getProductInfos().get(1).getPrice()).isEqualTo(2000L);
-//        assertThat(result.getData().getProductInfos().get(1).getQuantity()).isEqualTo(3L);
-//    }
+
+    @Test
+    @DisplayName("취소/반품 상세 조회 (WOW_NoCoupon)")
+    public void getCancelDetail_WOW_NoCoupon() {
+        // given
+        Member member = Member.builder()
+                .membership(MembershipType.WOW.getText())
+                .build();
+
+        Product product = Product.builder()
+                .name("빵빵이키링")
+                .productNo("1")
+                .build();
+
+        LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
+        OrderDetail orderDetail = OrderDetail.builder()
+                .orderNo("1")
+                .reason("단순변심")
+                .cancelledAt(cancelledAt)
+                .quantity(10L)
+                .product(product)
+                .price(1000L)
+                .statusCode(RELEASE_PENDING.getCode())
+                .build();
+
+        testContainer.productRepository.save(product);
+        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.memberRepository.save(member);
+
+        Long orderDetailId = 1L;
+        Long memberId = 1L;
+
+        // when
+        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelReturnController.getCancelDetail(orderDetailId, memberId);
+
+        // then
+        assertThat(result.getCode()).isEqualTo(OK.value());
+        assertThat(result.getStatus()).isEqualTo(OK);
+        assertThat(result.getMessage()).isEqualTo(OK.name());
+
+        assertThat(result.getData().getOrderDate()).isEqualTo(orderDate);
+        assertThat(result.getData().getCancelDate()).isEqualTo(cancelledAt);
+        assertThat(result.getData().getOrderNo()).isEqualTo("1");
+        assertThat(result.getData().getCancelReason()).isEqualTo("단순변심");
+
+        assertThat(result.getData().getProductInfo().getProductId()).isEqualTo(1L);
+        assertThat(result.getData().getProductInfo().getProductNo()).isEqualTo("1");
+        assertThat(result.getData().getProductInfo().getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getData().getProductInfo().getPrice()).isEqualTo(1000L);
+        assertThat(result.getData().getProductInfo().getQuantity()).isEqualTo(10L);
+
+        assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
+        assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
+        assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(0L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+    }
+
+    @Test
+    @DisplayName("취소/반품 상세 조회 (BASIC_NoCoupon)")
+    public void getCancelDetail_BASIC_NoCoupon() {
+        // given
+        Member member = Member.builder()
+                .membership(MembershipType.BASIC.getText())
+                .build();
+
+        Product product = Product.builder()
+                .name("빵빵이키링")
+                .productNo("1")
+                .build();
+
+        LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
+        OrderDetail orderDetail = OrderDetail.builder()
+                .orderNo("1")
+                .reason("단순변심")
+                .cancelledAt(cancelledAt)
+                .quantity(10L)
+                .product(product)
+                .price(1000L)
+                .statusCode(RELEASE_PENDING.getCode())
+                .build();
+
+        testContainer.productRepository.save(product);
+        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.memberRepository.save(member);
+
+        Long orderDetailId = 1L;
+        Long memberId = 1L;
+
+        // when
+        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelReturnController.getCancelDetail(orderDetailId, memberId);
+
+        // then
+        assertThat(result.getCode()).isEqualTo(OK.value());
+        assertThat(result.getStatus()).isEqualTo(OK);
+        assertThat(result.getMessage()).isEqualTo(OK.name());
+
+        assertThat(result.getData().getOrderDate()).isEqualTo(orderDate);
+        assertThat(result.getData().getCancelDate()).isEqualTo(cancelledAt);
+        assertThat(result.getData().getOrderNo()).isEqualTo("1");
+        assertThat(result.getData().getCancelReason()).isEqualTo("단순변심");
+
+        assertThat(result.getData().getProductInfo().getProductId()).isEqualTo(1L);
+        assertThat(result.getData().getProductInfo().getProductNo()).isEqualTo("1");
+        assertThat(result.getData().getProductInfo().getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getData().getProductInfo().getPrice()).isEqualTo(1000L);
+        assertThat(result.getData().getProductInfo().getQuantity()).isEqualTo(10L);
+
+        assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
+        assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
+        assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(0L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+    }
+
+    @Test
+    @DisplayName("취소/반품 상세 조회 (WOW_Coupon)")
+    public void getCancelDetail_WOW_Coupon() {
+        // given
+        Member member = Member.builder()
+                .membership(MembershipType.WOW.getText())
+                .build();
+
+        Product product = Product.builder()
+                .name("빵빵이키링")
+                .productNo("1")
+                .build();
+
+        Coupon coupon = Coupon.builder()
+                .product(product)
+                .price(1000L)
+                .build();
+
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .coupon(coupon)
+                .build();
+
+        LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
+        OrderDetail orderDetail = OrderDetail.builder()
+                .memberCoupon(memberCoupon)
+                .orderNo("1")
+                .reason("단순변심")
+                .cancelledAt(cancelledAt)
+                .quantity(10L)
+                .product(product)
+                .price(1000L)
+                .statusCode(RELEASE_PENDING.getCode())
+                .build();
+
+        testContainer.productRepository.save(product);
+        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.memberRepository.save(member);
+
+        Long orderDetailId = 1L;
+        Long memberId = 1L;
+
+        // when
+        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelReturnController.getCancelDetail(orderDetailId, memberId);
+
+        // then
+        assertThat(result.getCode()).isEqualTo(OK.value());
+        assertThat(result.getStatus()).isEqualTo(OK);
+        assertThat(result.getMessage()).isEqualTo(OK.name());
+
+        assertThat(result.getData().getOrderDate()).isEqualTo(orderDate);
+        assertThat(result.getData().getCancelDate()).isEqualTo(cancelledAt);
+        assertThat(result.getData().getOrderNo()).isEqualTo("1");
+        assertThat(result.getData().getCancelReason()).isEqualTo("단순변심");
+
+        assertThat(result.getData().getProductInfo().getProductId()).isEqualTo(1L);
+        assertThat(result.getData().getProductInfo().getProductNo()).isEqualTo("1");
+        assertThat(result.getData().getProductInfo().getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getData().getProductInfo().getPrice()).isEqualTo(1000L);
+        assertThat(result.getData().getProductInfo().getQuantity()).isEqualTo(10L);
+
+        assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
+        assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
+        assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+    }
+
+    @Test
+    @DisplayName("취소/반품 상세 조회 (BASIC_Coupon)")
+    public void getCancelDetail_BASIC_Coupon() {
+        // given
+        Member member = Member.builder()
+                .membership(MembershipType.BASIC.getText())
+                .build();
+
+        Product product = Product.builder()
+                .name("빵빵이키링")
+                .productNo("1")
+                .build();
+
+        Coupon coupon = Coupon.builder()
+                .product(product)
+                .price(1000L)
+                .build();
+
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .coupon(coupon)
+                .build();
+
+        LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
+        OrderDetail orderDetail = OrderDetail.builder()
+                .memberCoupon(memberCoupon)
+                .orderNo("1")
+                .reason("단순변심")
+                .cancelledAt(cancelledAt)
+                .quantity(10L)
+                .product(product)
+                .price(1000L)
+                .statusCode(RELEASE_PENDING.getCode())
+                .build();
+
+        testContainer.productRepository.save(product);
+        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.memberRepository.save(member);
+
+        Long orderDetailId = 1L;
+        Long memberId = 1L;
+
+        // when
+        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelReturnController.getCancelDetail(orderDetailId, memberId);
+
+        // then
+        assertThat(result.getCode()).isEqualTo(OK.value());
+        assertThat(result.getStatus()).isEqualTo(OK);
+        assertThat(result.getMessage()).isEqualTo(OK.name());
+
+        assertThat(result.getData().getOrderDate()).isEqualTo(orderDate);
+        assertThat(result.getData().getCancelDate()).isEqualTo(cancelledAt);
+        assertThat(result.getData().getOrderNo()).isEqualTo("1");
+        assertThat(result.getData().getCancelReason()).isEqualTo("단순변심");
+
+        assertThat(result.getData().getProductInfo().getProductId()).isEqualTo(1L);
+        assertThat(result.getData().getProductInfo().getProductNo()).isEqualTo("1");
+        assertThat(result.getData().getProductInfo().getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getData().getProductInfo().getPrice()).isEqualTo(1000L);
+        assertThat(result.getData().getProductInfo().getQuantity()).isEqualTo(10L);
+
+        assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
+        assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
+        assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+    }
+
+    @Test
+    @DisplayName("저장된 맴버가 없을 때 취소 요청을 하면 에러가 발생한다.")
+    public void getCancelDetail_NoMember_ERROR() {
+        // given
+        Long orderDetailId = 1L;
+        Long memberId = 1L;
+
+        // when // then
+        assertThatThrownBy(() -> testContainer.orderCancelReturnController.getCancelDetail(orderDetailId, memberId))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("주문 상세가 없을 경우 에러가 발생한다.")
+    public void getCancelDetail_ENTITY_NOT_FOUND_ERROR() {
+        // given
+        Member member = Member.builder().build();
+
+        testContainer.memberRepository.save(member);
+
+        Long orderDetailId = 1L;
+        Long memberId = 1L;
+
+        // when
+        assertThatThrownBy(() -> testContainer.orderCancelReturnController.getCancelDetail(orderDetailId, memberId))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("엔티티가 존재하지 않습니다");
+    }
+
 }

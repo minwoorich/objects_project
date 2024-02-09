@@ -8,15 +8,12 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.*;
 import com.objects.marketbridge.order.service.OrderCancelReturnService;
 import com.objects.marketbridge.order.service.port.OrderDetailDtoRepository;
-import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Builder
 @RestController
@@ -33,7 +30,7 @@ public class OrderCancelReturnController {
     public ApiResponse<ConfirmCancelReturnHttp.Response> confirmCancelReturn(
             @RequestBody @Valid ConfirmCancelReturnHttp.Request request
     ) {
-        return ApiResponse.ok(ConfirmCancelReturnHttp.Response.of(orderCancelReturnService.confirmCancelReturn(request.toDto(), dateTimeHolder)));
+        return ApiResponse.ok(ConfirmCancelReturnHttp.Response.of(orderCancelReturnService.confirmCancelReturn(request.toDto())));
     }
 
     @GetMapping("/cancel-flow")
@@ -66,17 +63,29 @@ public class OrderCancelReturnController {
         return ApiResponse.ok(GetCancelReturnListHttp.Response.of(orderDetailDtoRepository.findCancelReturnListDtio(memberId, pageRequest)));
     }
 
-    @GetMapping("/cancel-return/{orderNo}")
-    public ApiResponse<GetCancelReturnDetailHttp.Response> getCancelReturnDetail(
-            @RequestParam(name = "orderDetailIds") List<Long> orderDetailIds,
+    @GetMapping("/cancel/detail")
+    public ApiResponse<GetCancelDetailHttp.Response> getCancelDetail(
+            @RequestParam(name = "orderDetailId") Long orderDetailId,
             @AuthMemberId Long memberId
     ) {
         String membership = memberRepository.findById(memberId).getMembership();
-        return ApiResponse.ok(GetCancelReturnDetailHttp.Response.of(orderCancelReturnService.findCancelReturnDetail(orderDetailIds, membership, dateTimeHolder)));
+        return ApiResponse.ok(GetCancelDetailHttp.Response.of(orderCancelReturnService.findCancelDetail(orderDetailId, membership)));
     }
 
+    @GetMapping("/return/detail")
+    public ApiResponse<GetCancelDetailHttp.Response> getReturnDetail(
+            @RequestParam(name = "orderDetailId") Long orderDetailId,
+            @AuthMemberId Long memberId
+    ) {
+        String membership = memberRepository.findById(memberId).getMembership();
+        return ApiResponse.ok(GetCancelDetailHttp.Response.of(orderCancelReturnService.findCancelDetail(orderDetailId, membership)));
+    }
+
+    // 반품 철회 확정
     @PostMapping("/cancel-return/list")
-    public ApiResponse<ReturnRecantationHttp.Response> returnRecantation() {
+    public ApiResponse<ReturnRecantationHttp.Response> returnRecantation(
+            @RequestParam(name = "orderDetailId") Long orderDetailId
+    ) {
         return null;
     }
 

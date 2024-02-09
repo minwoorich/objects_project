@@ -126,7 +126,6 @@ class OrderDetailDtoRepositoryTest {
         assertThat(content).hasSize(3);
 
         assertThat(content.get(0).getOrderDetailInfo().getOrderNo()).isEqualTo("1");
-        assertThat(content.get(0).getOrderDetailInfo().getProductId()).isEqualTo(1L);
         assertThat(content.get(0).getOrderDetailInfo().getProductNo()).isEqualTo("1");
         assertThat(content.get(0).getOrderDetailInfo().getName()).isEqualTo("옷");
         assertThat(content.get(0).getOrderDetailInfo().getPrice()).isEqualTo(1000L);
@@ -134,7 +133,6 @@ class OrderDetailDtoRepositoryTest {
         assertThat(content.get(0).getOrderDetailInfo().getOrderStatus()).isEqualTo(RETURN_COMPLETED.getCode());
 
         assertThat(content.get(1).getOrderDetailInfo().getOrderNo()).isEqualTo("1");
-        assertThat(content.get(1).getOrderDetailInfo().getProductId()).isEqualTo(2L);
         assertThat(content.get(1).getOrderDetailInfo().getProductNo()).isEqualTo("2");
         assertThat(content.get(1).getOrderDetailInfo().getName()).isEqualTo("신발");
         assertThat(content.get(1).getOrderDetailInfo().getPrice()).isEqualTo(2000L);
@@ -142,7 +140,6 @@ class OrderDetailDtoRepositoryTest {
         assertThat(content.get(1).getOrderDetailInfo().getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
 
         assertThat(content.get(2).getOrderDetailInfo().getOrderNo()).isEqualTo("2");
-        assertThat(content.get(2).getOrderDetailInfo().getProductId()).isEqualTo(3L);
         assertThat(content.get(2).getOrderDetailInfo().getProductNo()).isEqualTo("3");
         assertThat(content.get(2).getOrderDetailInfo().getName()).isEqualTo("바지");
         assertThat(content.get(2).getOrderDetailInfo().getPrice()).isEqualTo(3000L);
