@@ -96,6 +96,6 @@ public class OrderController {
             @AuthMemberId Long memberId){
 
 
-        return ApiResponse.ok();
+        return ApiResponse.ok(null);
     }
 }
