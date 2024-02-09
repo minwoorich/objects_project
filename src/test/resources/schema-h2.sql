@@ -263,6 +263,7 @@ CREATE TABLE order_detail (
                                      tid	varchar(255)	,
                                      reason	text	,
                                      cancelled_at	timestamp	,
+                                     numberOfCancellations bigint,
                                      created_at	timestamp	,
                                      updated_at	timestamp	,
                                      deleted_at	timestamp	

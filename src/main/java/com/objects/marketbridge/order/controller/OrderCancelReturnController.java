@@ -27,10 +27,10 @@ public class OrderCancelReturnController {
     private final DateTimeHolder dateTimeHolder;
 
     @PostMapping("/cancel-return-flow/thank-you")
-    public ApiResponse<ConfirmCancelReturnHttp.Response> confirmCancelReturn(
-            @RequestBody @Valid ConfirmCancelReturnHttp.Request request
+    public ApiResponse<ConfirmCancelHttp.Response> confirmCancelReturn(
+            @RequestBody @Valid ConfirmCancelHttp.Request request
     ) {
-        return ApiResponse.ok(ConfirmCancelReturnHttp.Response.of(orderCancelReturnService.confirmCancelReturn(request.toDto())));
+        return ApiResponse.ok(ConfirmCancelHttp.Response.of(orderCancelReturnService.confirmCancelReturn(request.toDto(), dateTimeHolder)));
     }
 
     @GetMapping("/cancel-flow")
@@ -73,12 +73,12 @@ public class OrderCancelReturnController {
     }
 
     @GetMapping("/return/detail")
-    public ApiResponse<GetCancelDetailHttp.Response> getReturnDetail(
+    public ApiResponse<GetReturnDetailHttp.Response> getReturnDetail(
             @RequestParam(name = "orderDetailId") Long orderDetailId,
             @AuthMemberId Long memberId
     ) {
         String membership = memberRepository.findById(memberId).getMembership();
-        return ApiResponse.ok(GetCancelDetailHttp.Response.of(orderCancelReturnService.findCancelDetail(orderDetailId, membership)));
+        return ApiResponse.ok(GetReturnDetailHttp.Response.of(orderCancelReturnService.findReturnDetail(orderDetailId, membership)));
     }
 
     // 반품 철회 확정

@@ -41,6 +41,11 @@ public class OrderDetailCommendRepositoryImpl implements OrderDetailCommendRepos
     }
 
     @Override
+    public OrderDetail saveAndReturnEntity(OrderDetail orderDetail) {
+        return orderDetailJpaRepository.save(orderDetail);
+    }
+
+    @Override
     public void deleteAllInBatch() {
         orderDetailJpaRepository.deleteAllInBatch();
     }

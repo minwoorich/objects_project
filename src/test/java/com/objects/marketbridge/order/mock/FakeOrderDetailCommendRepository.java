@@ -21,6 +21,12 @@ public class FakeOrderDetailCommendRepository extends BaseFakeOrderDetailReposit
     }
 
     @Override
+    public OrderDetail saveAndReturnEntity(OrderDetail orderDetail) {
+        save(orderDetail);
+        return OrderDetail.create(orderDetail);
+    }
+
+    @Override
     public List<OrderDetail> saveAll(List<OrderDetail> orderDetail) {
         return null;
     }

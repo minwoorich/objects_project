@@ -1,20 +1,23 @@
 package com.objects.marketbridge.order.domain;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.http.HttpStatus;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.NON_CANCELLABLE_PRODUCT;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.QUANTITY_EXCEEDED;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Entity
 @Getter
@@ -56,8 +59,10 @@ public class OrderDetail extends BaseEntity {
 
     private LocalDateTime cancelledAt;
 
+    private Long numberOfCancellations;
+
     @Builder
-    private OrderDetail(Order order, String orderNo, String tid, Product product, MemberCoupon memberCoupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, Long sellerId, LocalDateTime cancelledAt) {
+    private OrderDetail(Order order, String orderNo, String tid, Product product, MemberCoupon memberCoupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, Long sellerId, LocalDateTime cancelledAt, Long numberOfCancellations) {
         this.orderNo = orderNo;
         this.tid = tid;
         this.order = order;
@@ -70,6 +75,7 @@ public class OrderDetail extends BaseEntity {
         this.reason = reason;
         this.sellerId = sellerId;
         this.cancelledAt = cancelledAt;
+        this.numberOfCancellations = numberOfCancellations;
     }
 
     // 연관관계 메서드
@@ -97,33 +103,40 @@ public class OrderDetail extends BaseEntity {
                 .build();
     }
 
-    public Integer changeReasonAndStatus(String reason, String statusCode, Long numberOfCancellations) {
+    public static OrderDetail create(OrderDetail orderDetail) {
+        return OrderDetail.builder()
+                .tid(orderDetail.getTid())
+                .order(orderDetail.getOrder())
+                .orderNo(orderDetail.getOrderNo())
+                .product(orderDetail.getProduct())
+                .memberCoupon(orderDetail.getMemberCoupon())
+                .price(orderDetail.getPrice())
+                .sellerId(orderDetail.getSellerId())
+                .quantity(orderDetail.getNumberOfCancellations())
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .numberOfCancellations(0L)
+                .build();
+    }
+
+    public void cancel(String reason, Long numberOfCancellations, DateTimeHolder dateTimeHolder) {
         // TODO 정책 정해야 함
-        if (Objects.equals(this.statusCode, DELIVERY_COMPLETED.getCode())) {
-            throw CustomLogicException.builder()
-                    .httpStatus(BAD_REQUEST)
-                    .message("취소가 불가능한 상품입니다.")
-                    .timestamp(LocalDateTime.now())
-                    .errorCode(NON_CANCELLABLE_PRODUCT)
-                    .build();
-        }
-        Integer totalAmount = totalAmount(numberOfCancellations, LocalDateTime.now());
-        this.quantity -= numberOfCancellations;
+        if (impossibleCancel())
+            throw createNonCancellableProductError(dateTimeHolder.getTimeNow());
+        if (exceededQuantity(numberOfCancellations))
+            throw createQuantityExceededError(dateTimeHolder.getTimeNow());
+
         this.product.increase(numberOfCancellations);
+        this.numberOfCancellations += numberOfCancellations;
         this.reason = reason;
-        this.statusCode = statusCode;
-        return totalAmount;
+        this.statusCode = ORDER_CANCEL.getCode();
+
+        returnMemberCoupon();
     }
 
     public Integer totalAmount(Long quantity, LocalDateTime dateTime) {
-        if(quantity > this.quantity) {
-            throw CustomLogicException.builder()
-                    .errorCode(QUANTITY_EXCEEDED)
-                    .timestamp(dateTime)
-                    .message("수량이 초과 되었습니다.")
-                    .httpStatus(BAD_REQUEST)
-                    .build();
-        }
+        if(exceededQuantity(quantity))
+            throw createQuantityExceededError(dateTime);
+
         return (int) (price * quantity);
     }
 
@@ -135,13 +148,51 @@ public class OrderDetail extends BaseEntity {
        return totalAmount(quantity, LocalDateTime.now());
     }
 
+    public Integer cancelAmount() {
+        return (int) (numberOfCancellations * price);
+    }
+
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
-        if (memberCoupon != null) {
+        if (hasMemberCoupon())
             memberCoupon.changeUsageInfo(dateTimeHolder);
-        }
+    }
+
+    public void returnMemberCoupon() {
+        changeMemberCouponInfo(null);
     }
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    private CustomLogicException createQuantityExceededError(LocalDateTime dateTime) {
+        return CustomLogicException.builder()
+                .errorCode(QUANTITY_EXCEEDED)
+                .timestamp(dateTime)
+                .message("수량이 초과 되었습니다.")
+                .httpStatus(BAD_REQUEST)
+                .build();
+    }
+
+    private CustomLogicException createNonCancellableProductError(LocalDateTime dateTime) {
+        return CustomLogicException.builder()
+                .httpStatus(BAD_REQUEST)
+                .message("취소가 불가능한 상품입니다.")
+                .timestamp(dateTime)
+                .errorCode(NON_CANCELLABLE_PRODUCT)
+                .build();
+    }
+
+    private boolean exceededQuantity(Long numberOfCancellations) {
+        return this.numberOfCancellations + numberOfCancellations > this.quantity;
+    }
+
+    private boolean impossibleCancel() {
+        return Objects.equals(this.statusCode, DELIVERY_COMPLETED.getCode())
+                || Objects.equals(this.statusCode, ORDER_PARTIAL_CANCEL.getCode());
+    }
+
+    private boolean hasMemberCoupon() {
+        return memberCoupon != null;
     }
 }

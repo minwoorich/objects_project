@@ -10,8 +10,6 @@ import org.springframework.data.domain.PageImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
 public class GetCancelReturnListHttp {
 
     @Getter

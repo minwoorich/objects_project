@@ -1,6 +1,7 @@
 package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
@@ -9,6 +10,7 @@ import com.objects.marketbridge.order.mock.BaseFakeOrderDetailRepository;
 import com.objects.marketbridge.order.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.order.mock.TestContainer;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
+import com.objects.marketbridge.order.service.dto.ConfirmCancelDto;
 import com.objects.marketbridge.order.service.dto.GetCancelDetailDto;
 import com.objects.marketbridge.order.service.dto.RequestCancelDto;
 import com.objects.marketbridge.order.service.dto.RequestReturnDto;
@@ -26,18 +28,18 @@ import static com.objects.marketbridge.member.domain.MembershipType.WOW;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 class OrderCancelReturnServiceTest {
 
     private LocalDateTime orderDate = LocalDateTime.of(2024, 2, 9, 3, 9);
     private TestContainer testContainer = TestContainer.builder()
-                .dateTimeHolder(
-                        TestDateTimeHolder.builder()
-                        .createTime(orderDate)
-                        .build()
-                )
-                .build();
-
+            .dateTimeHolder(
+                    TestDateTimeHolder.builder()
+                            .createTime(orderDate)
+                            .build()
+            )
+            .build();
 
     @AfterEach
     void afterEach() {
@@ -45,48 +47,88 @@ class OrderCancelReturnServiceTest {
         BaseFakeOrderRepository.getInstance().clear();
     }
 
-//    @Test
-//    @DisplayName("취소/반품 확정")
-//    public void confirmCancelReturn() {
-//        // given
-//        ConfirmCancelReturnDto.OrderDetailInfo orderDetailInfo1 = ConfirmCancelReturnDto.OrderDetailInfo.builder()
-//                .orderDetailId(1L)
-//                .numberOfCancellation(1L)
-//                .build();
-//        ConfirmCancelReturnDto.OrderDetailInfo orderDetailInfo2 = ConfirmCancelReturnDto.OrderDetailInfo.builder()
-//                .orderDetailId(2L)
-//                .numberOfCancellation(2L)
-//                .build();
-//        List<ConfirmCancelReturnDto.OrderDetailInfo> orderDetailInfos = List.of(orderDetailInfo1, orderDetailInfo2);
-//
-//        ConfirmCancelReturnDto.Request request = ConfirmCancelReturnDto.Request.builder()
-//                .orderDetailInfos(orderDetailInfos)
-//                .cancelReason("단순변심")
-//                .build();
-//
-//        LocalDateTime updateTime = LocalDateTime.of(2024, 1, 31, 6, 7);
-//        DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
-//                .updateTime(updateTime)
-//                .build();
-//
-//        // when
-//        ConfirmCancelReturnDto.Response result = orderCancelReturnService.confirmCancelReturn(request, dateTimeHolder);
-//
-//        // then
-//        assertThat(result.getOrderId()).isEqualTo(1L);
-//        assertThat(result.getOrderNo()).isEqualTo("1");
-//        assertThat(result.getTotalPrice()).isEqualTo(30000L);
-//        assertThat(result.getCancellationDate()).isEqualTo(updateTime);
-//        assertThat(result.getRefundInfo())
-//                .extracting("totalRefundAmount", "refundMethod", "refundProcessedAt")
-//                .contains(5000L, "카드", cancelDate);
-//        assertThat(result.getCancelledItems()).hasSize(2)
-//                .extracting("productId", "productNo", "name", "price", "quantity")
-//                .contains(
-//                        tuple(1L, "1", "빵빵이키링", 1000L, 1L),
-//                        tuple(2L, "2", "옥지얌키링", 2000L, 2L)
-//                );
-//    }
+    @Test
+    @DisplayName("저장된 주문상세가 없으면 오류가 발생한다.")
+    public void confirmCancel_NoOrderDetail_ERROR() {
+        // given
+        DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder().build();
+
+        ConfirmCancelDto.Request request = ConfirmCancelDto.Request.builder()
+                .orderDetailId(1L)
+                .build();
+
+        // when // then
+        assertThatThrownBy(() -> testContainer.orderCancelReturnService.confirmCancelReturn(request, dateTimeHolder))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("엔티티가 존재하지 않습니다");
+    }
+
+    @Test
+    @DisplayName("배송완료된 주문은 취소할 수 없다.")
+    public void confirmCancel_DELIVERY_COMPLETED_ERROR() {
+        // given
+        LocalDateTime now = LocalDateTime.of(2024, 2, 9, 10, 51);
+        DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+                .now(now)
+                .build();
+
+        ConfirmCancelDto.Request request = ConfirmCancelDto.Request.builder()
+                .orderDetailId(1L)
+                .numberOfCancellation(2L)
+                .reason("단순변심")
+                .build();
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .statusCode(DELIVERY_COMPLETED.getCode())
+                .build();
+
+        testContainer.orderDetailCommendRepository.save(orderDetail);
+
+        // when // then
+        assertThatThrownBy(() -> testContainer.orderCancelReturnService.confirmCancelReturn(request, dateTimeHolder))
+                .isInstanceOf(CustomLogicException.class)
+                .hasMessage("취소가 불가능한 상품입니다.")
+                .satisfies(exception -> {
+                    CustomLogicException customLogicException = (CustomLogicException) exception;
+                    assertThat(customLogicException.getErrorCode()).isEqualTo(NON_CANCELLABLE_PRODUCT);
+                    assertThat(customLogicException.getHttpStatus()).isEqualTo(BAD_REQUEST);
+                    assertThat(customLogicException.getTimestamp()).isEqualTo(now);
+                });
+    }
+
+    @Test
+    @DisplayName("취소 수량이 기존 수량보다 많으면 에러가 발생한다.")
+    public void confirmCancel_QUANTITY_EXCEEDED_ERROR() {
+        // given
+        LocalDateTime now = LocalDateTime.of(2024, 2, 9, 10, 51);
+        DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+                .now(now)
+                .build();
+
+        ConfirmCancelDto.Request request = ConfirmCancelDto.Request.builder()
+                .orderDetailId(1L)
+                .numberOfCancellation(2L)
+                .reason("단순변심")
+                .build();
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .quantity(1L)
+                .statusCode(ORDER_RECEIVED.getCode())
+                .build();
+
+        testContainer.orderDetailCommendRepository.save(orderDetail);
+
+        // when // then
+        assertThatThrownBy(() -> testContainer.orderCancelReturnService.confirmCancelReturn(request, dateTimeHolder))
+                .isInstanceOf(CustomLogicException.class)
+                .hasMessage("수량이 초과 되었습니다.")
+                .satisfies(exception -> {
+                    CustomLogicException customLogicException = (CustomLogicException) exception;
+                    assertThat(customLogicException.getErrorCode()).isEqualTo(QUANTITY_EXCEEDED);
+                    assertThat(customLogicException.getHttpStatus()).isEqualTo(BAD_REQUEST);
+                    assertThat(customLogicException.getTimestamp()).isEqualTo(now);
+                });
+    }
 
     @Test
     @DisplayName("주문 취소 요청 (WOW_NoCoupon)")

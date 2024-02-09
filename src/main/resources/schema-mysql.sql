@@ -263,6 +263,7 @@ CREATE TABLE order_detail (
                                    delivered_date	datetime(6)	,
                                    reason	text	,
                                    cancelled_at	datetime(6)	,
+                                   numberOfCancellations bigint,
                                    created_at	datetime(6)	,
                                    updated_at	datetime(6)	,
                                    deleted_at	datetime(6)

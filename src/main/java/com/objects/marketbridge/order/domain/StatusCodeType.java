@@ -22,6 +22,7 @@ public enum StatusCodeType {
     ORDER_INIT("주문생성", "OR00"),
     ORDER_RECEIVED("주문접수", "OR01"),
     ORDER_CANCEL("주문취소", "OR02"),
+    ORDER_PARTIAL_CANCEL("부분취소", "OR05"),
 
     PAYMENT_PENDING("결제대기", "PM01"),
     PAYMENT_COMPLETED("결제완료", "PM04"),

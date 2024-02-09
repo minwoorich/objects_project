@@ -1,16 +1,11 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
+import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.EntityNotFoundException;
 
-import java.time.LocalDateTime;
 import java.util.List;
-
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.ORDERDETAIL_NOT_FOUND;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 public class FakeOrderDetailQueryRepository extends BaseFakeOrderDetailRepository implements OrderDetailQueryRepository {
     @Override
@@ -18,9 +13,7 @@ public class FakeOrderDetailQueryRepository extends BaseFakeOrderDetailRepositor
         return getInstance().getData().stream()
                 .filter(od -> od.getId().equals(id))
                 .findAny()
-                .orElseThrow(
-                        () -> new EntityNotFoundException("엔티티가 존재하지 않습니다")
-                );
+                .orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
     }
 
     @Override
