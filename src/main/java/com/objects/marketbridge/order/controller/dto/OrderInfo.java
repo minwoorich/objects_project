@@ -1,6 +1,5 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.order.infra.dtio.OrderDetailDtio;
 import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import lombok.Builder;
 import lombok.Getter;

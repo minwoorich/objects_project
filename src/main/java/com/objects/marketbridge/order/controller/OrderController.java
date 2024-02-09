@@ -82,9 +82,10 @@ public class OrderController {
             @RequestParam(name = "keyword") String keyword,
             @PageableDefault(value = 5, sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
 
-        GetOrderHttp.Response result = getOrderService.search(pageable, createCondition(year, keyword, memberId));
+        GetOrderHttp.Response response = getOrderService.search(pageable, createCondition(year, keyword, memberId));
 
-        return ApiResponse.ok(result);
+
+        return ApiResponse.ok(response);
     }
 
     private GetOrderHttp.Condition createCondition(String year, String keyword, Long memberId) {

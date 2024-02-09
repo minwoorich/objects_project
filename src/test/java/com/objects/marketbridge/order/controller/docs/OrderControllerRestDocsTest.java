@@ -7,25 +7,27 @@ import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.order.controller.OrderController;
-import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
-import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
+import com.objects.marketbridge.order.controller.dto.*;
 import com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response;
-import com.objects.marketbridge.order.controller.dto.OrderDetailInfo;
-import com.objects.marketbridge.order.controller.dto.OrderInfo;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.GetOrderService;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
+import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -42,10 +44,10 @@ import java.util.List;
 import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
 import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response.create;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -65,12 +67,12 @@ public class OrderControllerRestDocsTest  {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
-
     @MockBean CreateCheckoutService createCheckoutService;
     @MockBean CreateOrderService createOrderService;
     @MockBean KakaoPayConfig kakaoPayConfig;
     @MockBean KakaoPayService kakaoPayService;
     @MockBean GetOrderService getOrderService;
+    @MockBean OrderDtoRepository orderDtoRepository;
 
 
     @BeforeEach
@@ -245,27 +247,28 @@ public class OrderControllerRestDocsTest  {
     @Test
     @WithMockCustomUser
     void getOrders() throws Exception {
-
         // given
-        List<OrderDetailInfo> orderDetailInfos = createOrderDetailInfos();
-        List<OrderInfo> orderInfos = createOrderInfos(orderDetailInfos);
-        Response response = create(orderInfos);
-        Condition condition = Condition.builder()
-                .year("2024")
-                .keyword("자전거")
-                .memberId(1L)
-                .build();
+//
+//        List<OrderDetailInfo> orderDetailInfosSizeOne = createOrderDetailInfosSizeOne();
+//        List<OrderInfo> orderInfosSizeOne = createOrderInfosSizeOne(orderDetailInfosSizeOne);
+//        GetOrderHttp.Response response = create(orderInfosSizeOne);
+//        Condition condition = createCondition();
+//        Pageable pageable = PageRequest.of(0, 5, Sort.by("createdAt"));
 
-        given(getOrderService.search(PageRequest.of(0, 10), condition)).willReturn(response);
+        List<OrderInfo> orderInfos = createOrderInfosSizeOne(createOrderDetailInfosSizeOne());
+        GetOrderHttp.Response expectedResponse = GetOrderHttp.Response.builder().orderInfos(orderInfos).build();
 
+        given(getOrderService.search(any(Pageable.class), any(GetOrderHttp.Condition.class)))
+                .willReturn(expectedResponse);
 
-        //then, when
+        //when, then
         mockMvc.perform(get("/orders")
                         .param("page", "0")
                         .param("size", "10")
                         .param("sort", "createdAt,DESC")
                         .param("year", "2024")
                         .param("keyword", "자전거")
+                        .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken"))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -288,8 +291,6 @@ public class OrderControllerRestDocsTest  {
                                         fieldWithPath("data").type(JsonFieldType.OBJECT)
                                                 .description("응답 데이터"),
 
-                                        fieldWithPath("data.orderInfos").type(JsonFieldType.ARRAY)
-                                                .description("주문 리스트"),
                                         fieldWithPath("data.orderInfos[]").type(JsonFieldType.ARRAY)
                                                 .description("주문 리스트"),
                                         fieldWithPath("data.orderInfos[].orderNo").type(JsonFieldType.STRING)
@@ -297,10 +298,10 @@ public class OrderControllerRestDocsTest  {
                                         fieldWithPath("data.orderInfos[].createdAt").type(JsonFieldType.STRING)
                                                 .description("주문 생성 일자"),
 
-                                        fieldWithPath("data.orderInfos[].orderDetailInfos").type(JsonFieldType.ARRAY)
-                                                .description("상세 주문 리스트"),
                                         fieldWithPath("data.orderInfos[].orderDetailInfos[]").type(JsonFieldType.ARRAY)
                                                 .description("상세 주문 리스트"),
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].orderNo").type(JsonFieldType.STRING)
+                                                .description("부모 주문 번호"),
                                         fieldWithPath("data.orderInfos[].orderDetailInfos[].orderDetailId").type(JsonFieldType.NUMBER)
                                                 .description("상세 주문 아이디(PK)"),
                                         fieldWithPath("data.orderInfos[].orderDetailInfos[].productId").type(JsonFieldType.NUMBER)
@@ -321,6 +322,14 @@ public class OrderControllerRestDocsTest  {
                                                 .description("마켓브릿지 상품인지 입점 판매자 상품인지 구분하는 값")
                                 )));
 
+    }
+
+    private Condition createCondition() {
+        return Condition.builder()
+                .year("2024")
+                .keyword(null)
+                .memberId(1L)
+                .build();
     }
 
     private List<OrderDetailInfo> createOrderDetailInfos() {
@@ -348,6 +357,13 @@ public class OrderControllerRestDocsTest  {
         return Arrays.asList(od1, od2, od3, od4, od5, od6, od7, od8, od9);
     }
 
+    private List<OrderDetailInfo> createOrderDetailInfosSizeOne() {
+        OrderDetailInfo od1 =
+                OrderDetailInfo.create("AAAA-1111-1111-1111", 1L, 1L, 2L, 1000L, PAYMENT_COMPLETED.getCode(), "2024.01.23", "http://example/product/thumb1", "자전거", true);
+
+        return Arrays.asList(od1);
+    }
+
     private List<OrderInfo> createOrderInfos(List<OrderDetailInfo> orderDetailInfos) {
         List<OrderDetailInfo> firstThree = orderDetailInfos.subList(0, 3);
         List<OrderDetailInfo> nextThree = orderDetailInfos.subList(3, 6);
@@ -358,6 +374,12 @@ public class OrderControllerRestDocsTest  {
         OrderInfo o3 = OrderInfo.create("2024.03.19", "CCCC-3333-3333-3333", lastThree);
 
         return List.of(o1, o2, o3);
+    }
+
+    private List<OrderInfo> createOrderInfosSizeOne(List<OrderDetailInfo> orderDetailInfos) {
+        OrderInfo o1 = OrderInfo.create("2024.01.19", "AAAA-1111-1111-1111", orderDetailInfos);
+
+        return List.of(o1);
     }
 
 
