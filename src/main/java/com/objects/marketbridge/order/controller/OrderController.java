@@ -6,8 +6,10 @@ import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
+import com.objects.marketbridge.common.security.annotation.UserAuthorize;
 import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderDetailHttp;
 import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
@@ -91,11 +93,12 @@ public class OrderController {
                 .build();
     }
 
+    @UserAuthorize
     @GetMapping("/orders/{orderNo}")
-    public ApiResponse<GetOrderHttp.Response> getOrderDetails(
-            @AuthMemberId Long memberId){
-
-
-        return ApiResponse.ok(null);
+    public ApiResponse<GetOrderDetailHttp.Response> getOrderDetails(
+            @PathVariable(name = "orderNo") String orderNo
+    ){
+        GetOrderDetailHttp.Response orderDetail = getOrderService.getOrderDetails(orderNo);
+        return ApiResponse.ok(orderDetail);
     }
 }
