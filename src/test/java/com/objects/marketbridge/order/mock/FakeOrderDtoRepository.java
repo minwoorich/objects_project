@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 import static com.objects.marketbridge.member.domain.QAddress.address;
 import static com.objects.marketbridge.member.domain.QMember.member;
-import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
+import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Condition;
 import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;

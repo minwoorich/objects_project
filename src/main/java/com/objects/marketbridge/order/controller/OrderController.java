@@ -8,19 +8,15 @@ import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
-import com.objects.marketbridge.order.controller.dto.SortDto;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.GetOrderService;
-import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,7 +79,6 @@ public class OrderController {
             @PageableDefault(value = 5, sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
 
         GetOrderHttp.Response response = getOrderService.search(pageable, createCondition(year, keyword, memberId));
-
 
         return ApiResponse.ok(response);
     }

@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
-import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response;
+import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Condition;
+import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Response;
 
 @Service
 @Slf4j

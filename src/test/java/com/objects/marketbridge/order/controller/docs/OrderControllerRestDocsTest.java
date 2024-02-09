@@ -9,10 +9,9 @@ import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.order.controller.OrderController;
 import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response;
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response.OrderInfo;
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response.OrderInfo.OrderDetailInfo;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Response;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Response.OrderInfo;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Response.OrderInfo.OrderDetailInfo;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
@@ -41,7 +40,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
+import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Condition;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -250,8 +249,7 @@ public class OrderControllerRestDocsTest  {
         // given
         Response expectedResponse = Response.create(createOrderInfosSizeOne(createOrderDetailInfosSizeOne()));
 
-        given(getOrderService.search(any(Pageable.class), any(GetOrderHttp.Condition.class)))
-                .willReturn(expectedResponse);
+        given(getOrderService.search(any(Pageable.class), any(Condition.class))).willReturn(expectedResponse);
 
         //when, then
         mockMvc.perform(get("/orders")
