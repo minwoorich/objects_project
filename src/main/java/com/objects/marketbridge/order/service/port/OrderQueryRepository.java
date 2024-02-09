@@ -2,12 +2,9 @@ package com.objects.marketbridge.order.service.port;
 
 
 import com.objects.marketbridge.order.domain.Order;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
-
-import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
 
 public interface OrderQueryRepository {
 

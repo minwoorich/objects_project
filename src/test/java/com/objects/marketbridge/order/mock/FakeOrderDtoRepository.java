@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
@@ -72,6 +72,12 @@ public class FakeOrderDtoRepository extends BaseFakeOrderRepository implements O
 
     @Override
     public Page<OrderDtio> findAllPaged(GetOrderHttp.Condition condition, Pageable pageable) {
+        // TODO : 구현해야함 - 민우
+        return null;
+    }
+
+    @Override
+    public OrderDtio findByOrderNo(String orderNo) {
         // TODO : 구현해야함 - 민우
         return null;
     }

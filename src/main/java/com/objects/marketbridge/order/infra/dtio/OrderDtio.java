@@ -22,11 +22,13 @@ public class OrderDtio {
     private Long totalPrice; // 총 금액
     private Long realPrice; // 실 결제 금액
     private LocalDateTime createdAt; // 주문 생성 시간
+    private String paymentMethod;
+    private String cardIssuerName;
 
     private List<OrderDetailDtio> orderDetails;
 
     @Builder
-    private OrderDtio(Long memberId, AddressValue address, String orderName, String orderNo, Long totalDiscount, Long totalPrice, Long realPrice, LocalDateTime createdAt, List<OrderDetailDtio> orderDetails) {
+    private OrderDtio(Long memberId, AddressValue address, String orderName, String orderNo, Long totalDiscount, Long totalPrice, Long realPrice, LocalDateTime createdAt, String paymentMethod, String cardIssuerName, List<OrderDetailDtio> orderDetails) {
         this.memberId = memberId;
         this.address = address;
         this.orderName = orderName;
@@ -35,6 +37,8 @@ public class OrderDtio {
         this.totalPrice = totalPrice;
         this.realPrice = realPrice;
         this.createdAt = createdAt;
+        this.paymentMethod = paymentMethod;
+        this.cardIssuerName = cardIssuerName;
         this.orderDetails = orderDetails;
     }
 
@@ -48,6 +52,8 @@ public class OrderDtio {
                 .totalPrice(order.getTotalPrice())
                 .realPrice(order.getRealPrice())
                 .createdAt(order.getCreatedAt())
+                .paymentMethod(order.getPayment().getPaymentMethod())
+                .cardIssuerName(order.getPayment().getCardInfo().getCardIssuerName())
                 .orderDetails(order.getOrderDetails().stream().map(OrderDetailDtio::of).collect(Collectors.toList()))
                 .build();
     }

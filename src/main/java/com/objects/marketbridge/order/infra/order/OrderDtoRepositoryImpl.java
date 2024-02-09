@@ -7,6 +7,7 @@ import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_OrderDetailInfo;
 import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_Response;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
+import com.objects.marketbridge.payment.domain.QPayment;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -27,11 +28,12 @@ import java.util.stream.Collectors;
 
 import static com.objects.marketbridge.member.domain.QAddress.address;
 import static com.objects.marketbridge.member.domain.QMember.member;
-import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
+import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Condition;
 import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;
 import static com.objects.marketbridge.order.domain.StatusCodeType.RETURN_COMPLETED;
+import static com.objects.marketbridge.payment.domain.QPayment.payment;
 import static com.objects.marketbridge.product.domain.QProduct.product;
 import static com.querydsl.core.types.ExpressionUtils.count;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
@@ -204,5 +206,29 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
 
     private BooleanExpression eqMemberId(Long memberId) {
         return order.member.id.eq(memberId);
+    }
+
+    private BooleanExpression eqOrderNo(String orderNo) {
+        return order.orderNo.eq(orderNo);
+    }
+
+    @Override
+    public OrderDtio findByOrderNo(String orderNo) {
+        Order orderEntity = queryFactory
+                .selectFrom(order)
+                .innerJoin(order.address, address)
+                .innerJoin(order.member, member)
+                .innerJoin(order.payment, payment).fetchJoin()
+                .innerJoin(order.orderDetails, orderDetail).fetchJoin()
+                .innerJoin(orderDetail.product, product).fetchJoin()
+                .where(
+                        eqOrderNo(orderNo)
+                )
+                .fetchOne();
+
+        // 엔티티 -> dto 로 변환
+        assert orderEntity != null;
+
+        return OrderDtio.of(orderEntity);
     }
 }

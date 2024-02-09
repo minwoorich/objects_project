@@ -1,4 +1,4 @@
-package com.objects.marketbridge.order.controller.dto;
+package com.objects.marketbridge.order.controller.dto.select;
 
 import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import lombok.Builder;
@@ -31,7 +31,6 @@ public class GetOrderHttp {
                     .orderInfos(orderInfos)
                     .build();
         }
-
     }
 
     @Getter
