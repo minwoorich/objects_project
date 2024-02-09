@@ -10,7 +10,8 @@ import com.objects.marketbridge.order.controller.OrderController;
 import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
 import com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response;
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response.OrderInfo.OrderDetailInfo;
+import com.objects.marketbridge.order.controller.dto.OrderDetailInfo;
+import com.objects.marketbridge.order.controller.dto.OrderInfo;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
@@ -39,7 +40,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Condition;
-import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response.OrderInfo;
 import static com.objects.marketbridge.order.controller.dto.GetOrderHttp.Response.create;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -247,11 +247,14 @@ public class OrderControllerRestDocsTest  {
     void getOrders() throws Exception {
 
         // given
-        Response response = create(createOrderInfos(createOrderDetailInfos()));
+        List<OrderDetailInfo> orderDetailInfos = createOrderDetailInfos();
+        List<OrderInfo> orderInfos = createOrderInfos(orderDetailInfos);
+        Response response = create(orderInfos);
+
         given(getOrderService.search(PageRequest.of(0, 10), Condition.builder().build())).willReturn(response);
 
 
-        // when
+        //then, when
         mockMvc.perform(get("/orders")
                         .param("page", "0")
                         .param("size", "10")
@@ -263,13 +266,13 @@ public class OrderControllerRestDocsTest  {
                 .andDo(print())
                 .andDo(document("order-list",
                                 preprocessResponse(prettyPrint()),
-//                                queryParameters(
-//                                    parameterWithName("page").description("페이지 번호"),
-//                                    parameterWithName("size").description("페이지 사이즈"),
-//                                    parameterWithName("sort").description("정렬기준,정렬순서"),
-//                                    parameterWithName("year").description("연도"),
-//                                    parameterWithName("keyword").description("검색 키워드")
-//                                ),
+                                queryParameters(
+                                    parameterWithName("page").description("페이지 번호"),
+                                    parameterWithName("size").description("페이지 사이즈"),
+                                    parameterWithName("sort").description("정렬기준,정렬순서"),
+                                    parameterWithName("year").description("연도"),
+                                    parameterWithName("keyword").description("검색 키워드")
+                                ),
                                 responseFields(
                                         fieldWithPath("code").type(JsonFieldType.NUMBER)
                                                 .description("응답 코드"),
@@ -279,23 +282,27 @@ public class OrderControllerRestDocsTest  {
                                                 .description("메시지"),
                                         fieldWithPath("data").type(JsonFieldType.OBJECT)
                                                 .description("응답 데이터"),
+
                                         fieldWithPath("data.orderInfos").type(JsonFieldType.ARRAY)
                                                 .description("주문 리스트"),
-
+                                        fieldWithPath("data.orderInfos[]").type(JsonFieldType.ARRAY)
+                                                .description("주문 리스트"),
                                         fieldWithPath("data.orderInfos[].orderNo").type(JsonFieldType.STRING)
                                                 .description("주문 번호"),
                                         fieldWithPath("data.orderInfos[].createdAt").type(JsonFieldType.STRING)
                                                 .description("주문 생성 일자"),
+
                                         fieldWithPath("data.orderInfos[].orderDetailInfos").type(JsonFieldType.ARRAY)
                                                 .description("상세 주문 리스트"),
-
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[]").type(JsonFieldType.ARRAY)
+                                                .description("상세 주문 리스트"),
                                         fieldWithPath("data.orderInfos[].orderDetailInfos[].orderDetailId").type(JsonFieldType.NUMBER)
                                                 .description("상세 주문 아이디(PK)"),
-                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].productId").type(JsonFieldType.STRING)
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].productId").type(JsonFieldType.NUMBER)
                                                 .description("상품 아이디(PK)"),
-                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].quantity").type(JsonFieldType.STRING)
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].quantity").type(JsonFieldType.NUMBER)
                                                 .description("상품 수량"),
-                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].price").type(JsonFieldType.STRING)
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].price").type(JsonFieldType.NUMBER)
                                                 .description("(1개당) 상품 가격"),
                                         fieldWithPath("data.orderInfos[].orderDetailInfos[].statusCode").type(JsonFieldType.STRING)
                                                 .description("주문 상태"),
@@ -308,9 +315,6 @@ public class OrderControllerRestDocsTest  {
                                         fieldWithPath("data.orderInfos[].orderDetailInfos[].isOwn").type(JsonFieldType.BOOLEAN)
                                                 .description("마켓브릿지 상품인지 입점 판매자 상품인지 구분하는 값")
                                 )));
-
-
-        //then
 
     }
 
