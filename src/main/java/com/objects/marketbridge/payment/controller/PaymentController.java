@@ -2,6 +2,7 @@ package com.objects.marketbridge.payment.controller;
 
 import com.objects.marketbridge.common.dto.KakaoPayApproveRequest;
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
+import com.objects.marketbridge.common.dto.KakaoPayOrderRequest;
 import com.objects.marketbridge.common.dto.KakaoPayOrderResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
@@ -9,7 +10,6 @@ import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.controller.dto.CompleteOrderHttp;
 import com.objects.marketbridge.payment.service.CreatePaymentService;
-import com.objects.marketbridge.payment.service.QuitPaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,24 +43,23 @@ public class PaymentController {
         return ApiResponse.ok(response);
     }
 
-//    @GetMapping("/payment/kakao-pay/fail/{orderNo}")
-//    public ApiResponse<?> kakaoPaymentFail(@PathVariable(name = "orderNo") String orderNo){
-//
-//        Order order = orderQueryRepository.findByOrderNo(orderNo);
-//
-//        KakaoPayOrderResponse response = kakaoPayService.getOrders(order.getTid(), ONE_TIME_CID);
-//        if ("FAIL_PAYMENT".equals(response.getStatus())) {
-//            // TODO : quitPaymentService 구현
-//            quitPaymentService.cancel(response);
-//        }
-//        return null;
-//    }
-    @GetMapping("/payment/kakao-pay/fail/{orderNo}")
+    @GetMapping("/kakao-pay/fail/{orderNo}")
     public ApiResponse<KakaoPayOrderResponse> kakaoPaymentFail(@PathVariable(name = "orderNo") String orderNo){
 
         Order order = orderQueryRepository.findByOrderNo(orderNo);
-        KakaoPayOrderResponse response = kakaoPayService.getOrders(order.getTid(), ONE_TIME_CID);
+        KakaoPayOrderRequest kakaoPayOrderRequest = KakaoPayOrderRequest.create(ONE_TIME_CID, order.getTid());
+        KakaoPayOrderResponse response = kakaoPayService.getOrders(kakaoPayOrderRequest);
         // TODO : 조회 후 status가 FAIL_PAYMENT 일 경우 후처리 로직 만들어야함
+
+        return ApiResponse.ok(response);
+    }
+
+    @GetMapping("/kakao-pay/cancel/{orderNo}")
+    public ApiResponse<KakaoPayOrderResponse> kakaoPaymentCancel(@PathVariable(name = "orderNo") String orderNo){
+
+        Order order = orderQueryRepository.findByOrderNo(orderNo);
+        KakaoPayOrderRequest kakaoPayOrderRequest = KakaoPayOrderRequest.create(ONE_TIME_CID, order.getTid());
+        KakaoPayOrderResponse response = kakaoPayService.getOrders(kakaoPayOrderRequest);
 
         return ApiResponse.ok(response);
     }
