@@ -19,20 +19,17 @@ public class OrderDetailDtio {
     private String orderNo;
     private Long price;
     private String statusCode;
-    private LocalDateTime deliveredDate;
-    private Long sellerId;
+//    private LocalDateTime deliveredDate;
     private LocalDateTime cancelledAt;
 
     @Builder
-    public OrderDetailDtio(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime deliveredDate, Long sellerId, LocalDateTime cancelledAt) {
+    public OrderDetailDtio(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime cancelledAt) {
         this.orderDetailId = orderDetailId;
         this.product = product;
         this.quantity = quantity;
         this.orderNo = orderNo;
         this.price = price;
         this.statusCode = statusCode;
-        this.deliveredDate = deliveredDate;
-        this.sellerId = sellerId;
         this.cancelledAt = cancelledAt;
     }
 
@@ -43,14 +40,12 @@ public class OrderDetailDtio {
                 .orderNo(orderDetail.getOrderNo())
                 .price(orderDetail.getPrice())
                 .statusCode(orderDetail.getStatusCode())
-                .deliveredDate(orderDetail.getDeliveredDate())
-                .sellerId(orderDetail.getSellerId())
                 .cancelledAt(orderDetail.getCancelledAt())
                 .product(ProductDto.of(orderDetail.getProduct()))
                 .build();
     }
 
-    public static OrderDetailDtio create(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime deliveredDate, Long sellerId, LocalDateTime cancelledAt) {
+    public static OrderDetailDtio create(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode,   LocalDateTime cancelledAt) {
         return OrderDetailDtio.builder()
                 .orderDetailId(orderDetailId)
                 .product(product)
@@ -58,8 +53,6 @@ public class OrderDetailDtio {
                 .orderNo(orderNo)
                 .price(price)
                 .statusCode(statusCode)
-                .deliveredDate(deliveredDate)
-                .sellerId(sellerId)
                 .cancelledAt(cancelledAt)
                 .build();
 

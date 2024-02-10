@@ -3,8 +3,13 @@ package com.objects.marketbridge.order.controller.dto.select;
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class GetOrderDetailHttp {
+
+    @Getter
+    @NoArgsConstructor
     public static class Response{
         private OrderInfo orderInfo;
         private AddressValue addressValue;

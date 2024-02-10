@@ -5,10 +5,12 @@ import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MembershipType;
 import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderDetailHttp;
 import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.StatusCodeType;
+import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.payment.domain.Amount;
@@ -166,4 +168,22 @@ class GetOrderServiceTest {
         assertThat(response2.getOrderInfos()).hasSize(2);
         assertThat(response3.getOrderInfos()).hasSize(0);
     }
+
+    @DisplayName("상세 주문 조회")
+    @Test
+    void getOrderDetails(){
+        //given
+        String orderNo = "orderNo1";
+
+        //when
+        GetOrderDetailHttp.Response response = getOrderService.getOrderDetails(orderNo);
+
+        //then
+        assertThat(response.getOrderInfo().getOrderNo()).isEqualTo(orderNo);
+        assertThat(response.getOrderInfo().getOrderDetailInfos()).hasSize(3);
+        assertThat(response.getOrderInfo().getOrderDetailInfos().get(0).getProductName()).isEqualTo("상품1");
+        assertThat(response.getAddressValue().getCity()).isEqualTo("서울");
+        assertThat(response.getPaymentInfo().getCardIssuerName()).isEqualTo("카카오뱅크");
+    }
+
 }

@@ -76,7 +76,6 @@ public class OrderInfo {
                     .quantity(orderDetailDtio.getQuantity())
                     .price(orderDetailDtio.getPrice())
                     .statusCode(orderDetailDtio.getStatusCode())
-                    .deliveredDate(orderDetailDtio.getDeliveredDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                     .productThumbImageUrl(orderDetailDtio.getProduct().getThumbImg())
                     .productName(orderDetailDtio.getProduct().getName())
                     .isOwn(orderDetailDtio.getProduct().getIsOwn())
