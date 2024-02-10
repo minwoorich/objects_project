@@ -26,4 +26,12 @@ public class Amount {
         this.discountAmount = discountAmount;
         this.taxFreeAmount=taxFreeAmount;
     }
+
+    public static Amount create(Long totalAmount, Long discountAmount, Long taxFreeAmount) {
+        return Amount.builder()
+                .totalAmount(totalAmount)
+                .discountAmount(discountAmount)
+                .taxFreeAmount(taxFreeAmount)
+                .build();
+    }
 }
