@@ -1,6 +1,7 @@
 package com.objects.marketbridge.order.infra.dtio;
 
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.product.domain.Product;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,6 +50,21 @@ public class OrderDetailDtio {
                 .build();
     }
 
+    public static OrderDetailDtio create(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime deliveredDate, Long sellerId, LocalDateTime cancelledAt) {
+        return OrderDetailDtio.builder()
+                .orderDetailId(orderDetailId)
+                .product(product)
+                .quantity(quantity)
+                .orderNo(orderNo)
+                .price(price)
+                .statusCode(statusCode)
+                .deliveredDate(deliveredDate)
+                .sellerId(sellerId)
+                .cancelledAt(cancelledAt)
+                .build();
+
+    }
+
     @Getter
     @NoArgsConstructor
     public static class ProductDto{
@@ -82,6 +98,18 @@ public class OrderDetailDtio {
                     .productNo(product.getProductNo())
                     .build();
 
+        }
+
+        public static ProductDto create(Long productId, String optionName, Boolean isOwn, String name, Long price, String thumbImg, String productNo) {
+            return ProductDto.builder()
+                    .productId(productId)
+                    .optionName(optionName)
+                    .isOwn(isOwn)
+                    .name(name)
+                    .price(price)
+                    .thumbImg(thumbImg)
+                    .productNo(productNo)
+                    .build();
         }
     }
 }

@@ -30,4 +30,16 @@ public class AddressValue {
         this.detail = detail;
         this.alias = alias;
     }
+
+    public static AddressValue create(String phoneNo, String name, String city, String street, String zipcode, String detail, String alias) {
+        return AddressValue.builder()
+                .phoneNo(phoneNo)
+                .name(name)
+                .city(city)
+                .street(street)
+                .zipcode(zipcode)
+                .detail(detail)
+                .alias(alias)
+                .build();
+    }
 }
