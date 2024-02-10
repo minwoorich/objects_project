@@ -44,7 +44,7 @@ public class PaymentController {
     }
 
     @GetMapping("/kakao-pay/fail/{orderNo}")
-    public ApiResponse<KakaoPayOrderResponse> kakaoPaymentFail(@PathVariable(name = "orderNo") String orderNo){
+    public ApiResponse<KakaoPayOrderResponse> kakaoPaymentApproveFail(@PathVariable(name = "orderNo") String orderNo){
 
         Order order = orderQueryRepository.findByOrderNo(orderNo);
         KakaoPayOrderRequest kakaoPayOrderRequest = KakaoPayOrderRequest.create(ONE_TIME_CID, order.getTid());
@@ -55,7 +55,7 @@ public class PaymentController {
     }
 
     @GetMapping("/kakao-pay/cancel/{orderNo}")
-    public ApiResponse<KakaoPayOrderResponse> kakaoPaymentCancel(@PathVariable(name = "orderNo") String orderNo){
+    public ApiResponse<KakaoPayOrderResponse> kakaoPaymentApproveCancel(@PathVariable(name = "orderNo") String orderNo){
 
         Order order = orderQueryRepository.findByOrderNo(orderNo);
         KakaoPayOrderRequest kakaoPayOrderRequest = KakaoPayOrderRequest.create(ONE_TIME_CID, order.getTid());
