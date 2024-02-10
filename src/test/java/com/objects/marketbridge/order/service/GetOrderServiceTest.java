@@ -9,8 +9,6 @@ import com.objects.marketbridge.order.controller.dto.select.GetOrderDetailHttp;
 import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.domain.StatusCodeType;
-import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.payment.domain.Amount;
@@ -19,7 +17,6 @@ import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,8 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.*;
-import static org.assertj.core.api.Assertions.*;
+import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
