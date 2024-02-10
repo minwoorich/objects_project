@@ -57,10 +57,10 @@ public class CategoryDto {
     private Long parentId;
     private Long level;
     private String name;
-    private List<?> childCategories;
+    private List<CategoryDto> childCategories;
 
     @Builder
-    public CategoryDto(Long id, Long parentId, Long level, String name, List<Category> childCategories) {
+    public CategoryDto(Long id, Long parentId, Long level, String name, List<CategoryDto> childCategories) {
         this.id = id;
         this.parentId = parentId != null ? parentId : 0L;
         this.level = level;
