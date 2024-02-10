@@ -96,8 +96,7 @@ public class OrderController {
     @UserAuthorize
     @GetMapping("/orders/{orderNo}")
     public ApiResponse<GetOrderDetailHttp.Response> getOrderDetails(
-            @PathVariable(name = "orderNo") String orderNo
-    ){
+            @PathVariable(name = "orderNo") String orderNo){
         GetOrderDetailHttp.Response orderDetail = getOrderService.getOrderDetails(orderNo);
         return ApiResponse.ok(orderDetail);
     }
