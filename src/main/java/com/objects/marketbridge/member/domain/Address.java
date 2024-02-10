@@ -1,8 +1,5 @@
 package com.objects.marketbridge.member.domain;
 
-import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.member.domain.BaseEntity;
-import com.objects.marketbridge.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,5 +40,13 @@ public class Address extends BaseEntity {
         }
         this.member = member;
         member.getAddresses().add(this);
+    }
+
+    // 비즈니스 로직
+    public static Address create(AddressValue addressValue, Boolean isDefault) {
+        return Address.builder()
+                .addressValue(addressValue)
+                .isDefault(isDefault)
+                .build();
     }
 }
