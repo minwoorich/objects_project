@@ -34,6 +34,7 @@ class GetCancelDetailDtoTest {
         ReflectionTestUtils.setField(product, "id", 1L, Long.class);
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .orderNo("1")
                 .product(product)
                 .reason("단순변심")
@@ -76,6 +77,7 @@ class GetCancelDetailDtoTest {
         ReflectionTestUtils.setField(product, "id", 1L, Long.class);
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .orderNo("1")
                 .product(product)
                 .reason("단순변심")
@@ -127,6 +129,7 @@ class GetCancelDetailDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
                 .product(product)
@@ -179,6 +182,7 @@ class GetCancelDetailDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
                 .product(product)
@@ -216,7 +220,9 @@ class GetCancelDetailDtoTest {
                 .productNo("1")
                 .build();
         ReflectionTestUtils.setField(product, "id", 1L, Long.class);
+
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .product(product)
                 .price(product.getPrice())
                 .quantity(2L)
@@ -245,6 +251,7 @@ class GetCancelDetailDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .memberCoupon(memberCoupon)
                 .price(1000L)
                 .quantity(1L)
@@ -275,6 +282,7 @@ class GetCancelDetailDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .memberCoupon(memberCoupon)
                 .price(1000L)
                 .quantity(1L)
@@ -297,6 +305,7 @@ class GetCancelDetailDtoTest {
         String memberShip = BASIC.getText();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .price(1000L)
                 .quantity(1L)
                 .build();
@@ -318,6 +327,7 @@ class GetCancelDetailDtoTest {
         String memberShip = WOW.getText();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .price(1000L)
                 .quantity(1L)
                 .build();

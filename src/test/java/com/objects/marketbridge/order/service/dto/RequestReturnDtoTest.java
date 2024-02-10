@@ -28,6 +28,7 @@ class RequestReturnDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .quantity(3L)
@@ -61,6 +62,7 @@ class RequestReturnDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .quantity(3L)
@@ -94,6 +96,7 @@ class RequestReturnDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .quantity(3L)
@@ -123,6 +126,7 @@ class RequestReturnDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .quantity(3L)
@@ -147,6 +151,7 @@ class RequestReturnDtoTest {
         String memberShip = MembershipType.BASIC.getText();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .price(1000L)
                 .quantity(3L)
                 .build();
@@ -169,6 +174,7 @@ class RequestReturnDtoTest {
         String memberShip = MembershipType.WOW.getText();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .price(1000L)
                 .quantity(3L)
                 .build();
@@ -191,6 +197,7 @@ class RequestReturnDtoTest {
         String memberShip = MembershipType.WOW.getText();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .quantity(3L)
                 .build();
 

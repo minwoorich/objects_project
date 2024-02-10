@@ -138,7 +138,6 @@ class OrderDtoRepositoryTest {
                 .build();
     }
 
-    @Disabled
     @DisplayName("전체 주문 목록을 조회 할 경우 페이징이 가능하다")
     @Test
     void findByMemberIdWithMemberAddress_paging(){
@@ -220,6 +219,7 @@ class OrderDtoRepositoryTest {
         return OrderDetail.builder()
                 .product(product)
                 .quantity(quantity)
+                .reducedQuantity(0L)
                 .price(product.getPrice() * quantity)
                 .orderNo(orderNo)
                 .build();

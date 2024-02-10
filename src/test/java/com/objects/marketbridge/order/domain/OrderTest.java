@@ -225,21 +225,25 @@ class OrderTest {
                 .price(1000L)
                 .quantity(1L)
                 .sellerId(1L)
+                .reducedQuantity(0L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
                 .price(1000L)
                 .quantity(2L)
                 .sellerId(1L)
+                .reducedQuantity(0L)
                 .build();
         OrderDetail orderDetail3 = OrderDetail.builder()
                 .price(1000L)
                 .quantity(2L)
                 .sellerId(2L)
+                .reducedQuantity(0L)
                 .build();
         OrderDetail orderDetail4 = OrderDetail.builder()
                 .price(1000L)
                 .quantity(3L)
                 .sellerId(3L)
+                .reducedQuantity(0L)
                 .build();
         return List.of(orderDetail1, orderDetail2, orderDetail3, orderDetail4);
     }

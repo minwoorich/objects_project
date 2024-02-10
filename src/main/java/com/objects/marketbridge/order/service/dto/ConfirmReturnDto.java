@@ -8,20 +8,20 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-public class ConfirmCancelDto {
+public class ConfirmReturnDto {
 
     @Getter
     @NoArgsConstructor
     public static class Request {
 
         private Long orderDetailId;
-        private Long numberOfCancellation;
+        private Long numberOfReturns;
         private String reason;
 
         @Builder
-        private Request(Long orderDetailId, Long numberOfCancellation, String reason) {
+        private Request(Long orderDetailId, Long numberOfReturns, String reason) {
             this.orderDetailId = orderDetailId;
-            this.numberOfCancellation = numberOfCancellation;
+            this.numberOfReturns = numberOfReturns;
             this.reason = reason;
         }
     }
@@ -33,18 +33,18 @@ public class ConfirmCancelDto {
         private Long orderId;
         private String orderNo;
         private Long totalPrice;
-        private LocalDateTime cancellationDate; // 주문 취소 일자
-        private ProductInfo cancelledItem;
+        private LocalDateTime returnedDate; // 주문 취소 일자
+        private ProductInfo returnedItem;
         private RefundInfo refundInfo;
 
         @Builder
-        private Response(Long orderId, String orderNo, Long totalPrice, LocalDateTime cancellationDate, RefundInfo refundInfo, ProductInfo cancelledItem) {
+        private Response(Long orderId, String orderNo, Long totalPrice, LocalDateTime returnedDate, RefundInfo refundInfo, ProductInfo returnedItem) {
             this.orderId = orderId;
             this.orderNo = orderNo;
             this.totalPrice = totalPrice;
-            this.cancellationDate = cancellationDate;
+            this.returnedDate = returnedDate;
             this.refundInfo = refundInfo;
-            this.cancelledItem = cancelledItem;
+            this.returnedItem = returnedItem;
         }
 
         public static Response of(OrderDetail orderDetail, RefundDto refundDto) {
@@ -52,9 +52,9 @@ public class ConfirmCancelDto {
                     .orderId(orderDetail.getOrder().getId())
                     .orderNo(orderDetail.getOrderNo())
                     .totalPrice(Long.valueOf(orderDetail.cancelAmount()))
-                    .cancellationDate(orderDetail.getCancelledAt())
+                    .returnedDate(orderDetail.getCancelledAt())
                     .refundInfo(RefundInfo.of(refundDto))
-                    .cancelledItem(ProductInfo.of(orderDetail))
+                    .returnedItem(ProductInfo.of(orderDetail))
                     .build();
         }
     }
@@ -112,5 +112,4 @@ public class ConfirmCancelDto {
                     .build();
         }
     }
-
 }

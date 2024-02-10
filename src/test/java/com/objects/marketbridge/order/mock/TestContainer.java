@@ -2,8 +2,12 @@ package com.objects.marketbridge.order.mock;
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.order.controller.OrderCancelController;
 import com.objects.marketbridge.order.controller.OrderCancelReturnController;
+import com.objects.marketbridge.order.controller.OrderReturnController;
 import com.objects.marketbridge.order.service.OrderCancelReturnService;
+import com.objects.marketbridge.order.service.OrderCancelService;
+import com.objects.marketbridge.order.service.OrderReturnService;
 import com.objects.marketbridge.order.service.port.*;
 import com.objects.marketbridge.payment.service.port.RefundClient;
 import com.objects.marketbridge.product.infra.CouponRepository;
@@ -14,8 +18,11 @@ import lombok.Builder;
 public class TestContainer {
 
     public final OrderCancelReturnController orderCancelReturnController;
+    public final OrderCancelController orderCancelController;
+    public final OrderReturnController orderReturnController;
 
-    public final OrderCancelReturnService orderCancelReturnService;
+    public final OrderCancelService orderCancelService;
+    public final OrderReturnService orderReturnService;
 
     public final OrderQueryRepository orderQueryRepository;
     public final OrderCommendRepository orderCommendRepository;
@@ -45,22 +52,32 @@ public class TestContainer {
         this.refundClient = new FakeRefundClient(dateTimeHolder);
 
         // Service
-        this.orderCancelReturnService = OrderCancelReturnService.builder()
-                .dateTimeHolder(dateTimeHolder)
+        this.orderCancelService = OrderCancelService.builder()
                 .orderDetailQueryRepository(this.orderDetailQueryRepository)
-                .orderQueryRepository(this.orderQueryRepository)
-                .productRepository(this.productRepository)
-                .refundClient(this.refundClient)
-                .orderCommendRepository(this.orderCommendRepository)
                 .orderDetailCommendRepository(this.orderDetailCommendRepository)
+                .refundClient(this.refundClient)
+                .dateTimeHolder(dateTimeHolder)
+                .build();
+        this.orderReturnService = OrderReturnService.builder()
+                .orderDetailQueryRepository(this.orderDetailQueryRepository)
+                .orderDetailCommendRepository(this.orderDetailCommendRepository)
+                .refundClient(this.refundClient)
+                .dateTimeHolder(dateTimeHolder)
                 .build();
 
         // Controller
         this.orderCancelReturnController = OrderCancelReturnController.builder()
-                .dateTimeHolder(dateTimeHolder)
-                .orderCancelReturnService(this.orderCancelReturnService)
                 .orderDetailDtoRepository(this.orderDetailDtoRepository)
+                .build();
+        this.orderCancelController = OrderCancelController.builder()
+                .orderCancelService(this.orderCancelService)
                 .memberRepository(this.memberRepository)
+                .dateTimeHolder(dateTimeHolder)
+                .build();
+        this.orderReturnController = OrderReturnController.builder()
+                .orderReturnService(this.orderReturnService)
+                .memberRepository(this.memberRepository)
+                .dateTimeHolder(dateTimeHolder)
                 .build();
 
     }

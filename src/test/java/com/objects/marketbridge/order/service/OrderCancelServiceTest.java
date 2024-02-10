@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-class OrderCancelReturnServiceTest {
+class OrderCancelServiceTest {
 
     private LocalDateTime orderDate = LocalDateTime.of(2024, 2, 9, 3, 9);
     private TestContainer testContainer = TestContainer.builder()
@@ -58,7 +58,7 @@ class OrderCancelReturnServiceTest {
                 .build();
 
         // when // then
-        assertThatThrownBy(() -> testContainer.orderCancelReturnService.confirmCancelReturn(request, dateTimeHolder))
+        assertThatThrownBy(() -> testContainer.orderCancelService.confirmCancel(request, dateTimeHolder))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("엔티티가 존재하지 않습니다");
     }
@@ -85,7 +85,7 @@ class OrderCancelReturnServiceTest {
         testContainer.orderDetailCommendRepository.save(orderDetail);
 
         // when // then
-        assertThatThrownBy(() -> testContainer.orderCancelReturnService.confirmCancelReturn(request, dateTimeHolder))
+        assertThatThrownBy(() -> testContainer.orderCancelService.confirmCancel(request, dateTimeHolder))
                 .isInstanceOf(CustomLogicException.class)
                 .hasMessage("취소가 불가능한 상품입니다.")
                 .satisfies(exception -> {
@@ -113,13 +113,14 @@ class OrderCancelReturnServiceTest {
 
         OrderDetail orderDetail = OrderDetail.builder()
                 .quantity(1L)
+                .reducedQuantity(0L)
                 .statusCode(ORDER_RECEIVED.getCode())
                 .build();
 
         testContainer.orderDetailCommendRepository.save(orderDetail);
 
         // when // then
-        assertThatThrownBy(() -> testContainer.orderCancelReturnService.confirmCancelReturn(request, dateTimeHolder))
+        assertThatThrownBy(() -> testContainer.orderCancelService.confirmCancel(request, dateTimeHolder))
                 .isInstanceOf(CustomLogicException.class)
                 .hasMessage("수량이 초과 되었습니다.")
                 .satisfies(exception -> {
@@ -143,6 +144,7 @@ class OrderCancelReturnServiceTest {
                 .quantity(10L)
                 .product(product)
                 .price(1000L)
+                .reducedQuantity(0L)
                 .statusCode(ORDER_RECEIVED.getCode())
                 .build();
 
@@ -154,7 +156,7 @@ class OrderCancelReturnServiceTest {
         String membership = WOW.getText();
 
         // when
-        RequestCancelDto.Response result = testContainer.orderCancelReturnService.findCancelInfo(orderDetailId, numberOfCancellation, membership);
+        RequestCancelDto.Response result = testContainer.orderCancelService.findCancelInfo(orderDetailId, numberOfCancellation, membership);
         RequestCancelDto.CancelRefundInfo cancelRefundInfo = result.getCancelRefundInfo();
         RequestCancelDto.ProductInfo productInfo = result.getProductInfo();
 
@@ -183,6 +185,7 @@ class OrderCancelReturnServiceTest {
                 .quantity(10L)
                 .product(product)
                 .price(1000L)
+                .reducedQuantity(0L)
                 .statusCode(ORDER_RECEIVED.getCode())
                 .build();
 
@@ -194,7 +197,7 @@ class OrderCancelReturnServiceTest {
         String membership = BASIC.getText();
 
         // when
-        RequestCancelDto.Response result = testContainer.orderCancelReturnService.findCancelInfo(orderDetailId, numberOfCancellation, membership);
+        RequestCancelDto.Response result = testContainer.orderCancelService.findCancelInfo(orderDetailId, numberOfCancellation, membership);
         RequestCancelDto.CancelRefundInfo cancelRefundInfo = result.getCancelRefundInfo();
         RequestCancelDto.ProductInfo productInfo = result.getProductInfo();
 
@@ -231,6 +234,7 @@ class OrderCancelReturnServiceTest {
         OrderDetail orderDetail = OrderDetail.builder()
                 .memberCoupon(memberCoupon)
                 .quantity(10L)
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .statusCode(ORDER_RECEIVED.getCode())
@@ -244,7 +248,7 @@ class OrderCancelReturnServiceTest {
         String membership = WOW.getText();
 
         // when
-        RequestCancelDto.Response result = testContainer.orderCancelReturnService.findCancelInfo(orderDetailId, numberOfCancellation, membership);
+        RequestCancelDto.Response result = testContainer.orderCancelService.findCancelInfo(orderDetailId, numberOfCancellation, membership);
         RequestCancelDto.CancelRefundInfo cancelRefundInfo = result.getCancelRefundInfo();
         RequestCancelDto.ProductInfo productInfo = result.getProductInfo();
 
@@ -282,6 +286,7 @@ class OrderCancelReturnServiceTest {
                 .memberCoupon(memberCoupon)
                 .quantity(10L)
                 .product(product)
+                .reducedQuantity(0L)
                 .price(1000L)
                 .statusCode(ORDER_RECEIVED.getCode())
                 .build();
@@ -294,7 +299,7 @@ class OrderCancelReturnServiceTest {
         String membership = BASIC.getText();
 
         // when
-        RequestCancelDto.Response result = testContainer.orderCancelReturnService.findCancelInfo(orderDetailId, numberOfCancellation, membership);
+        RequestCancelDto.Response result = testContainer.orderCancelService.findCancelInfo(orderDetailId, numberOfCancellation, membership);
         RequestCancelDto.CancelRefundInfo cancelRefundInfo = result.getCancelRefundInfo();
         RequestCancelDto.ProductInfo productInfo = result.getProductInfo();
 
@@ -319,7 +324,7 @@ class OrderCancelReturnServiceTest {
         String membership = BASIC.getText();
 
         // when
-        assertThatThrownBy(() -> testContainer.orderCancelReturnService.findCancelInfo(orderDetailId, numberOfCancellation, membership))
+        assertThatThrownBy(() -> testContainer.orderCancelService.findCancelInfo(orderDetailId, numberOfCancellation, membership))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("엔티티가 존재하지 않습니다");
     }
@@ -348,137 +353,12 @@ class OrderCancelReturnServiceTest {
         String membership = BASIC.getText();
 
         // when
-        assertThatThrownBy(() -> testContainer.orderCancelReturnService.findCancelInfo(orderDetailId, numberOfCancellation, membership))
+        assertThatThrownBy(() -> testContainer.orderCancelService.findCancelInfo(orderDetailId, numberOfCancellation, membership))
                 .isInstanceOf(CustomLogicException.class)
                 .hasMessage("취소가 불가능한 상품입니다.")
                 .satisfies(exception -> {
                     CustomLogicException customLogicException = (CustomLogicException) exception;
                     assertThat(customLogicException.getErrorCode()).isEqualTo(NON_CANCELLABLE_PRODUCT);
-                });
-    }
-
-    @Test
-    @DisplayName("주문 취소 요청 (WOW)")
-    public void findReturnInfo_WOW() {
-        // given
-        Product product = Product.builder()
-                .name("빵빵이키링")
-                .thumbImg("빵빵이썸네일")
-                .build();
-
-        OrderDetail orderDetail = OrderDetail.builder()
-                .quantity(10L)
-                .product(product)
-                .price(1000L)
-                .statusCode(DELIVERY_COMPLETED.getCode())
-                .build();
-
-        testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
-
-        Long orderDetailId = 1L;
-        Long numberOfReturns = 2L;
-        String membership = WOW.getText();
-
-        // when
-        RequestReturnDto.Response result = testContainer.orderCancelReturnService.findReturnInfo(orderDetailId, numberOfReturns, membership);
-        RequestReturnDto.ReturnRefundInfo returnRefundInfo = result.getReturnRefundInfo();
-        RequestReturnDto.ProductInfo productInfo = result.getProductInfo();
-
-        // then
-        assertThat(returnRefundInfo.getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
-        assertThat(returnRefundInfo.getReturnFee()).isEqualTo(MemberShipPrice.WOW.getReturnFee());
-        assertThat(returnRefundInfo.getProductTotalPrice()).isEqualTo(2000L);
-
-        assertThat(productInfo.getQuantity()).isEqualTo(2L);
-        assertThat(productInfo.getName()).isEqualTo("빵빵이키링");
-        assertThat(productInfo.getPrice()).isEqualTo(1000L);
-        assertThat(productInfo.getImage()).isEqualTo("빵빵이썸네일");
-    }
-
-    @Test
-    @DisplayName("주문 반품 요청 (BASIC)")
-    public void findReturnInfo_BASIC() {
-        // given
-        Product product = Product.builder()
-                .name("빵빵이키링")
-                .thumbImg("빵빵이썸네일")
-                .build();
-
-        OrderDetail orderDetail = OrderDetail.builder()
-                .quantity(10L)
-                .product(product)
-                .price(1000L)
-                .statusCode(DELIVERY_COMPLETED.getCode())
-                .build();
-
-        testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
-
-        Long orderDetailId = 1L;
-        Long numberOfReturns = 2L;
-        String membership = BASIC.getText();
-
-        // when
-        RequestReturnDto.Response result = testContainer.orderCancelReturnService.findReturnInfo(orderDetailId, numberOfReturns, membership);
-        RequestReturnDto.ReturnRefundInfo returnRefundInfo = result.getReturnRefundInfo();
-        RequestReturnDto.ProductInfo productInfo = result.getProductInfo();
-
-        // then
-        assertThat(returnRefundInfo.getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
-        assertThat(returnRefundInfo.getReturnFee()).isEqualTo(MemberShipPrice.BASIC.getReturnFee());
-        assertThat(returnRefundInfo.getProductTotalPrice()).isEqualTo(2000L);
-
-        assertThat(productInfo.getQuantity()).isEqualTo(2L);
-        assertThat(productInfo.getName()).isEqualTo("빵빵이키링");
-        assertThat(productInfo.getPrice()).isEqualTo(1000L);
-        assertThat(productInfo.getImage()).isEqualTo("빵빵이썸네일");
-    }
-
-    @Test
-    @DisplayName("주문 상세가 없을 경우 에러가 발생한다.")
-    public void findReturnInfo_ENTITY_NOT_FOUND_ERROR() {
-        // given
-        Long orderDetailId = 1L;
-        Long numberOfCancellation = 2L;
-        String membership = BASIC.getText();
-
-        // when
-        assertThatThrownBy(() -> testContainer.orderCancelReturnService.findReturnInfo(orderDetailId, numberOfCancellation, membership))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("엔티티가 존재하지 않습니다");
-    }
-
-    @Test
-    @DisplayName("배송 완료된 상품은 취소가 불가능하다.")
-    public void findReturnInfo_NON_RETURNABLE_PRODUCT_ERROR() {
-        // given
-        Product product = Product.builder()
-                .name("빵빵이키링")
-                .thumbImg("빵빵이썸네일")
-                .build();
-
-        OrderDetail orderDetail = OrderDetail.builder()
-                .quantity(10L)
-                .product(product)
-                .price(1000L)
-                .statusCode(RELEASE_PENDING.getCode())
-                .build();
-
-        testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
-
-        Long orderDetailId = 1L;
-        Long numberOfCancellation = 2L;
-        String membership = BASIC.getText();
-
-        // when
-        assertThatThrownBy(() -> testContainer.orderCancelReturnService.findReturnInfo(orderDetailId, numberOfCancellation, membership))
-                .isInstanceOf(CustomLogicException.class)
-                .hasMessage("반품이 불가능한 상품입니다.")
-                .satisfies(exception -> {
-                    CustomLogicException customLogicException = (CustomLogicException) exception;
-                    assertThat(customLogicException.getErrorCode()).isEqualTo(NON_RETURNABLE_PRODUCT);
                 });
     }
 
@@ -497,6 +377,7 @@ class OrderCancelReturnServiceTest {
                 .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
@@ -509,7 +390,7 @@ class OrderCancelReturnServiceTest {
         String membership = WOW.getText();
 
         // when
-        GetCancelDetailDto.Response result = testContainer.orderCancelReturnService.findCancelDetail(orderDetailId, membership);
+        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderDetailId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -544,6 +425,7 @@ class OrderCancelReturnServiceTest {
                 .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
@@ -556,7 +438,7 @@ class OrderCancelReturnServiceTest {
         String membership = BASIC.getText();
 
         // when
-        GetCancelDetailDto.Response result = testContainer.orderCancelReturnService.findCancelDetail(orderDetailId, membership);
+        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderDetailId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -601,6 +483,7 @@ class OrderCancelReturnServiceTest {
                 .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
@@ -613,7 +496,7 @@ class OrderCancelReturnServiceTest {
         String membership = WOW.getText();
 
         // when
-        GetCancelDetailDto.Response result = testContainer.orderCancelReturnService.findCancelDetail(orderDetailId, membership);
+        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderDetailId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -658,6 +541,7 @@ class OrderCancelReturnServiceTest {
                 .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
@@ -670,7 +554,7 @@ class OrderCancelReturnServiceTest {
         String membership = BASIC.getText();
 
         // when
-        GetCancelDetailDto.Response result = testContainer.orderCancelReturnService.findCancelDetail(orderDetailId, membership);
+        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderDetailId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -698,7 +582,7 @@ class OrderCancelReturnServiceTest {
         String membership = BASIC.getText();
 
         // when
-        assertThatThrownBy(() -> testContainer.orderCancelReturnService.findCancelDetail(orderDetailId, membership))
+        assertThatThrownBy(() -> testContainer.orderCancelService.findCancelDetail(orderDetailId, membership))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("엔티티가 존재하지 않습니다");
     }

@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.NON_CANCELLABLE_PRODUCT;
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.QUANTITY_EXCEEDED;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -96,7 +95,7 @@ class OrderDetailTest {
     public void cancelAmount() {
         // given
         OrderDetail orderDetail = OrderDetail.builder()
-                .numberOfCancellations(2L)
+                .reducedQuantity(2L)
                 .price(1000L)
                 .build();
 
@@ -122,7 +121,7 @@ class OrderDetailTest {
 
         // when // then
         assertThatThrownBy(() -> orderDetail.cancel(null, null, dateTimeHolder))
-                .hasMessage("취소가 불가능한 상품입니다.")
+                .hasMessage(NON_CANCELLABLE_PRODUCT.getMessage())
                 .isInstanceOf(CustomLogicException.class)
                 .satisfies(exception -> {
                     CustomLogicException customLogicException = (CustomLogicException) exception;
@@ -147,7 +146,7 @@ class OrderDetailTest {
 
         // when // then
         assertThatThrownBy(() -> orderDetail.cancel(null, null, dateTimeHolder))
-                .hasMessage("취소가 불가능한 상품입니다.")
+                .hasMessage(NON_CANCELLABLE_PRODUCT.getMessage())
                 .isInstanceOf(CustomLogicException.class)
                 .satisfies(exception -> {
                     CustomLogicException customLogicException = (CustomLogicException) exception;
@@ -163,7 +162,7 @@ class OrderDetailTest {
         // given
         OrderDetail orderDetail = OrderDetail.builder()
                 .quantity(5L)
-                .numberOfCancellations(4L)
+                .reducedQuantity(4L)
                 .statusCode(ORDER_RECEIVED.getCode())
                 .build();
 
@@ -175,7 +174,7 @@ class OrderDetailTest {
 
         // when // then
         assertThatThrownBy(() -> orderDetail.cancel(null, numberOfCancellations, dateTimeHolder))
-                .hasMessage("수량이 초과 되었습니다.")
+                .hasMessage(QUANTITY_EXCEEDED.getMessage())
                 .isInstanceOf(CustomLogicException.class)
                 .satisfies(exception -> {
                     CustomLogicException customLogicException = (CustomLogicException) exception;
@@ -186,7 +185,45 @@ class OrderDetailTest {
     }
 
     @Test
-    @DisplayName("상품재고, 취소수량, 이유, 상태코드, 쿠폰상태가 변경된다.")
+    @DisplayName("부분 취소의 경우 상품재고, 취소수량, 쿠폰상태가 변경된다.")
+    public void cancel_partial() {
+        // given
+        Product product = Product.builder()
+                .stock(5L)
+                .build();
+
+        LocalDateTime usedDate = LocalDateTime.of(2024, 2, 9, 11, 30);
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .isUsed(true)
+                .usedDate(usedDate)
+                .build();
+
+        String statusCode = PAYMENT_COMPLETED.getCode();
+        OrderDetail orderDetail = OrderDetail.builder()
+                .quantity(5L)
+                .product(product)
+                .memberCoupon(memberCoupon)
+                .reducedQuantity(0L)
+                .statusCode(statusCode)
+                .build();
+
+        Long numberOfCancellations = 2L;
+
+        // when
+        orderDetail.cancel(null, numberOfCancellations, null);
+
+        // then
+        assertThat(product.getStock()).isEqualTo(7L);
+        assertThat(memberCoupon.getUsedDate()).isNull();
+        assertThat(memberCoupon.getIsUsed()).isFalse();
+        assertThat(orderDetail.getQuantity()).isEqualTo(5L);
+        assertThat(orderDetail.getReducedQuantity()).isEqualTo(numberOfCancellations);
+        assertThat(orderDetail.getReason()).isNull();
+        assertThat(orderDetail.getStatusCode()).isEqualTo(statusCode);
+    }
+
+    @Test
+    @DisplayName("모든 취소의 경우 상품재고, 취소수량, 쿠폰상태, 이유, 주문상태가 변경된다.")
     public void cancel() {
         // given
         Product product = Product.builder()
@@ -203,23 +240,162 @@ class OrderDetailTest {
                 .quantity(5L)
                 .product(product)
                 .memberCoupon(memberCoupon)
-                .numberOfCancellations(0L)
+                .reducedQuantity(0L)
+                .statusCode(PAYMENT_COMPLETED.getCode())
                 .build();
 
+        Long numberOfCancellations = 5L;
         String reason = "단순변심";
-        Long numberOfCancellations = 2L;
 
         // when
         orderDetail.cancel(reason, numberOfCancellations, null);
+
+        // then
+        assertThat(product.getStock()).isEqualTo(10L);
+        assertThat(memberCoupon.getUsedDate()).isNull();
+        assertThat(memberCoupon.getIsUsed()).isFalse();
+        assertThat(orderDetail.getQuantity()).isEqualTo(5L);
+        assertThat(orderDetail.getReducedQuantity()).isEqualTo(numberOfCancellations);
+        assertThat(orderDetail.getReason()).isEqualTo(reason);
+        assertThat(orderDetail.getStatusCode()).isEqualTo(ORDER_CANCEL.getCode());
+    }
+
+    @Test
+    @DisplayName("배송완료된 상태를 제외하면 에러를 발생시킨다.")
+    public void returns_NOT_DELIVERY_COMPLETED_ERROR() {
+        // given
+        OrderDetail orderDetail = OrderDetail.builder()
+                .statusCode(ORDER_RECEIVED.getCode())
+                .build();
+        LocalDateTime now = LocalDateTime.of(2024, 2, 10, 5, 3);
+        DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+                .now(now)
+                .build();
+
+        // when // then
+        assertThatThrownBy(() -> orderDetail.returns(null, null, dateTimeHolder))
+                .isInstanceOf(CustomLogicException.class)
+                .hasMessage(NON_RETURNABLE_PRODUCT.getMessage())
+                .satisfies(exception -> {
+                    CustomLogicException customLogicException = (CustomLogicException) exception;
+                    assertThat(customLogicException.getHttpStatus()).isEqualTo(BAD_REQUEST);
+                    assertThat(customLogicException.getErrorCode()).isEqualTo(NON_RETURNABLE_PRODUCT);
+                    assertThat(customLogicException.getTimestamp()).isEqualTo(now);
+                });
+    }
+
+    @Test
+    @DisplayName("반품 수량을 초과하면 에러를 발생시킨다.")
+    public void returns_QUANTITY_EXCEEDED_ERROR() {
+        // given
+        OrderDetail orderDetail = OrderDetail.builder()
+                .statusCode(DELIVERY_COMPLETED.getCode())
+                .quantity(5L)
+                .reducedQuantity(0L)
+                .build();
+        LocalDateTime now = LocalDateTime.of(2024, 2, 10, 5, 3);
+        DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+                .now(now)
+                .build();
+
+        Long numberOfReturns = 6L;
+
+        // when // then
+        assertThatThrownBy(() -> orderDetail.returns(null, numberOfReturns, dateTimeHolder))
+                .isInstanceOf(CustomLogicException.class)
+                .hasMessage("수량이 초과 되었습니다.")
+                .satisfies(exception -> {
+                    CustomLogicException customLogicException = (CustomLogicException) exception;
+                    assertThat(customLogicException.getHttpStatus()).isEqualTo(BAD_REQUEST);
+                    assertThat(customLogicException.getErrorCode()).isEqualTo(QUANTITY_EXCEEDED);
+                    assertThat(customLogicException.getTimestamp()).isEqualTo(now);
+                });
+    }
+
+    @Test
+    @DisplayName("부분 반품하면 상품재고, 수량감소, 쿠폰 반환만 한다.")
+    public void returns_partial() {
+        // given
+        Product product = Product.builder()
+                .stock(5L)
+                .build();
+
+        LocalDateTime usedDate = LocalDateTime.of(2024, 2, 9, 11, 30);
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .isUsed(true)
+                .usedDate(usedDate)
+                .build();
+
+        String statusCode = DELIVERY_COMPLETED.getCode();
+        OrderDetail orderDetail = OrderDetail.builder()
+                .quantity(5L)
+                .product(product)
+                .memberCoupon(memberCoupon)
+                .reducedQuantity(0L)
+                .statusCode(statusCode)
+                .build();
+
+        LocalDateTime now = LocalDateTime.of(2024, 2, 10, 5, 15);
+        DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+                .now(now)
+                .build();
+
+        Long numberOfReturns = 2L;
+
+        // when
+        orderDetail.returns(null, numberOfReturns, dateTimeHolder);
 
         // then
         assertThat(product.getStock()).isEqualTo(7L);
         assertThat(memberCoupon.getUsedDate()).isNull();
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(orderDetail.getQuantity()).isEqualTo(5L);
-        assertThat(orderDetail.getNumberOfCancellations()).isEqualTo(numberOfCancellations);
+        assertThat(orderDetail.getReducedQuantity()).isEqualTo(numberOfReturns);
+        assertThat(orderDetail.getReason()).isNull();
+        assertThat(orderDetail.getStatusCode()).isEqualTo(statusCode);
+    }
+
+    @Test
+    @DisplayName("모두 반품하면 상품재고, 수량감소, 쿠폰 반환, 상태변화, 이유를 변경한다.")
+    public void returns() {
+        // given
+        Product product = Product.builder()
+                .stock(5L)
+                .build();
+
+        LocalDateTime usedDate = LocalDateTime.of(2024, 2, 9, 11, 30);
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .isUsed(true)
+                .usedDate(usedDate)
+                .build();
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .quantity(5L)
+                .product(product)
+                .memberCoupon(memberCoupon)
+                .reducedQuantity(0L)
+                .statusCode(DELIVERY_COMPLETED.getCode())
+                .build();
+
+        LocalDateTime now = LocalDateTime.of(2024, 2, 10, 5, 16);
+        DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+                .now(now)
+                .build();
+
+        Long numberOfReturns = 5L;
+        String reason = "단순변심";
+
+        // when
+        orderDetail.returns(reason, numberOfReturns, dateTimeHolder);
+
+        // then
+        assertThat(product.getStock()).isEqualTo(10L);
+        assertThat(memberCoupon.getUsedDate()).isNull();
+        assertThat(memberCoupon.getIsUsed()).isFalse();
+        assertThat(orderDetail.getQuantity()).isEqualTo(5L);
+        assertThat(orderDetail.getReducedQuantity()).isEqualTo(numberOfReturns);
         assertThat(orderDetail.getReason()).isEqualTo(reason);
-        assertThat(orderDetail.getStatusCode()).isEqualTo(ORDER_CANCEL.getCode());
+        assertThat(orderDetail.getStatusCode()).isEqualTo(RETURN_INIT.getCode());
     }
 
     @Test
@@ -273,7 +449,7 @@ class OrderDetailTest {
         return OrderDetail.builder()
                 .quantity(quantity)
                 .price(price)
-                .numberOfCancellations(0L)
+                .reducedQuantity(0L)
                 .build();
     }
 

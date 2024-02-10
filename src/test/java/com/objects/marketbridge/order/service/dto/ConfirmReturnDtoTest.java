@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ConfirmCancelDtoTest {
+class ConfirmReturnDtoTest {
 
     @Test
     @DisplayName("주문상세, 환불 정보가 주어지면 Response를 반환한다.")
@@ -47,19 +47,19 @@ class ConfirmCancelDtoTest {
                 .build();
 
         // when
-        ConfirmCancelDto.Response result = ConfirmCancelDto.Response.of(orderDetail, refundDto);
+        ConfirmReturnDto.Response result = ConfirmReturnDto.Response.of(orderDetail, refundDto);
 
         // then
         assertThat(result.getOrderId()).isEqualTo(1L);
         assertThat(result.getOrderNo()).isEqualTo("1");
         assertThat(result.getTotalPrice()).isEqualTo(2000L);
-        assertThat(result.getCancellationDate()).isEqualTo(cancelledAt);
+        assertThat(result.getReturnedDate()).isEqualTo(cancelledAt);
 
-        assertThat(result.getCancelledItem().getProductId()).isEqualTo(1L);
-        assertThat(result.getCancelledItem().getProductNo()).isEqualTo("1");
-        assertThat(result.getCancelledItem().getName()).isEqualTo("빵빵이키링");
-        assertThat(result.getCancelledItem().getPrice()).isEqualTo(1000L);
-        assertThat(result.getCancelledItem().getQuantity()).isEqualTo(2L);
+        assertThat(result.getReturnedItem().getProductId()).isEqualTo(1L);
+        assertThat(result.getReturnedItem().getProductNo()).isEqualTo("1");
+        assertThat(result.getReturnedItem().getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getReturnedItem().getPrice()).isEqualTo(1000L);
+        assertThat(result.getReturnedItem().getQuantity()).isEqualTo(2L);
     }
 
     @Test
@@ -79,7 +79,7 @@ class ConfirmCancelDtoTest {
                 .build();
 
         // when
-        ConfirmCancelDto.ProductInfo result = ConfirmCancelDto.ProductInfo.of(orderDetail);
+        ConfirmReturnDto.ProductInfo result = ConfirmReturnDto.ProductInfo.of(orderDetail);
 
         // then
         assertThat(result.getProductId()).isEqualTo(1L);
@@ -102,11 +102,12 @@ class ConfirmCancelDtoTest {
                 .build();
 
         // when
-        ConfirmCancelDto.RefundInfo result = ConfirmCancelDto.RefundInfo.of(refundDto);
+        ConfirmReturnDto.RefundInfo result = ConfirmReturnDto.RefundInfo.of(refundDto);
 
         // then
         assertThat(result.getRefundMethod()).isEqualTo("카드");
         assertThat(result.getRefundProcessedAt()).isEqualTo(refundProcessedAt);
         assertThat(result.getTotalRefundAmount()).isEqualTo(4000L);
     }
+
 }

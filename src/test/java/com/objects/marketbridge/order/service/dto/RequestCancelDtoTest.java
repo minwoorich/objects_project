@@ -30,6 +30,7 @@ class RequestCancelDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .quantity(3L)
@@ -71,6 +72,7 @@ class RequestCancelDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .memberCoupon(memberCoupon)
                 .product(product)
                 .price(1000L)
@@ -105,6 +107,7 @@ class RequestCancelDtoTest {
 
         OrderDetail orderDetail = OrderDetail.builder()
                 .product(product)
+                .reducedQuantity(0L)
                 .price(1000L)
                 .quantity(3L)
                 .build();
@@ -146,6 +149,7 @@ class RequestCancelDtoTest {
 
         OrderDetail orderDetail = OrderDetail.builder()
                 .memberCoupon(memberCoupon)
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .quantity(3L)
@@ -179,6 +183,7 @@ class RequestCancelDtoTest {
 
         OrderDetail orderDetail = OrderDetail.builder()
                 .product(product)
+                .reducedQuantity(0L)
                 .price(1000L)
                 .quantity(3L)
                 .build();
@@ -206,6 +211,7 @@ class RequestCancelDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .product(product)
                 .price(1000L)
                 .quantity(3L)
@@ -228,6 +234,7 @@ class RequestCancelDtoTest {
         String memberShip = MembershipType.BASIC.getText();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .price(1000L)
                 .quantity(3L)
                 .build();
@@ -258,6 +265,7 @@ class RequestCancelDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .memberCoupon(memberCoupon)
                 .price(1000L)
                 .quantity(3L)
@@ -281,6 +289,7 @@ class RequestCancelDtoTest {
         String memberShip = MembershipType.WOW.getText();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .price(1000L)
                 .quantity(3L)
                 .build();
@@ -311,6 +320,7 @@ class RequestCancelDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .memberCoupon(memberCoupon)
                 .price(1000L)
                 .quantity(3L)
@@ -334,6 +344,7 @@ class RequestCancelDtoTest {
         String memberShip = MembershipType.WOW.getText();
 
         OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .quantity(3L)
                 .build();
 
