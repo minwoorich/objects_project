@@ -11,7 +11,6 @@ import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.payment.service.port.RefundClient;
 import lombok.Builder;
-import lombok.experimental.SuperBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +29,9 @@ public class OrderReturnService extends OrderCancelReturnService {
         super(refundClient, dateTimeHolder, orderDetailQueryRepository, orderDetailCommendRepository);
     }
 
-    @Transactional // TODO HTTP, DTO, confirmReturn, Controller 테스트
+    @Transactional // TODO confirmReturn, Controller 테스트
     public ConfirmReturnDto.Response confirmReturn(ConfirmReturnDto.Request request, DateTimeHolder dateTimeHolder) {
-        return processOrderDetail(
+        return confirmProcess(
                 request.getOrderDetailId(),
                 request.getReason(),
                 request.getNumberOfReturns(),

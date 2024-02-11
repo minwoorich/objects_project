@@ -75,6 +75,7 @@ class ConfirmReturnDtoTest {
         OrderDetail orderDetail = OrderDetail.builder()
                 .product(product)
                 .price(1000L)
+                .reducedQuantity(0L)
                 .quantity(2L)
                 .build();
 
@@ -86,7 +87,7 @@ class ConfirmReturnDtoTest {
         assertThat(result.getProductNo()).isEqualTo("1");
         assertThat(result.getName()).isEqualTo("빵빵이키링");
         assertThat(result.getPrice()).isEqualTo(1000L);
-        assertThat(result.getQuantity()).isEqualTo(2L);
+        assertThat(result.getQuantity()).isEqualTo(0L);
     }
 
     @Test

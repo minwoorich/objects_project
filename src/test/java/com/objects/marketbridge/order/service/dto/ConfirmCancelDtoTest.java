@@ -76,6 +76,7 @@ class ConfirmCancelDtoTest {
                 .product(product)
                 .price(1000L)
                 .quantity(2L)
+                .reducedQuantity(0L)
                 .build();
 
         // when
@@ -86,7 +87,7 @@ class ConfirmCancelDtoTest {
         assertThat(result.getProductNo()).isEqualTo("1");
         assertThat(result.getName()).isEqualTo("빵빵이키링");
         assertThat(result.getPrice()).isEqualTo(1000L);
-        assertThat(result.getQuantity()).isEqualTo(2L);
+        assertThat(result.getQuantity()).isEqualTo(0L);
     }
 
     @Test

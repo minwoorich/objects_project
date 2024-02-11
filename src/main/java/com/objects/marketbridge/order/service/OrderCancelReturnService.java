@@ -8,8 +8,6 @@ import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
 import com.objects.marketbridge.payment.service.port.RefundClient;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_PARTIAL_CANCEL;
@@ -26,7 +24,7 @@ public abstract class OrderCancelReturnService {
     protected final OrderDetailQueryRepository orderDetailQueryRepository;
     protected final OrderDetailCommendRepository orderDetailCommendRepository;
 
-    protected <T> T processOrderDetail(Long orderDetailId, String reason, Long numberOfOperations, DateTimeHolder dateTimeHolder, OrderDetailOperation operation, ResponseBuilder<T> responseBuilder) {
+    protected <T> T confirmProcess(Long orderDetailId, String reason, Long numberOfOperations, DateTimeHolder dateTimeHolder, OrderDetailOperation operation, ResponseBuilder<T> responseBuilder) {
         OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
 
         boolean isPartialOperation = operation.apply(orderDetail, reason, numberOfOperations, dateTimeHolder);

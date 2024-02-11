@@ -83,7 +83,7 @@ public class ConfirmReturnDto {
                     .productId(orderDetail.getProduct().getId())
                     .name(orderDetail.getProduct().getName())
                     .price(orderDetail.getPrice())
-                    .quantity(orderDetail.getQuantity())
+                    .quantity(orderDetail.getReducedQuantity())
                     .productNo(orderDetail.getProduct().getProductNo())
                     .build();
         }
