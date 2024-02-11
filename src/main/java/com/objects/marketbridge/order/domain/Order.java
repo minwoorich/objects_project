@@ -10,6 +10,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 @Getter
 @Table(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE orders SET deleted_at = now() WHERE order_id = ?")
+@SQLRestriction("deleted_at is NULL")
 public class Order extends BaseEntity {
 
     @Id
@@ -116,6 +120,10 @@ public class Order extends BaseEntity {
 
     public void stockDecrease() {
         orderDetails.forEach(o -> o.getProduct().decrease(o.getQuantity()));
+    }
+
+    public void stockIncrease() {
+        orderDetails.forEach(o -> o.getProduct().increase(o.getQuantity()));
     }
 
     // 판매자별 총 주문 금액
