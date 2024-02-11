@@ -5,7 +5,6 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.OrderCancelController;
 import com.objects.marketbridge.order.controller.OrderCancelReturnController;
 import com.objects.marketbridge.order.controller.OrderReturnController;
-import com.objects.marketbridge.order.service.OrderCancelReturnService;
 import com.objects.marketbridge.order.service.OrderCancelService;
 import com.objects.marketbridge.order.service.OrderReturnService;
 import com.objects.marketbridge.order.service.port.*;
@@ -44,11 +43,11 @@ public class TestContainer {
         this.orderDetailQueryRepository = new FakeOrderDetailQueryRepository();
         this.orderDetailCommendRepository = new FakeOrderDetailCommendRepository();
         this.orderDtoRepository = new FakeOrderDtoRepository();
+        this.orderDetailDtoRepository = new FakeOrderDetailDtoRepository();
         this.productRepository = new FakeProductRepository();
         this.couponRepository = new FakeCouponRepository();
         this.memberCouponRepository = new FakeMemberCouponRepository();
         this.memberRepository = new FakeMemberRepository();
-        this.orderDetailDtoRepository = new FakeOrderDetailDtoRepository();
         this.refundClient = new FakeRefundClient(dateTimeHolder);
 
         // Service

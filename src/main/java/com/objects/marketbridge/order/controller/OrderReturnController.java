@@ -53,7 +53,7 @@ public class OrderReturnController {
 
     // 반품 철회 확정
     @PostMapping("/cancel-return/list")
-    public ApiResponse<ReturnRecantationHttp.Response> returnRecantation(
+    public ApiResponse<ReturnRecantationHttp.Response> confirmReturnRecantation(
             @RequestParam(name = "orderDetailId") Long orderDetailId
     ) {
         return null;

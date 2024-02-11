@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class GetCancelDetailDtoTest {
 
+
     @Test
     @DisplayName("Response를 반환한다. (WOW_NoCoupon)")
     public void response_of_WOW_NoCoupon() {
