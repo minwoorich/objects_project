@@ -141,7 +141,7 @@ class GetOrderServiceTest {
         assertThat(response.getOrderInfos()).hasSize(1);
         assertThat(response.getOrderInfos().get(0).getOrderDetailInfos()).hasSize(3);
         assertThat(response.getOrderInfos().get(0).getOrderDetailInfos().get(0).getOrderNo()).isEqualTo("orderNo1");
-        assertThat(response.getOrderInfos().get(0).getOrderDetailInfos().get(0).getProductId()).isEqualTo(1L);
+        assertThat(response.getOrderInfos().get(0).getOrderDetailInfos().get(0).getProductName()).isEqualTo("상품1");
 
     }
     @Test
