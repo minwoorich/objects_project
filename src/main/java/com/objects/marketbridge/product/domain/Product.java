@@ -40,6 +40,9 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product")
     private List<ProductImage> productImages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product")
+    private List<ProdTag> prodTags = new ArrayList<>();
+
     private Boolean isOwn; // 로켓 true , 오픈 마켓 false
 
     private String name;
@@ -91,6 +94,11 @@ public class Product extends BaseEntity {
     public void addProdOptions(ProdOption prodOption){
         prodOptions.add(prodOption);
         prodOption.setProduct(this);
+    }
+
+    public void addProdTags(ProdTag prodTag){
+        prodTags.add(prodTag);
+        prodTag.setProduct(this);
     }
 
     public Product update(Category category, Boolean isOwn, String name, Long price,

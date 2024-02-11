@@ -2,7 +2,6 @@ package com.objects.marketbridge.member.service;
 
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MembershipType;
-import com.objects.marketbridge.member.domain.SocialType;
 import com.objects.marketbridge.member.mock.FakeMemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +36,6 @@ class MemberServiceTest {
                 .isAgree(true)
                 .isAlert(true)
                 .membership(MembershipType.WOW.toString())
-                .socialType(SocialType.DEFAULT.toString())
                 .build();
 
         Member member2 = Member.builder()
@@ -49,7 +47,6 @@ class MemberServiceTest {
                 .isAgree(true)
                 .isAlert(true)
                 .membership(MembershipType.WOW.toString())
-                .socialType(SocialType.DEFAULT.toString())
                 .build();
 
         fakeMemberRepository.save(member1);

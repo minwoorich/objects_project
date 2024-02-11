@@ -39,6 +39,12 @@ include::api/member/reissue.adoc[]
 {empty}
 {empty}
 
+== *멤버십*
+include::api/member/kakaoPaySubsReady.adoc[]
+{empty}
+include::api/member/kakaoPaySubsApproved.adoc[]
+{empty}
+include::api/member/kakaoPaySubsSubscribtion.adoc[]
 == *상품*
 {empty}
 {empty}

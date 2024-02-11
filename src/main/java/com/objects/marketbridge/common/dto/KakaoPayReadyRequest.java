@@ -49,8 +49,8 @@ public class KakaoPayReadyRequest {
         this.totalAmount = totalAmount;
         this.taxFreeAmount = taxFreeAmount;
         this.approvalUrl = approvalUrl+"/"+partnerOrderId;
-        this.cancelUrl = cancelUrl;
-        this.failUrl = failUrl;
+        this.cancelUrl = cancelUrl+"/"+partnerOrderId;
+        this.failUrl = failUrl+"/"+partnerOrderId;
     }
 
     public MultiValueMap<String, String> toMultiValueMap() {

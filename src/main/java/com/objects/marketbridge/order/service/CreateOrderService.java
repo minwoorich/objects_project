@@ -1,19 +1,21 @@
 package com.objects.marketbridge.order.service;
 
-import com.objects.marketbridge.member.domain.Coupon;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MemberCoupon;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.domain.*;
+import com.objects.marketbridge.order.domain.CalcTotalDiscountService;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
-import com.objects.marketbridge.product.infra.CouponRepository;
-import com.objects.marketbridge.product.infra.MemberCouponRepository;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.*;
+import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_INIT;
 
 @Service
 @Transactional(readOnly = true)

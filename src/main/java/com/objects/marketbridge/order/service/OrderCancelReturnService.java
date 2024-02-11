@@ -14,7 +14,7 @@ import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
 import com.objects.marketbridge.payment.service.port.RefundClient;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

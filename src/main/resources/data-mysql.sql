@@ -1,211 +1,260 @@
-/*INSERT INTO category (category_id, name)
+INSERT INTO member_coupon (member_id, coupon_id, is_used, used_date, end_date, created_at, updated_at, deleted_at)
 VALUES
-    (1, 'Electronics'),
-    (2, 'Clothing');*/
+    (1, 1, 0, NULL, NOW(), NOW(), NOW(), NULL),
+    (2, 2, 0, NULL, NOW(), NOW(), NOW(), NULL),
+    (3, 3, 0, NULL, NOW(), NOW(), NOW(), NULL),
+    (4, 4, 0, NULL, NOW(), NOW(), NOW(), NULL),
+    (5, 5, 0, NULL, NOW(), NOW(), NOW(), NULL),
+    (6, 6, 0, NULL, NOW(), NOW(), NOW(), NULL),
+    (7, 7, 0, NULL, NOW(), NOW(), NOW(), NULL),
+    (8, 8, 0, NULL, NOW(), NOW(), NOW(), NULL),
+    (9, 9, 0, NULL, NOW(), NOW(), NOW(), NULL),
+    (10, 10, 0, NULL, NOW(), NOW(), NOW(), NULL);
 
--- Insert statements for member table
-INSERT INTO marketbridge.member (member_type, social_type, membership, email, password, name, phone_no,  is_alert, is_agree, created_at, updated_at, deleted_at)
-VALUES ('Regular', 'Email', 'Silver', 'member1@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member One', '010-1234-5678',  1, 1, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
-('VIP', 'Facebook', 'Gold', 'member2@example.com', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'member Two', '010-9876-5432',  1, 1, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
-
--- Insert statements for seller table
-INSERT INTO marketbridge.seller (name, biz_no, owner, category, detail, address, license_no, email, account_no, created_at, updated_at, deleted_at)
+INSERT INTO coupon (product_id, name, price, count, minimum_price, start_date, end_date, created_at, updated_at, deleted_at)
 VALUES
-    ('ABC Electronics', '123456789', 'David Lee', 'Electronics', 'Electronics seller', '123 Main St', '987654321', 'abc@example.com', '1234567890123456', NOW(), NOW(), NULL),
-    ('XYZ Clothing', '987654321', 'Emma Kim', 'Clothing', 'Clothing seller', '456 Oak St', '123456789', 'xyz@example.com', '6543210987654321', NOW(), NOW(), NULL);
+    (1, 'CouponName1', 'CouponPrice1', 1, 100, NOW(), NOW(), NOW(), NOW(), NULL),
+    (2, 'CouponName2', 'CouponPrice2', 2, 200, NOW(), NOW(), NOW(), NOW(), NULL),
+    (3, 'CouponName3', 'CouponPrice3', 3, 300, NOW(), NOW(), NOW(), NOW(), NULL),
+    (4, 'CouponName4', 'CouponPrice4', 4, 400, NOW(), NOW(), NOW(), NOW(), NULL),
+    (5, 'CouponName5', 'CouponPrice5', 5, 500, NOW(), NOW(), NOW(), NOW(), NULL),
+    (6, 'CouponName6', 'CouponPrice6', 6, 600, NOW(), NOW(), NOW(), NOW(), NULL),
+    (7, 'CouponName7', 'CouponPrice7', 7, 700, NOW(), NOW(), NOW(), NOW(), NULL),
+    (8, 'CouponName8', 'CouponPrice8', 8, 800, NOW(), NOW(), NOW(), NOW(), NULL),
+    (9, 'CouponName9', 'CouponPrice9', 9, 900, NOW(), NOW(), NOW(), NOW(), NULL),
+    (10, 'CouponName10', 'CouponPrice10', 10, 1000, NOW(), NOW(), NOW(), NOW(), NULL);
 
--- Insert statements for address table
-INSERT INTO marketbridge.address (member_id, alias, name, phone_no, city, street, zipcode, is_default, created_at, updated_at, deleted_at)
-VALUES
-    (1, 'Home', 'John Doe', '1234567890', 'Seoul', '123 Main St', '12345', 1, NOW(), NOW(), NULL),
-    (2, 'Office', 'Jane Doe', '9876543210', 'Busan', '456 Oak St', '54321', 1, NOW(), NOW(), NULL);
-
--- Insert statements for social_credential table
-INSERT INTO marketbridge.social_credential (member_id, token_id, created_at, updated_at, deleted_at)
-VALUES
-    (1, 'token123', NOW(), NOW(), NULL),
-    (2, 'token456', NOW(), NOW(), NULL);
-
--- Insert statements for category table
-INSERT INTO marketbridge.category (parent_id, level, name, created_at, updated_at, deleted_at)
-VALUES
-    (NULL, 0, 'Electronics', NOW(), NOW(), NULL),
-    (NULL, 0, 'Clothing', NOW(), NOW(), NULL);
-
--- Insert statements for reward_policy table
-INSERT INTO marketbridge.reward_policy (type, rate, created_at, updated_at, deleted_at)
-VALUES
-    ('Cashback', 5, NOW(), NOW(), NULL),
-    ('Discount', 10, NOW(), NOW(), NULL);
-
--- Insert statements for seller_product table
-INSERT INTO marketbridge.seller_product (seller_id, product_id, created_at, updated_at, deleted_at)
+INSERT INTO review_image (review_id, image_id, created_at, updated_at, deleted_at)
 VALUES
     (1, 1, NOW(), NOW(), NULL),
-    (2, 2, NOW(), NOW(), NULL);
+    (2, 2, NOW(), NOW(), NULL),
+    (3, 3, NOW(), NOW(), NULL),
+    (4, 4, NOW(), NOW(), NULL),
+    (5, 5, NOW(), NOW(), NULL),
+    (6, 6, NOW(), NOW(), NULL),
+    (7, 7, NOW(), NOW(), NULL),
+    (8, 8, NOW(), NOW(), NULL),
+    (9, 9, NOW(), NOW(), NULL),
+    (10, 10, NOW(), NOW(), NULL);
 
--- Insert statements for product_image table
-INSERT INTO marketbridge.product_image (product_id, image_id, created_at, updated_at, deleted_at)
+INSERT INTO review (member_id, product_id, content, rating, created_at, updated_at, deleted_at)
+VALUES
+    (1, 1, 'ReviewContent1', 5, NOW(), NOW(), NULL),
+    (2, 2, 'ReviewContent2', 4, NOW(), NOW(), NULL),
+    (3, 3, 'ReviewContent3', 3, NOW(), NOW(), NULL),
+    (4, 4, 'ReviewContent4', 2, NOW(), NOW(), NULL),
+    (5, 5, 'ReviewContent5', 1, NOW(), NOW(), NULL),
+    (6, 6, 'ReviewContent6', 5, NOW(), NOW(), NULL),
+    (7, 7, 'ReviewContent7', 4, NOW(), NOW(), NULL),
+    (8, 8, 'ReviewContent8', 3, NOW(), NOW(), NULL),
+    (9, 9, 'ReviewContent9', 2, NOW(), NOW(), NULL),
+    (10, 10, 'ReviewContent10', 1, NOW(), NOW(), NULL);
+
+INSERT INTO payment (order_id, order_no, payment_method, tid, card_issuer_name, card_purchase_name, card_no, card_install_month, total_amount, discount_amount, tax_free_amount, approved_at, deleted_at, updated_at, created_at)
+VALUES
+    (1, 'OrderNo1', 'PaymentMethod1', 'TID1', 'CardIssuerName1', 'CardPurchaseName1', 'CardNo1', 1, 100, 10, 5, NOW(), NOW(), NOW(), NOW()),
+    (2, 'OrderNo2', 'PaymentMethod2', 'TID2', 'CardIssuerName2', 'CardPurchaseName2', 'CardNo2', 2, 200, 20, 10, NOW(), NOW(), NOW(), NOW()),
+    (3, 'OrderNo3', 'PaymentMethod3', 'TID3', 'CardIssuerName3', 'CardPurchaseName3', 'CardNo3', 3, 300, 30, 15, NOW(), NOW(), NOW(), NOW()),
+    (4, 'OrderNo4', 'PaymentMethod4', 'TID4', 'CardIssuerName4', 'CardPurchaseName4', 'CardNo4', 4, 400, 40, 20, NOW(), NOW(), NOW(), NOW()),
+    (5, 'OrderNo5', 'PaymentMethod5', 'TID5', 'CardIssuerName5', 'CardPurchaseName5', 'CardNo5', 5, 500, 50, 25, NOW(), NOW(), NOW(), NOW()),
+    (6, 'OrderNo6', 'PaymentMethod6', 'TID6', 'CardIssuerName6', 'CardPurchaseName6', 'CardNo6', 6, 600, 60, 30, NOW(), NOW(), NOW(), NOW());
+
+INSERT INTO order_detail (order_id, product_id, order_no, member_coupon_id,  quantity, price,  status_code, tid, delivered_date, reason, cancelled_at, created_at, updated_at, deleted_at)
+VALUES
+    (1, 1, 'OrderNo1', 1, 1, 100,  'StatusCode1', 'TID1', NOW(), 'Reason1', NOW(), NOW(), NOW(), NULL),
+    (1, 2, 'OrderNo1', 2,  2, 200,  'StatusCode2', 'TID2', NOW(), 'Reason2', NOW(), NOW(), NOW(), NULL),
+    (1, 3, 'OrderNo1', 3,  3, 300, 'StatusCode3', 'TID3', NOW(), 'Reason3', NOW(), NOW(), NOW(), NULL),
+    (2, 4, 'OrderNo2', 4,  4, 400,  'StatusCode4', 'TID4', NOW(), 'Reason4', NOW(), NOW(), NOW(), NULL),
+    (2, 5, 'OrderNo2', 5,  5, 500,  'StatusCode5', 'TID5', NOW(), 'Reason5', NOW(), NOW(), NOW(), NULL),
+    (2, 6, 'OrderNo2', 6,  6, 600,  'StatusCode6', 'TID6', NOW(), 'Reason6', NOW(), NOW(), NOW(), NULL),
+    (3, 7, 'OrderNo3', 7,  7, 700,  'StatusCode7', 'TID7', NOW(), 'Reason7', NOW(), NOW(), NOW(), NULL),
+    (3, 8, 'OrderNo3', 8,  8, 800,  'StatusCode8', 'TID8', NOW(), 'Reason8', NOW(), NOW(), NOW(), NULL),
+    (3, 9, 'OrderNo3', 9,  9, 900,  'StatusCode9', 'TID9', NOW(), 'Reason9', NOW(), NOW(), NOW(), NULL),
+    (4, 10, 'OrderNo4', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
+    (4, 10, 'OrderNo4', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
+    (4, 10, 'OrderNo4', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
+    (5, 10, 'OrderNo5', 10,10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
+    (5, 10, 'OrderNo5', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
+    (5, 10, 'OrderNo5', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
+    (6, 10, 'OrderNo6', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
+    (6, 10, 'OrderNo6', 10, 10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
+    (6, 10, 'OrderNo6', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
+    (6, 10, 'OrderNo6', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL);
+
+INSERT INTO orders (member_id, address_id, order_name, order_no, total_discount, total_price, real_price, tid, created_at, updated_at, deleted_at)
+VALUES
+    (11, 1, 'OrderName1', 'OrderNo1', 100, 200, 100, 'TID1', NOW(), NOW(), NULL),
+    (11, 2, 'OrderName2', 'OrderNo2', 200, 300, 100, 'TID2', NOW(), NOW(), NULL),
+    (11, 3, 'OrderName3', 'OrderNo3', 300, 400, 100, 'TID3', NOW(), NOW(), NULL),
+    (11, 4, 'OrderName4', 'OrderNo4', 400, 500, 100, 'TID4', NOW(), NOW(), NULL),
+    (11, 5, 'OrderName5', 'OrderNo5', 500, 600, 100, 'TID5', NOW(), NOW(), NULL),
+    (11, 6, 'OrderName6', 'OrderNo6', 600, 700, 100, 'TID6', NOW(), NOW(), NULL);
+
+INSERT INTO status_code (type, code, name, created_at, updated_at, deleted_at)
+VALUES
+    ('Type1', 'Code1', 'Name1', NOW(), NOW(), NULL),
+    ('Type2', 'Code2', 'Name2', NOW(), NOW(), NULL),
+    ('Type3', 'Code3', 'Name3', NOW(), NOW(), NULL),
+    ('Type4', 'Code4', 'Name4', NOW(), NOW(), NULL),
+    ('Type5', 'Code5', 'Name5', NOW(), NOW(), NULL),
+    ('Type6', 'Code6', 'Name6', NOW(), NOW(), NULL),
+    ('Type7', 'Code7', 'Name7', NOW(), NOW(), NULL),
+    ('Type8', 'Code8', 'Name8', NOW(), NOW(), NULL),
+    ('Type9', 'Code9', 'Name9', NOW(), NOW(), NULL),
+    ('Type10', 'Code10', 'Name10', NOW(), NOW(), NULL);
+
+INSERT INTO prod_tag (tag_id, product_id, created_at, updated_at, deleted_at)
 VALUES
     (1, 1, NOW(), NOW(), NULL),
-    (2, 2, NOW(), NOW(), NULL);
+    (2, 2, NOW(), NOW(), NULL),
+    (3, 3, NOW(), NOW(), NULL),
+    (4, 4, NOW(), NOW(), NULL),
+    (5, 5, NOW(), NOW(), NULL),
+    (6, 6, NOW(), NOW(), NULL),
+    (7, 7, NOW(), NOW(), NULL),
+    (8, 8, NOW(), NOW(), NULL),
+    (9, 9, NOW(), NOW(), NULL),
+    (10, 10, NOW(), NOW(), NULL);
 
--- Insert statements for image table
-INSERT INTO marketbridge.image (type, url, created_at, updated_at, deleted_at)
+INSERT INTO tag (name, created_at, updated_at, deleted_at)
 VALUES
-    ('Thumbnail', 'electronics_thumb.jpg', NOW(), NOW(), NULL),
-    ('Thumbnail', 'clothing_thumb.jpg', NOW(), NOW(), NULL);
+    ('Tag1', NOW(), NOW(), NULL),
+    ('Tag2', NOW(), NOW(), NULL),
+    ('Tag3', NOW(), NOW(), NULL),
+    ('Tag4', NOW(), NOW(), NULL),
+    ('Tag5', NOW(), NOW(), NULL),
+    ('Tag6', NOW(), NOW(), NULL),
+    ('Tag7', NOW(), NOW(), NULL),
+    ('Tag8', NOW(), NOW(), NULL),
+    ('Tag9', NOW(), NOW(), NULL),
+    ('Tag10', NOW(), NOW(), NULL);
 
--- Insert statements for option_category table
-INSERT INTO marketbridge.option_category (name, created_at, updated_at, deleted_at)
+INSERT INTO options (option_category_id, name, created_at, updated_at, deleted_at)
 VALUES
-    ('Size', NOW(), NOW(), NULL),
-    ('Color', NOW(), NOW(), NULL);
+    (1, 'Option1', NOW(), NOW(), NULL),
+    (2, 'Option2', NOW(), NOW(), NULL),
+    (3, 'Option3', NOW(), NOW(), NULL),
+    (4, 'Option4', NOW(), NOW(), NULL),
+    (5, 'Option5', NOW(), NOW(), NULL),
+    (6, 'Option6', NOW(), NOW(), NULL),
+    (7, 'Option7', NOW(), NOW(), NULL),
+    (8, 'Option8', NOW(), NOW(), NULL),
+    (9, 'Option9', NOW(), NOW(), NULL),
+    (10, 'Option10', NOW(), NOW(), NULL);
 
--- Insert statements for options table
-INSERT INTO marketbridge.options (option_category_id, name, created_at, updated_at, deleted_at)
+INSERT INTO option_category (name, created_at, updated_at, deleted_at)
 VALUES
-    (1, 'Medium', NOW(), NOW(), NULL),
-    (2, 'Blue', NOW(), NOW(), NULL);
+    ('OptionCategory1', NOW(), NOW(), NULL),
+    ('OptionCategory2', NOW(), NOW(), NULL),
+    ('OptionCategory3', NOW(), NOW(), NULL),
+    ('OptionCategory4', NOW(), NOW(), NULL),
+    ('OptionCategory5', NOW(), NOW(), NULL),
+    ('OptionCategory6', NOW(), NOW(), NULL),
+    ('OptionCategory7', NOW(), NOW(), NULL),
+    ('OptionCategory8', NOW(), NOW(), NULL),
+    ('OptionCategory9', NOW(), NOW(), NULL),
+    ('OptionCategory10', NOW(), NOW(), NULL);
 
--- Insert statements for tag table
-INSERT INTO marketbridge.tag (name, created_at, updated_at, deleted_at)
+INSERT INTO image (type, url, created_at, updated_at, deleted_at)
 VALUES
-    ('Electronics', NOW(), NOW(), NULL),
-    ('Fashion', NOW(), NOW(), NULL);
+    ('Type1', 'URL1', NOW(), NOW(), NULL),
+    ('Type2', 'URL2', NOW(), NOW(), NULL),
+    ('Type3', 'URL3', NOW(), NOW(), NULL),
+    ('Type4', 'URL4', NOW(), NOW(), NULL),
+    ('Type5', 'URL5', NOW(), NOW(), NULL),
+    ('Type6', 'URL6', NOW(), NOW(), NULL),
+    ('Type7', 'URL7', NOW(), NOW(), NULL),
+    ('Type8', 'URL8', NOW(), NOW(), NULL),
+    ('Type9', 'URL9', NOW(), NOW(), NULL),
+    ('Type10', 'URL10', NOW(), NOW(), NULL);
 
--- Insert statements for prod_tag table
-INSERT INTO marketbridge.prod_tag (tag_id, product_id, created_at, updated_at, deleted_at)
-VALUES
-    (1, 1, NOW(), NOW(), NULL),
-    (2, 2, NOW(), NOW(), NULL);
-
--- Insert statements for status_code table
-INSERT INTO marketbridge.status_code (type, code, name, created_at, updated_at, deleted_at)
-VALUES
-    ('Order', '1001', 'Pending', NOW(), NOW(), NULL),
-    ('Order', '1002', 'Shipped', NOW(), NOW(), NULL);
-
--- Insert statements for orders table
-INSERT INTO marketbridge.orders (member_id, address_id, order_name, order_no, total_discount,  total_price, real_price, created_at, updated_at, deleted_at)
-VALUES (1, 101, 'First Order', 'ORD001', 275, 280, 5, '2024-01-16 12:30:00', '2024-01-17 09:00:00', NULL),
-(2, 102, 'Second Order', 'ORD002',  15,  200, 185, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
-
--- Insert statements for order_detail table
-INSERT INTO marketbridge.order_detail (order_id, product_id, member_coupon_id, reward_type, quantity, price, status_code, delivered_date,  reason, cancelled_at, created_at, updated_at, deleted_at)
-VALUES
-    (1, 1, 1, 'Cashback', 2, 200, '1001', NULL,  NULL, NULL, NOW(), NOW(), NULL),
-    (2, 2, 2, 'Discount', 1, 150, '1002', NOW(),  'Out of stock', NULL, NOW(), NOW(), NULL);
-
--- Insert statements for payment table
-/*INSERT INTO payment (order_id, receipt_id, order_name, order_no, transaction_key, payment_type, payment_method, total_amount, balance_amount, payment_key, settlement_status, payment_status, refund_status, customer_name, bank_code, phone_no, cancel_amount, cancel_toss_reason, card_issuer_code, card_no, installment_plan_months, approve_no, account_no, v_account_no, v_due_date, v_expired, deleted_at, canceled_at, approved_at, requested_at, updated_at, cancelled_at, created_at)
-VALUES
-    (1, 'REC123', 'Order 123', 'ORD123', 'TRANSKEY123', 'Credit Card', 'VISA', 500, 100, 'PAYKEY123', 'Settled', 'Paid', NULL, 'John Doe', 'BANK123', '9876543210', NULL, NULL, 'ISSUER123', 'CARDNO123', 3, 'APPROVE123', 'ACC123', 'VACC123', '2024-02-01', 0, NULL, NULL, NULL, NOW(), NULL, NOW()),
-    (2, 'REC456', 'Order 456', 'ORD456', 'TRANSKEY456', 'Debit Card', 'MasterCard', 300, 50, 'PAYKEY456', 'Settled', 'Paid', NULL, 'Jane Doe', 'BANK456', '1234567890', NULL, NULL, 'ISSUER456', 'CARDNO456', 2, 'APPROVE456', 'ACC456', 'VACC456', '2024-03-01', 0, NULL, NULL, NULL, NOW(), NULL, NOW());*/
-
--- Insert statements for review table
-INSERT INTO marketbridge.review (member_id, product_id, content, rating, created_at, updated_at, deleted_at)
-VALUES
-    (1, 1, 'Great product!', 5, NOW(), NOW(), NULL),
-    (2, 2, 'Good quality', 4, NOW(), NOW(), NULL);
-
--- Insert statements for review_image table
-INSERT INTO marketbridge.review_image (review_id, image_id, created_at, updated_at, deleted_at)
-VALUES
-    (1, 1, NOW(), NOW(), NULL),
-    (2, 2, NOW(), NOW(), NULL);
-
--- Insert statements for review_survey table
-INSERT INTO marketbridge.review_survey (review_id, review_survey_category_id, survey_content_id, created_at, updated_at, deleted_at)
+INSERT INTO product_image (product_id, image_id, seq_no, created_at, updated_at, deleted_at)
 VALUES
     (1, 1, 1, NOW(), NOW(), NULL),
-    (2, 2, 2, NOW(), NOW(), NULL);
+    (2, 2, 1, NOW(), NOW(), NULL),
+    (3, 3, 1, NOW(), NOW(), NULL),
+    (4, 4, 1, NOW(), NOW(), NULL),
+    (5, 5, 1, NOW(), NOW(), NULL),
+    (6, 6, 1, NOW(), NOW(), NULL),
+    (7, 7, 1, NOW(), NOW(), NULL),
+    (8, 8, 1, NOW(), NOW(), NULL),
+    (9, 9, 1, NOW(), NOW(), NULL),
+    (10, 10, 1, NOW(), NOW(), NULL);
 
--- Insert statements for review_survey_category table
-INSERT INTO marketbridge.review_survey_category (product_id, name, created_at, updated_at, deleted_at)
+INSERT INTO category (parent_id, level, name, created_at, updated_at, deleted_at)
 VALUES
-    (1, 'Product Satisfaction', NOW(), NOW(), NULL),
-    (2, 'Delivery Time', NOW(), NOW(), NULL);
+    (NULL, 1, 'CategoryName1', NOW(), NOW(), NULL),
+    (NULL, 1, 'CategoryName2', NOW(), NOW(), NULL),
+    (NULL, 1, 'CategoryName3', NOW(), NOW(), NULL),
+    (NULL, 1, 'CategoryName4', NOW(), NOW(), NULL),
+    (NULL, 1, 'CategoryName5', NOW(), NOW(), NULL),
+    (NULL, 1, 'CategoryName6', NOW(), NOW(), NULL),
+    (NULL, 1, 'CategoryName7', NOW(), NOW(), NULL),
+    (NULL, 1, 'CategoryName8', NOW(), NOW(), NULL),
+    (NULL, 1, 'CategoryName9', NOW(), NOW(), NULL),
+    (NULL, 1, 'CategoryName10', NOW(), NOW(), NULL);
 
--- Insert statements for survey_content table
-INSERT INTO marketbridge.survey_content (review_survey_category_id, seq_no, content, created_at, updated_at, deleted_at)
+INSERT INTO address (member_id, alias, name, phone_no, city, street, zipcode, detail, is_default, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, 'How satisfied are you with the product?', NOW(), NOW(), NULL),
-    (2, 1, 'How was the delivery time?', NOW(), NOW(), NULL);
+    (1, 'Alias1', 'Name1', '123456789', 'City1', 'Street1', 'Zipcode1', 'Detail1', 1, NOW(), NOW(), NULL),
+    (2, 'Alias2', 'Name2', '123456789', 'City2', 'Street2', 'Zipcode2', 'Detail2', 1, NOW(), NOW(), NULL),
+    (3, 'Alias3', 'Name3', '123456789', 'City3', 'Street3', 'Zipcode3', 'Detail3', 1, NOW(), NOW(), NULL),
+    (4, 'Alias4', 'Name4', '123456789', 'City4', 'Street4', 'Zipcode4', 'Detail4', 1, NOW(), NOW(), NULL),
+    (5, 'Alias5', 'Name5', '123456789', 'City5', 'Street5', 'Zipcode5', 'Detail5', 1, NOW(), NOW(), NULL),
+    (6, 'Alias6', 'Name6', '123456789', 'City6', 'Street6', 'Zipcode6', 'Detail6', 1, NOW(), NOW(), NULL),
+    (7, 'Alias7', 'Name7', '123456789', 'City7', 'Street7', 'Zipcode7', 'Detail7', 1, NOW(), NOW(), NULL),
+    (8, 'Alias8', 'Name8', '123456789', 'City8', 'Street8', 'Zipcode8', 'Detail8', 1, NOW(), NOW(), NULL),
+    (9, 'Alias9', 'Name9', '123456789', 'City9', 'Street9', 'Zipcode9', 'Detail9', 1, NOW(), NOW(), NULL),
+    (10, 'Alias10', 'Name10', '123456789', 'City10', 'Street10', 'Zipcode10', 'Detail10', 1, NOW(), NOW(), NULL);
 
--- Insert statements for board table
-INSERT INTO marketbridge.board (type, subject, contents, created_at, updated_at, deleted_at)
+INSERT INTO membership (member_id, cid, tid, sid, item_name, subs_order_no,  status_code, payment_method, quantity, total_amount, discount_amount, tax_free_amount, card_issuer_name, card_purchase_name, card_no, card_install_month, created_at, updated_at, deleted_at)
 VALUES
-    ('General', 'Hello World', 'This is the first post!', NOW(), NOW(), NULL),
-    ('News', 'Exciting Update', 'Check out our latest news!', NOW(), NOW(), NULL);
+    (1, 'CID1', 'TID1', 'SID1', 'ItemName1', 'SubsOrderNo1',  'StatusCode1', 'PaymentMethod1', 1, 1000, 100, 50, 'CardIssuerName1', 'CardPurchaseName1', 'CardNo1', 12, NOW(), NOW(), NULL),
+    (2, 'CID2', 'TID2', 'SID2', 'ItemName2', 'SubsOrderNo2',  'StatusCode2', 'PaymentMethod2', 2, 2000, 200, 100, 'CardIssuerName2', 'CardPurchaseName2', 'CardNo2', 6, NOW(), NOW(), NULL),
+    (3, 'CID3', 'TID3', 'SID3', 'ItemName3', 'SubsOrderNo3',  'StatusCode3', 'PaymentMethod3', 3, 3000, 300, 150, 'CardIssuerName3', 'CardPurchaseName3', 'CardNo3', 3, NOW(), NOW(), NULL),
+    (4, 'CID4', 'TID4', 'SID4', 'ItemName4', 'SubsOrderNo4',  'StatusCode4', 'PaymentMethod4', 4, 4000, 400, 200, 'CardIssuerName4', 'CardPurchaseName4', 'CardNo4', 9, NOW(), NOW(), NULL),
+    (5, 'CID5', 'TID5', 'SID5', 'ItemName5', 'SubsOrderNo5',  'StatusCode5', 'PaymentMethod5', 5, 5000, 500, 250, 'CardIssuerName5', 'CardPurchaseName5', 'CardNo5', 6, NOW(), NOW(), NULL),
+    (6, 'CID6', 'TID6', 'SID6', 'ItemName6', 'SubsOrderNo6',  'StatusCode6', 'PaymentMethod6', 6, 6000, 600, 300, 'CardIssuerName6', 'CardPurchaseName6', 'CardNo6', 12, NOW(), NOW(), NULL),
+    (7, 'CID7', 'TID7', 'SID7', 'ItemName7', 'SubsOrderNo7',  'StatusCode7', 'PaymentMethod7', 7, 7000, 700, 350, 'CardIssuerName7', 'CardPurchaseName7', 'CardNo7', 3, NOW(), NOW(), NULL),
+    (8, 'CID8', 'TID8', 'SID8', 'ItemName8', 'SubsOrderNo8',  'StatusCode8', 'PaymentMethod8', 8, 8000, 800, 400, 'CardIssuerName8', 'CardPurchaseName8', 'CardNo8', 6, NOW(), NOW(), NULL),
+    (9, 'CID9', 'TID9', 'SID9', 'ItemName9', 'SubsOrderNo9',  'StatusCode9', 'PaymentMethod9', 9, 9000, 900, 450, 'CardIssuerName9', 'CardPurchaseName9', 'CardNo9', 9, NOW(), NOW(), NULL),
+    (10, 'CID10', 'TID10', 'SID10', 'ItemName10', 'SubsOrderNo10',  'StatusCode10', 'PaymentMethod10', 10, 10000, 1000, 500, 'CardIssuerName10', 'CardPurchaseName10', 'CardNo10', 12, NOW(), NOW(), NULL);
 
--- Insert statements for qna table
-INSERT INTO marketbridge.qna (seller_id, member_id, content_type, content, created_at, updated_at, deleted_at)
+INSERT INTO member ( membership, email, password, name, phone_no, is_alert, is_agree, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, 'Product', 'Do you have this product in different colors?', NOW(), NOW(), NULL),
-    (2, 2, 'Shipping', 'When will my order be delivered?', NOW(), NOW(), NULL);
+    ( 'Membership1', 'email1@example.com', 'password1', 'MemberName1', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ('Membership2', 'email2@example.com', 'password2', 'MemberName2', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership3', 'email3@example.com', 'password3', 'MemberName3', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ('Membership4', 'email4@example.com', 'password4', 'MemberName4', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership5', 'email5@example.com', 'password5', 'MemberName5', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership6', 'email6@example.com', 'password6', 'MemberName6', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership7', 'email7@example.com', 'password7', 'MemberName7', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership8', 'email8@example.com', 'password8', 'MemberName8', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ( 'Membership9', 'email9@example.com', 'password9', 'MemberName9', '123456789', 1, 1, NOW(), NOW(), NULL),
+    ('Membership10', 'email10@example.com', 'password10', 'MemberName10', '123456789', 1, 1, NOW(), NOW(), NULL);
 
--- Insert statements for help_desk table
-INSERT INTO marketbridge.help_desk (member_id, product_id, order_id, contents_type, content, created_at, updated_at, deleted_at)
+INSERT INTO prod_option (product_id, option_id, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, 1, 'Product Inquiry', 'I have a question about this product.', NOW(), NOW(), NULL),
-    (2, 2, 2, 'Order Issue', 'I need assistance with my order.', NOW(), NOW(), NULL);
+    (1, 1, NOW(), NOW(), NOW()),
+    (2, 2, NOW(), NOW(), NOW()),
+    (3, 3, NOW(), NOW(), NOW()),
+    (4, 4, NOW(), NOW(), NOW()),
+    (5, 5, NOW(), NOW(), NOW()),
+    (6, 6, NOW(), NOW(), NOW()),
+    (7, 7, NOW(), NOW(), NOW()),
+    (8, 8, NOW(), NOW(), NOW()),
+    (9, 9, NOW(), NOW(), NOW()),
+    (10, 10, NOW(), NOW(), NOW());
 
--- Insert statements for delivery table
-INSERT INTO marketbridge.delivery (seller_id, address_id, order_detail_id, type, carrier, tracking_no, status, ship_date, delivered_date, created_at, updated_at, deleted_at)
+INSERT INTO product (category_id, is_own, name, price, is_subs, stock, thumb_img, discount_rate, product_no, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, 1, 'Standard', 'UPS', '1234567890', 'In Transit', NOW(), NULL, NOW(), NOW(), NULL),
-    (2, 2, 2, 'Express', 'FedEx', '9876543210', 'Delivered', NOW(), NOW(), NOW(), NOW(), NULL);
-
--- Insert statements for estimated_time table
-INSERT INTO marketbridge.estimated_time (hours, add_day, created_at, updated_at, deleted_at)
-VALUES
-    (24, 2, NOW(), NOW(), NULL),
-    (48, 1, NOW(), NOW(), NULL);
-
--- Insert statements for coupon_budget table
-INSERT INTO marketbridge.coupon_budget (seller_id, balance, outgoing, incoming, created_at, updated_at, deleted_at)
-VALUES
-    (1, 500, 50, 100, NOW(), NOW(), NULL),
-    (2, 300, 30, 80, NOW(), NOW(), NULL);
-
--- Insert statements for coupon table
-INSERT INTO marketbridge.coupon (product_id, name, price, count, minimum_price, start_date, end_date, created_at, updated_at, deleted_at)
-VALUES
-    (1, 'Discount Coupon', '50', 100, 200, '2024-02-01', '2024-03-01', NOW(), NOW(), NULL),
-    (2, 'Free Shipping Coupon', '30', 50, 100, '2024-03-01', '2024-04-01', NOW(), NOW(), NULL);
-
--- Insert statements for point table
-INSERT INTO marketbridge.point (member_id, in_point, out_point, balance, type, comments, created_at, updated_at, deleted_at)
-VALUES
-    (1, 100, 50, 50, 'Credit', 'Reward points for order', NOW(), NOW(), NULL),
-    (2, 80, 30, 50, 'Credit', 'Reward points for order', NOW(), NOW(), NULL);
-
--- Insert statements for member_coupon table
-INSERT INTO marketbridge.member_coupon (member_id, coupon_id, is_used, used_date, end_date, created_at, updated_at, deleted_at)
-VALUES
-    (1, 1, 0, NULL, '2024-03-01', NOW(), NOW(), NULL),
-    (2, 2, 0, NULL, '2024-04-01', NOW(), NOW(), NULL);
-
--- Insert statements for admin table
-INSERT INTO marketbridge.admin (emp_no, password, name, level, created_at, updated_at, deleted_at)
-VALUES
-    ('EMP001', 'admin123', 'Admin member', 1, NOW(), NOW(), NULL),
-    ('EMP002', 'admin456', 'Super Admin', 2, NOW(), NOW(), NULL);
-
--- Insert statements for cart table
-INSERT INTO marketbridge.cart (member_id, product_id, is_subs, quantity)
-VALUES
-    (1, 1, 0, 2),
-    (2, 2, 1, 1);
-
-
--- Insert statements for prod_option table
-INSERT INTO marketbridge.prod_option (product_id, option_id, created_at, updated_at, deleted_at)
-VALUES
-    (1, 1, NOW(), NOW(), NULL),
-    (2, 2, NOW(), NOW(), NULL);
-
-INSERT INTO marketbridge.product (category_id, is_own, name, price, is_subs, stock, thumb_img, discount_rate, product_no, created_at, updated_at, deleted_at)
-VALUES (1, 1, 'Product One', 5000, 0, 100, 'product1.jpg', 10, 'PN0001', NOW(), NOW(), NULL),
-       (2, 0, 'Product Two', 8000, 1, 50, 'product2.jpg', 15, 'PN0002', NOW(), NOW(), NULL);
+    (1, 1, 'Product1', 100, 0, 10, 'ThumbImg1', 5, 'ProductNo1', NOW(), NOW(), NOW()),
+    (2, 1, 'Product2', 200, 0, 20, 'ThumbImg2', 10, 'ProductNo2', NOW(), NOW(), NOW()),
+    (3, 1, 'Product3', 300, 0, 30, 'ThumbImg3', 15, 'ProductNo3', NOW(), NOW(), NOW()),
+    (4, 1, 'Product4', 400, 0, 40, 'ThumbImg4', 20, 'ProductNo4', NOW(), NOW(), NOW()),
+    (5, 1, 'Product5', 500, 0, 50, 'ThumbImg5', 25, 'ProductNo5', NOW(), NOW(), NOW()),
+    (6, 1, 'Product6', 600, 0, 60, 'ThumbImg6', 30, 'ProductNo6', NOW(), NOW(), NOW()),
+    (7, 1, 'Product7', 700, 0, 70, 'ThumbImg7', 35, 'ProductNo7', NOW(), NOW(), NOW()),
+    (8, 1, 'Product8', 800, 0, 80, 'ThumbImg8', 40, 'ProductNo8', NOW(), NOW(), NOW()),
+    (9, 1, 'Product9', 900, 0, 90, 'ThumbImg9', 45, 'ProductNo9', NOW(), NOW(), NOW()),
+    (10, 1, 'Product10', 1000, 0, 100, 'ThumbImg10', 50, 'ProductNo10', NOW(), NOW(), NOW());
