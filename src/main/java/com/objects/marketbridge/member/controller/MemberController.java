@@ -1,17 +1,15 @@
 package com.objects.marketbridge.member.controller;
 
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.service.MemberService;
-import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.member.domain.Address;
+import com.objects.marketbridge.common.security.annotation.AuthMemberId;
+import com.objects.marketbridge.member.dto.AddAddressRequestDto;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
+import com.objects.marketbridge.member.dto.GetAddressesResponse;
+import com.objects.marketbridge.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -23,17 +21,28 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
 
-    @PostMapping("/address")
-    public ApiResponse<List<Address>> addAddressValue(
+
+    @GetMapping("/find-address")
+    public ApiResponse<List<GetAddressesResponse>> findAddrress(@AuthMemberId Long memberId){
+        List<GetAddressesResponse> addressesResponses =memberService.findByMemberId(memberId);
+        return ApiResponse.ok(addressesResponses);
+    }
+
+    @PostMapping("/add-address")
+    public ApiResponse<List<GetAddressesResponse>> addAddressValue(
             @AuthMemberId Long memberId,
-            @Valid @RequestBody Address request){
-       //서비스 쪽으로
-        Member member = memberRepository.findById(memberId);
-        member.addAddress(request);
+            @Valid @RequestBody AddAddressRequestDto request){
+        List<GetAddressesResponse> addressesResponses = memberService.addMemberAddress(memberId,request);
+       return ApiResponse.ok(addressesResponses);
+    }
 
-       return ApiResponse.ok(member.getAddresses());
+    @PatchMapping("/update-address")
+    public ApiResponse<List<GetAddressesResponse>> updateAddress(
+            @AuthMemberId Long memberId ,@Valid @RequestBody AddAddressRequestDto request){
+//
+        List<GetAddressesResponse> addressesResponses = memberService.updateMemberAddress(memberId,request);
+        return ApiResponse.ok(addressesResponses);
     }
 
     @GetMapping("/check-email")

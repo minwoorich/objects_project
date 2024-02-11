@@ -1,5 +1,6 @@
 package com.objects.marketbridge.member.service.port;
 
+import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.member.domain.Member;
 
 import java.util.List;
