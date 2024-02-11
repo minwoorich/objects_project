@@ -39,7 +39,10 @@ public class Address extends BaseEntity {
             this.member.getAddresses().remove(this);
         }
         this.member = member;
-        member.getAddresses().add(this);
+    }
+
+    public void update(AddressValue addressValue){
+        this.addressValue=addressValue;
     }
 
     // 비즈니스 로직

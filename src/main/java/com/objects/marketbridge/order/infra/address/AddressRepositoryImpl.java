@@ -20,6 +20,11 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
+    public Address findAddressValueByAddressId(Long addressId, Long memberId) {
+        return addressJpaRepository.findAddressValueByAddressId(addressId,memberId);
+    }
+
+    @Override
     public void save(Address address) {
         addressJpaRepository.save(address);
     }
