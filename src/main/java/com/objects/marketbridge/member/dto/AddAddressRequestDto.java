@@ -10,12 +10,15 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AddAddressRequestDto {
 
+    private Long addressId;
+
     private AddressValue addressValue;
 
     private Boolean isDefault;
 
     @Builder
-    public AddAddressRequestDto(AddressValue addressValue,Boolean isDefault) {
+    public AddAddressRequestDto( Long addressId,AddressValue addressValue,Boolean isDefault) {
+        this.addressId = addressId;
         this.addressValue = addressValue;
         this.isDefault=isDefault;
     }

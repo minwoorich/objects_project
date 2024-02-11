@@ -46,8 +46,8 @@ public class MemberService {
 
     public List<GetAddressesResponse> updateMemberAddress(Long memberId,AddAddressRequestDto request){
         Member member = memberRepository.findById(memberId);
-        //        Address addressValueByAddressId = addressRepository.findAddressValueByAddressId(request.getAddress().getId(),memberId);
-//        addressValueByAddressId.update(request.getAddress().getAddressValue());
+        Address addressValueByAddressId = addressRepository.findAddressValueByAddressId(request.getAddressId(), memberId);
+        addressValueByAddressId.update(request.getAddressValue());
         return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
