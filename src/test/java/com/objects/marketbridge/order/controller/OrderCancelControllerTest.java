@@ -7,7 +7,6 @@ import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.member.domain.MembershipType;
 import com.objects.marketbridge.order.controller.dto.ConfirmCancelHttp;
-import com.objects.marketbridge.order.controller.dto.ConfirmReturnHttp;
 import com.objects.marketbridge.order.controller.dto.GetCancelDetailHttp;
 import com.objects.marketbridge.order.controller.dto.RequestCancelHttp;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
@@ -31,7 +30,6 @@ import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static com.objects.marketbridge.order.domain.StatusCodeType.RELEASE_PENDING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -698,7 +696,7 @@ class OrderCancelControllerTest {
     }
 
     @Test
-    @DisplayName("취소/반품 상세 조회 (WOW_NoCoupon)")
+    @DisplayName("취소 상세 조회 (WOW_NoCoupon)")
     public void getCancelDetail_WOW_NoCoupon() {
         // given
         Member member = Member.builder()
@@ -740,7 +738,7 @@ class OrderCancelControllerTest {
         assertThat(result.getData().getOrderDate()).isEqualTo(orderDate);
         assertThat(result.getData().getCancelDate()).isEqualTo(cancelledAt);
         assertThat(result.getData().getOrderNo()).isEqualTo("1");
-        assertThat(result.getData().getCancelReason()).isEqualTo("단순변심");
+        assertThat(result.getData().getReason()).isEqualTo("단순변심");
 
         assertThat(result.getData().getProductInfo().getProductId()).isEqualTo(1L);
         assertThat(result.getData().getProductInfo().getProductNo()).isEqualTo("1");
@@ -755,7 +753,7 @@ class OrderCancelControllerTest {
     }
 
     @Test
-    @DisplayName("취소/반품 상세 조회 (BASIC_NoCoupon)")
+    @DisplayName("취소 상세 조회 (BASIC_NoCoupon)")
     public void getCancelDetail_BASIC_NoCoupon() {
         // given
         Member member = Member.builder()
@@ -797,7 +795,7 @@ class OrderCancelControllerTest {
         assertThat(result.getData().getOrderDate()).isEqualTo(orderDate);
         assertThat(result.getData().getCancelDate()).isEqualTo(cancelledAt);
         assertThat(result.getData().getOrderNo()).isEqualTo("1");
-        assertThat(result.getData().getCancelReason()).isEqualTo("단순변심");
+        assertThat(result.getData().getReason()).isEqualTo("단순변심");
 
         assertThat(result.getData().getProductInfo().getProductId()).isEqualTo(1L);
         assertThat(result.getData().getProductInfo().getProductNo()).isEqualTo("1");
@@ -812,7 +810,7 @@ class OrderCancelControllerTest {
     }
 
     @Test
-    @DisplayName("취소/반품 상세 조회 (WOW_Coupon)")
+    @DisplayName("취소 상세 조회 (WOW_Coupon)")
     public void getCancelDetail_WOW_Coupon() {
         // given
         Member member = Member.builder()
@@ -864,7 +862,7 @@ class OrderCancelControllerTest {
         assertThat(result.getData().getOrderDate()).isEqualTo(orderDate);
         assertThat(result.getData().getCancelDate()).isEqualTo(cancelledAt);
         assertThat(result.getData().getOrderNo()).isEqualTo("1");
-        assertThat(result.getData().getCancelReason()).isEqualTo("단순변심");
+        assertThat(result.getData().getReason()).isEqualTo("단순변심");
 
         assertThat(result.getData().getProductInfo().getProductId()).isEqualTo(1L);
         assertThat(result.getData().getProductInfo().getProductNo()).isEqualTo("1");
@@ -879,7 +877,7 @@ class OrderCancelControllerTest {
     }
 
     @Test
-    @DisplayName("취소/반품 상세 조회 (BASIC_Coupon)")
+    @DisplayName("취소 상세 조회 (BASIC_Coupon)")
     public void getCancelDetail_BASIC_Coupon() {
         // given
         Member member = Member.builder()
@@ -931,7 +929,7 @@ class OrderCancelControllerTest {
         assertThat(result.getData().getOrderDate()).isEqualTo(orderDate);
         assertThat(result.getData().getCancelDate()).isEqualTo(cancelledAt);
         assertThat(result.getData().getOrderNo()).isEqualTo("1");
-        assertThat(result.getData().getCancelReason()).isEqualTo("단순변심");
+        assertThat(result.getData().getReason()).isEqualTo("단순변심");
 
         assertThat(result.getData().getProductInfo().getProductId()).isEqualTo(1L);
         assertThat(result.getData().getProductInfo().getProductNo()).isEqualTo("1");

@@ -64,6 +64,10 @@ include::api/order/orderreturnrequest.adoc[]
 {empty}
 {empty}
 
+include::api/order/orderreturndetail.adoc[]
+{empty}
+{empty}
+
 include::api/order/orderconfirmreturn.adoc[]
 {empty}
 {empty}

@@ -12,6 +12,8 @@ import com.objects.marketbridge.order.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.order.mock.TestContainer;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.service.dto.ConfirmReturnDto;
+import com.objects.marketbridge.order.service.dto.GetCancelDetailDto;
+import com.objects.marketbridge.order.service.dto.GetReturnDetailDto;
 import com.objects.marketbridge.order.service.dto.RequestReturnDto;
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.EntityNotFoundException;
@@ -534,6 +536,231 @@ class OrderReturnServiceTest {
                     CustomLogicException customLogicException = (CustomLogicException) exception;
                     assertThat(customLogicException.getErrorCode()).isEqualTo(NON_RETURNABLE_PRODUCT);
                 });
+    }
+
+    @Test
+    @DisplayName("반품 상세 조회 (WOW_NoCoupon)")
+    public void findReturnDetail_WOW_NoCoupon() {
+        // given
+        Product product = Product.builder()
+                .name("빵빵이키링")
+                .productNo("1")
+                .build();
+
+        LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
+        OrderDetail orderDetail = OrderDetail.builder()
+                .orderNo("1")
+                .reason("단순변심")
+                .cancelledAt(cancelledAt)
+                .quantity(10L)
+                .reducedQuantity(0L)
+                .product(product)
+                .price(1000L)
+                .statusCode(RELEASE_PENDING.getCode())
+                .build();
+
+        testContainer.productRepository.save(product);
+        testContainer.orderDetailCommendRepository.save(orderDetail);
+
+        Long orderDetailId = 1L;
+        String membership = WOW.getText();
+
+        // when
+        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderDetailId, membership);
+
+        // then
+        assertThat(result.getOrderDate()).isEqualTo(orderDate);
+        assertThat(result.getCancelDate()).isEqualTo(cancelledAt);
+        assertThat(result.getOrderNo()).isEqualTo("1");
+        assertThat(result.getReason()).isEqualTo("단순변심");
+
+        assertThat(result.getProductInfo().getProductId()).isEqualTo(1L);
+        assertThat(result.getProductInfo().getProductNo()).isEqualTo("1");
+        assertThat(result.getProductInfo().getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getProductInfo().getPrice()).isEqualTo(1000L);
+        assertThat(result.getProductInfo().getQuantity()).isEqualTo(10L);
+
+        assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
+        assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
+        assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(0L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+    }
+
+    @Test
+    @DisplayName("반품 상세 조회 (BASIC_NoCoupon)")
+    public void findReturnDetail_BASIC_NoCoupon() {
+        // given
+        Product product = Product.builder()
+                .name("빵빵이키링")
+                .productNo("1")
+                .build();
+
+        LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
+        OrderDetail orderDetail = OrderDetail.builder()
+                .orderNo("1")
+                .reason("단순변심")
+                .cancelledAt(cancelledAt)
+                .quantity(10L)
+                .reducedQuantity(0L)
+                .product(product)
+                .price(1000L)
+                .statusCode(RELEASE_PENDING.getCode())
+                .build();
+
+        testContainer.productRepository.save(product);
+        testContainer.orderDetailCommendRepository.save(orderDetail);
+
+        Long orderDetailId = 1L;
+        String membership = BASIC.getText();
+
+        // when
+        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderDetailId, membership);
+
+        // then
+        assertThat(result.getOrderDate()).isEqualTo(orderDate);
+        assertThat(result.getCancelDate()).isEqualTo(cancelledAt);
+        assertThat(result.getOrderNo()).isEqualTo("1");
+        assertThat(result.getReason()).isEqualTo("단순변심");
+
+        assertThat(result.getProductInfo().getProductId()).isEqualTo(1L);
+        assertThat(result.getProductInfo().getProductNo()).isEqualTo("1");
+        assertThat(result.getProductInfo().getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getProductInfo().getPrice()).isEqualTo(1000L);
+        assertThat(result.getProductInfo().getQuantity()).isEqualTo(10L);
+
+        assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
+        assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
+        assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(0L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+    }
+
+    @Test
+    @DisplayName("반품 상세 조회 (WOW_Coupon)")
+    public void findReturnDetail_WOW_Coupon() {
+        // given
+        Product product = Product.builder()
+                .name("빵빵이키링")
+                .productNo("1")
+                .build();
+
+        Coupon coupon = Coupon.builder()
+                .product(product)
+                .price(1000L)
+                .build();
+
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .coupon(coupon)
+                .build();
+
+        LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
+        OrderDetail orderDetail = OrderDetail.builder()
+                .memberCoupon(memberCoupon)
+                .orderNo("1")
+                .reason("단순변심")
+                .cancelledAt(cancelledAt)
+                .quantity(10L)
+                .reducedQuantity(0L)
+                .product(product)
+                .price(1000L)
+                .statusCode(RELEASE_PENDING.getCode())
+                .build();
+
+        testContainer.productRepository.save(product);
+        testContainer.orderDetailCommendRepository.save(orderDetail);
+
+        Long orderDetailId = 1L;
+        String membership = WOW.getText();
+
+        // when
+        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderDetailId, membership);
+
+        // then
+        assertThat(result.getOrderDate()).isEqualTo(orderDate);
+        assertThat(result.getCancelDate()).isEqualTo(cancelledAt);
+        assertThat(result.getOrderNo()).isEqualTo("1");
+        assertThat(result.getReason()).isEqualTo("단순변심");
+
+        assertThat(result.getProductInfo().getProductId()).isEqualTo(1L);
+        assertThat(result.getProductInfo().getProductNo()).isEqualTo("1");
+        assertThat(result.getProductInfo().getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getProductInfo().getPrice()).isEqualTo(1000L);
+        assertThat(result.getProductInfo().getQuantity()).isEqualTo(10L);
+
+        assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
+        assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
+        assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+    }
+
+    @Test
+    @DisplayName("반품 상세 조회 (BASIC_Coupon)")
+    public void findReturnDetail_BASIC_Coupon() {
+        // given
+        Product product = Product.builder()
+                .name("빵빵이키링")
+                .productNo("1")
+                .build();
+
+        Coupon coupon = Coupon.builder()
+                .product(product)
+                .price(1000L)
+                .build();
+
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .coupon(coupon)
+                .build();
+
+        LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
+        OrderDetail orderDetail = OrderDetail.builder()
+                .memberCoupon(memberCoupon)
+                .orderNo("1")
+                .reason("단순변심")
+                .cancelledAt(cancelledAt)
+                .quantity(10L)
+                .reducedQuantity(0L)
+                .product(product)
+                .price(1000L)
+                .statusCode(RELEASE_PENDING.getCode())
+                .build();
+
+        testContainer.productRepository.save(product);
+        testContainer.orderDetailCommendRepository.save(orderDetail);
+
+        Long orderDetailId = 1L;
+        String membership = BASIC.getText();
+
+        // when
+        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderDetailId, membership);
+
+        // then
+        assertThat(result.getOrderDate()).isEqualTo(orderDate);
+        assertThat(result.getCancelDate()).isEqualTo(cancelledAt);
+        assertThat(result.getOrderNo()).isEqualTo("1");
+        assertThat(result.getReason()).isEqualTo("단순변심");
+
+        assertThat(result.getProductInfo().getProductId()).isEqualTo(1L);
+        assertThat(result.getProductInfo().getProductNo()).isEqualTo("1");
+        assertThat(result.getProductInfo().getName()).isEqualTo("빵빵이키링");
+        assertThat(result.getProductInfo().getPrice()).isEqualTo(1000L);
+        assertThat(result.getProductInfo().getQuantity()).isEqualTo(10L);
+
+        assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
+        assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
+        assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+    }
+
+    @Test
+    @DisplayName("반품 상세가 없을 경우 에러가 발생한다.")
+    public void findReturnDetail_ENTITY_NOT_FOUND_ERROR() {
+        // given
+        Long orderDetailId = 1L;
+        String membership = BASIC.getText();
+
+        // when
+        assertThatThrownBy(() -> testContainer.orderReturnService.findReturnDetail(orderDetailId, membership))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("엔티티가 존재하지 않습니다");
     }
 
 }

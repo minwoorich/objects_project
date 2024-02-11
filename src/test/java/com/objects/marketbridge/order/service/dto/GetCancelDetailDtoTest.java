@@ -50,7 +50,7 @@ class GetCancelDetailDtoTest {
         GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderDetail, memberShip, testDateTimeHolder);
 
         // then
-        assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "cancelReason")
+        assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "reason")
                 .contains(createTime, cancelledAt, "1", "단순변심");
 
         assertThat(result.getProductInfo())
@@ -93,7 +93,7 @@ class GetCancelDetailDtoTest {
         GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderDetail, memberShip, testDateTimeHolder);
 
         // then
-        assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "cancelReason")
+        assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "reason")
                 .contains(createTime, cancelledAt, "1", "단순변심");
 
         assertThat(result.getProductInfo())
@@ -146,7 +146,7 @@ class GetCancelDetailDtoTest {
         GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderDetail, memberShip, testDateTimeHolder);
 
         // then
-        assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "cancelReason")
+        assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "reason")
                 .contains(createTime, cancelledAt, "1", "단순변심");
 
         assertThat(result.getProductInfo())
@@ -199,7 +199,7 @@ class GetCancelDetailDtoTest {
         GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderDetail, memberShip, testDateTimeHolder);
 
         // then
-        assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "cancelReason")
+        assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "reason")
                 .contains(createTime, cancelledAt, "1", "단순변심");
 
         assertThat(result.getProductInfo())

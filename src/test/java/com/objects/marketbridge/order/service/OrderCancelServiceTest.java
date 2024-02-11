@@ -13,7 +13,6 @@ import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.service.dto.ConfirmCancelDto;
 import com.objects.marketbridge.order.service.dto.GetCancelDetailDto;
 import com.objects.marketbridge.order.service.dto.RequestCancelDto;
-import com.objects.marketbridge.order.service.dto.RequestReturnDto;
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -363,8 +362,8 @@ class OrderCancelServiceTest {
     }
 
     @Test
-    @DisplayName("취소/반품 상세 조회 (WOW_NoCoupon)")
-    public void findCancelReturn_WOW_NoCoupon() {
+    @DisplayName("취소 상세 조회 (WOW_NoCoupon)")
+    public void findCancelDetail_WOW_NoCoupon() {
         // given
         Product product = Product.builder()
                 .name("빵빵이키링")
@@ -396,7 +395,7 @@ class OrderCancelServiceTest {
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
         assertThat(result.getCancelDate()).isEqualTo(cancelledAt);
         assertThat(result.getOrderNo()).isEqualTo("1");
-        assertThat(result.getCancelReason()).isEqualTo("단순변심");
+        assertThat(result.getReason()).isEqualTo("단순변심");
 
         assertThat(result.getProductInfo().getProductId()).isEqualTo(1L);
         assertThat(result.getProductInfo().getProductNo()).isEqualTo("1");
@@ -411,8 +410,8 @@ class OrderCancelServiceTest {
     }
 
     @Test
-    @DisplayName("취소/반품 상세 조회 (BASIC_NoCoupon)")
-    public void findCancelReturn_BASIC_NoCoupon() {
+    @DisplayName("취소 상세 조회 (BASIC_NoCoupon)")
+    public void findCancelDetail_BASIC_NoCoupon() {
         // given
         Product product = Product.builder()
                 .name("빵빵이키링")
@@ -444,7 +443,7 @@ class OrderCancelServiceTest {
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
         assertThat(result.getCancelDate()).isEqualTo(cancelledAt);
         assertThat(result.getOrderNo()).isEqualTo("1");
-        assertThat(result.getCancelReason()).isEqualTo("단순변심");
+        assertThat(result.getReason()).isEqualTo("단순변심");
 
         assertThat(result.getProductInfo().getProductId()).isEqualTo(1L);
         assertThat(result.getProductInfo().getProductNo()).isEqualTo("1");
@@ -459,8 +458,8 @@ class OrderCancelServiceTest {
     }
 
     @Test
-    @DisplayName("취소/반품 상세 조회 (WOW_Coupon)")
-    public void findCancelReturn_WOW_Coupon() {
+    @DisplayName("취소 상세 조회 (WOW_Coupon)")
+    public void findCancelDetail_WOW_Coupon() {
         // given
         Product product = Product.builder()
                 .name("빵빵이키링")
@@ -502,7 +501,7 @@ class OrderCancelServiceTest {
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
         assertThat(result.getCancelDate()).isEqualTo(cancelledAt);
         assertThat(result.getOrderNo()).isEqualTo("1");
-        assertThat(result.getCancelReason()).isEqualTo("단순변심");
+        assertThat(result.getReason()).isEqualTo("단순변심");
 
         assertThat(result.getProductInfo().getProductId()).isEqualTo(1L);
         assertThat(result.getProductInfo().getProductNo()).isEqualTo("1");
@@ -517,8 +516,8 @@ class OrderCancelServiceTest {
     }
 
     @Test
-    @DisplayName("취소/반품 상세 조회 (BASIC_Coupon)")
-    public void findCancelReturn_BASIC_Coupon() {
+    @DisplayName("취소 상세 조회 (BASIC_Coupon)")
+    public void findCancelDetail_BASIC_Coupon() {
         // given
         Product product = Product.builder()
                 .name("빵빵이키링")
@@ -560,7 +559,7 @@ class OrderCancelServiceTest {
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
         assertThat(result.getCancelDate()).isEqualTo(cancelledAt);
         assertThat(result.getOrderNo()).isEqualTo("1");
-        assertThat(result.getCancelReason()).isEqualTo("단순변심");
+        assertThat(result.getReason()).isEqualTo("단순변심");
 
         assertThat(result.getProductInfo().getProductId()).isEqualTo(1L);
         assertThat(result.getProductInfo().getProductNo()).isEqualTo("1");
@@ -576,7 +575,7 @@ class OrderCancelServiceTest {
 
     @Test
     @DisplayName("주문 상세가 없을 경우 에러가 발생한다.")
-    public void findCancelReturn_ENTITY_NOT_FOUND_ERROR() {
+    public void findCancelDetail_ENTITY_NOT_FOUND_ERROR() {
         // given
         Long orderDetailId = 1L;
         String membership = BASIC.getText();

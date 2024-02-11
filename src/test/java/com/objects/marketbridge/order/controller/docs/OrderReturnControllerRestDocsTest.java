@@ -256,4 +256,99 @@ public class OrderReturnControllerRestDocsTest {
                         )));
     }
 
+    @Test
+    @DisplayName("반품 상세를 조회한다.")
+    @WithMockCustomUser
+    public void getReturnDetail() throws Exception {
+        // given
+        GetReturnDetailDto.ProductInfo productInfo = GetReturnDetailDto.ProductInfo.builder()
+                .productId(1L)
+                .productNo("1")
+                .name("빵빵이 키링")
+                .price(10000L)
+                .quantity(2L)
+                .build();
+
+        GetReturnDetailDto.RefundInfo refundInfo = GetReturnDetailDto.RefundInfo.builder()
+                .deliveryFee(0L)
+                .refundFee(0L)
+                .discountPrice(5000L)
+                .totalPrice(100000L)
+                .build();
+
+        GetReturnDetailDto.Response response = GetReturnDetailDto.Response.builder()
+                .orderDate(LocalDateTime.now())
+                .cancelDate(LocalDateTime.now())
+                .orderNo("123")
+                .reason("빵빵이 기여워")
+                .productInfo(productInfo)
+                .refundInfo(refundInfo)
+                .build();
+
+        Member member = Member.builder()
+                .membership(MembershipType.WOW.getText())
+                .build();
+
+        given(memberRepository.findById(anyLong())).willReturn(member);
+        given(orderReturnService.findReturnDetail(anyLong(), any(String.class)))
+                .willReturn(response);
+
+        // when // then
+        mockMvc.perform(
+                        get("/orders/return/detail")
+                                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .param("orderDetailId", "1")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("order-return-detail",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("orderDetailId")
+                                        .description("주문 상세 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.orderDate").type(JsonFieldType.STRING)
+                                        .description("주문 날짜"),
+                                fieldWithPath("data.cancelDate").type(JsonFieldType.STRING)
+                                        .description("주문 취소 날짜"),
+                                fieldWithPath("data.orderNo").type(JsonFieldType.STRING)
+                                        .description("주문 번호"),
+                                fieldWithPath("data.reason").type(JsonFieldType.STRING)
+                                        .description("주문 취소 이유"),
+                                fieldWithPath("data.productInfo").type(JsonFieldType.OBJECT)
+                                        .description("상품 정보"),
+                                fieldWithPath("data.productInfo.productId").type(JsonFieldType.NUMBER)
+                                        .description("상품 ID"),
+                                fieldWithPath("data.productInfo.productNo").type(JsonFieldType.STRING)
+                                        .description("상품 번호"),
+                                fieldWithPath("data.productInfo.name").type(JsonFieldType.STRING)
+                                        .description("상품 이름"),
+                                fieldWithPath("data.productInfo.price").type(JsonFieldType.NUMBER)
+                                        .description("주문 가격"),
+                                fieldWithPath("data.productInfo.quantity").type(JsonFieldType.NUMBER)
+                                        .description("상품 주문 수량"),
+                                fieldWithPath("data.refundInfo").type(JsonFieldType.OBJECT)
+                                        .description("취소/반품 정보"),
+                                fieldWithPath("data.refundInfo.deliveryFee").type(JsonFieldType.NUMBER)
+                                        .description("배송 비용"),
+                                fieldWithPath("data.refundInfo.refundFee").type(JsonFieldType.NUMBER)
+                                        .description("반품 비용"),
+                                fieldWithPath("data.refundInfo.discountPrice").type(JsonFieldType.NUMBER)
+                                        .description("할인 금액"),
+                                fieldWithPath("data.refundInfo.totalPrice").type(JsonFieldType.NUMBER)
+                                        .description("상품 할인 전 금액 합계")
+                        )));
+    }
+
 }

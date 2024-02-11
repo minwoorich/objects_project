@@ -21,16 +21,16 @@ public class GetCancelDetailDto {
         private LocalDateTime orderDate;
         private LocalDateTime cancelDate;
         private String orderNo;
-        private String cancelReason;
+        private String reason;
         private ProductInfo productInfo;
         private RefundInfo refundInfo;
 
         @Builder
-        private Response(LocalDateTime orderDate, LocalDateTime cancelDate, String orderNo, String cancelReason, ProductInfo productInfo, RefundInfo refundInfo) {
+        private Response(LocalDateTime orderDate, LocalDateTime cancelDate, String orderNo, String reason, ProductInfo productInfo, RefundInfo refundInfo) {
             this.orderDate = orderDate;
             this.cancelDate = cancelDate;
             this.orderNo = orderNo;
-            this.cancelReason = cancelReason;
+            this.reason = reason;
             this.productInfo = productInfo;
             this.refundInfo = refundInfo;
         }
@@ -40,7 +40,7 @@ public class GetCancelDetailDto {
                     .orderDate(dateTimeHolder.getCreateTime(orderDetail.getOrder()))
                     .cancelDate(orderDetail.getCancelledAt())
                     .orderNo(orderDetail.getOrderNo())
-                    .cancelReason(orderDetail.getReason())
+                    .reason(orderDetail.getReason())
                     .productInfo(ProductInfo.of(orderDetail))
                     .refundInfo(RefundInfo.of(orderDetail, memberShip))
                     .build();

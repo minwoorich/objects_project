@@ -36,7 +36,7 @@ class GetCancelDetailHttpTest {
                 .orderDate(orderDate)
                 .cancelDate(cancelDate)
                 .orderNo("1")
-                .cancelReason("단순변심")
+                .reason("단순변심")
                 .productInfo(dtoProductInfo)
                 .refundInfo(dtoRefundInfo)
                 .build();
@@ -48,7 +48,7 @@ class GetCancelDetailHttpTest {
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
         assertThat(result.getCancelDate()).isEqualTo(cancelDate);
         assertThat(result.getOrderNo()).isEqualTo("1");
-        assertThat(result.getCancelReason()).isEqualTo("단순변심");
+        assertThat(result.getReason()).isEqualTo("단순변심");
 
         assertThat(result.getProductInfo().getProductId()).isEqualTo(1L);
         assertThat(result.getProductInfo().getProductNo()).isEqualTo("1");

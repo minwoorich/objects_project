@@ -253,9 +253,9 @@ public class OrderCancelControllerRestDocsTest {
     }
 
     @Test
-    @DisplayName("취소/반품 상세를 조회한다.")
+    @DisplayName("취소 상세를 조회한다.")
     @WithMockCustomUser
-    public void getCancelReturnDetail() throws Exception {
+    public void getCancelDetail() throws Exception {
         // given
         GetCancelDetailDto.ProductInfo productInfo = GetCancelDetailDto.ProductInfo.builder()
                 .productId(1L)
@@ -276,7 +276,7 @@ public class OrderCancelControllerRestDocsTest {
                 .orderDate(LocalDateTime.now())
                 .cancelDate(LocalDateTime.now())
                 .orderNo("123")
-                .cancelReason("빵빵이 기여워")
+                .reason("빵빵이 기여워")
                 .productInfo(productInfo)
                 .refundInfo(refundInfo)
                 .build();
@@ -320,7 +320,7 @@ public class OrderCancelControllerRestDocsTest {
                                         .description("주문 취소 날짜"),
                                 fieldWithPath("data.orderNo").type(JsonFieldType.STRING)
                                         .description("주문 번호"),
-                                fieldWithPath("data.cancelReason").type(JsonFieldType.STRING)
+                                fieldWithPath("data.reason").type(JsonFieldType.STRING)
                                         .description("주문 취소 이유"),
                                 fieldWithPath("data.productInfo").type(JsonFieldType.OBJECT)
                                         .description("상품 정보"),
