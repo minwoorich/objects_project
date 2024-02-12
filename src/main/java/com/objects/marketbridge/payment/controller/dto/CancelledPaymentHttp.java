@@ -28,11 +28,11 @@ public class CancelledPaymentHttp {
         private Long discountAmount;
         private Long taxFreeAmount;
         private String cardIssuerName;
-        private String cardInstallMonth;
+        private Long cardInstallMonth;
         private List<ProductInfoDto> productInfos;
 
         @Builder
-        private Response(String paymentMethodType, String orderName, String approvedAt, String canceledAt, String status, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName,  String cardInstallMonth, List<ProductInfoDto> productInfos) {
+        private Response(String paymentMethodType, String orderName, String approvedAt, String canceledAt, String status, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName,  Long cardInstallMonth, List<ProductInfoDto> productInfos) {
             this.paymentMethodType = paymentMethodType;
             this.orderName = orderName;
             this.approvedAt = approvedAt;
@@ -57,7 +57,7 @@ public class CancelledPaymentHttp {
                     .approvedAt(kakaoResp.getApprovedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .canceledAt(kakaoResp.getCanceledAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .status(kakaoResp.getKakaoStatus())
-                    .cardInstallMonth(cardInfo.getInstallMonth().toString())
+                    .cardInstallMonth(cardInfo.getInstallMonth())
                     .cardIssuerName(cardInfo.getCardCorpName())
                     .totalAmount(kakaoResp.getAmount().getTotalAmount())
                     .discountAmount(kakaoResp.getAmount().getDiscountAmount())
@@ -74,7 +74,7 @@ public class CancelledPaymentHttp {
         }
 
 
-        public static Response create(String paymentMethodType, String orderName, String approvedAt, String canceledAt, String status, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName, String cardPurchaseName, String cardInstallMonth,  List<ProductInfoDto> productInfos) {
+        public static Response create(String paymentMethodType, String orderName, String approvedAt, String canceledAt, String status, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName, Long cardInstallMonth,  List<ProductInfoDto> productInfos) {
             return Response.builder()
                     .paymentMethodType(paymentMethodType)
                     .orderName(orderName)

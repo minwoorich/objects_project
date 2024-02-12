@@ -1,6 +1,8 @@
 package com.objects.marketbridge.payment.controller.dto;
 
 import com.objects.marketbridge.common.dto.KakaoPayOrderResponse;
+import com.objects.marketbridge.common.enums.CardCoType;
+import com.objects.marketbridge.common.enums.KakaoStatus;
 import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.member.domain.Member;
@@ -12,9 +14,7 @@ import com.objects.marketbridge.order.service.GetOrderService;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
-import com.objects.marketbridge.payment.domain.Amount;
-import com.objects.marketbridge.payment.domain.CardInfo;
-import com.objects.marketbridge.payment.domain.Payment;
+import com.objects.marketbridge.payment.domain.*;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +28,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.objects.marketbridge.common.enums.CardCoType.*;
+import static com.objects.marketbridge.common.enums.KakaoStatus.CANCEL_PAYMENT;
 import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
+import static com.objects.marketbridge.payment.domain.PaymentType.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -90,13 +94,13 @@ class CancelledPaymentHttpTest {
         KakaoPayOrderResponse kakaoResponse = KakaoPayOrderResponse.builder()
                 .tid("tid")
                 .cid("cid")
-                .status("실패")
+                .kakaoStatus(CANCEL_PAYMENT.toString())
                 .partnerOrderId("orderNo1")
                 .partnerUserId("1")
-                .paymentMethodType("카드")
+                .paymentMethodType(CARD.toString())
                 .amount(Amount.create(6000L, 0L, 0L))
                 .itemName("상품1 외 2건")
-                .selectedCardInfo(CardInfo.create("카카오뱅크", "카카오뱅크", "0"))
+                .selectedCardInfo(SelectedCardInfo.create("cardBin", 0L, KAKAOBANK.toString()))
                 .canceledAt(LocalDateTime.of(2024, 1, 1, 12, 0, 0))
                 .approvedAt(LocalDateTime.of(2024,1,1,11,0,0))
                 .build();
@@ -105,13 +109,12 @@ class CancelledPaymentHttpTest {
         CancelledPaymentHttp.Response result = CancelledPaymentHttp.Response.of(kakaoResponse, order);
 
         //then
-        Assertions.assertThat(result.getPaymentMethodType()).isEqualTo("카드");
+        Assertions.assertThat(result.getPaymentMethodType()).isEqualTo(CARD.toString());
         Assertions.assertThat(result.getOrderName()).isEqualTo("상품1 외 2건");
         Assertions.assertThat(result.getApprovedAt()).isEqualTo("2024-01-01 11:00:00");
         Assertions.assertThat(result.getCanceledAt()).isEqualTo("2024-01-01 12:00:00");
-        Assertions.assertThat(result.getStatus()).isEqualTo("실패");
-        Assertions.assertThat(result.getCardIssuerName()).isEqualTo("카카오뱅크");
-        Assertions.assertThat(result.getCardPurchaseName()).isEqualTo("카카오뱅크");
+        Assertions.assertThat(result.getStatus()).isEqualTo(CANCEL_PAYMENT.toString());
+        Assertions.assertThat(result.getCardIssuerName()).isEqualTo(KAKAOBANK.toString());
         Assertions.assertThat(result.getTotalAmount()).isEqualTo(6000L);
 
         Assertions.assertThat(result.getProductInfos()).hasSize(3);
@@ -119,14 +122,41 @@ class CancelledPaymentHttpTest {
         Assertions.assertThat(result.getProductInfos().get(0).getPrice()).isEqualTo(1000L);
     }
 
-    @DisplayName("")
+    @DisplayName("현금으로 결제한 건에 대해 결제 승인 취소를 할 수 있다")
     @Test
-    void of_CASH(){
+    void of_MONEY(){
         //given
+        Order order = orderQueryRepository.findByOrderNo("orderNo1");
+        KakaoPayOrderResponse kakaoResponse = KakaoPayOrderResponse.builder()
+                .tid("tid")
+                .cid("cid")
+                .kakaoStatus(CANCEL_PAYMENT.toString())
+                .partnerOrderId("orderNo1")
+                .partnerUserId("1")
+                .paymentMethodType(MONEY.toString())
+                .amount(Amount.create(6000L, 0L, 0L))
+                .itemName("상품1 외 2건")
+                .selectedCardInfo(null)
+                .canceledAt(LocalDateTime.of(2024, 1, 1, 12, 0, 0))
+                .approvedAt(LocalDateTime.of(2024,1,1,11,0,0))
+                .build();
+
 
         //when
+        CancelledPaymentHttp.Response result = CancelledPaymentHttp.Response.of(kakaoResponse, order);
 
         //then
+        Assertions.assertThat(result.getPaymentMethodType()).isEqualTo(MONEY.toString());
+        Assertions.assertThat(result.getOrderName()).isEqualTo("상품1 외 2건");
+        Assertions.assertThat(result.getApprovedAt()).isEqualTo("2024-01-01 11:00:00");
+        Assertions.assertThat(result.getCanceledAt()).isEqualTo("2024-01-01 12:00:00");
+        Assertions.assertThat(result.getStatus()).isEqualTo(CANCEL_PAYMENT.toString());
+        Assertions.assertThat(result.getCardIssuerName()).isNull();
+        Assertions.assertThat(result.getTotalAmount()).isEqualTo(6000L);
+
+        Assertions.assertThat(result.getProductInfos()).hasSize(3);
+        Assertions.assertThat(result.getProductInfos().get(0).getThumbImgUrl()).isEqualTo("썸네일1");
+        Assertions.assertThat(result.getProductInfos().get(0).getPrice()).isEqualTo(1000L);
     }
 
 
