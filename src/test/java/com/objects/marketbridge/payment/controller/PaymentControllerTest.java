@@ -1,7 +1,9 @@
 package com.objects.marketbridge.payment.controller;
 
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
+import com.objects.marketbridge.common.dto.KakaoPayOrderResponse;
 import com.objects.marketbridge.member.domain.AddressValue;
+import com.objects.marketbridge.payment.controller.dto.CancelledPaymentHttp;
 import com.objects.marketbridge.payment.controller.dto.CompleteOrderHttp;
 import com.objects.marketbridge.payment.service.CreatePaymentService;
 import com.objects.marketbridge.payment.service.QuitPaymentService;
@@ -27,8 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.anyString;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -171,5 +172,24 @@ class PaymentControllerTest {
         ProductInfoDto productInfoDto = ProductInfoDto.create(true, "가방", 10000L, false, "thumbImgUrl", 0L, "임꺽정", "2024-01-01");
 
         return List.of(productInfoDto);
+    }
+
+    @DisplayName("결제 승인 취소")
+    @Test
+    void kakaoPaymentApproveCancel() {
+
+        // given
+        CancelledPaymentHttp.Response response = createCancelledResponse();
+        given(quitPaymentService.response(anyString())).willReturn(response);
+        willDoNothing().given(quitPaymentService).cancel(anyString());
+
+        // when
+
+        //then
+
+    }
+
+    private CancelledPaymentHttp.Response createCancelledResponse() {
+        return null;
     }
 }
