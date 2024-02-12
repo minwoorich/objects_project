@@ -59,7 +59,7 @@ class PaymentControllerTest {
                 .build();
     }
 
-    @DisplayName("결제 테이블 생성")
+    @DisplayName("결제 성공")
     @Test
     void createPayment() throws Exception {
         // given
