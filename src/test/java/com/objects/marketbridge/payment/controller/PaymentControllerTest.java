@@ -2,6 +2,8 @@ package com.objects.marketbridge.payment.controller;
 
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
 import com.objects.marketbridge.common.dto.KakaoPayOrderResponse;
+import com.objects.marketbridge.common.enums.CardCoType;
+import com.objects.marketbridge.common.enums.KakaoStatus;
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.payment.controller.dto.CancelledPaymentHttp;
 import com.objects.marketbridge.payment.controller.dto.CompleteOrderHttp;
@@ -27,8 +29,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.objects.marketbridge.common.enums.CardCoType.*;
+import static com.objects.marketbridge.common.enums.KakaoStatus.*;
+import static com.objects.marketbridge.payment.domain.PaymentType.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -155,7 +162,7 @@ class PaymentControllerTest {
     }
 
     private CompleteOrderHttp.Response createResponse() {
-        return CompleteOrderHttp.Response.create(PaymentType.CARD.toString(), "가방 외 1건",
+        return CompleteOrderHttp.Response.create(CARD.toString(), "가방 외 1건",
                 "2024-01-01 13:30:20",
                 10000L, 1000L, 0L,
                 "카카오뱅크", 0L,
@@ -175,20 +182,87 @@ class PaymentControllerTest {
 
     @DisplayName("결제 승인 취소")
     @Test
-    void kakaoPaymentApproveCancel() {
+    void kakaoPaymentApproveCancel() throws Exception {
 
         // given
         CancelledPaymentHttp.Response response = createCancelledResponse();
         given(quitPaymentService.response(anyString())).willReturn(response);
         willDoNothing().given(quitPaymentService).cancel(anyString());
 
-        // when
+        // when, then
+        mockMvc.perform(get("/kakao-pay/cancel/{orderNo}", "orderNo1")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("payment-create",
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("orderNo").description("주문 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
 
-        //then
+                                fieldWithPath("data.paymentMethodType").type(JsonFieldType.STRING)
+                                        .description("결제 수단"),
+                                fieldWithPath("data.orderName").type(JsonFieldType.STRING)
+                                        .description("주문 이름"),
+                                fieldWithPath("data.canceledAt").type(JsonFieldType.STRING)
+                                        .description("결제 취소 일시 (yyyy-MM-dd HH:mm:ss)"),
+                                fieldWithPath("data.kakaoStatus").type(JsonFieldType.STRING)
+                                        .description("카카오 결제 상태"),
+                                fieldWithPath("data.totalAmount").type(JsonFieldType.NUMBER)
+                                        .description("총 결제 금액"),
+                                fieldWithPath("data.discountAmount").type(JsonFieldType.NUMBER)
+                                        .description("총 할인 금액"),
+                                fieldWithPath("data.taxFreeAmount").type(JsonFieldType.NUMBER)
+                                        .description("상품 비과세 금액"),
 
+                                fieldWithPath("data.cardIssuerName").type(JsonFieldType.STRING)
+                                        .description("카드 발급사 명 (현금결제시 null)"),
+                                fieldWithPath("data.cardInstallMonth").type(JsonFieldType.NUMBER)
+                                        .description("할부 개월 수 (현금결제시 null)"),
+
+                                fieldWithPath("data.productInfos[]").type(JsonFieldType.ARRAY)
+                                        .description("주문 상품 리스트"),
+                                fieldWithPath("data.productInfos[].isOwn").type(JsonFieldType.BOOLEAN)
+                                        .description("마켓브릿지 상품인지 구분하는 값"),
+                                fieldWithPath("data.productInfos[].name").type(JsonFieldType.STRING)
+                                        .description("상품 이름"),
+                                fieldWithPath("data.productInfos[].price").type(JsonFieldType.NUMBER)
+                                        .description("상품 가격"),
+                                fieldWithPath("data.productInfos[].isSubs").type(JsonFieldType.BOOLEAN)
+                                        .description("정기 배송 상품인지 구분하는 값"),
+                                fieldWithPath("data.productInfos[].thumbImgUrl").type(JsonFieldType.STRING)
+                                        .description("상품 썸네일 이미지 URL"),
+                                fieldWithPath("data.productInfos[].discountRate").type(JsonFieldType.NUMBER)
+                                        .description("할인율(0~100)"),
+                                fieldWithPath("data.productInfos[].sellerName").type(JsonFieldType.STRING)
+                                        .description("판매자 이름"),
+                                fieldWithPath("data.productInfos[].deliveredDate").type(JsonFieldType.STRING)
+                                        .description("예상 도착 날짜 ((yyyy-MM-dd))")
+                        )));
     }
 
     private CancelledPaymentHttp.Response createCancelledResponse() {
-        return null;
+        return CancelledPaymentHttp.Response.create(
+                CARD.toString(),
+                "가방 외 1건",
+                LocalDateTime.of(2024,1,1,0,0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                QUIT_PAYMENT.toString(),
+                10000L,
+                500L,
+                0L,
+                KAKAOBANK.toString(),
+                0L,
+                createProductInfoDtos()
+                );
     }
 }

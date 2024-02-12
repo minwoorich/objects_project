@@ -21,9 +21,8 @@ public class CancelledPaymentHttp {
 
         private String paymentMethodType;
         private String orderName;
-        private String approvedAt;
         private String canceledAt;
-        private String status;
+        private String kakaoStatus;
         private Long totalAmount;
         private Long discountAmount;
         private Long taxFreeAmount;
@@ -32,12 +31,11 @@ public class CancelledPaymentHttp {
         private List<ProductInfoDto> productInfos;
 
         @Builder
-        private Response(String paymentMethodType, String orderName, String approvedAt, String canceledAt, String status, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName,  Long cardInstallMonth, List<ProductInfoDto> productInfos) {
+        private Response(String paymentMethodType, String orderName,  String canceledAt, String kakaoStatus, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName,  Long cardInstallMonth, List<ProductInfoDto> productInfos) {
             this.paymentMethodType = paymentMethodType;
             this.orderName = orderName;
-            this.approvedAt = approvedAt;
             this.canceledAt = canceledAt;
-            this.status = status;
+            this.kakaoStatus = kakaoStatus;
             this.totalAmount = totalAmount;
             this.discountAmount = discountAmount;
             this.taxFreeAmount = taxFreeAmount;
@@ -54,9 +52,8 @@ public class CancelledPaymentHttp {
             return Response.builder()
                     .paymentMethodType(kakaoResp.getPaymentMethodType())
                     .orderName(kakaoResp.getItemName())
-                    .approvedAt(kakaoResp.getApprovedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .canceledAt(kakaoResp.getCanceledAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                    .status(kakaoResp.getKakaoStatus())
+                    .kakaoStatus(kakaoResp.getKakaoStatus())
                     .cardInstallMonth(cardInfo.getInstallMonth())
                     .cardIssuerName(cardInfo.getCardCorpName())
                     .totalAmount(kakaoResp.getAmount().getTotalAmount())
@@ -74,13 +71,12 @@ public class CancelledPaymentHttp {
         }
 
 
-        public static Response create(String paymentMethodType, String orderName, String approvedAt, String canceledAt, String status, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName, Long cardInstallMonth,  List<ProductInfoDto> productInfos) {
+        public static Response create(String paymentMethodType, String orderName,  String canceledAt, String kakaoStatus, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName, Long cardInstallMonth,  List<ProductInfoDto> productInfos) {
             return Response.builder()
                     .paymentMethodType(paymentMethodType)
                     .orderName(orderName)
-                    .approvedAt(approvedAt)
                     .canceledAt(canceledAt)
-                    .status(status)
+                    .kakaoStatus(kakaoStatus)
                     .totalAmount(totalAmount)
                     .discountAmount(discountAmount)
                     .taxFreeAmount(taxFreeAmount)

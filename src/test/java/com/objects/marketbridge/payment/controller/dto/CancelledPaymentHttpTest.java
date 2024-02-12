@@ -111,9 +111,8 @@ class CancelledPaymentHttpTest {
         //then
         Assertions.assertThat(result.getPaymentMethodType()).isEqualTo(CARD.toString());
         Assertions.assertThat(result.getOrderName()).isEqualTo("상품1 외 2건");
-        Assertions.assertThat(result.getApprovedAt()).isEqualTo("2024-01-01 11:00:00");
         Assertions.assertThat(result.getCanceledAt()).isEqualTo("2024-01-01 12:00:00");
-        Assertions.assertThat(result.getStatus()).isEqualTo(CANCEL_PAYMENT.toString());
+        Assertions.assertThat(result.getKakaoStatus()).isEqualTo(CANCEL_PAYMENT.toString());
         Assertions.assertThat(result.getCardIssuerName()).isEqualTo(KAKAOBANK.toString());
         Assertions.assertThat(result.getTotalAmount()).isEqualTo(6000L);
 
@@ -148,9 +147,8 @@ class CancelledPaymentHttpTest {
         //then
         Assertions.assertThat(result.getPaymentMethodType()).isEqualTo(MONEY.toString());
         Assertions.assertThat(result.getOrderName()).isEqualTo("상품1 외 2건");
-        Assertions.assertThat(result.getApprovedAt()).isEqualTo("2024-01-01 11:00:00");
         Assertions.assertThat(result.getCanceledAt()).isEqualTo("2024-01-01 12:00:00");
-        Assertions.assertThat(result.getStatus()).isEqualTo(CANCEL_PAYMENT.toString());
+        Assertions.assertThat(result.getKakaoStatus()).isEqualTo(CANCEL_PAYMENT.toString());
         Assertions.assertThat(result.getCardIssuerName()).isNull();
         Assertions.assertThat(result.getTotalAmount()).isEqualTo(6000L);
 
