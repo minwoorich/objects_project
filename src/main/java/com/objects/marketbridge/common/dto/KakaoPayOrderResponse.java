@@ -14,7 +14,9 @@ import java.util.List;
 public class KakaoPayOrderResponse {
     private String tid;
     private String cid;
-    private String status;
+
+    @JsonProperty("status")
+    private String kakaoStatus;
 
     @JsonProperty("partner_order_id")
     private String partnerOrderId;
@@ -39,22 +41,22 @@ public class KakaoPayOrderResponse {
     private String quantity;
 
     @JsonProperty("approved_at")
-    private LocalDateTime approvedAt;
+    private LocalDateTime approvedAt; // YYYY-MM-DDTHH:MM:SS (ISO8601)
 
     @JsonProperty("canceled_at")
-    private LocalDateTime canceledAt;
+    private LocalDateTime canceledAt; // YYYY-MM-DDTHH:MM:SS (ISO8601)
 
     @JsonProperty("selected_card_info")
-    private CardInfo selectedCardInfo;
+    private SelectedCardInfo selectedCardInfo;
 
     @JsonProperty("payment_action_details")
     private List<PaymentActionDetail> paymentActionDetails;
 
     @Builder
-    public KakaoPayOrderResponse(String tid, String cid, String status, String partnerOrderId, String partnerUserId, String paymentMethodType, Amount amount, CanceledAmount canceledAmount, CanceledAvailableAmount canceledAvailableAmount, String itemName, String quantity, LocalDateTime approvedAt, LocalDateTime canceledAt, CardInfo selectedCardInfo, List<PaymentActionDetail> paymentActionDetails) {
+    public KakaoPayOrderResponse(String tid, String cid, String kakaoStatus, String partnerOrderId, String partnerUserId, String paymentMethodType, Amount amount, CanceledAmount canceledAmount, CanceledAvailableAmount canceledAvailableAmount, String itemName, String quantity, LocalDateTime approvedAt, LocalDateTime canceledAt, SelectedCardInfo selectedCardInfo, List<PaymentActionDetail> paymentActionDetails) {
         this.tid = tid;
         this.cid = cid;
-        this.status = status;
+        this.kakaoStatus = kakaoStatus;
         this.partnerOrderId = partnerOrderId;
         this.partnerUserId = partnerUserId;
         this.paymentMethodType = paymentMethodType;

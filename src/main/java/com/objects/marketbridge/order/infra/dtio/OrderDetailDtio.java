@@ -1,6 +1,7 @@
 package com.objects.marketbridge.order.infra.dtio;
 
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.product.domain.Product;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,20 +19,17 @@ public class OrderDetailDtio {
     private String orderNo;
     private Long price;
     private String statusCode;
-    private LocalDateTime deliveredDate;
-    private Long sellerId;
+//    private LocalDateTime deliveredDate;
     private LocalDateTime cancelledAt;
 
     @Builder
-    public OrderDetailDtio(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime deliveredDate, Long sellerId, LocalDateTime cancelledAt) {
+    public OrderDetailDtio(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime cancelledAt) {
         this.orderDetailId = orderDetailId;
         this.product = product;
         this.quantity = quantity;
         this.orderNo = orderNo;
         this.price = price;
         this.statusCode = statusCode;
-        this.deliveredDate = deliveredDate;
-        this.sellerId = sellerId;
         this.cancelledAt = cancelledAt;
     }
 
@@ -42,11 +40,22 @@ public class OrderDetailDtio {
                 .orderNo(orderDetail.getOrderNo())
                 .price(orderDetail.getPrice())
                 .statusCode(orderDetail.getStatusCode())
-                .deliveredDate(orderDetail.getDeliveredDate())
-                .sellerId(orderDetail.getSellerId())
                 .cancelledAt(orderDetail.getCancelledAt())
                 .product(ProductDto.of(orderDetail.getProduct()))
                 .build();
+    }
+
+    public static OrderDetailDtio create(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode,   LocalDateTime cancelledAt) {
+        return OrderDetailDtio.builder()
+                .orderDetailId(orderDetailId)
+                .product(product)
+                .quantity(quantity)
+                .orderNo(orderNo)
+                .price(price)
+                .statusCode(statusCode)
+                .cancelledAt(cancelledAt)
+                .build();
+
     }
 
     @Getter
@@ -82,6 +91,18 @@ public class OrderDetailDtio {
                     .productNo(product.getProductNo())
                     .build();
 
+        }
+
+        public static ProductDto create(Long productId, String optionName, Boolean isOwn, String name, Long price, String thumbImg, String productNo) {
+            return ProductDto.builder()
+                    .productId(productId)
+                    .optionName(optionName)
+                    .isOwn(isOwn)
+                    .name(name)
+                    .price(price)
+                    .thumbImg(thumbImg)
+                    .productNo(productNo)
+                    .build();
         }
     }
 }

@@ -52,12 +52,12 @@ VALUES
 
 INSERT INTO payment (order_id, order_no, payment_method, tid, card_issuer_name, card_purchase_name, card_no, card_install_month, total_amount, discount_amount, tax_free_amount, approved_at, deleted_at, updated_at, created_at)
 VALUES
-    (1, 'OrderNo1', 'PaymentMethod1', 'TID1', 'CardIssuerName1', 'CardPurchaseName1', 'CardNo1', 1, 100, 10, 5, NOW(), NOW(), NOW(), NOW()),
-    (2, 'OrderNo2', 'PaymentMethod2', 'TID2', 'CardIssuerName2', 'CardPurchaseName2', 'CardNo2', 2, 200, 20, 10, NOW(), NOW(), NOW(), NOW()),
-    (3, 'OrderNo3', 'PaymentMethod3', 'TID3', 'CardIssuerName3', 'CardPurchaseName3', 'CardNo3', 3, 300, 30, 15, NOW(), NOW(), NOW(), NOW()),
-    (4, 'OrderNo4', 'PaymentMethod4', 'TID4', 'CardIssuerName4', 'CardPurchaseName4', 'CardNo4', 4, 400, 40, 20, NOW(), NOW(), NOW(), NOW()),
-    (5, 'OrderNo5', 'PaymentMethod5', 'TID5', 'CardIssuerName5', 'CardPurchaseName5', 'CardNo5', 5, 500, 50, 25, NOW(), NOW(), NOW(), NOW()),
-    (6, 'OrderNo6', 'PaymentMethod6', 'TID6', 'CardIssuerName6', 'CardPurchaseName6', 'CardNo6', 6, 600, 60, 30, NOW(), NOW(), NOW(), NOW());
+    (1, 'OrderNo1', 'PaymentMethod1', 'TID1', 'CardIssuerName1', 'CardPurchaseName1', 'CardNo1', 1, 100, 10, 5, NOW(), null, NOW(), NOW()),
+    (2, 'OrderNo2', 'PaymentMethod2', 'TID2', 'CardIssuerName2', 'CardPurchaseName2', 'CardNo2', 2, 200, 20, 10, NOW(), null, NOW(), NOW()),
+    (3, 'OrderNo3', 'PaymentMethod3', 'TID3', 'CardIssuerName3', 'CardPurchaseName3', 'CardNo3', 3, 300, 30, 15, NOW(), null, NOW(), NOW()),
+    (4, 'OrderNo4', 'PaymentMethod4', 'TID4', 'CardIssuerName4', 'CardPurchaseName4', 'CardNo4', 4, 400, 40, 20, NOW(), null, NOW(), NOW()),
+    (5, 'OrderNo5', 'PaymentMethod5', 'TID5', 'CardIssuerName5', 'CardPurchaseName5', 'CardNo5', 5, 500, 50, 25, NOW(), null, NOW(), NOW()),
+    (6, 'OrderNo6', 'PaymentMethod6', 'TID6', 'CardIssuerName6', 'CardPurchaseName6', 'CardNo6', 6, 600, 60, 30, NOW(), null, NOW(), NOW());
 
 INSERT INTO order_detail (order_id, product_id, order_no, member_coupon_id,  quantity, price,  status_code, tid, delivered_date, reason, cancelled_at, created_at, updated_at, deleted_at)
 VALUES
@@ -235,26 +235,26 @@ VALUES
 
 INSERT INTO prod_option (product_id, option_id, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, NOW(), NOW(), NOW()),
-    (2, 2, NOW(), NOW(), NOW()),
-    (3, 3, NOW(), NOW(), NOW()),
-    (4, 4, NOW(), NOW(), NOW()),
-    (5, 5, NOW(), NOW(), NOW()),
-    (6, 6, NOW(), NOW(), NOW()),
-    (7, 7, NOW(), NOW(), NOW()),
-    (8, 8, NOW(), NOW(), NOW()),
-    (9, 9, NOW(), NOW(), NOW()),
-    (10, 10, NOW(), NOW(), NOW());
+    (1, 1, NOW(), NOW(), null),
+    (2, 2, NOW(), NOW(), null),
+    (3, 3, NOW(), NOW(), null),
+    (4, 4, NOW(), NOW(), null),
+    (5, 5, NOW(), NOW(), null),
+    (6, 6, NOW(), NOW(), null),
+    (7, 7, NOW(), NOW(), null),
+    (8, 8, NOW(), NOW(), null),
+    (9, 9, NOW(), NOW(), null),
+    (10, 10, NOW(), NOW(), null);
 
 INSERT INTO product (category_id, is_own, name, price, is_subs, stock, thumb_img, discount_rate, product_no, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, 'Product1', 100, 0, 10, 'ThumbImg1', 5, 'ProductNo1', NOW(), NOW(), NOW()),
-    (2, 1, 'Product2', 200, 0, 20, 'ThumbImg2', 10, 'ProductNo2', NOW(), NOW(), NOW()),
-    (3, 1, 'Product3', 300, 0, 30, 'ThumbImg3', 15, 'ProductNo3', NOW(), NOW(), NOW()),
-    (4, 1, 'Product4', 400, 0, 40, 'ThumbImg4', 20, 'ProductNo4', NOW(), NOW(), NOW()),
-    (5, 1, 'Product5', 500, 0, 50, 'ThumbImg5', 25, 'ProductNo5', NOW(), NOW(), NOW()),
-    (6, 1, 'Product6', 600, 0, 60, 'ThumbImg6', 30, 'ProductNo6', NOW(), NOW(), NOW()),
-    (7, 1, 'Product7', 700, 0, 70, 'ThumbImg7', 35, 'ProductNo7', NOW(), NOW(), NOW()),
-    (8, 1, 'Product8', 800, 0, 80, 'ThumbImg8', 40, 'ProductNo8', NOW(), NOW(), NOW()),
-    (9, 1, 'Product9', 900, 0, 90, 'ThumbImg9', 45, 'ProductNo9', NOW(), NOW(), NOW()),
-    (10, 1, 'Product10', 1000, 0, 100, 'ThumbImg10', 50, 'ProductNo10', NOW(), NOW(), NOW());
+    (1, 1, 'Product1', 100, 0, 10, 'ThumbImg1', 5, 'ProductNo1', NOW(), NOW(), null),
+    (2, 1, 'Product2', 200, 0, 20, 'ThumbImg2', 10, 'ProductNo2', NOW(), NOW(), null),
+    (3, 1, 'Product3', 300, 0, 30, 'ThumbImg3', 15, 'ProductNo3', NOW(), NOW(), null),
+    (4, 1, 'Product4', 400, 0, 40, 'ThumbImg4', 20, 'ProductNo4', NOW(), NOW(), null),
+    (5, 1, 'Product5', 500, 0, 50, 'ThumbImg5', 25, 'ProductNo5', NOW(), NOW(), null),
+    (6, 1, 'Product6', 600, 0, 60, 'ThumbImg6', 30, 'ProductNo6', NOW(), NOW(), null),
+    (7, 1, 'Product7', 700, 0, 70, 'ThumbImg7', 35, 'ProductNo7', NOW(), NOW(), null),
+    (8, 1, 'Product8', 800, 0, 80, 'ThumbImg8', 40, 'ProductNo8', NOW(), NOW(), null),
+    (9, 1, 'Product9', 900, 0, 90, 'ThumbImg9', 45, 'ProductNo9', NOW(), NOW(), null),
+    (10, 1, 'Product10', 1000, 0, 100, 'ThumbImg10', 50, 'ProductNo10', NOW(), NOW(), null);

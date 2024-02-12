@@ -94,18 +94,13 @@ public class KakaoPayService {
     // 정기결제 상태조회
 
     // 주문조회
-    public KakaoPayOrderResponse getOrders(String cid, String tid) {
-
-        String orderUri = UriComponentsBuilder.fromUriString(ORDER_END_POINT)
-                .queryParam("cid", cid)
-                .queryParam("tid", tid)
-                .build()
-                .toUriString();
+    public KakaoPayOrderResponse getOrders(KakaoPayOrderRequest request) {
 
         RestClient restClient = setup();
 
-        return restClient.get()
-                .uri(orderUri)
+        return restClient.post()
+                .uri(ORDER_END_POINT)
+                .body(request)
                 .retrieve()
                 .body(KakaoPayOrderResponse.class);
     }

@@ -57,4 +57,20 @@ public class OrderDtio {
                 .orderDetails(order.getOrderDetails().stream().map(OrderDetailDtio::of).collect(Collectors.toList()))
                 .build();
     }
+
+    public static OrderDtio create(Long memberId, AddressValue address, String orderName, String orderNo, Long totalDiscount, Long totalPrice, Long realPrice, LocalDateTime createdAt, String paymentMethod, String cardIssuerName, List<OrderDetailDtio> orderDetails) {
+        return OrderDtio.builder()
+                .memberId(memberId)
+                .address(address)
+                .orderNo(orderNo)
+                .orderName(orderName)
+                .totalDiscount(totalDiscount)
+                .totalPrice(totalPrice)
+                .realPrice(realPrice)
+                .createdAt(createdAt)
+                .paymentMethod(paymentMethod)
+                .cardIssuerName(cardIssuerName)
+                .orderDetails(orderDetails)
+                .build();
+    }
 }

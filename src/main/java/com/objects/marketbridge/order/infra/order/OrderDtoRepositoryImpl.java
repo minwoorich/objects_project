@@ -208,9 +208,7 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
         return order.member.id.eq(memberId);
     }
 
-    private BooleanExpression eqOrderNo(String orderNo) {
-        return order.orderNo.eq(orderNo);
-    }
+
 
     @Override
     public OrderDtio findByOrderNo(String orderNo) {
@@ -226,9 +224,15 @@ public class OrderDtoRepositoryImpl implements OrderDtoRepository {
                 )
                 .fetchOne();
 
+        log.info("order는 null인가요? {}",orderEntity==null);
+
         // 엔티티 -> dto 로 변환
         assert orderEntity != null;
 
         return OrderDtio.of(orderEntity);
+    }
+
+    private BooleanExpression eqOrderNo(String orderNo) {
+        return order.orderNo.eq(orderNo);
     }
 }
