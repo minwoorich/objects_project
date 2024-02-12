@@ -45,6 +45,7 @@ public class PaymentController {
     @GetMapping("/kakao-pay/cancel/{orderNo}") // 결제 승인 취소
     public ApiResponse<?> kakaoPaymentApproveCancel(@PathVariable(name = "orderNo") String orderNo){
 
+        // TODO : 이거 응답 바디에 뭐 넣어줘야하지?
         quitPaymentService.cancel(orderNo);
         return ApiResponse.ok("good");
     }
