@@ -10,7 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,19 +24,27 @@ public class CompleteOrderHttp {
 
         private String paymentMethodType;
         private String orderName;
-        private LocalDateTime approvedAt;
-        private Amount amount;
-        private CardInfo cardInfo;
+        private String approvedAt;
+        private Long totalAmount;
+        private Long discountAmount;
+        private Long taxFreeAmount;
+        private String cardIssuerName;
+        private String cardPurchaseName;
+        private String cardInstallMonth;
         private AddressValue addressValue;
         private List<ProductInfoDto> productInfos;
 
         @Builder
-        private Response(String paymentMethodType, String orderName, LocalDateTime approvedAt, Amount amount, CardInfo cardInfo, AddressValue addressValue, List<ProductInfoDto> productInfos) {
+        private Response(String paymentMethodType, String orderName, String approvedAt, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName, String cardPurchaseName, String cardInstallMonth, AddressValue addressValue, List<ProductInfoDto> productInfos) {
             this.paymentMethodType = paymentMethodType;
             this.orderName = orderName;
             this.approvedAt = approvedAt;
-            this.amount = amount;
-            this.cardInfo = cardInfo;
+            this.totalAmount = totalAmount;
+            this.discountAmount = discountAmount;
+            this.taxFreeAmount = taxFreeAmount;
+            this.cardIssuerName = cardIssuerName;
+            this.cardPurchaseName = cardPurchaseName;
+            this.cardInstallMonth = cardInstallMonth;
             this.addressValue = addressValue;
             this.productInfos = productInfos;
         }
@@ -45,11 +53,31 @@ public class CompleteOrderHttp {
             return Response.builder()
                     .paymentMethodType(payment.getPaymentMethod())
                     .orderName(payment.getOrder().getOrderName())
-                    .approvedAt(payment.getApprovedAt())
-                    .amount(payment.getAmount())
-                    .cardInfo(payment.getCardInfo())
+                    .approvedAt(payment.getApprovedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .cardIssuerName(payment.getCardInfo().getCardIssuerName())
+                    .cardPurchaseName(payment.getCardInfo().getCardPurchaseName())
+                    .cardInstallMonth(payment.getCardInfo().getCardInstallMonth())
+                    .totalAmount(payment.getAmount().getTotalAmount())
+                    .discountAmount(payment.getAmount().getDiscountAmount())
+                    .taxFreeAmount(payment.getAmount().getTaxFreeAmount())
                     .addressValue(payment.getOrder().getAddress().getAddressValue())
                     .productInfos(createProductInfoDtos(payment.getOrder().getOrderDetails()))
+                    .build();
+        }
+
+        public static Response create(String paymentMethodType, String orderName, String approvedAt, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName, String cardPurchaseName, String cardInstallMonth, AddressValue addressValue, List<ProductInfoDto> productInfos) {
+            return Response.builder()
+                    .paymentMethodType(paymentMethodType)
+                    .orderName(orderName)
+                    .approvedAt(approvedAt)
+                    .totalAmount(totalAmount)
+                    .discountAmount(discountAmount)
+                    .taxFreeAmount(taxFreeAmount)
+                    .cardIssuerName(cardIssuerName)
+                    .cardPurchaseName(cardPurchaseName)
+                    .cardInstallMonth(cardInstallMonth)
+                    .addressValue(addressValue)
+                    .productInfos(productInfos)
                     .build();
         }
 
