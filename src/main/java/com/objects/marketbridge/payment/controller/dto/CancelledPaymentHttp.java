@@ -4,6 +4,7 @@ import com.objects.marketbridge.common.dto.KakaoPayOrderResponse;
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.payment.domain.CardInfo;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.payment.service.dto.ProductInfoDto;
 import lombok.Builder;
@@ -50,19 +51,30 @@ public class CancelledPaymentHttp {
         }
 
         public static CancelledPaymentHttp.Response of(KakaoPayOrderResponse kakaoResp, Order order) {
+            // null 처리를 위한 로직
+            CardInfo cardInfo = filterCardInfo(kakaoResp.getSelectedCardInfo());
+
             return CancelledPaymentHttp.Response.builder()
                     .paymentMethodType(kakaoResp.getPaymentMethodType())
                     .orderName(kakaoResp.getItemName())
                     .approvedAt(kakaoResp.getApprovedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                    .cardIssuerName(kakaoResp.getSelectedCardInfo().getCardIssuerName())
-                    .cardPurchaseName(kakaoResp.getSelectedCardInfo().getCardPurchaseName())
-                    .cardInstallMonth(kakaoResp.getSelectedCardInfo().getCardInstallMonth())
+                    .cardIssuerName(cardInfo.getCardIssuerName())
+                    .cardPurchaseName(cardInfo.getCardPurchaseName())
+                    .cardInstallMonth(cardInfo.getCardInstallMonth())
                     .totalAmount(kakaoResp.getAmount().getTotalAmount())
                     .discountAmount(kakaoResp.getAmount().getDiscountAmount())
                     .taxFreeAmount(kakaoResp.getAmount().getTaxFreeAmount())
                     .productInfos(createProductInfoDtos(order.getOrderDetails()))
                     .build();
         }
+
+        private static CardInfo filterCardInfo(CardInfo cardInfo) {
+            if (cardInfo != null) {
+                return CardInfo.create(cardInfo.getCardIssuerName(), cardInfo.getCardPurchaseName(), cardInfo.getCardInstallMonth());
+            }
+            return CardInfo.create(null, null, null);
+        }
+
 
         public static Response create(String paymentMethodType, String orderName, String approvedAt, String canceledAt, String status, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName, String cardPurchaseName, String cardInstallMonth,  List<ProductInfoDto> productInfos) {
             return Response.builder()
