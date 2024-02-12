@@ -64,8 +64,24 @@ class CancelledPaymentHttpTest {
         orderCommendRepository.save(order);
     }
 
+    private Address createAddress(AddressValue addressValue, Boolean isDefault) {
+        return Address.create(addressValue, isDefault);
+    }
 
-    // TODO : 현금 결제 케이스도 테스트 해봐야함
+    private AddressValue createAddressValue(String phoneNo, String name, String city, String street, String zipcode, String detail, String alias) {
+        return AddressValue.create(phoneNo, name, city, street, zipcode, detail, alias);
+    }
+
+    private Order createOrder(Member member, Address address, String orderName, String orderNo, Long totalPrice, String tid, List<OrderDetail> orderDetails, Payment payment) {
+        Order order = Order.create(member, address, orderName, orderNo, totalPrice, tid);
+
+        // order <-> orderDetail 연관관계
+        orderDetails.forEach(order::addOrderDetail);
+
+        return order;
+    }
+
+
     @DisplayName("KakaoPayOrderResponse와 Order엔티티 를 통해 CancelledPaymentHttp.Response 가 생성된다")
     @Test
     void of_card() {
@@ -101,25 +117,18 @@ class CancelledPaymentHttpTest {
         Assertions.assertThat(result.getProductInfos()).hasSize(3);
         Assertions.assertThat(result.getProductInfos().get(0).getThumbImgUrl()).isEqualTo("썸네일1");
         Assertions.assertThat(result.getProductInfos().get(0).getPrice()).isEqualTo(1000L);
-
-
     }
 
-    private Address createAddress(AddressValue addressValue, Boolean isDefault) {
-        return Address.create(addressValue, isDefault);
+    @DisplayName("")
+    @Test
+    void of_CASH(){
+        //given
+
+        //when
+
+        //then
     }
 
-    private AddressValue createAddressValue(String phoneNo, String name, String city, String street, String zipcode, String detail, String alias) {
-        return AddressValue.create(phoneNo, name, city, street, zipcode, detail, alias);
-    }
 
-    private Order createOrder(Member member, Address address, String orderName, String orderNo, Long totalPrice, String tid, List<OrderDetail> orderDetails, Payment payment) {
-        Order order = Order.create(member, address, orderName, orderNo, totalPrice, tid);
-
-        // order <-> orderDetail 연관관계
-        orderDetails.forEach(order::addOrderDetail);
-
-        return order;
-    }
 
 }
