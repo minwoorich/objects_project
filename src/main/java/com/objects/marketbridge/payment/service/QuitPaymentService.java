@@ -8,6 +8,7 @@ import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.payment.controller.dto.CancelledPaymentHttp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ public class QuitPaymentService {
     @Transactional
     public void cancel(String orderNo) {
         Order order = orderQueryRepository.findByOrderNo(orderNo);
+
         // 1) 사용했던 쿠폰들 다시 되돌리기
         order.changeMemberCouponInfo(dateTimeHolder);
 
@@ -35,10 +37,11 @@ public class QuitPaymentService {
         orderCommendRepository.deleteByOrderNo(orderNo);
     }
 
-    public KakaoPayOrderResponse response(String orderNo) {
+    public CancelledPaymentHttp.Response response(String orderNo) {
         Order order = orderQueryRepository.findByOrderNo(orderNo);
         KakaoPayOrderRequest kakaoPayOrderRequest = KakaoPayOrderRequest.create(KakaoPayConfig.ONE_TIME_CID, order.getTid());
+        CancelledPaymentHttp.Response response = CancelledPaymentHttp.Response.of(kakaoPayService.getOrders(kakaoPayOrderRequest), order);
 
-        return kakaoPayService.getOrders(kakaoPayOrderRequest);
+        return response;
     }
 }
