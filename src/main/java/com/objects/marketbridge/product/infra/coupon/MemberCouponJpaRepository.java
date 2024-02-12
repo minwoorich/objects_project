@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface MemberCouponJpaRepository extends JpaRepository<MemberCoupon, Long> {
 
-    // TODO : findByMemberIdAndCouponId 테스트 코드 작성
     @Query("SELECT mc FROM MemberCoupon mc WHERE mc.member.id = :memberId AND mc.coupon.id = :couponId")
     Optional<MemberCoupon> findByMemberIdAndCouponId(@Param("memberId") Long memberId, @Param("couponId") Long couponId);
 }
