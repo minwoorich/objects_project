@@ -2,8 +2,6 @@ package com.objects.marketbridge.payment.controller.dto;
 
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.payment.domain.Amount;
-import com.objects.marketbridge.payment.domain.CardInfo;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.payment.service.dto.ProductInfoDto;
 import lombok.Builder;
