@@ -54,10 +54,12 @@ public class CancelledPaymentHttp {
             // null 처리를 위한 로직
             CardInfo cardInfo = filterCardInfo(kakaoResp.getSelectedCardInfo());
 
-            return CancelledPaymentHttp.Response.builder()
+            return Response.builder()
                     .paymentMethodType(kakaoResp.getPaymentMethodType())
                     .orderName(kakaoResp.getItemName())
                     .approvedAt(kakaoResp.getApprovedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .canceledAt(kakaoResp.getCanceledAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .status(kakaoResp.getStatus())
                     .cardIssuerName(cardInfo.getCardIssuerName())
                     .cardPurchaseName(cardInfo.getCardPurchaseName())
                     .cardInstallMonth(cardInfo.getCardInstallMonth())
