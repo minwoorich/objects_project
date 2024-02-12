@@ -1,0 +1,62 @@
+name: Market Bridge Backend CI/CD
+
+on:
+  push:
+    branches: ["issue#251"]
+
+  permissions:
+    contents: read
+
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - name: checkout
+          uses: actions/checkout@v4
+
+        - name: Set up JDK 17
+          uses: actions/Setup-java@v4
+          with:
+            java-version: '17'
+            distribution: 'corretto'
+
+        - name: make application-database.yml
+          run: |
+            cd ./src/main/resources
+            touch ./application-database.yml
+            echo "${{ secrets.DATABASE }}" >> ./application-database.yml
+
+          shell: bash
+
+        - name: make application-redis.yml
+          run: |
+            cd ./src/main/resources
+            touch ./application-redis.yml
+            echo "${{ secrets.REDIS }}" >> ./application-redis.yml
+
+          shell: bash
+
+        - name: Build with Gradle
+          run: |
+            chmod +x gradlew
+            ./gradlew clean build
+
+        - name: web docker build and push
+          run: |
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} .
+            docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+
+        - name: execute remote ssh & deploy backend server
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.HOST }}
+            username: ubuntu
+            key: ${{ secrets.KEY }}
+            passphrase: ${{ secrets.PASSPHRASE }}
+            scripts:
+              sudo docker rm $(sudo docker ps -a)
+              sudo docker pull ${{ secrets.DOKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+              cd ~
+              docker-compose up -d
+              sudo docker image prune -f

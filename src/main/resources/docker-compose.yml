@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+
+  mysql:
+    container_name: mysql
+    image: mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_USER: objects
+      MYSQL_PASSWORD: 1234
+      MYSQL_DATABASE: MarketBridge
+    restart: always
+    networks:
+      - testnet
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - 6379:6379
+    restart: always
+    networks:
+      - testnet
+
+  backend:
+    container_name: backend
+    image: jeongin/market-bridge-app
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - testnet
+
+networks:
+  mynet:
+    driver: bridge
