@@ -5,6 +5,7 @@ import com.objects.marketbridge.common.dto.KakaoPayOrderResponse;
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.payment.controller.dto.CancelledPaymentHttp;
 import com.objects.marketbridge.payment.controller.dto.CompleteOrderHttp;
+import com.objects.marketbridge.payment.domain.PaymentType;
 import com.objects.marketbridge.payment.service.CreatePaymentService;
 import com.objects.marketbridge.payment.service.QuitPaymentService;
 import com.objects.marketbridge.payment.service.dto.ProductInfoDto;
@@ -112,9 +113,7 @@ class PaymentControllerTest {
 
                                 fieldWithPath("data.cardIssuerName").type(JsonFieldType.STRING)
                                         .description("카드 발급사 명 (현금결제시 null)"),
-                                fieldWithPath("data.cardPurchaseName").type(JsonFieldType.STRING)
-                                        .description("카드 매입사 명 (현금결제시 null)"),
-                                fieldWithPath("data.cardInstallMonth").type(JsonFieldType.STRING)
+                                fieldWithPath("data.cardInstallMonth").type(JsonFieldType.NUMBER)
                                         .description("할부 개월 수 (현금결제시 null)"),
 
                                 fieldWithPath("data.addressValue").type(JsonFieldType.OBJECT)
@@ -156,10 +155,10 @@ class PaymentControllerTest {
     }
 
     private CompleteOrderHttp.Response createResponse() {
-        return CompleteOrderHttp.Response.create("카드", "가방 외 1건",
+        return CompleteOrderHttp.Response.create(PaymentType.CARD.toString(), "가방 외 1건",
                 "2024-01-01 13:30:20",
                 10000L, 1000L, 0L,
-                "카카오뱅크", "카카오뱅크", "0",
+                "카카오뱅크", 0L,
                 createAddressValue("01044442222", "홍길동", "서울", "세종대로", "23333", "우리집", "민들레아파트 110동 1212호"),
                 createProductInfoDtos());
     }

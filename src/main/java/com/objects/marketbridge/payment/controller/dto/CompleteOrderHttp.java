@@ -27,13 +27,12 @@ public class CompleteOrderHttp {
         private Long discountAmount;
         private Long taxFreeAmount;
         private String cardIssuerName;
-        private String cardPurchaseName;
-        private String cardInstallMonth;
+        private Long cardInstallMonth;
         private AddressValue addressValue;
         private List<ProductInfoDto> productInfos;
 
         @Builder
-        private Response(String paymentMethodType, String orderName, String approvedAt, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName, String cardPurchaseName, String cardInstallMonth, AddressValue addressValue, List<ProductInfoDto> productInfos) {
+        private Response(String paymentMethodType, String orderName, String approvedAt, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName, Long cardInstallMonth, AddressValue addressValue, List<ProductInfoDto> productInfos) {
             this.paymentMethodType = paymentMethodType;
             this.orderName = orderName;
             this.approvedAt = approvedAt;
@@ -41,7 +40,6 @@ public class CompleteOrderHttp {
             this.discountAmount = discountAmount;
             this.taxFreeAmount = taxFreeAmount;
             this.cardIssuerName = cardIssuerName;
-            this.cardPurchaseName = cardPurchaseName;
             this.cardInstallMonth = cardInstallMonth;
             this.addressValue = addressValue;
             this.productInfos = productInfos;
@@ -53,8 +51,7 @@ public class CompleteOrderHttp {
                     .orderName(payment.getOrder().getOrderName())
                     .approvedAt(payment.getApprovedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .cardIssuerName(payment.getCardInfo().getCardIssuerName())
-                    .cardPurchaseName(payment.getCardInfo().getCardPurchaseName())
-                    .cardInstallMonth(payment.getCardInfo().getCardInstallMonth())
+                    .cardInstallMonth(Long.parseLong(payment.getCardInfo().getCardInstallMonth()))
                     .totalAmount(payment.getAmount().getTotalAmount())
                     .discountAmount(payment.getAmount().getDiscountAmount())
                     .taxFreeAmount(payment.getAmount().getTaxFreeAmount())
@@ -63,7 +60,7 @@ public class CompleteOrderHttp {
                     .build();
         }
 
-        public static Response create(String paymentMethodType, String orderName, String approvedAt, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName, String cardPurchaseName, String cardInstallMonth, AddressValue addressValue, List<ProductInfoDto> productInfos) {
+        public static Response create(String paymentMethodType, String orderName, String approvedAt, Long totalAmount, Long discountAmount, Long taxFreeAmount, String cardIssuerName, Long cardInstallMonth, AddressValue addressValue, List<ProductInfoDto> productInfos) {
             return Response.builder()
                     .paymentMethodType(paymentMethodType)
                     .orderName(orderName)
@@ -72,7 +69,6 @@ public class CompleteOrderHttp {
                     .discountAmount(discountAmount)
                     .taxFreeAmount(taxFreeAmount)
                     .cardIssuerName(cardIssuerName)
-                    .cardPurchaseName(cardPurchaseName)
                     .cardInstallMonth(cardInstallMonth)
                     .addressValue(addressValue)
                     .productInfos(productInfos)
