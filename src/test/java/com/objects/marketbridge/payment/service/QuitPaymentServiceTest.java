@@ -102,7 +102,7 @@ class QuitPaymentServiceTest {
         return order;
     }
 
-    @DisplayName("결제를 취소하면 payment, order_detail들도 모두 삭제(소프트삭제) 된다")
+    @DisplayName("결제를 취소하면 order_detail들도 모두 삭제(소프트삭제) 된다")
     @Test
     void cancel(){
         //given

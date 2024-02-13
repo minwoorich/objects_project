@@ -68,6 +68,7 @@ public class OrderInfo {
             this.isOwn = isOwn;
         }
 
+        // TODO : of() 에 deliveredDate 추가
         public static OrderDetailInfo of(OrderDetailDtio orderDetailDtio) {
             return OrderDetailInfo.builder()
                     .orderNo(orderDetailDtio.getOrderNo())

@@ -184,18 +184,16 @@ public void kakaoPaymentApproved() throws Exception{
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(print())
-            .andDo(document("orderNo",
+            .andDo(document("kakaoPaySubs-Approved",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
                     pathParameters(
                             parameterWithName("orderNo")
                                     .description("주문 번호")
                     ),
                     queryParameters(
                             parameterWithName("pg_token").description("토큰값")
-                )
-            ))
-            .andDo(document("kakaoPaySubs-Approved",
-                    preprocessRequest(prettyPrint()),
-                    preprocessResponse(prettyPrint()),
+                    ),
                     responseFields(
                             fieldWithPath("code").type(JsonFieldType.NUMBER)
                                     .description("응답 코드"),

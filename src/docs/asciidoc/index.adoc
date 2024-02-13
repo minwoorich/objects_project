@@ -52,7 +52,32 @@ include::api/member/kakaoPaySubsSubscribtion.adoc[]
 {empty}
 
 == *주문/결제*
+include::api/order/ordercheckout.adoc[]
+{empty}
+{empty}
 
+include::api/order/ordercreate.adoc[]
+{empty}
+{empty}
+
+include::api/payment/paymentcreate.adoc[]
+{empty}
+{empty}
+
+include::api/payment/paymentcancel.adoc[]
+{empty}
+{empty}
+
+include::api/order/orderlist.adoc[]
+{empty}
+{empty}
+
+include::api/order/orderdetaillist.adoc[]
+{empty}
+{empty}
+
+
+== *반품/취소*
 include::api/order/ordercancelreturn.adoc[]
 {empty}
 {empty}
@@ -73,18 +98,3 @@ include::api/order/ordercancelreturndetail.adoc[]
 {empty}
 {empty}
 
-[[OrderCreate-API]]
-== OrderCreate API
-include::api/order/ordercreate.adoc[]
-
-[[OrderCheckout-API]]
-== OrderCheckout API
-
-include::api/order/ordercheckout.adoc[]
-{empty}
-{empty}
-
-// [[Order-API]]
-// == Order API
-//
-// include::api/order/ordercancel.adoc[]

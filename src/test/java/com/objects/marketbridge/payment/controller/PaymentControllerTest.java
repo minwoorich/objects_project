@@ -1,13 +1,9 @@
 package com.objects.marketbridge.payment.controller;
 
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
-import com.objects.marketbridge.common.dto.KakaoPayOrderResponse;
-import com.objects.marketbridge.common.enums.CardCoType;
-import com.objects.marketbridge.common.enums.KakaoStatus;
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.payment.controller.dto.CancelledPaymentHttp;
 import com.objects.marketbridge.payment.controller.dto.CompleteOrderHttp;
-import com.objects.marketbridge.payment.domain.PaymentType;
 import com.objects.marketbridge.payment.service.CreatePaymentService;
 import com.objects.marketbridge.payment.service.QuitPaymentService;
 import com.objects.marketbridge.payment.service.dto.ProductInfoDto;
@@ -33,9 +29,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.objects.marketbridge.common.enums.CardCoType.*;
-import static com.objects.marketbridge.common.enums.KakaoStatus.*;
-import static com.objects.marketbridge.payment.domain.PaymentType.*;
+import static com.objects.marketbridge.common.enums.CardCoType.KAKAOBANK;
+import static com.objects.marketbridge.common.enums.KakaoStatus.QUIT_PAYMENT;
+import static com.objects.marketbridge.payment.domain.PaymentType.CARD;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -157,7 +153,7 @@ class PaymentControllerTest {
                                 fieldWithPath("data.productInfos[].sellerName").type(JsonFieldType.STRING)
                                         .description("판매자 이름"),
                                 fieldWithPath("data.productInfos[].deliveredDate").type(JsonFieldType.STRING)
-                                        .description("예상 도착 날짜 ((yyyy-MM-dd))")
+                                        .description("배송 도착 일자 (yyyy.MM.dd)")
                         )));
     }
 
@@ -195,7 +191,7 @@ class PaymentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("payment-create",
+                .andDo(document("payment-cancel",
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("orderNo").description("주문 번호")
