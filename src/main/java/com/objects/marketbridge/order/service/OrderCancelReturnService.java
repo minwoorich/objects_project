@@ -2,6 +2,7 @@ package com.objects.marketbridge.order.service;
 
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.order.domain.CancelReturnStatusCode;
 import com.objects.marketbridge.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderCancelReturnCommendRepository;
@@ -27,14 +28,14 @@ public abstract class OrderCancelReturnService {
     protected final OrderCancelReturnQueryRepository orderCancelReturnQueryRepository;
     private final OrderCancelReturnCommendRepository orderCancelReturnCommendRepository;
 
-    protected <T> T confirmProcess(Long orderDetailId, String reason, Long numberOfOperations, DateTimeHolder dateTimeHolder, OrderDetailOperation operation, ResponseBuilder<T> responseBuilder, String statusCode) {
+    protected <T> T confirmProcess(Long orderDetailId, String reason, Long numberOfOperations, DateTimeHolder dateTimeHolder, OrderDetailOperation operation, ResponseBuilder<T> responseBuilder) {
         OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
 
-        operation.apply(orderDetail, numberOfOperations, dateTimeHolder);
+        CancelReturnStatusCode statusInfo = operation.apply(orderDetail, numberOfOperations, dateTimeHolder);
 
         RefundDto refundDto = paymentClient.refund(getTid(orderDetail), orderDetail.cancelAmount());
 
-        orderCancelReturnCommendRepository.save(OrderCancelReturn.create(orderDetail, statusCode, reason));
+        orderCancelReturnCommendRepository.save(OrderCancelReturn.create(orderDetail, statusInfo, reason));
 
         return responseBuilder.build(orderDetail, refundDto);
     }
@@ -45,7 +46,7 @@ public abstract class OrderCancelReturnService {
 
     @FunctionalInterface
     interface OrderDetailOperation {
-        void apply(OrderDetail orderDetail, Long numberOfOperations, DateTimeHolder dateTimeHolder);
+        CancelReturnStatusCode apply(OrderDetail orderDetail, Long numberOfOperations, DateTimeHolder dateTimeHolder);
     }
 
     @FunctionalInterface

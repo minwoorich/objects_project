@@ -40,8 +40,7 @@ public class OrderCancelService extends OrderCancelReturnService {
                 request.getNumberOfCancellation(),
                 dateTimeHolder,
                 OrderDetail::cancel,
-                ConfirmCancelDto.Response::of,
-                ORDER_CANCEL.getCode()
+                ConfirmCancelDto.Response::of
         );
     }
 

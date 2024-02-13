@@ -5,7 +5,8 @@ import com.objects.marketbridge.common.exception.exceptions.CustomLogicException
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.service.dto.ConfirmRecantationDto;
+import com.objects.marketbridge.order.domain.StatusCodeType;
+import com.objects.marketbridge.order.service.dto.WithdrawDto;
 import com.objects.marketbridge.order.service.dto.ConfirmReturnDto;
 import com.objects.marketbridge.order.service.dto.GetReturnDetailDto;
 import com.objects.marketbridge.order.service.dto.RequestReturnDto;
@@ -42,8 +43,7 @@ public class OrderReturnService extends OrderCancelReturnService {
                 request.getNumberOfReturns(),
                 dateTimeHolder,
                 OrderDetail::returns,
-                ConfirmReturnDto.Response::of,
-                RETURN_INIT.getCode()
+                ConfirmReturnDto.Response::of
         );
     }
 
@@ -60,28 +60,15 @@ public class OrderReturnService extends OrderCancelReturnService {
         return GetReturnDetailDto.Response.of(returnDetail, membership, dateTimeHolder);
     }
 
-    @Transactional
-    public ConfirmRecantationDto.Response confirmRecantation(Long orderDetailId) {
-        OrderDetail orderDetail = valifyReturnOrderDetail(orderDetailId);
-        // 내부 재결재
-        PaymentDto paymentDto = paymentClient.payment(orderDetail.getOrder(), orderDetail.getOrder().getPayment().getPgToken());
-        // 상품 재고 감소
-        orderDetail.getProduct().decrease(orderDetail.getReducedQuantity());
-        // 쿠폰 상태 변경
-        orderDetail.getMemberCoupon().changeUsageInfo(orderDetail.getCancelledAt());
-        // orderDetail 상태 변경 (줄어든 수량)
-//        orderDetail.changeReducedQuantity();
-        // 같은 field의 orderDetail 찾기
-//            orderDetailQueryRepository.findByAllField(orderDetail);
-        // 만약 부분 반품이었으면 소프트 삭제
-        if (orderDetail.getStatusCode() == ORDER_PARTIAL_RETURN.getCode()) {
-//            orderDetailCommendRepository. 삭제
-//            찾은 orderDetail 줄어든 수량 변경
-        } else {
-//            줄어든 수량 변경 + 주문 상태 변경
-        }
-        // 모든 반품이었으면 배송완료로 상태 변경
-        return ConfirmRecantationDto.Response.of();
+    @Transactional  //TODO 테스트 작성
+    public WithdrawDto.Response withdraw(Long orderReturnId) {
+        OrderCancelReturn orderReturn = orderCancelReturnQueryRepository.findById(orderReturnId);
+
+        PaymentDto paymentDto = paymentClient.payment(orderReturn.getOrderDetail().getOrder(), orderReturn.getOrderDetail().getOrder().getPayment().getPgToken());
+
+        orderReturn.withdraw();
+
+        return WithdrawDto.Response.of(orderReturn, paymentDto);
     }
 
     private OrderDetail valifyReturnOrderDetail(Long orderDetailId) {
