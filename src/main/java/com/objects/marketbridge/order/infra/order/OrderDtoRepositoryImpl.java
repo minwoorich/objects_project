@@ -10,6 +10,7 @@ import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.payment.domain.QPayment;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
