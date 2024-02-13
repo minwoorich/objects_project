@@ -1,0 +1,9 @@
+==== *주문 조회*
+
+.*HTTP Request*
+include::{snippets}/order-list/http-request.adoc[]
+
+
+.*HTTP Response*
+include::{snippets}/order-list/http-response.adoc[]
+include::{snippets}/order-list/response-fields.adoc[]

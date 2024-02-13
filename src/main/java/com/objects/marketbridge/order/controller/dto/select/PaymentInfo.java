@@ -31,4 +31,14 @@ public class PaymentInfo {
                 .cardIssuerName(orderDtio.getCardIssuerName())
                 .build();
     }
+
+    public static PaymentInfo create(String paymentMethod, String cardIssuerName, Long totalAmount, Long discountAmount, Long deliveryFee) {
+        return PaymentInfo.builder()
+                .paymentMethod(paymentMethod)
+                .cardIssuerName(cardIssuerName)
+                .totalAmount(totalAmount)
+                .discountAmount(discountAmount)
+                .deliveryFee(deliveryFee)
+                .build();
+    }
 }
