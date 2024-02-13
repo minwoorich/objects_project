@@ -92,10 +92,10 @@ VALUES (1, 101, 'First Order', 'ORD001', 275, 280, 5, '2024-01-16 12:30:00', '20
 (2, 102, 'Second Order', 'ORD002',  15,  200, 185, '2024-01-18 10:45:00', '2024-01-19 08:30:00', NULL);
 
 -- Insert statements for order_detail table
-INSERT INTO marketbridge.order_detail (order_id, product_id, member_coupon_id, reward_type, quantity, price, status_code, delivered_date,  reason, cancelled_at, created_at, updated_at, deleted_at)
+INSERT INTO marketbridge.order_detail (order_id, product_id, member_coupon_id, reward_type, quantity, price, status_code, delivered_date, cancelled_at, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, 1, 'Cashback', 2, 200, '1001', NULL,  NULL, NULL, NOW(), NOW(), NULL),
-    (2, 2, 2, 'Discount', 1, 150, '1002', NOW(),  'Out of stock', NULL, NOW(), NOW(), NULL);
+    (1, 1, 1, 'Cashback', 2, 200, '1001', NULL,  NULL, NOW(), NOW(), NULL),
+    (2, 2, 2, 'Discount', 1, 150, '1002', NOW(),  NULL, NOW(), NOW(), NULL);
 
 -- Insert statements for payment table
 /*INSERT INTO payment (order_id, receipt_id, order_name, order_no, transaction_key, payment_type, payment_method, total_amount, balance_amount, payment_key, settlement_status, payment_status, refund_status, customer_name, bank_code, phone_no, cancel_amount, cancel_toss_reason, card_issuer_code, card_no, installment_plan_months, approve_no, account_no, v_account_no, v_due_date, v_expired, deleted_at, canceled_at, approved_at, requested_at, updated_at, cancelled_at, created_at)
