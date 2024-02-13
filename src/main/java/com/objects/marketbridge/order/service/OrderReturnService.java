@@ -3,6 +3,7 @@ package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.dto.ConfirmRecantationDto;
 import com.objects.marketbridge.order.service.dto.ConfirmReturnDto;
@@ -53,10 +54,10 @@ public class OrderReturnService extends OrderCancelReturnService {
         return RequestReturnDto.Response.of(orderDetail, numberOfReturns, membership);
     }
 
-    public GetReturnDetailDto.Response findReturnDetail(Long orderDetailId, String membership) {
-        OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
+    public GetReturnDetailDto.Response findReturnDetail(Long orderReturnId, String membership) {
+        OrderCancelReturn returnDetail = orderCancelReturnQueryRepository.findById(orderReturnId);
 
-        return GetReturnDetailDto.Response.of(orderDetail, membership, dateTimeHolder);
+        return GetReturnDetailDto.Response.of(returnDetail, membership, dateTimeHolder);
     }
 
     @Transactional

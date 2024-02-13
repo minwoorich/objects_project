@@ -2,6 +2,7 @@ package com.objects.marketbridge.order.service.dto;
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.MembershipType;
+import com.objects.marketbridge.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,13 +36,14 @@ public class GetReturnDetailDto {
             this.refundInfo = refundInfo;
         }
 
-        public static GetReturnDetailDto.Response of(OrderDetail orderDetail, String memberShip, DateTimeHolder dateTimeHolder) {
-            return GetReturnDetailDto.Response.builder()
-                    .orderDate(dateTimeHolder.getCreateTime(orderDetail.getOrder()))
-                    .cancelDate(orderDetail.getCancelledAt())
-                    .orderNo(orderDetail.getOrderNo())
-                    .productInfo(ProductInfo.of(orderDetail))
-                    .refundInfo(RefundInfo.of(orderDetail, memberShip))
+        public static GetReturnDetailDto.Response of(OrderCancelReturn orderReturn, String memberShip, DateTimeHolder dateTimeHolder) {
+            return Response.builder()
+                    .orderDate(dateTimeHolder.getCreateTime(orderReturn))
+                    .cancelDate(orderReturn.getOrderDetail().getCancelledAt())
+                    .reason(orderReturn.getReason())
+                    .orderNo(orderReturn.getOrderDetail().getOrderNo())
+                    .productInfo(ProductInfo.of(orderReturn.getOrderDetail()))
+                    .refundInfo(RefundInfo.of(orderReturn.getOrderDetail(), memberShip))
                     .build();
         }
     }
@@ -110,7 +112,7 @@ public class GetReturnDetailDto {
 
             return GetReturnDetailDto.RefundInfo.builder()
                     .discountPrice(discountPrice)
-                    .totalPrice(Long.valueOf(Objects.requireNonNull(orderDetail).totalAmount()))
+                    .totalPrice(Long.valueOf(Objects.requireNonNull(orderDetail).cancelAmount()))
                     .refundFee(refundFee)
                     .deliveryFee(deliveryFee)
                     .build();

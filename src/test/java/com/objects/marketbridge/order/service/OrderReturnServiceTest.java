@@ -6,11 +6,9 @@ import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
 import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.mock.BaseFakeOrderDetailRepository;
-import com.objects.marketbridge.order.mock.BaseFakeOrderRepository;
-import com.objects.marketbridge.order.mock.TestContainer;
-import com.objects.marketbridge.order.mock.TestDateTimeHolder;
+import com.objects.marketbridge.order.mock.*;
 import com.objects.marketbridge.order.service.dto.ConfirmReturnDto;
 import com.objects.marketbridge.order.service.dto.GetReturnDetailDto;
 import com.objects.marketbridge.order.service.dto.RequestReturnDto;
@@ -48,6 +46,7 @@ class OrderReturnServiceTest {
     void afterEach() {
         BaseFakeOrderDetailRepository.getInstance().clear();
         BaseFakeOrderRepository.getInstance().clear();
+        BaseFakeOrderCancelReturnRepository.getInstance().clear();
     }
 
     @Test
@@ -179,7 +178,7 @@ class OrderReturnServiceTest {
         ConfirmReturnDto.Response result = testContainer.orderReturnService.confirmReturn(request, dateTimeHolder);
 
         // then
-        assertThat(orderDetail.getStatusCode()).isEqualTo(DELIVERY_COMPLETED.getCode());
+        assertThat(orderDetail.getStatusCode()).isEqualTo(RETURN_INIT.getCode());
         assertThat(product.getStock()).isEqualTo(7L);
         assertThat(result.getOrderId()).isEqualTo(1L);
         assertThat(result.getOrderNo()).isEqualTo("1");
@@ -315,7 +314,7 @@ class OrderReturnServiceTest {
         // then
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(memberCoupon.getUsedDate()).isNull();
-        assertThat(orderDetail.getStatusCode()).isEqualTo(DELIVERY_COMPLETED.getCode());
+        assertThat(orderDetail.getStatusCode()).isEqualTo(RETURN_INIT.getCode());
         assertThat(product.getStock()).isEqualTo(7L);
         assertThat(result.getOrderId()).isEqualTo(1L);
         assertThat(result.getOrderNo()).isEqualTo("1");
@@ -547,20 +546,29 @@ class OrderReturnServiceTest {
                 .orderNo("1")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn returnDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(returnDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
 
-        Long orderDetailId = 1L;
+        Long orderReturnId = 1L;
         String membership = WOW.getText();
 
         // when
-        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderDetailId, membership);
+        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderReturnId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -577,7 +585,7 @@ class OrderReturnServiceTest {
         assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
         assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
         assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(0L);
-        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
@@ -594,20 +602,29 @@ class OrderReturnServiceTest {
                 .orderNo("1")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn returnDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(returnDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
 
-        Long orderDetailId = 1L;
+        Long orderReturnId = 1L;
         String membership = BASIC.getText();
 
         // when
-        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderDetailId, membership);
+        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderReturnId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -624,7 +641,7 @@ class OrderReturnServiceTest {
         assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
         assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
         assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(0L);
-        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
@@ -651,20 +668,29 @@ class OrderReturnServiceTest {
                 .orderNo("1")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn returnDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(returnDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
 
-        Long orderDetailId = 1L;
+        Long orderReturnId = 1L;
         String membership = WOW.getText();
 
         // when
-        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderDetailId, membership);
+        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderReturnId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -681,7 +707,7 @@ class OrderReturnServiceTest {
         assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
         assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
         assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
-        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
@@ -708,20 +734,29 @@ class OrderReturnServiceTest {
                 .orderNo("1")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn returnDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(returnDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
 
-        Long orderDetailId = 1L;
+        Long orderReturnId = 1L;
         String membership = BASIC.getText();
 
         // when
-        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderDetailId, membership);
+        GetReturnDetailDto.Response result = testContainer.orderReturnService.findReturnDetail(orderReturnId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -738,7 +773,7 @@ class OrderReturnServiceTest {
         assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
         assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
         assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
-        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test

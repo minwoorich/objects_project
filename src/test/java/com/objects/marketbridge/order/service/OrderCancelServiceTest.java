@@ -388,7 +388,6 @@ class OrderCancelServiceTest {
                 .reason("단순변심")
                 .build();
 
-
         testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);

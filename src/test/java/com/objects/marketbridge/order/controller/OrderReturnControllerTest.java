@@ -305,7 +305,7 @@ class OrderReturnControllerTest {
         // then
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(memberCoupon.getUsedDate()).isNull();
-        assertThat(orderDetail.getStatusCode()).isEqualTo(DELIVERY_COMPLETED.getCode());
+        assertThat(orderDetail.getStatusCode()).isEqualTo(RETURN_INIT.getCode());
         assertThat(product.getStock()).isEqualTo(7L);
 
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -585,20 +585,29 @@ class OrderReturnControllerTest {
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .product(product)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn returnDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(returnDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
-        Long orderDetailId = 1L;
+        Long orderReturnId = 1L;
         Long memberId = 1L;
 
         // when
-        ApiResponse<GetReturnDetailHttp.Response> result = testContainer.orderReturnController.getReturnDetail(orderDetailId, memberId);
+        ApiResponse<GetReturnDetailHttp.Response> result = testContainer.orderReturnController.getReturnDetail(orderReturnId, memberId);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -619,7 +628,7 @@ class OrderReturnControllerTest {
         assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
         assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
         assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(0L);
-        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
@@ -640,21 +649,30 @@ class OrderReturnControllerTest {
                 .orderNo("1")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn returnDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(returnDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
-        Long orderDetailId = 1L;
+        Long orderReturnId = 1L;
         Long memberId = 1L;
 
         // when
-        ApiResponse<GetReturnDetailHttp.Response> result = testContainer.orderReturnController.getReturnDetail(orderDetailId, memberId);
+        ApiResponse<GetReturnDetailHttp.Response> result = testContainer.orderReturnController.getReturnDetail(orderReturnId, memberId);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -675,7 +693,7 @@ class OrderReturnControllerTest {
         assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
         assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
         assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(0L);
-        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
@@ -707,20 +725,29 @@ class OrderReturnControllerTest {
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .product(product)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn returnDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(returnDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
-        Long orderDetailId = 1L;
+        Long orderReturnId = 1L;
         Long memberId = 1L;
 
         // when
-        ApiResponse<GetReturnDetailHttp.Response> result = testContainer.orderReturnController.getReturnDetail(orderDetailId, memberId);
+        ApiResponse<GetReturnDetailHttp.Response> result = testContainer.orderReturnController.getReturnDetail(orderReturnId, memberId);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -741,7 +768,7 @@ class OrderReturnControllerTest {
         assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
         assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
         assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
-        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
