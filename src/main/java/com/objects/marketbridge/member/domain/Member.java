@@ -1,6 +1,5 @@
 package com.objects.marketbridge.member.domain;
 
-import com.objects.marketbridge.order.domain.Address;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    private String socialType;
     @Setter
     private String membership;
 
@@ -32,6 +30,7 @@ public class Member extends BaseEntity {
 
     // 알림
     private Boolean isAlert;
+
     // 약관동의
     private Boolean isAgree;
 
@@ -40,13 +39,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
-    @OneToOne(mappedBy = "member" , cascade = CascadeType.ALL, orphanRemoval = true)
-    private Point point;
-
     @Builder
-    public Member(Long id, String socialType, String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
+    public Member(Long id, String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
         this.id = id;
-        this.socialType = socialType;
         this.membership = membership;
         this.email = email;
         this.password = password;
@@ -64,18 +59,19 @@ public class Member extends BaseEntity {
         address.setMember(this);
     }
 
-    public void changePoint(Point point) {
-        this.point = point;
+    // 비즈니스 로직
+    public static Member create(String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
+        return Member.builder()
+                .membership(membership)
+                .email(email)
+                .password(password)
+                .name(name)
+                .phoneNo(phoneNo)
+                .isAlert(isAlert)
+                .isAgree(isAgree)
+                .build();
     }
 
-//    public static Member fromDto(CreateMember createMember){
-//        return Member.builder()
-//                .email(createMember.getEmail())
-//                .name(createMember.getName())
-//                .phoneNo(createMember.getPhoneNo())
-//                .password(createMember.getPassword())
-//                .isAgree(createMember.getIsAgree()).build();
-//    }
 }
 
 

@@ -41,4 +41,18 @@ public class ProductInfoDto {
                 .discountRate(product.getDiscountRate())
                 .build();
     }
+
+    public static ProductInfoDto create(Boolean isOwn, String name, Long price, Boolean isSubs, String thumbImgUrl, Long discountRate, String sellerName, String deliveredDate) {
+        return ProductInfoDto.builder()
+                .isOwn(isOwn)
+                .name(name)
+                .price(price)
+                .isSubs(isSubs)
+                .thumbImgUrl(thumbImgUrl)
+                .discountRate(discountRate)
+                .sellerName(sellerName)
+                .deliveredDate(deliveredDate)
+                .build();
+
+    }
 }

@@ -9,9 +9,9 @@ import com.objects.marketbridge.order.service.OrderCancelService;
 import com.objects.marketbridge.order.service.OrderReturnService;
 import com.objects.marketbridge.order.service.port.*;
 import com.objects.marketbridge.payment.service.port.PaymentClient;
-import com.objects.marketbridge.product.infra.CouponRepository;
-import com.objects.marketbridge.product.infra.MemberCouponRepository;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.infra.coupon.CouponRepository;
+import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.Builder;
 
 public class TestContainer {

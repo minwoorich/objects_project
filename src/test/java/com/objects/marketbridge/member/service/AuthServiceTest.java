@@ -2,7 +2,6 @@ package com.objects.marketbridge.member.service;
 
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MembershipType;
-import com.objects.marketbridge.member.domain.SocialType;
 import com.objects.marketbridge.member.dto.SignUpDto;
 import com.objects.marketbridge.member.mock.FakeAuthRepository;
 
@@ -50,7 +49,6 @@ class AuthServiceTest {
                 .isAgree(true)
                 .isAlert(true)
                 .membership(MembershipType.WOW.toString())
-                .socialType(SocialType.DEFAULT.toString())
                 .build();
 
         Member member2 = Member.builder()
@@ -62,7 +60,6 @@ class AuthServiceTest {
                 .isAgree(true)
                 .isAlert(true)
                 .membership(MembershipType.WOW.toString())
-                .socialType(SocialType.DEFAULT.toString())
                 .build();
 
         fakeMemberRepository.save(member1);

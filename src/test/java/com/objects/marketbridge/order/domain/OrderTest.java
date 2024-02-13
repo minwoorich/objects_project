@@ -8,10 +8,11 @@ import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.CouponRepository;
-import com.objects.marketbridge.product.infra.MemberCouponRepository;
-import com.objects.marketbridge.product.infra.ProductRepository;
+import com.objects.marketbridge.product.infra.coupon.CouponRepository;
+import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
+@Slf4j
 class OrderTest {
 
     @Autowired
@@ -61,20 +63,35 @@ class OrderTest {
 //        Product product2 = Product.builder()
 //                .build();
 //
+//        Coupon coupon1 = Coupon.builder()
+//                .product(product1)
+//                .price(1000L)
+//                .count(10L)
+//                .build();
+//        Coupon coupon2 = Coupon.builder()
+//                .product(product2)
+//                .price(2000L)
+//                .count(20L)
+//                .build();
+//
 //        OrderDetail orderDetail1 = OrderDetail.builder()
 //                .order(order)
+//                .coupon(coupon1)
 //                .product(product1)
 //                .build();
 //        OrderDetail orderDetail2 = OrderDetail.builder()
 //                .order(order)
+//                .coupon(coupon2)
 //                .product(product2)
 //                .build();
 //
 //        MemberCoupon memberCoupon1 = MemberCoupon.builder()
+//                .coupon(coupon1)
 //                .isUsed(true)
 //                .usedDate(useDate)
 //                .build();
 //        MemberCoupon memberCoupon2 = MemberCoupon.builder()
+//                .coupon(coupon2)
 //                .isUsed(true)
 //                .usedDate(useDate)
 //                .build();
@@ -84,6 +101,10 @@ class OrderTest {
 //        productRepository.saveAll(List.of(product1, product2));
 //        order.addOrderDetail(orderDetail1);
 //        order.addOrderDetail(orderDetail2);
+//        coupon1.addMemberCoupon(memberCoupon1);
+//        coupon2.addMemberCoupon(memberCoupon2);
+//        couponRepository.save(coupon1);
+//        couponRepository.save(coupon2);
 //        memberCouponRepository.save(memberCoupon1);
 //        memberCouponRepository.save(memberCoupon2);
 //
@@ -97,6 +118,8 @@ class OrderTest {
 //        );
 //
 //        // then
+//        assertThat(coupon1.getCount()).isEqualTo(10L);
+//        assertThat(coupon2.getCount()).isEqualTo(20L);
 //        assertThat(memberCoupon1.getUsedDate()).isNull();
 //        assertThat(memberCoupon2.getUsedDate()).isNull();
 //        assertThat(memberCoupon1.getIsUsed()).isFalse();
@@ -220,6 +243,27 @@ class OrderTest {
         assertThat(groupedMap.get(getKeyList(orderDetails).get(0))).isEqualTo(3000L);
     }
 
+    @DisplayName("재고를 증가시킬 수 있다.")
+    @Test
+    void stockIncrease(){
+        //given
+        Long beforeQuantity = 100L;
+        Order order = createOrder();
+        List<OrderDetail> orderDetails = createOrderDetails();
+        Product product = Product.builder().stock(beforeQuantity).build();
+        orderDetails.forEach(order::addOrderDetail);
+        orderDetails.forEach(product::addOrderDetail);
+        orderCommendRepository.save(order);
+        productRepository.save(product);
+
+        //when
+        order.stockIncrease();
+        Long totalCanceledQuantity = orderDetails.stream().mapToLong(OrderDetail::getQuantity).sum();
+
+        //then
+        assertThat(product.getStock()).isEqualTo(totalCanceledQuantity + beforeQuantity);
+    }
+
     private List<OrderDetail> createOrderDetails() {
         OrderDetail orderDetail1 = OrderDetail.builder()
                 .price(1000L)
@@ -265,6 +309,7 @@ class OrderTest {
                 .totalPrice(4000L)
                 .build();
     }
+
 
 
 

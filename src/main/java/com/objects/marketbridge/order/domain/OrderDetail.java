@@ -6,10 +6,9 @@ import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -22,6 +21,8 @@ import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE order_detail SET deleted_at = now() WHERE order_detail_id = ?")
+@SQLRestriction("deleted_at is NULL")
 public class OrderDetail extends BaseEntity {
 
     @Id
@@ -45,7 +46,7 @@ public class OrderDetail extends BaseEntity {
 
     private String orderNo;
 
-    private Long price; // quantity * 상품 price
+    private Long price;
 
     private String statusCode;
 

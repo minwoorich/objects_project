@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,7 +26,7 @@ public class Option extends BaseEntity {
     private OptionCategory optionCategory;
 
     @OneToMany(mappedBy = "option")
-    private List<ProdOption> prodOptions;
+    private List<ProdOption> prodOptions = new ArrayList<>();
 
     private String name;
 

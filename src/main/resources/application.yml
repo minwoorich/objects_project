@@ -28,12 +28,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        default_batch_fetch_size: 100
-    defer-datasource-initialization: true # (2.5~) Hibernate 초기화 이후 data-mysql.sql 실행
+      show-sql: true
+      properties:
+        hibernate:
+          format_sql: true
+          default_batch_fetch_size: 100
+      defer-datasource-initialization: true # (2.5~) Hibernate 초기화 이후 data-mysql.sql 실행
     # 이게 없으면 data-mysql.sql 스크립트가 수행 안 되고 에러 발생합니당.
 
   h2:
@@ -51,9 +51,6 @@ logging:
 
 payment:
   kakao:
-    client_id : "AE7564ADF66B30123C2A"
-    client_secret : "94B65EF567BCB6E860B4"
-    secret_key: "PRD4A3CDADAF6C09168BA3E4725A3C678A78B271"
     secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
 
 host: "http://localhost:8080"
@@ -105,9 +102,6 @@ logging:
 
 payment:
   kakao:
-    client_id : "AE7564ADF66B30123C2A"
-    client_secret : "94B65EF567BCB6E860B4"
-    secret_key: "PRD4A3CDADAF6C09168BA3E4725A3C678A78B271"
     secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
 
 host: "http://localhost:8080/"

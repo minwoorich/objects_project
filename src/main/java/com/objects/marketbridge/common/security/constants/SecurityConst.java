@@ -4,14 +4,11 @@ package com.objects.marketbridge.common.security.constants;
  * 토큰 정보 값을 설정하는 클래스
  */
 public class SecurityConst {
-    public static final long ACCESS_TOKEN_EXPIRE_TIME = 2 * 60 * 1000;
-    public static final long REFRESH_TOKEN_EXPIRE_TIME = 3 * 60 * 1000;
-
     //6시간
-//    public static final long ACCESS_TOKEN_EXPIRE_TIME = 6 * 60 * 60 * 1000;
+    public static final long ACCESS_TOKEN_EXPIRE_TIME = 6 * 60 * 60 * 1000;
 
     //7일
-//    public static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000;
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000;
 
     public static final String AUTH = "auth";
 

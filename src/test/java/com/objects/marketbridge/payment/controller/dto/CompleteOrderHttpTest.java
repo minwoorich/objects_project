@@ -1,7 +1,7 @@
 package com.objects.marketbridge.payment.controller.dto;
 
 import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.order.domain.Address;
+import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 class CompleteOrderHttpTest {
@@ -34,16 +35,22 @@ class CompleteOrderHttpTest {
                 "paymentMethodType",
                 "orderName",
                 "approvedAt",
-                "amount",
-                "cardInfo",
+                "totalAmount",
+                "discountAmount",
+                "taxFreeAmount",
+                "cardIssuerName",
+                "cardInstallMonth",
                 "addressValue",
                 "productInfos"
         ).containsExactlyInAnyOrder(
                 payment.getPaymentMethod(),
                 payment.getOrder().getOrderName(),
-                payment.getApprovedAt(),
-                payment.getAmount(),
-                payment.getCardInfo(),
+                payment.getApprovedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                payment.getAmount().getTotalAmount(),
+                payment.getAmount().getDiscountAmount(),
+                payment.getAmount().getTaxFreeAmount(),
+                payment.getCardInfo().getCardIssuerName(),
+                Long.parseLong(payment.getCardInfo().getCardInstallMonth()),
                 payment.getOrder().getAddress().getAddressValue(),
                 payment.getOrder().getOrderDetails().stream().map(o -> ProductInfoDto.of(o.getProduct())).collect(Collectors.toList())
         );

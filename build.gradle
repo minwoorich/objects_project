@@ -71,6 +71,7 @@ dependencies {
 
 	//LocalDateTime 처리 라이브러리
 //	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'org.json:json:20230618'
 }
 
 ext { // 전역 변수
@@ -129,3 +130,8 @@ tasks.withType(JavaCompile).configureEach {
 clean.doLast {
 	file(querydslDir).deleteDir()
 }
+
+
+//tasks.withType(JavaCompile) {
+//	options.compilerArgs << "-parameters"
+//}

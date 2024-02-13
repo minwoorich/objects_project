@@ -44,6 +44,16 @@ public class MemberCoupon extends BaseEntity {
         this.endDate = endDate;
     }
 
+    public static MemberCoupon create(Member member, Coupon coupon, Boolean isUsed, LocalDateTime usedDate, LocalDateTime endDate) {
+        return MemberCoupon.builder()
+                .member(member)
+                .coupon(coupon)
+                .isUsed(isUsed)
+                .usedDate(usedDate)
+                .endDate(endDate)
+                .build();
+    }
+
     public void changeUsageInfo(DateTimeHolder dateTimeHolder) {
         if(Objects.isNull(dateTimeHolder))
             changeUsageInfo((LocalDateTime) null);

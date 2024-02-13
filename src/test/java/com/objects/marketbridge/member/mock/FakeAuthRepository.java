@@ -35,7 +35,6 @@ public class FakeAuthRepository implements AuthRepository {
                     .isAgree(member.getIsAgree())
                     .isAlert(member.getIsAlert())
                     .membership(member.getMembership())
-                    .socialType(member.getSocialType())
                     .build();
             data.add(newMember);
         } else {
