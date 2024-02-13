@@ -24,7 +24,8 @@ public class OrderDetailQueryRepositoryImpl implements OrderDetailQueryRepositor
 
     @Override
     public OrderDetail findById(Long id) {
-        return orderDetailJpaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
+        return orderDetailJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
     }
 
     @Override
@@ -50,6 +51,16 @@ public class OrderDetailQueryRepositoryImpl implements OrderDetailQueryRepositor
     @Override
     public List<OrderDetail> findByOrderNoAndProduct_IdIn(String orderNo, List<Long> productIds) {
         return orderDetailJpaRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
+    }
+
+    @Override
+    public List<OrderDetail> findByIdIn(List<Long> orderDetailIds) {
+        return null;
+    }
+
+    @Override
+    public List<OrderDetail> findByOrderNoAndOrderDetail_In(String orderNo, List<Long> orderDetailIds) {
+        return orderDetailJpaRepository.findByOrderNoAndIdIn(orderNo, orderDetailIds);
     }
 
 }

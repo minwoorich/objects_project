@@ -9,7 +9,6 @@ import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.
 
 public interface OrderDtoRepository {
 
-    Page<GetCancelReturnListDtio.Response> findOrdersByMemberId(Long memberId, Pageable pageable);
 
     Page<OrderDtio> findAllPaged(Condition condition, Pageable pageable);
 

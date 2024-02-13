@@ -7,6 +7,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Objects;
 
+import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_PARTIAL_CANCEL;
+
 public class FakeOrderDetailCommendRepository extends BaseFakeOrderDetailRepository implements OrderDetailCommendRepository {
 
     @Override
@@ -21,6 +23,12 @@ public class FakeOrderDetailCommendRepository extends BaseFakeOrderDetailReposit
     }
 
     @Override
+    public OrderDetail saveAndReturnEntity(OrderDetail orderDetail) {
+        save(orderDetail);
+        return OrderDetail.create(orderDetail, ORDER_PARTIAL_CANCEL.getCode(), ORDER_PARTIAL_CANCEL.getCode());
+    }
+
+    @Override
     public List<OrderDetail> saveAll(List<OrderDetail> orderDetail) {
         return null;
     }
@@ -28,11 +36,6 @@ public class FakeOrderDetailCommendRepository extends BaseFakeOrderDetailReposit
     @Override
     public int changeAllType(Long orderId, String type) {
         return 0;
-    }
-
-    @Override
-    public void addReason(Long orderId, String reason) {
-
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.objects.marketbridge.order.domain;
 
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.MemberCoupon;
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
@@ -12,6 +12,7 @@ import com.objects.marketbridge.product.infra.coupon.CouponRepository;
 import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
+@Slf4j
 class OrderTest {
 
     @Autowired
@@ -241,26 +243,51 @@ class OrderTest {
         assertThat(groupedMap.get(getKeyList(orderDetails).get(0))).isEqualTo(3000L);
     }
 
+    @DisplayName("재고를 증가시킬 수 있다.")
+    @Test
+    void stockIncrease(){
+        //given
+        Long beforeQuantity = 100L;
+        Order order = createOrder();
+        List<OrderDetail> orderDetails = createOrderDetails();
+        Product product = Product.builder().stock(beforeQuantity).build();
+        orderDetails.forEach(order::addOrderDetail);
+        orderDetails.forEach(product::addOrderDetail);
+        orderCommendRepository.save(order);
+        productRepository.save(product);
+
+        //when
+        order.stockIncrease();
+        Long totalCanceledQuantity = orderDetails.stream().mapToLong(OrderDetail::getQuantity).sum();
+
+        //then
+        assertThat(product.getStock()).isEqualTo(totalCanceledQuantity + beforeQuantity);
+    }
+
     private List<OrderDetail> createOrderDetails() {
         OrderDetail orderDetail1 = OrderDetail.builder()
                 .price(1000L)
                 .quantity(1L)
                 .sellerId(1L)
+                .reducedQuantity(0L)
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
                 .price(1000L)
                 .quantity(2L)
                 .sellerId(1L)
+                .reducedQuantity(0L)
                 .build();
         OrderDetail orderDetail3 = OrderDetail.builder()
                 .price(1000L)
                 .quantity(2L)
                 .sellerId(2L)
+                .reducedQuantity(0L)
                 .build();
         OrderDetail orderDetail4 = OrderDetail.builder()
                 .price(1000L)
                 .quantity(3L)
                 .sellerId(3L)
+                .reducedQuantity(0L)
                 .build();
         return List.of(orderDetail1, orderDetail2, orderDetail3, orderDetail4);
     }
@@ -282,6 +309,7 @@ class OrderTest {
                 .totalPrice(4000L)
                 .build();
     }
+
 
 
 

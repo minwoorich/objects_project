@@ -42,7 +42,6 @@ public class CreatePaymentService {
         // 3. orderDetail 의 statusCode 업데이트
         payment.changeStatusCode(PAYMENT_COMPLETED.getCode());
 
-        // TODO : payment 대신 order?
         return CompleteOrderHttp.Response.of(payment);
     }
 
