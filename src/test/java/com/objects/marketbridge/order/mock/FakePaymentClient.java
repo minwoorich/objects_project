@@ -1,16 +1,18 @@
 package com.objects.marketbridge.order.mock;
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.payment.service.port.RefundClient;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.payment.service.dto.PaymentDto;
+import com.objects.marketbridge.payment.service.port.PaymentClient;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
 import lombok.Builder;
 
-public class FakeRefundClient implements RefundClient {
+public class FakePaymentClient implements PaymentClient {
 
     private DateTimeHolder dateTimeHolder;
 
     @Builder
-    public FakeRefundClient(DateTimeHolder dateTimeHolder) {
+    public FakePaymentClient(DateTimeHolder dateTimeHolder) {
         this.dateTimeHolder = dateTimeHolder;
     }
 
@@ -22,4 +24,10 @@ public class FakeRefundClient implements RefundClient {
                 .refundProcessedAt(dateTimeHolder.getTimeNow())
                 .build();
     }
+
+    @Override
+    public PaymentDto payment(Order order, String pgToken) {
+        return null;
+    }
+
 }

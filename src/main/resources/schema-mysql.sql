@@ -201,8 +201,8 @@ CREATE TABLE order_detail (
                               status_code	varchar(255)	,
                               tid	varchar(255)	,
                               delivered_date	datetime(6)	,
-                              reason	text	,
                               cancelled_at	datetime(6)	,
+                              reduced_quantity bigint,
                               created_at	datetime(6)	,
                               updated_at	datetime(6)	,
                               deleted_at	datetime(6)
@@ -226,6 +226,7 @@ CREATE TABLE payment (
                          discount_amount BIGINT,
                          tax_free_amount BIGINT,
                          approved_at	datetime(6)	,
+                         pg_token       varchar(255),
                          deleted_at	datetime(6)	,
                          updated_at	datetime(6)	,
                          created_at	datetime(6)

@@ -65,7 +65,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(OrderController.class)
 @ExtendWith(RestDocumentationExtension.class)
-public class OrderControllerRestDocsTest  {
+public class OrderControllerRestDocsTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;

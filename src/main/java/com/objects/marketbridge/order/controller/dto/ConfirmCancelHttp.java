@@ -1,35 +1,38 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.order.service.dto.ConfirmCancelReturnDto;
+import com.objects.marketbridge.order.service.dto.ConfirmCancelDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class ConfirmCancelReturnHttp {
+public class ConfirmCancelHttp {
 
     @Getter
     @NoArgsConstructor
     public static class Request {
 
         @NotNull
-        private String orderNo;
+        private Long orderDetailId;
         @NotNull
-        private String cancelReason;
+        private Long numberOfCancellation;
+        @NotNull
+        private String reason;
 
         @Builder
-        public Request(String orderNo, String cancelReason) {
-            this.orderNo = orderNo;
-            this.cancelReason = cancelReason;
+        public Request(Long orderDetailId, Long numberOfCancellation, String reason) {
+            this.orderDetailId = orderDetailId;
+            this.numberOfCancellation = numberOfCancellation;
+            this.reason = reason;
         }
 
-        public ConfirmCancelReturnDto.Request toServiceRequest() {
-            return ConfirmCancelReturnDto.Request.builder()
-                    .orderNo(orderNo)
-                    .cancelReason(cancelReason)
+        public ConfirmCancelDto.Request toDto() {
+            return ConfirmCancelDto.Request.builder()
+                    .orderDetailId(this.orderDetailId)
+                    .numberOfCancellation(this.numberOfCancellation)
+                    .reason(this.reason)
                     .build();
         }
     }
@@ -41,33 +44,28 @@ public class ConfirmCancelReturnHttp {
         private String orderNo;
         private Long totalPrice;
         private LocalDateTime cancellationDate; // 주문 취소 일자
-        private List<ProductInfo> cancelledItems;
+        private ProductInfo cancelledItem;
         private RefundInfo refundInfo;
 
         @Builder
-        private Response(Long orderId, String orderNo, Long totalPrice, LocalDateTime cancellationDate, RefundInfo refundInfo, List<ProductInfo> cancelledItems) {
+        private Response(Long orderId, String orderNo, Long totalPrice, LocalDateTime cancellationDate, RefundInfo refundInfo, ProductInfo cancelledItem) {
             this.orderId = orderId;
             this.orderNo = orderNo;
             this.totalPrice = totalPrice;
             this.cancellationDate = cancellationDate;
             this.refundInfo = refundInfo;
-            this.cancelledItems = cancelledItems;
+            this.cancelledItem = cancelledItem;
         }
 
-        public static Response of(ConfirmCancelReturnDto.Response serviceDto) {
+        public static Response of(ConfirmCancelDto.Response dto) {
             return Response.builder()
-                    .orderId(serviceDto.getOrderId())
-                    .orderNo(serviceDto.getOrderNo())
-                    .totalPrice(serviceDto.getTotalPrice())
-                    .cancellationDate(serviceDto.getCancellationDate())
-                    .refundInfo(RefundInfo.of(serviceDto.getRefundInfo()))
-                    .cancelledItems(
-                            serviceDto.getCancelledItems().stream()
-                                    .map(ProductInfo::of)
-                                    .toList()
-                    )
+                    .orderId(dto.getOrderId())
+                    .orderNo(dto.getOrderNo())
+                    .totalPrice(dto.getTotalPrice())
+                    .cancellationDate(dto.getCancellationDate())
+                    .refundInfo(RefundInfo.of(dto.getRefundInfo()))
+                    .cancelledItem(ProductInfo.of(dto.getCancelledItem()))
                     .build();
-
         }
     }
 
@@ -90,13 +88,13 @@ public class ConfirmCancelReturnHttp {
             this.quantity = quantity;
         }
 
-        public static ProductInfo of(ConfirmCancelReturnDto.ProductInfo productInfo) {
+        public static ProductInfo of(ConfirmCancelDto.ProductInfo dto) {
             return ProductInfo.builder()
-                    .productId(productInfo.getProductId())
-                    .name(productInfo.getName())
-                    .price(productInfo.getPrice())
-                    .quantity(productInfo.getQuantity())
-                    .productNo(productInfo.getProductNo())
+                    .productId(dto.getProductId())
+                    .name(dto.getName())
+                    .price(dto.getPrice())
+                    .quantity(dto.getQuantity())
+                    .productNo(dto.getProductNo())
                     .build();
         }
     }
@@ -116,11 +114,11 @@ public class ConfirmCancelReturnHttp {
             this.refundProcessedAt = refundProcessedAt;
         }
 
-        public static RefundInfo of(ConfirmCancelReturnDto.RefundInfo refundDto) {
+        public static RefundInfo of(ConfirmCancelDto.RefundInfo dto) {
             return RefundInfo.builder()
-                    .totalRefundAmount(refundDto.getTotalRefundAmount())
-                    .refundMethod(refundDto.getRefundMethod())
-                    .refundProcessedAt(refundDto.getRefundProcessedAt())
+                    .totalRefundAmount(dto.getTotalRefundAmount())
+                    .refundMethod(dto.getRefundMethod())
+                    .refundProcessedAt(dto.getRefundProcessedAt())
                     .build();
         }
     }
