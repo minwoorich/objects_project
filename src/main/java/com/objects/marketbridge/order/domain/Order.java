@@ -83,11 +83,11 @@ public class Order extends BaseEntity {
     }
 
     //== 비즈니스 로직==//
-    public Integer changeDetailsReasonAndStatus(String reason, String statusCode) {
-        return orderDetails.stream()
-                .mapToInt(od -> od.changeReasonAndStatus(reason, statusCode))
-                .sum();
-    }
+//    public Integer changeDetailsReasonAndStatus(String reason, String statusCode) {
+//        return orderDetails.stream()
+//                .mapToInt(od -> od.changeReasonAndStatus(reason, statusCode))
+//                .sum();
+//    }
 
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
 

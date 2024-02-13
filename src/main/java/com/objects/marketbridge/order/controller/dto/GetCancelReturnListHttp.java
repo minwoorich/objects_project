@@ -10,8 +10,6 @@ import org.springframework.data.domain.PageImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
 public class GetCancelReturnListHttp {
 
     @Getter
@@ -20,27 +18,20 @@ public class GetCancelReturnListHttp {
 
         private LocalDateTime cancelReceiptDate;
         private LocalDateTime orderDate;
-        private String orderNo;
-        private List<OrderDetailInfo> orderDetailInfos;
+        private OrderDetailInfo orderDetailInfo;
 
         @Builder
-        private Response(LocalDateTime cancelReceiptDate, LocalDateTime orderDate, String orderNo, List<OrderDetailInfo> orderDetailInfos) {
+        private Response(LocalDateTime cancelReceiptDate, LocalDateTime orderDate, OrderDetailInfo orderDetailInfo) {
             this.cancelReceiptDate = cancelReceiptDate;
             this.orderDate = orderDate;
-            this.orderNo = orderNo;
-            this.orderDetailInfos = orderDetailInfos;
+            this.orderDetailInfo = orderDetailInfo;
         }
 
         public static Response of(GetCancelReturnListDtio.Response cancelReturnResponse) {
             return Response.builder()
                     .cancelReceiptDate(cancelReturnResponse.getCancelReceiptDate())
                     .orderDate(cancelReturnResponse.getOrderDate())
-                    .orderNo(cancelReturnResponse.getOrderNo())
-                    .orderDetailInfos(
-                            cancelReturnResponse.getOrderDetailInfos().stream()
-                                    .map(OrderDetailInfo::of)
-                                    .toList()
-                    )
+                    .orderDetailInfo(OrderDetailInfo.of(cancelReturnResponse.getOrderDetailInfo()))
                     .build();
         }
 

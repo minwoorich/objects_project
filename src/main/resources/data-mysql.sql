@@ -59,27 +59,27 @@ VALUES
     (5, 'OrderNo5', 'PaymentMethod5', 'TID5', 'CardIssuerName5', 'CardPurchaseName5', 'CardNo5', 5, 500, 50, 25, NOW(), null, NOW(), NOW()),
     (6, 'OrderNo6', 'PaymentMethod6', 'TID6', 'CardIssuerName6', 'CardPurchaseName6', 'CardNo6', 6, 600, 60, 30, NOW(), null, NOW(), NOW());
 
-INSERT INTO order_detail (order_id, product_id, order_no, member_coupon_id,  quantity, price,  status_code, tid, delivered_date, reason, cancelled_at, created_at, updated_at, deleted_at)
+INSERT INTO order_detail (order_id, product_id, order_no, member_coupon_id,  quantity, price,  status_code, tid, delivered_date, cancelled_at, created_at, updated_at, deleted_at)
 VALUES
-    (1, 1, 'OrderNo1', 1, 1, 100,  'StatusCode1', 'TID1', NOW(), 'Reason1', NOW(), NOW(), NOW(), NULL),
-    (1, 2, 'OrderNo1', 2,  2, 200,  'StatusCode2', 'TID2', NOW(), 'Reason2', NOW(), NOW(), NOW(), NULL),
-    (1, 3, 'OrderNo1', 3,  3, 300, 'StatusCode3', 'TID3', NOW(), 'Reason3', NOW(), NOW(), NOW(), NULL),
-    (2, 4, 'OrderNo2', 4,  4, 400,  'StatusCode4', 'TID4', NOW(), 'Reason4', NOW(), NOW(), NOW(), NULL),
-    (2, 5, 'OrderNo2', 5,  5, 500,  'StatusCode5', 'TID5', NOW(), 'Reason5', NOW(), NOW(), NOW(), NULL),
-    (2, 6, 'OrderNo2', 6,  6, 600,  'StatusCode6', 'TID6', NOW(), 'Reason6', NOW(), NOW(), NOW(), NULL),
-    (3, 7, 'OrderNo3', 7,  7, 700,  'StatusCode7', 'TID7', NOW(), 'Reason7', NOW(), NOW(), NOW(), NULL),
-    (3, 8, 'OrderNo3', 8,  8, 800,  'StatusCode8', 'TID8', NOW(), 'Reason8', NOW(), NOW(), NOW(), NULL),
-    (3, 9, 'OrderNo3', 9,  9, 900,  'StatusCode9', 'TID9', NOW(), 'Reason9', NOW(), NOW(), NOW(), NULL),
-    (4, 10, 'OrderNo4', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
-    (4, 10, 'OrderNo4', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
-    (4, 10, 'OrderNo4', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
-    (5, 10, 'OrderNo5', 10,10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
-    (5, 10, 'OrderNo5', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
-    (5, 10, 'OrderNo5', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
-    (6, 10, 'OrderNo6', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
-    (6, 10, 'OrderNo6', 10, 10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
-    (6, 10, 'OrderNo6', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL),
-    (6, 10, 'OrderNo6', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), 'Reason10', NOW(), NOW(), NOW(), NULL);
+    (1, 1, 'OrderNo1', 1, 1, 100,  'StatusCode1', 'TID1', NOW(), NOW(), NOW(), NOW(), NULL),
+    (1, 2, 'OrderNo1', 2,  2, 200,  'StatusCode2', 'TID2', NOW(), NOW(), NOW(), NOW(), NULL),
+    (1, 3, 'OrderNo1', 3,  3, 300, 'StatusCode3', 'TID3', NOW(), NOW(), NOW(), NOW(), NULL),
+    (2, 4, 'OrderNo2', 4,  4, 400,  'StatusCode4', 'TID4', NOW(), NOW(), NOW(), NOW(), NULL),
+    (2, 5, 'OrderNo2', 5,  5, 500,  'StatusCode5', 'TID5', NOW(), NOW(), NOW(), NOW(), NULL),
+    (2, 6, 'OrderNo2', 6,  6, 600,  'StatusCode6', 'TID6', NOW(), NOW(), NOW(), NOW(), NULL),
+    (3, 7, 'OrderNo3', 7,  7, 700,  'StatusCode7', 'TID7', NOW(), NOW(), NOW(), NOW(), NULL),
+    (3, 8, 'OrderNo3', 8,  8, 800,  'StatusCode8', 'TID8', NOW(), NOW(), NOW(), NOW(), NULL),
+    (3, 9, 'OrderNo3', 9,  9, 900,  'StatusCode9', 'TID9', NOW(), NOW(), NOW(), NOW(), NULL),
+    (4, 10, 'OrderNo4', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), NOW(), NOW(), NOW(), NULL),
+    (4, 10, 'OrderNo4', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), NOW(), NOW(), NOW(), NULL),
+    (4, 10, 'OrderNo4', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), NOW(), NOW(), NOW(), NULL),
+    (5, 10, 'OrderNo5', 10,10, 1000,  'StatusCode10', 'TID10', NOW(), NOW(), NOW(), NOW(), NULL),
+    (5, 10, 'OrderNo5', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), NOW(), NOW(), NOW(), NULL),
+    (5, 10, 'OrderNo5', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), NOW(), NOW(), NOW(), NULL),
+    (6, 10, 'OrderNo6', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), NOW(), NOW(), NOW(), NULL),
+    (6, 10, 'OrderNo6', 10, 10, 1000,  'StatusCode10', 'TID10', NOW(), NOW(), NOW(), NOW(), NULL),
+    (6, 10, 'OrderNo6', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), NOW(), NOW(), NOW(), NULL),
+    (6, 10, 'OrderNo6', 10,  10, 1000,  'StatusCode10', 'TID10', NOW(), NOW(), NOW(), NOW(), NULL);
 
 INSERT INTO orders (member_id, address_id, order_name, order_no, total_discount, total_price, real_price, tid, created_at, updated_at, deleted_at)
 VALUES

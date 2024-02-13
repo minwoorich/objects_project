@@ -12,24 +12,19 @@ public class RequestReturnHttp {
     @Getter
     @NoArgsConstructor
     public static class Response {
-        private List<ProductInfo> productInfos;
+        private ProductInfo productInfo;
         private ReturnRefundInfo returnRefundInfo;
 
         @Builder
-        private Response(List<ProductInfo> productInfos, ReturnRefundInfo returnRefundInfo) {
-            this.productInfos = productInfos;
+        private Response(ProductInfo productInfo, ReturnRefundInfo returnRefundInfo) {
+            this.productInfo = productInfo;
             this.returnRefundInfo = returnRefundInfo;
         }
 
-        public static Response of(RequestReturnDto.Response serviceDto) {
+        public static Response of(RequestReturnDto.Response dto) {
             return Response.builder()
-                    .productInfos(
-                            serviceDto.getProductInfos()
-                                    .stream()
-                                    .map(ProductInfo::of)
-                                    .toList()
-                    )
-                    .returnRefundInfo(ReturnRefundInfo.of(serviceDto.getReturnRefundInfo()))
+                    .productInfo(ProductInfo.of(dto.getProductInfo()))
+                    .returnRefundInfo(ReturnRefundInfo.of(dto.getReturnRefundInfo()))
                     .build();
         }
     }
@@ -50,12 +45,12 @@ public class RequestReturnHttp {
             this.image = image;
         }
 
-        public static ProductInfo of(RequestReturnDto.ProductInfo serviceDto) {
+        public static ProductInfo of(RequestReturnDto.ProductInfo dto) {
             return ProductInfo.builder()
-                    .quantity(serviceDto.getQuantity())
-                    .name(serviceDto.getName())
-                    .price(serviceDto.getPrice())
-                    .image(serviceDto.getImage())
+                    .quantity(dto.getQuantity())
+                    .name(dto.getName())
+                    .price(dto.getPrice())
+                    .image(dto.getImage())
                     .build();
         }
     }

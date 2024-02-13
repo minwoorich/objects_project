@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -54,8 +55,15 @@ public class MemberCoupon extends BaseEntity {
     }
 
     public void changeUsageInfo(DateTimeHolder dateTimeHolder) {
+        if(Objects.isNull(dateTimeHolder))
+            changeUsageInfo((LocalDateTime) null);
+        else
+            changeUsageInfo(dateTimeHolder.getTimeNow());
+    }
+
+    public void changeUsageInfo(LocalDateTime dateTime) {
         isUsed = !isUsed;
-        usedDate = dateTimeHolder == null ? null : dateTimeHolder.getTimeNow();
+        usedDate = dateTime;
     }
 
     public void setCoupon(Coupon coupon) {

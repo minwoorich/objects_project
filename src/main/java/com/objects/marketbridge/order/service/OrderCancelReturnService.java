@@ -2,109 +2,55 @@ package com.objects.marketbridge.order.service;
 
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.service.dto.ConfirmCancelReturnDto;
-import com.objects.marketbridge.order.service.dto.GetCancelReturnDetailDto;
-import com.objects.marketbridge.order.service.dto.RequestCancelDto;
-import com.objects.marketbridge.order.service.dto.RequestReturnDto;
-import com.objects.marketbridge.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderCancelReturnCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderCancelReturnQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
-import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
-import com.objects.marketbridge.payment.service.port.RefundClient;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
-import lombok.Builder;
+import com.objects.marketbridge.payment.service.port.PaymentClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;
 
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-@Builder
-public class OrderCancelReturnService {
+public abstract class OrderCancelReturnService {
 
-    private final DateTimeHolder dateTimeHolder;
+    protected final PaymentClient paymentClient;
 
-    private final RefundClient refundClient;
+    protected final DateTimeHolder dateTimeHolder;
 
-    private final OrderDetailQueryRepository orderDetailQueryRepository;
-    private final OrderDetailCommendRepository orderDetailCommendRepository;
-    private final OrderQueryRepository orderQueryRepository;
-    private final OrderCommendRepository orderCommendRepository;
-    private final ProductRepository productRepository;
+    protected final OrderDetailQueryRepository orderDetailQueryRepository;
+    protected final OrderDetailCommendRepository orderDetailCommendRepository;
+    protected final OrderCancelReturnQueryRepository orderCancelReturnQueryRepository;
+    private final OrderCancelReturnCommendRepository orderCancelReturnCommendRepository;
 
+    protected <T> T confirmProcess(Long orderDetailId, String reason, Long numberOfOperations, DateTimeHolder dateTimeHolder, OrderDetailOperation operation, ResponseBuilder<T> responseBuilder, String statusCode) {
+        OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
 
-    // TODO 트랜잭션 위치 고려해야함
-    @Transactional
-    public ConfirmCancelReturnDto.Response confirmCancelReturn(ConfirmCancelReturnDto.Request request, DateTimeHolder dateTimeHolder) {
-        Order order = orderQueryRepository.findByOrderNo(request.getOrderNo());
+        operation.apply(orderDetail, numberOfOperations, dateTimeHolder);
 
-        Integer cancelAmount = order.changeDetailsReasonAndStatus(request.getCancelReason(), ORDER_CANCEL.getCode());
+        RefundDto refundDto = paymentClient.refund(getTid(orderDetail), orderDetail.cancelAmount());
 
-        order.changeMemberCouponInfo(null);
+        orderCancelReturnCommendRepository.save(OrderCancelReturn.create(orderDetail, statusCode, reason));
 
-        RefundDto refundDto = refundClient.refund(order.getTid(), cancelAmount);
-
-        return ConfirmCancelReturnDto.Response.of(order, refundDto, dateTimeHolder);
+        return responseBuilder.build(orderDetail, refundDto);
     }
 
-    public RequestCancelDto.Response findCancelInfo(String orderNo, List<Long> productIds, String membership) {
-        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
-
-        return RequestCancelDto.Response.of(orderDetails, membership); // TODO 맴버 조회해서 타입 넣기
+    private String getTid(OrderDetail orderDetail) {
+        return orderDetail.getOrder().getTid();
     }
 
-    public RequestReturnDto.Response findReturnInfo(String orderNo, List<Long> productIds, String membership) {
-        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
-
-        return RequestReturnDto.Response.of(orderDetails, membership); // TODO 맴버 조회해서 타입 넣기
+    @FunctionalInterface
+    interface OrderDetailOperation {
+        void apply(OrderDetail orderDetail, Long numberOfOperations, DateTimeHolder dateTimeHolder);
     }
 
-    public GetCancelReturnDetailDto.Response findCancelReturnDetail(String orderNo, List<Long> productIds, String membership, DateTimeHolder dateTimeHolder) {
-
-//        Order order = validOrder(orderNo);
-//        List<OrderDetail> orderDetails = validOrderDetails(orderNo, productIds);
-        Order order = orderQueryRepository.findByOrderNo(orderNo);
-        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
-
-        return GetCancelReturnDetailDto.Response.of(order, orderDetails, membership, dateTimeHolder); // TODO 맴버 조회해서 타입 넣기
+    @FunctionalInterface
+    interface ResponseBuilder<T> {
+        T build(OrderDetail orderDetail, RefundDto refundDto);
     }
-
-//    private Order validOrder(String orderNo) {
-//        Order order = orderQueryRepository.findByOrderNo(orderNo);
-//        if (order == null) {
-//            throw new EntityNotFoundException("조회된 주문이 없습니다.");
-//        } return order;
-//    }
-
-//    private List<OrderDetail> validOrderDetails(String orderNo, List<Long> productIds) {
-//        List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrderNoAndProduct_IdIn(orderNo, productIds);
-//        if (orderDetails.isEmpty()) {
-//            throw new EntityNotFoundException("조회된 주문 상세가 없습니다.");
-//        }
-//        return orderDetails;
-//    }
-
-    //    // TODO 객체로 따로 빼야함(임시로 사용)
-//    class InnerService {
-//        public Integer confirmCancelReturn(Long orderId, String reason) {
-//            Order order = orderQueryRepository.findById(orderId)
-//                    .orElseThrow(() -> new IllegalArgumentException("해당하는 주문이 없습니다."));
-//
-//            Integer cancelAmount = order.changeDetailsReasonAndStatus(reason, ORDER_CANCEL.getCode());
-//
-//            order.returnCoupon();
-//
-//            return cancelAmount;
-//        }
-//    }
 
 }

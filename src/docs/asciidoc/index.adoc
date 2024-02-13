@@ -76,17 +76,32 @@ include::api/order/orderdetaillist.adoc[]
 {empty}
 {empty}
 
-
 == *반품/취소*
+include::api/order/ordercancelrequest.adoc[]
+{empty}
+{empty}
+
 include::api/order/ordercancelreturn.adoc[]
 {empty}
 {empty}
 
-include::api/order/ordercancel.adoc[]
+include::api/order/ordercanceldetail.adoc[]
 {empty}
 {empty}
 
-include::api/order/orderreturn.adoc[]
+include::api/order/orderconfirmcancel.adoc[]
+{empty}
+{empty}
+
+include::api/order/orderreturnrequest.adoc[]
+{empty}
+{empty}
+
+include::api/order/orderreturndetail.adoc[]
+{empty}
+{empty}
+
+include::api/order/orderconfirmreturn.adoc[]
 {empty}
 {empty}
 
@@ -94,7 +109,6 @@ include::api/order/ordercancelreturnlist.adoc[]
 {empty}
 {empty}
 
-include::api/order/ordercancelreturndetail.adoc[]
-{empty}
-{empty}
+
+
 
