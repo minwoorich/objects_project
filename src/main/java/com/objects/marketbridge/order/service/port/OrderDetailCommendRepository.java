@@ -14,8 +14,6 @@ public interface OrderDetailCommendRepository {
 
     int changeAllType(Long orderId, String type);
 
-    void addReason(Long orderId, String reason);
-
     void deleteAllInBatch();
 
 }

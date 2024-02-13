@@ -28,6 +28,7 @@ public class Payment extends BaseEntity {
     private String orderNo;
     private String paymentMethod; // CARD, MONEY
     private LocalDateTime approvedAt;
+    private String pgToken;
 
     // 카드 결제
     @Embedded

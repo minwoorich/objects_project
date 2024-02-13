@@ -120,7 +120,7 @@ class OrderDetailTest {
                 .build();
 
         // when // then
-        assertThatThrownBy(() -> orderDetail.cancel(null, null, dateTimeHolder))
+        assertThatThrownBy(() -> orderDetail.cancel(null,  dateTimeHolder))
                 .hasMessage(NON_CANCELLABLE_PRODUCT.getMessage())
                 .isInstanceOf(CustomLogicException.class)
                 .satisfies(exception -> {
@@ -145,7 +145,7 @@ class OrderDetailTest {
                 .build();
 
         // when // then
-        assertThatThrownBy(() -> orderDetail.cancel(null, null, dateTimeHolder))
+        assertThatThrownBy(() -> orderDetail.cancel(null, dateTimeHolder))
                 .hasMessage(NON_CANCELLABLE_PRODUCT.getMessage())
                 .isInstanceOf(CustomLogicException.class)
                 .satisfies(exception -> {
@@ -173,7 +173,7 @@ class OrderDetailTest {
                 .build();
 
         // when // then
-        assertThatThrownBy(() -> orderDetail.cancel(null, numberOfCancellations, dateTimeHolder))
+        assertThatThrownBy(() -> orderDetail.cancel(numberOfCancellations, dateTimeHolder))
                 .hasMessage(QUANTITY_EXCEEDED.getMessage())
                 .isInstanceOf(CustomLogicException.class)
                 .satisfies(exception -> {
@@ -210,7 +210,7 @@ class OrderDetailTest {
         Long numberOfCancellations = 2L;
 
         // when
-        orderDetail.cancel(null, numberOfCancellations, null);
+        orderDetail.cancel(numberOfCancellations, null);
 
         // then
         assertThat(product.getStock()).isEqualTo(7L);
@@ -218,8 +218,7 @@ class OrderDetailTest {
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(orderDetail.getQuantity()).isEqualTo(5L);
         assertThat(orderDetail.getReducedQuantity()).isEqualTo(numberOfCancellations);
-        assertThat(orderDetail.getReason()).isNull();
-        assertThat(orderDetail.getStatusCode()).isEqualTo(statusCode);
+        assertThat(orderDetail.getStatusCode()).isEqualTo(ORDER_CANCEL.getCode());
     }
 
     @Test
@@ -248,7 +247,7 @@ class OrderDetailTest {
         String reason = "단순변심";
 
         // when
-        orderDetail.cancel(reason, numberOfCancellations, null);
+        orderDetail.cancel(numberOfCancellations, null);
 
         // then
         assertThat(product.getStock()).isEqualTo(10L);
@@ -256,7 +255,6 @@ class OrderDetailTest {
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(orderDetail.getQuantity()).isEqualTo(5L);
         assertThat(orderDetail.getReducedQuantity()).isEqualTo(numberOfCancellations);
-        assertThat(orderDetail.getReason()).isEqualTo(reason);
         assertThat(orderDetail.getStatusCode()).isEqualTo(ORDER_CANCEL.getCode());
     }
 
@@ -273,7 +271,7 @@ class OrderDetailTest {
                 .build();
 
         // when // then
-        assertThatThrownBy(() -> orderDetail.returns(null, null, dateTimeHolder))
+        assertThatThrownBy(() -> orderDetail.returns( null, dateTimeHolder))
                 .isInstanceOf(CustomLogicException.class)
                 .hasMessage(NON_RETURNABLE_PRODUCT.getMessage())
                 .satisfies(exception -> {
@@ -301,7 +299,7 @@ class OrderDetailTest {
         Long numberOfReturns = 6L;
 
         // when // then
-        assertThatThrownBy(() -> orderDetail.returns(null, numberOfReturns, dateTimeHolder))
+        assertThatThrownBy(() -> orderDetail.returns( numberOfReturns, dateTimeHolder))
                 .isInstanceOf(CustomLogicException.class)
                 .hasMessage("수량이 초과 되었습니다.")
                 .satisfies(exception -> {
@@ -343,7 +341,7 @@ class OrderDetailTest {
         Long numberOfReturns = 2L;
 
         // when
-        orderDetail.returns(null, numberOfReturns, dateTimeHolder);
+        orderDetail.returns(numberOfReturns, dateTimeHolder);
 
         // then
         assertThat(product.getStock()).isEqualTo(7L);
@@ -351,8 +349,7 @@ class OrderDetailTest {
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(orderDetail.getQuantity()).isEqualTo(5L);
         assertThat(orderDetail.getReducedQuantity()).isEqualTo(numberOfReturns);
-        assertThat(orderDetail.getReason()).isNull();
-        assertThat(orderDetail.getStatusCode()).isEqualTo(statusCode);
+        assertThat(orderDetail.getStatusCode()).isEqualTo(RETURN_INIT.getCode());
     }
 
     @Test
@@ -383,10 +380,9 @@ class OrderDetailTest {
                 .build();
 
         Long numberOfReturns = 5L;
-        String reason = "단순변심";
 
         // when
-        orderDetail.returns(reason, numberOfReturns, dateTimeHolder);
+        orderDetail.returns(numberOfReturns, dateTimeHolder);
 
         // then
         assertThat(product.getStock()).isEqualTo(10L);
@@ -394,7 +390,6 @@ class OrderDetailTest {
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(orderDetail.getQuantity()).isEqualTo(5L);
         assertThat(orderDetail.getReducedQuantity()).isEqualTo(numberOfReturns);
-        assertThat(orderDetail.getReason()).isEqualTo(reason);
         assertThat(orderDetail.getStatusCode()).isEqualTo(RETURN_INIT.getCode());
     }
 
@@ -471,7 +466,6 @@ class OrderDetailTest {
                         .build())
                 .statusCode(statusCode)
                 .quantity(quantity)
-                .reason(reason)
                 .build();
     }
 

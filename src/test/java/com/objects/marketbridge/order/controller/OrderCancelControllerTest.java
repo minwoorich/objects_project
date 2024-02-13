@@ -2,6 +2,7 @@ package com.objects.marketbridge.order.controller;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MemberCoupon;
@@ -11,11 +12,9 @@ import com.objects.marketbridge.order.controller.dto.GetCancelDetailHttp;
 import com.objects.marketbridge.order.controller.dto.RequestCancelHttp;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
 import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.mock.BaseFakeOrderDetailRepository;
-import com.objects.marketbridge.order.mock.BaseFakeOrderRepository;
-import com.objects.marketbridge.order.mock.TestContainer;
-import com.objects.marketbridge.order.mock.TestDateTimeHolder;
+import com.objects.marketbridge.order.mock.*;
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -37,19 +36,21 @@ class OrderCancelControllerTest {
 
     private LocalDateTime orderDate = LocalDateTime.of(2024, 2, 9, 3, 9);
     private LocalDateTime now = LocalDateTime.of(2024, 2, 9, 4, 47);
+
+    private DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+            .now(now)
+            .createTime(orderDate)
+            .build();
+
     private TestContainer testContainer = TestContainer.builder()
-            .dateTimeHolder(
-                    TestDateTimeHolder.builder()
-                            .now(now)
-                            .createTime(orderDate)
-                            .build()
-            )
+            .dateTimeHolder(dateTimeHolder)
             .build();
 
     @AfterEach
     void afterEach() {
         BaseFakeOrderDetailRepository.getInstance().clear();
         BaseFakeOrderRepository.getInstance().clear();
+        BaseFakeOrderCancelReturnRepository.getInstance().clear();
         testContainer.memberRepository.deleteAllInBatch();
         testContainer.productRepository.deleteAllInBatch();
     }
@@ -166,8 +167,7 @@ class OrderCancelControllerTest {
         ApiResponse<ConfirmCancelHttp.Response> result = testContainer.orderCancelController.confirmCancel(request);
 
         // then
-        assertThat(orderDetail.getStatusCode()).isEqualTo(ORDER_RECEIVED.getCode());
-        assertThat(orderDetail.getReason()).isNull();
+        assertThat(orderDetail.getStatusCode()).isEqualTo(ORDER_CANCEL.getCode());
         assertThat(product.getStock()).isEqualTo(7L);
 
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -231,7 +231,6 @@ class OrderCancelControllerTest {
 
         // then
         assertThat(orderDetail.getStatusCode()).isEqualTo(ORDER_CANCEL.getCode());
-        assertThat(orderDetail.getReason()).isEqualTo("단순변심");
         assertThat(product.getStock()).isEqualTo(8L);
 
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -308,8 +307,7 @@ class OrderCancelControllerTest {
         // then
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(memberCoupon.getUsedDate()).isNull();
-        assertThat(orderDetail.getStatusCode()).isEqualTo(ORDER_RECEIVED.getCode());
-        assertThat(orderDetail.getReason()).isNull();
+        assertThat(orderDetail.getStatusCode()).isEqualTo(ORDER_CANCEL.getCode());
         assertThat(product.getStock()).isEqualTo(7L);
 
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -387,7 +385,6 @@ class OrderCancelControllerTest {
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(memberCoupon.getUsedDate()).isNull();
         assertThat(orderDetail.getStatusCode()).isEqualTo(ORDER_CANCEL.getCode());
-        assertThat(orderDetail.getReason()).isEqualTo("단순변심");
         assertThat(product.getStock()).isEqualTo(8L);
 
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -711,24 +708,32 @@ class OrderCancelControllerTest {
         LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
         OrderDetail orderDetail = OrderDetail.builder()
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .product(product)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn cancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
-        Long orderDetailId = 1L;
+        Long orderCancelId = 1L;
         Long memberId = 1L;
 
         // when
-        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelController.getCancelDetail(orderDetailId, memberId);
+        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelController.getCancelDetail(orderCancelId, memberId);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -749,7 +754,7 @@ class OrderCancelControllerTest {
         assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
         assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
         assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(0L);
-        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
@@ -768,24 +773,32 @@ class OrderCancelControllerTest {
         LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
         OrderDetail orderDetail = OrderDetail.builder()
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn cancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
-        Long orderDetailId = 1L;
+        Long orderCancelId = 1L;
         Long memberId = 1L;
 
         // when
-        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelController.getCancelDetail(orderDetailId, memberId);
+        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelController.getCancelDetail(orderCancelId, memberId);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -806,7 +819,7 @@ class OrderCancelControllerTest {
         assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
         assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
         assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(0L);
-        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
@@ -835,24 +848,32 @@ class OrderCancelControllerTest {
         OrderDetail orderDetail = OrderDetail.builder()
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .product(product)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn cancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
-        Long orderDetailId = 1L;
+        Long orderCancelId = 1L;
         Long memberId = 1L;
 
         // when
-        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelController.getCancelDetail(orderDetailId, memberId);
+        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelController.getCancelDetail(orderCancelId, memberId);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -873,7 +894,7 @@ class OrderCancelControllerTest {
         assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
         assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
         assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
-        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
@@ -902,24 +923,32 @@ class OrderCancelControllerTest {
         OrderDetail orderDetail = OrderDetail.builder()
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .product(product)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn cancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
-        Long orderDetailId = 1L;
+        Long orderCancelId = 1L;
         Long memberId = 1L;
 
         // when
-        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelController.getCancelDetail(orderDetailId, memberId);
+        ApiResponse<GetCancelDetailHttp.Response> result = testContainer.orderCancelController.getCancelDetail(orderCancelId, memberId);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -940,7 +969,7 @@ class OrderCancelControllerTest {
         assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
         assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
         assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
-        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test

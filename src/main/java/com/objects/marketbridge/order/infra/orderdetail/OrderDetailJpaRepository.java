@@ -15,10 +15,6 @@ public interface OrderDetailJpaRepository extends JpaRepository<OrderDetail, Lon
     @Query("update OrderDetail pod set pod.statusCode = :type where pod.order.id = :orderId")
     int changeAllType(@Param("orderId") Long orderId, @Param("type") String type);
 
-    @Modifying(clearAutomatically = true)
-    @Query("update OrderDetail pod set pod.reason = :reason where pod.order.id = :orderId")
-    void addReason(@Param("orderId") Long orderId, @Param("reason") String reason);
-
     List<OrderDetail> findByProductId(Long memberId);
 
     List<OrderDetail> findByOrderNo(String orderNo);

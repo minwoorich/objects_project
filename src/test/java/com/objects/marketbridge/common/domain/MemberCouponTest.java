@@ -37,7 +37,7 @@ class MemberCouponTest {
         MemberCoupon usedCoupon = createMemberCoupon(localDateTime, true);
 
         // when
-        usedCoupon.changeUsageInfo(null);
+        usedCoupon.changeUsageInfo(LocalDateTime.now());
 
         // then
         Assertions.assertThat(usedCoupon).extracting("usedDate", "isUsed")

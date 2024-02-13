@@ -8,7 +8,7 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.ConfirmReturnHttp;
 import com.objects.marketbridge.order.controller.dto.GetReturnDetailHttp;
 import com.objects.marketbridge.order.controller.dto.RequestReturnHttp;
-import com.objects.marketbridge.order.controller.dto.ReturnRecantationHttp;
+import com.objects.marketbridge.order.controller.dto.ConfirmRecantationHttp;
 import com.objects.marketbridge.order.service.OrderReturnService;
 import jakarta.validation.Valid;
 import lombok.Builder;
@@ -54,10 +54,10 @@ public class OrderReturnController {
 
     // 반품 철회 확정
     @PostMapping("/cancel-return/list")
-    public ApiResponse<ReturnRecantationHttp.Response> confirmReturnRecantation(
-            @RequestParam(name = "orderDetailId") Long orderDetailId
+    public ApiResponse<ConfirmRecantationHttp.Response> confirmRecantation(
+            @RequestBody Long orderDetailId
     ) {
-        return null;
+        return ApiResponse.ok(ConfirmRecantationHttp.Response.of(orderReturnService.confirmRecantation(orderDetailId)));
     }
 
 }

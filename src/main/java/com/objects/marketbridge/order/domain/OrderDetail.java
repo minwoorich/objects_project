@@ -18,7 +18,6 @@ import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.NON_CANCELLABLE_PRODUCT;
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.QUANTITY_EXCEEDED;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Entity
 @Getter
@@ -52,8 +51,6 @@ public class OrderDetail extends BaseEntity {
 
     private LocalDateTime deliveredDate;
 
-    private String reason;
-
     private String tid;
 
     private Long sellerId;
@@ -63,7 +60,7 @@ public class OrderDetail extends BaseEntity {
     private Long reducedQuantity;
 
     @Builder
-    private OrderDetail(Order order, String orderNo, String tid, Product product, MemberCoupon memberCoupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, String reason, Long sellerId, LocalDateTime cancelledAt, Long reducedQuantity) {
+    private OrderDetail(Order order, String orderNo, String tid, Product product, MemberCoupon memberCoupon,  Long quantity, Long price, String statusCode, LocalDateTime deliveredDate, Long sellerId, LocalDateTime cancelledAt, Long reducedQuantity) {
         this.orderNo = orderNo;
         this.tid = tid;
         this.order = order;
@@ -73,7 +70,6 @@ public class OrderDetail extends BaseEntity {
         this.price = price;
         this.statusCode = statusCode;
         this.deliveredDate = deliveredDate;
-        this.reason = reason;
         this.sellerId = sellerId;
         this.cancelledAt = cancelledAt;
         this.reducedQuantity = reducedQuantity;
@@ -115,26 +111,24 @@ public class OrderDetail extends BaseEntity {
                 .price(orderDetail.getPrice())
                 .statusCode(statusCode)
                 .deliveredDate(orderDetail.getDeliveredDate())
-                .reason(reason)
                 .sellerId(orderDetail.getSellerId())
                 .cancelledAt(orderDetail.getCancelledAt())
-                .reducedQuantity(orderDetail.getQuantity())
                 .build();
     }
 
-    public boolean cancel(String reason, Long numberOfCancellations, DateTimeHolder dateTimeHolder) {
+    public String cancel(Long numberOfCancellations, DateTimeHolder dateTimeHolder) {
         // TODO 정책 정해야 함
         if (impossibleCancel())
             throw CustomLogicException.createBadRequestError(NON_CANCELLABLE_PRODUCT, dateTimeHolder);
 
-        return changeStatus(reason, numberOfCancellations, dateTimeHolder, ORDER_CANCEL.getCode());
+        return changeStatus(numberOfCancellations, dateTimeHolder, ORDER_CANCEL.getCode());
     }
 
-    public boolean returns(String reason, Long numberOfReturns, DateTimeHolder dateTimeHolder) {
+    public void returns(Long numberOfReturns, DateTimeHolder dateTimeHolder) {
         if (impossibleReturn())
             throw CustomLogicException.createBadRequestError(NON_RETURNABLE_PRODUCT, dateTimeHolder);
 
-        return changeStatus(reason, numberOfReturns, dateTimeHolder, RETURN_INIT.getCode());
+        changeStatus(numberOfReturns, dateTimeHolder, RETURN_INIT.getCode());
     }
 
     public Integer totalAmount(Long quantity, LocalDateTime dateTime) {
@@ -169,22 +163,36 @@ public class OrderDetail extends BaseEntity {
         this.product = product;
     }
 
-    private boolean changeStatus(String reason, Long numberOfReduce, DateTimeHolder dateTimeHolder, String statusCode) {
-        if (exceededQuantity(numberOfReduce))
+    private String changeStatus(Long numberOfReduce, DateTimeHolder dateTimeHolder, String statusCode) {
+        validateQuantity(numberOfReduce, dateTimeHolder);
+
+        updateProductAndStatus(numberOfReduce, statusCode);
+
+        return determineReturnOrCancelStatus(statusCode);
+    }
+
+    private void validateQuantity(Long numberOfReduce, DateTimeHolder dateTimeHolder) {
+        if (exceededQuantity(numberOfReduce)) {
             throw CustomLogicException.createBadRequestError(QUANTITY_EXCEEDED, dateTimeHolder);
-
-        this.product.increase(numberOfReduce);
-        this.reducedQuantity += numberOfReduce;
-
-        returnMemberCoupon();
-
-        if(isNotPartial(numberOfReduce)) {
-            this.statusCode = statusCode;
-            this.reason = reason;
-            return false;
         }
+    }
 
-        return true;
+    private void updateProductAndStatus(Long numberOfReduce, String statusCode) {
+        this.product.increase(numberOfReduce);
+        this.statusCode = statusCode;
+        this.reducedQuantity += numberOfReduce;
+        returnMemberCoupon();
+    }
+
+    private String determineReturnOrCancelStatus(String statusCode) {
+        boolean isOrderCancel = statusCode.equals(ORDER_CANCEL.getCode());
+        boolean isWholeOrder = Objects.equals(quantity, reducedQuantity);
+
+        if (isWholeOrder) {
+            return isOrderCancel ? ORDER_CANCEL.getCode() : ORDER_RETURN.getCode();
+        } else {
+            return isOrderCancel ? ORDER_PARTIAL_CANCEL.getCode() : ORDER_PARTIAL_RETURN.getCode();
+        }
     }
 
     private boolean exceededQuantity(Long numberOfCancellations) {
@@ -194,10 +202,6 @@ public class OrderDetail extends BaseEntity {
     private boolean impossibleCancel() {
         return Objects.equals(this.statusCode, DELIVERY_COMPLETED.getCode())
                 || Objects.equals(this.statusCode, ORDER_PARTIAL_CANCEL.getCode());
-    }
-
-    private boolean isNotPartial(Long numberOfReduce) {
-        return Objects.equals(numberOfReduce, quantity);
     }
 
     private boolean hasMemberCoupon() {

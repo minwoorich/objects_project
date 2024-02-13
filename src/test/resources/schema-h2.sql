@@ -261,12 +261,27 @@ CREATE TABLE order_detail (
                                      status_code	varchar(255)	,
                                      delivered_date	timestamp	,
                                      tid	varchar(255)	,
-                                     reason	text	,
                                      cancelled_at	timestamp	,
                                      reduced_quantity bigint,
                                      created_at	timestamp	,
                                      updated_at	timestamp	,
                                      deleted_at	timestamp	
+);
+
+DROP TABLE IF EXISTS order_cancel_return;
+
+CREATE TABLE order_cancel_return (
+                                     order_cancel_return_id	bigint auto_increment
+                                         primary key,
+
+                                     order_detail_id	bigint	,
+                                     status_code	varchar(255)	,
+                                     quantity	bigint	,
+                                     refundAmount	bigint	,
+                                     reason    text	,
+                                     created_at	datetime(6)	,
+                                     updated_at	datetime(6)	,
+                                     deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS payment;
@@ -287,6 +302,7 @@ CREATE TABLE payment (
                          discount_amount BIGINT,
                          tax_free_amount BIGINT,
                          approved_at	datetime(6)	,
+                         pg_token       varchar(255),
                          deleted_at	datetime(6)	,
                          updated_at	datetime(6)	,
                          created_at	datetime(6)

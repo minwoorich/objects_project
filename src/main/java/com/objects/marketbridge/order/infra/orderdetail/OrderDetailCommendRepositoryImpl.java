@@ -31,11 +31,6 @@ public class OrderDetailCommendRepositoryImpl implements OrderDetailCommendRepos
     }
 
     @Override
-    public void addReason(Long orderId, String reason) {
-        orderDetailJpaRepository.addReason(orderId, reason);
-    }
-
-    @Override
     public void save(OrderDetail orderDetail) {
         orderDetailJpaRepository.save(orderDetail);
     }

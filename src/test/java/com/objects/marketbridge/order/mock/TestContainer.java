@@ -8,7 +8,7 @@ import com.objects.marketbridge.order.controller.OrderReturnController;
 import com.objects.marketbridge.order.service.OrderCancelService;
 import com.objects.marketbridge.order.service.OrderReturnService;
 import com.objects.marketbridge.order.service.port.*;
-import com.objects.marketbridge.payment.service.port.RefundClient;
+import com.objects.marketbridge.payment.service.port.PaymentClient;
 import com.objects.marketbridge.product.infra.CouponRepository;
 import com.objects.marketbridge.product.infra.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.ProductRepository;
@@ -27,13 +27,15 @@ public class TestContainer {
     public final OrderCommendRepository orderCommendRepository;
     public final OrderDetailQueryRepository orderDetailQueryRepository;
     public final OrderDetailCommendRepository orderDetailCommendRepository;
+    public final OrderCancelReturnQueryRepository orderCancelReturnQueryRepository;
+    public final OrderCancelReturnCommendRepository orderCancelReturnCommendRepository;
     public final OrderDtoRepository orderDtoRepository;
     public final OrderDetailDtoRepository orderDetailDtoRepository;
     public final ProductRepository productRepository;
     public final CouponRepository couponRepository;
     public final MemberCouponRepository memberCouponRepository;
     public final MemberRepository memberRepository;
-    public final RefundClient refundClient;
+    public final PaymentClient paymentClient;
 
     @Builder
     public TestContainer(DateTimeHolder dateTimeHolder) {
@@ -42,25 +44,31 @@ public class TestContainer {
         this.orderCommendRepository = new FakeOrderCommendRepository();
         this.orderDetailQueryRepository = new FakeOrderDetailQueryRepository();
         this.orderDetailCommendRepository = new FakeOrderDetailCommendRepository();
+        this.orderCancelReturnQueryRepository = new FakeOrderCancelReturnQueryRepository();
+        this.orderCancelReturnCommendRepository = new FakeOrderCancelReturnCommendRepository();
         this.orderDtoRepository = new FakeOrderDtoRepository();
         this.orderDetailDtoRepository = new FakeOrderDetailDtoRepository();
         this.productRepository = new FakeProductRepository();
         this.couponRepository = new FakeCouponRepository();
         this.memberCouponRepository = new FakeMemberCouponRepository();
         this.memberRepository = new FakeMemberRepository();
-        this.refundClient = new FakeRefundClient(dateTimeHolder);
+        this.paymentClient = new FakePaymentClient(dateTimeHolder);
 
         // Service
         this.orderCancelService = OrderCancelService.builder()
                 .orderDetailQueryRepository(this.orderDetailQueryRepository)
                 .orderDetailCommendRepository(this.orderDetailCommendRepository)
-                .refundClient(this.refundClient)
+                .orderCancelReturnQueryRepository(this.orderCancelReturnQueryRepository)
+                .orderCancelReturnCommendRepository(this.orderCancelReturnCommendRepository)
+                .paymentClient(this.paymentClient)
                 .dateTimeHolder(dateTimeHolder)
                 .build();
         this.orderReturnService = OrderReturnService.builder()
                 .orderDetailQueryRepository(this.orderDetailQueryRepository)
                 .orderDetailCommendRepository(this.orderDetailCommendRepository)
-                .refundClient(this.refundClient)
+                .orderCancelReturnQueryRepository(this.orderCancelReturnQueryRepository)
+                .orderCancelReturnCommendRepository(this.orderCancelReturnCommendRepository)
+                .paymentClient(this.paymentClient)
                 .dateTimeHolder(dateTimeHolder)
                 .build();
 

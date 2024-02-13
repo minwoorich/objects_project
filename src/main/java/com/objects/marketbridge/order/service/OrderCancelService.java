@@ -3,13 +3,16 @@ package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.dto.ConfirmCancelDto;
 import com.objects.marketbridge.order.service.dto.GetCancelDetailDto;
 import com.objects.marketbridge.order.service.dto.RequestCancelDto;
+import com.objects.marketbridge.order.service.port.OrderCancelReturnCommendRepository;
+import com.objects.marketbridge.order.service.port.OrderCancelReturnQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
-import com.objects.marketbridge.payment.service.port.RefundClient;
+import com.objects.marketbridge.payment.service.port.PaymentClient;
 import lombok.Builder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.NON_CANCELLABLE_PRODUCT;
-import static com.objects.marketbridge.order.domain.StatusCodeType.DELIVERY_COMPLETED;
+import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 
 
 @Service
@@ -25,8 +28,8 @@ import static com.objects.marketbridge.order.domain.StatusCodeType.DELIVERY_COMP
 public class OrderCancelService extends OrderCancelReturnService {
 
     @Builder
-    public OrderCancelService(RefundClient refundClient, DateTimeHolder dateTimeHolder, OrderDetailQueryRepository orderDetailQueryRepository, OrderDetailCommendRepository orderDetailCommendRepository) {
-        super(refundClient, dateTimeHolder, orderDetailQueryRepository, orderDetailCommendRepository);
+    public OrderCancelService(PaymentClient paymentClient, DateTimeHolder dateTimeHolder, OrderDetailQueryRepository orderDetailQueryRepository, OrderDetailCommendRepository orderDetailCommendRepository, OrderCancelReturnQueryRepository orderCancelReturnQueryRepository, OrderCancelReturnCommendRepository orderCancelReturnCommendRepository) {
+        super(paymentClient, dateTimeHolder, orderDetailQueryRepository, orderDetailCommendRepository, orderCancelReturnQueryRepository, orderCancelReturnCommendRepository);
     }
 
     @Transactional
@@ -37,7 +40,9 @@ public class OrderCancelService extends OrderCancelReturnService {
                 request.getNumberOfCancellation(),
                 dateTimeHolder,
                 OrderDetail::cancel,
-                ConfirmCancelDto.Response::of);
+                ConfirmCancelDto.Response::of,
+                ORDER_CANCEL.getCode()
+        );
     }
 
     public RequestCancelDto.Response findCancelInfo(Long orderDetailId, Long numberOfCancellation, String membership) {
@@ -47,10 +52,10 @@ public class OrderCancelService extends OrderCancelReturnService {
         return RequestCancelDto.Response.of(orderDetail, numberOfCancellation, membership);
     }
 
-    public GetCancelDetailDto.Response findCancelDetail(Long orderDetailId, String membership) {
-        OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
+    public GetCancelDetailDto.Response findCancelDetail(Long orderCancelId, String membership) {
+        OrderCancelReturn cancelDetail = orderCancelReturnQueryRepository.findById(orderCancelId);
 
-        return GetCancelDetailDto.Response.of(orderDetail, membership, dateTimeHolder);
+        return GetCancelDetailDto.Response.of(cancelDetail, membership, dateTimeHolder);
     }
 
     private OrderDetail valifyCancelOrderDetail(Long orderDetailId) {

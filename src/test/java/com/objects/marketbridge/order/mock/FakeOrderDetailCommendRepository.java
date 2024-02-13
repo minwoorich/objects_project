@@ -39,11 +39,6 @@ public class FakeOrderDetailCommendRepository extends BaseFakeOrderDetailReposit
     }
 
     @Override
-    public void addReason(Long orderId, String reason) {
-
-    }
-
-    @Override
     public void deleteAllInBatch() {
 
     }

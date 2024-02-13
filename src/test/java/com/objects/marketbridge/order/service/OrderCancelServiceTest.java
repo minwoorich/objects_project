@@ -5,11 +5,9 @@ import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
+import com.objects.marketbridge.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.mock.BaseFakeOrderDetailRepository;
-import com.objects.marketbridge.order.mock.BaseFakeOrderRepository;
-import com.objects.marketbridge.order.mock.TestContainer;
-import com.objects.marketbridge.order.mock.TestDateTimeHolder;
+import com.objects.marketbridge.order.mock.*;
 import com.objects.marketbridge.order.service.dto.ConfirmCancelDto;
 import com.objects.marketbridge.order.service.dto.GetCancelDetailDto;
 import com.objects.marketbridge.order.service.dto.RequestCancelDto;
@@ -21,7 +19,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.NON_CANCELLABLE_PRODUCT;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.QUANTITY_EXCEEDED;
 import static com.objects.marketbridge.member.domain.MembershipType.BASIC;
 import static com.objects.marketbridge.member.domain.MembershipType.WOW;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
@@ -32,18 +31,18 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 class OrderCancelServiceTest {
 
     private LocalDateTime orderDate = LocalDateTime.of(2024, 2, 9, 3, 9);
+    private DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+            .createTime(orderDate)
+            .build();
     private TestContainer testContainer = TestContainer.builder()
-            .dateTimeHolder(
-                    TestDateTimeHolder.builder()
-                            .createTime(orderDate)
-                            .build()
-            )
+            .dateTimeHolder(dateTimeHolder)
             .build();
 
     @AfterEach
     void afterEach() {
         BaseFakeOrderDetailRepository.getInstance().clear();
         BaseFakeOrderRepository.getInstance().clear();
+        BaseFakeOrderCancelReturnRepository.getInstance().clear();
     }
 
     @Test
@@ -373,23 +372,32 @@ class OrderCancelServiceTest {
         LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
         OrderDetail orderDetail = OrderDetail.builder()
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn cancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+
+        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
 
-        Long orderDetailId = 1L;
+        Long orderCancelId = 1L;
         String membership = WOW.getText();
 
         // when
-        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderDetailId, membership);
+        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderCancelId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -406,7 +414,7 @@ class OrderCancelServiceTest {
         assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
         assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
         assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(0L);
-        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
@@ -421,23 +429,31 @@ class OrderCancelServiceTest {
         LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
         OrderDetail orderDetail = OrderDetail.builder()
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn cancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
 
-        Long orderDetailId = 1L;
+        Long orderCancelId = 1L;
         String membership = BASIC.getText();
 
         // when
-        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderDetailId, membership);
+        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderCancelId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -454,7 +470,7 @@ class OrderCancelServiceTest {
         assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
         assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
         assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(0L);
-        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
@@ -479,23 +495,31 @@ class OrderCancelServiceTest {
         OrderDetail orderDetail = OrderDetail.builder()
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn cancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
 
-        Long orderDetailId = 1L;
+        Long orderCancelId = 1L;
         String membership = WOW.getText();
 
         // when
-        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderDetailId, membership);
+        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderCancelId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -512,7 +536,7 @@ class OrderCancelServiceTest {
         assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.WOW.getDeliveryFee());
         assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.WOW.getRefundFee());
         assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
-        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test
@@ -537,23 +561,31 @@ class OrderCancelServiceTest {
         OrderDetail orderDetail = OrderDetail.builder()
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .product(product)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn cancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
 
-        Long orderDetailId = 1L;
+        Long orderCancelId = 1L;
         String membership = BASIC.getText();
 
         // when
-        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderDetailId, membership);
+        GetCancelDetailDto.Response result = testContainer.orderCancelService.findCancelDetail(orderCancelId, membership);
 
         // then
         assertThat(result.getOrderDate()).isEqualTo(orderDate);
@@ -570,7 +602,7 @@ class OrderCancelServiceTest {
         assertThat(result.getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
         assertThat(result.getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
         assertThat(result.getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
-        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test

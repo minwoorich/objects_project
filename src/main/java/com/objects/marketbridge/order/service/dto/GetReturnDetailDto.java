@@ -40,7 +40,6 @@ public class GetReturnDetailDto {
                     .orderDate(dateTimeHolder.getCreateTime(orderDetail.getOrder()))
                     .cancelDate(orderDetail.getCancelledAt())
                     .orderNo(orderDetail.getOrderNo())
-                    .reason(orderDetail.getReason())
                     .productInfo(ProductInfo.of(orderDetail))
                     .refundInfo(RefundInfo.of(orderDetail, memberShip))
                     .build();

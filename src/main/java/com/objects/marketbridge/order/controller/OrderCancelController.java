@@ -41,10 +41,10 @@ public class OrderCancelController {
 
     @GetMapping("/cancel/detail")
     public ApiResponse<GetCancelDetailHttp.Response> getCancelDetail(
-            @RequestParam(name = "orderDetailId") Long orderDetailId,
+            @RequestParam(name = "orderCancelId") Long orderCancelId,
             @AuthMemberId Long memberId
     ) {
         String membership = memberRepository.findById(memberId).getMembership();
-        return ApiResponse.ok(GetCancelDetailHttp.Response.of(orderCancelService.findCancelDetail(orderDetailId, membership)));
+        return ApiResponse.ok(GetCancelDetailHttp.Response.of(orderCancelService.findCancelDetail(orderCancelId, membership)));
     }
 }

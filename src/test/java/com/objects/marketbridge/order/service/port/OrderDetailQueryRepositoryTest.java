@@ -76,31 +76,6 @@ class OrderDetailQueryRepositoryTest {
     }
 
     @Test
-    @DisplayName("주문 상세에 이유 넣기")
-    public void addReason() {
-        // given
-        String reason = "상품이 맘에들지 않아요";
-        OrderDetail orderDetail1 = OrderDetail.builder().build();
-        OrderDetail orderDetail2 = OrderDetail.builder().build();
-        OrderDetail orderDetail3 = OrderDetail.builder().build();
-
-        Order order = Order.builder().build();
-        order.addOrderDetail(orderDetail1);
-        order.addOrderDetail(orderDetail2);
-        order.addOrderDetail(orderDetail3);
-
-        Order savedOrder = orderCommendRepository.save(order);
-        Long orderId = savedOrder.getId();
-
-        // when
-        orderDetailCommendRepository.addReason(orderId, reason);
-
-        // then
-        String savedReason = getReason(orderId);
-        assertThat(reason).isEqualTo(savedReason);
-    }
-
-    @Test
     @DisplayName("주문 ID와 상품 리스트가 주어지면 주문 상세 리스트를 조회할 수 있다.")
     public void findByProdOrder_IdAndProductIn() {
         // given
@@ -160,7 +135,6 @@ class OrderDetailQueryRepositoryTest {
                 .price(product1.getPrice() * 2L)
                 .orderNo("123")
                 .statusCode(ORDER_CANCEL.getCode())
-                .reason("빵빵이")
                 .build();
         OrderDetail orderDetail2 = OrderDetail.builder()
                 .product(product2)
@@ -168,7 +142,6 @@ class OrderDetailQueryRepositoryTest {
                 .price(product2.getPrice() * 3L)
                 .orderNo("123")
                 .statusCode(ORDER_CANCEL.getCode())
-                .reason("옥지얌")
                 .build();
         OrderDetail orderDetail3 = OrderDetail.builder()
                 .product(product3)
@@ -176,7 +149,6 @@ class OrderDetailQueryRepositoryTest {
                 .price(product3.getPrice() * 4L)
                 .orderNo("123")
                 .statusCode(RETURN_COMPLETED.getCode())
-                .reason("멍청이")
                 .build();
 
         Order order = Order.builder()
@@ -196,18 +168,18 @@ class OrderDetailQueryRepositoryTest {
 
         // then
         assertThat(orderDetails).hasSize(3)
-                .extracting("orderNo", "product", "quantity", "price", "statusCode", "reason")
+                .extracting("orderNo", "product", "quantity", "price", "statusCode")
                 .contains(
-                        tuple("123", product1, 2L, 2000L, ORDER_CANCEL.getCode(), "빵빵이"),
-                        tuple("123", product2, 3L, 6000L, ORDER_CANCEL.getCode(), "옥지얌"),
-                        tuple("123", product3, 4L, 12000L, RETURN_COMPLETED.getCode(), "멍청이")
+                        tuple("123", product1, 2L, 2000L, ORDER_CANCEL.getCode()),
+                        tuple("123", product2, 3L, 6000L, ORDER_CANCEL.getCode()),
+                        tuple("123", product3, 4L, 12000L, RETURN_COMPLETED.getCode())
                 );
     }
 
 
     private String getReason(Long orderId) {
         List<OrderDetail> orderDetails = orderQueryRepository.findById(orderId).get().getOrderDetails();
-        return orderDetails.get(0).getReason();
+        return null;
     }
 
     private OrderDetail createOrderDetail_type(String code) {
@@ -215,7 +187,5 @@ class OrderDetailQueryRepositoryTest {
                 .statusCode(code)
                 .build();
     }
-
-
 
 }

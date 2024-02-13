@@ -1,9 +1,12 @@
 package com.objects.marketbridge.order.service.dto;
 
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
+import com.objects.marketbridge.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
@@ -35,19 +38,26 @@ class GetCancelDetailDtoTest {
         ReflectionTestUtils.setField(product, "id", 1L, Long.class);
 
         OrderDetail orderDetail = OrderDetail.builder()
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .orderNo("1")
                 .product(product)
-                .reason("단순변심")
                 .price(1000L)
-                .quantity(1L)
+                .quantity(2L)
                 .cancelledAt(cancelledAt)
                 .build();
 
-        TestDateTimeHolder testDateTimeHolder = new TestDateTimeHolder(null, createTime, null, null);
+        OrderCancelReturn orderCancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .statusCode(StatusCodeType.ORDER_PARTIAL_CANCEL.getCode())
+                .quantity(1L)
+                .reason("단순변심")
+                .refundAmount(1000L)
+                .build();
+
+        DateTimeHolder testDateTimeHolder = new TestDateTimeHolder(null, createTime, null, null);
 
         // when
-        GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderDetail, memberShip, testDateTimeHolder);
+        GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderCancelDetail, memberShip, testDateTimeHolder);
 
         // then
         assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "reason")
@@ -81,16 +91,23 @@ class GetCancelDetailDtoTest {
                 .reducedQuantity(0L)
                 .orderNo("1")
                 .product(product)
-                .reason("단순변심")
                 .price(1000L)
                 .quantity(1L)
                 .cancelledAt(cancelledAt)
                 .build();
 
+        OrderCancelReturn orderCancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .statusCode(StatusCodeType.ORDER_PARTIAL_CANCEL.getCode())
+                .quantity(1L)
+                .reason("단순변심")
+                .refundAmount(1000L)
+                .build();
+
         TestDateTimeHolder testDateTimeHolder = new TestDateTimeHolder(null, createTime, null, null);
 
         // when
-        GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderDetail, memberShip, testDateTimeHolder);
+        GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderCancelDetail, memberShip, testDateTimeHolder);
 
         // then
         assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "reason")
@@ -134,16 +151,23 @@ class GetCancelDetailDtoTest {
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
                 .product(product)
-                .reason("단순변심")
                 .price(1000L)
                 .quantity(1L)
                 .cancelledAt(cancelledAt)
                 .build();
 
+        OrderCancelReturn orderCancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .statusCode(StatusCodeType.ORDER_PARTIAL_CANCEL.getCode())
+                .quantity(1L)
+                .reason("단순변심")
+                .refundAmount(1000L)
+                .build();
+
         TestDateTimeHolder testDateTimeHolder = new TestDateTimeHolder(null, createTime, null, null);
 
         // when
-        GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderDetail, memberShip, testDateTimeHolder);
+        GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderCancelDetail, memberShip, testDateTimeHolder);
 
         // then
         assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "reason")
@@ -187,16 +211,23 @@ class GetCancelDetailDtoTest {
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
                 .product(product)
-                .reason("단순변심")
                 .price(1000L)
                 .quantity(1L)
                 .cancelledAt(cancelledAt)
                 .build();
 
+        OrderCancelReturn orderCancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .statusCode(StatusCodeType.ORDER_PARTIAL_CANCEL.getCode())
+                .quantity(1L)
+                .reason("단순변심")
+                .refundAmount(1000L)
+                .build();
+
         TestDateTimeHolder testDateTimeHolder = new TestDateTimeHolder(null, createTime, null, null);
 
         // when
-        GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderDetail, memberShip, testDateTimeHolder);
+        GetCancelDetailDto.Response result = GetCancelDetailDto.Response.of(orderCancelDetail, memberShip, testDateTimeHolder);
 
         // then
         assertThat(result).extracting("orderDate", "cancelDate", "orderNo", "reason")
@@ -252,10 +283,10 @@ class GetCancelDetailDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .memberCoupon(memberCoupon)
                 .price(1000L)
-                .quantity(1L)
+                .quantity(2L)
                 .build();
 
         // when
@@ -283,10 +314,10 @@ class GetCancelDetailDtoTest {
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .memberCoupon(memberCoupon)
                 .price(1000L)
-                .quantity(1L)
+                .quantity(2L)
                 .build();
 
         // when
@@ -306,9 +337,9 @@ class GetCancelDetailDtoTest {
         String memberShip = BASIC.getText();
 
         OrderDetail orderDetail = OrderDetail.builder()
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .price(1000L)
-                .quantity(1L)
+                .quantity(2L)
                 .build();
 
         // when
@@ -328,9 +359,9 @@ class GetCancelDetailDtoTest {
         String memberShip = WOW.getText();
 
         OrderDetail orderDetail = OrderDetail.builder()
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .price(1000L)
-                .quantity(1L)
+                .quantity(2L)
                 .build();
 
         // when

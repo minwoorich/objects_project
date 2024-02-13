@@ -12,7 +12,6 @@ import com.objects.marketbridge.order.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.order.mock.TestContainer;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.service.dto.ConfirmReturnDto;
-import com.objects.marketbridge.order.service.dto.GetCancelDetailDto;
 import com.objects.marketbridge.order.service.dto.GetReturnDetailDto;
 import com.objects.marketbridge.order.service.dto.RequestReturnDto;
 import com.objects.marketbridge.product.domain.Product;
@@ -181,7 +180,6 @@ class OrderReturnServiceTest {
 
         // then
         assertThat(orderDetail.getStatusCode()).isEqualTo(DELIVERY_COMPLETED.getCode());
-        assertThat(orderDetail.getReason()).isNull();
         assertThat(product.getStock()).isEqualTo(7L);
         assertThat(result.getOrderId()).isEqualTo(1L);
         assertThat(result.getOrderNo()).isEqualTo("1");
@@ -243,7 +241,6 @@ class OrderReturnServiceTest {
 
         // then
         assertThat(orderDetail.getStatusCode()).isEqualTo(RETURN_INIT.getCode());
-        assertThat(orderDetail.getReason()).isEqualTo("단순변심");
         assertThat(product.getStock()).isEqualTo(8L);
         assertThat(result.getOrderId()).isEqualTo(1L);
         assertThat(result.getOrderNo()).isEqualTo("1");
@@ -319,7 +316,6 @@ class OrderReturnServiceTest {
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(memberCoupon.getUsedDate()).isNull();
         assertThat(orderDetail.getStatusCode()).isEqualTo(DELIVERY_COMPLETED.getCode());
-        assertThat(orderDetail.getReason()).isNull();
         assertThat(product.getStock()).isEqualTo(7L);
         assertThat(result.getOrderId()).isEqualTo(1L);
         assertThat(result.getOrderNo()).isEqualTo("1");
@@ -395,7 +391,6 @@ class OrderReturnServiceTest {
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(memberCoupon.getUsedDate()).isNull();
         assertThat(orderDetail.getStatusCode()).isEqualTo(RETURN_INIT.getCode());
-        assertThat(orderDetail.getReason()).isEqualTo("단순변심");
         assertThat(product.getStock()).isEqualTo(8L);
         assertThat(result.getOrderId()).isEqualTo(1L);
         assertThat(result.getOrderNo()).isEqualTo("1");
@@ -550,7 +545,6 @@ class OrderReturnServiceTest {
         LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
         OrderDetail orderDetail = OrderDetail.builder()
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .reducedQuantity(0L)
@@ -598,7 +592,6 @@ class OrderReturnServiceTest {
         LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
         OrderDetail orderDetail = OrderDetail.builder()
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .reducedQuantity(0L)
@@ -656,7 +649,6 @@ class OrderReturnServiceTest {
         OrderDetail orderDetail = OrderDetail.builder()
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .reducedQuantity(0L)
@@ -714,7 +706,6 @@ class OrderReturnServiceTest {
         OrderDetail orderDetail = OrderDetail.builder()
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .reducedQuantity(0L)

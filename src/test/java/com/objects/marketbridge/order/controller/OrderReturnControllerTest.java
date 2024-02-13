@@ -2,20 +2,18 @@ package com.objects.marketbridge.order.controller;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.member.domain.MembershipType;
-import com.objects.marketbridge.order.controller.dto.*;
+import com.objects.marketbridge.order.controller.dto.ConfirmReturnHttp;
+import com.objects.marketbridge.order.controller.dto.GetReturnDetailHttp;
+import com.objects.marketbridge.order.controller.dto.RequestReturnHttp;
 import com.objects.marketbridge.order.domain.MemberShipPrice;
 import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.mock.BaseFakeOrderDetailRepository;
-import com.objects.marketbridge.order.mock.BaseFakeOrderRepository;
-import com.objects.marketbridge.order.mock.TestContainer;
-import com.objects.marketbridge.order.mock.TestDateTimeHolder;
-import com.objects.marketbridge.order.service.dto.ConfirmReturnDto;
+import com.objects.marketbridge.order.mock.*;
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -24,7 +22,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.NON_RETURNABLE_PRODUCT;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.QUANTITY_EXCEEDED;
 import static com.objects.marketbridge.order.domain.MemberShipPrice.WOW;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,6 +48,7 @@ class OrderReturnControllerTest {
     void afterEach() {
         BaseFakeOrderDetailRepository.getInstance().clear();
         BaseFakeOrderRepository.getInstance().clear();
+        BaseFakeOrderCancelReturnRepository.getInstance().clear();
         testContainer.memberRepository.deleteAllInBatch();
         testContainer.productRepository.deleteAllInBatch();
     }
@@ -165,8 +165,7 @@ class OrderReturnControllerTest {
         ApiResponse<ConfirmReturnHttp.Response> result = testContainer.orderReturnController.confirmReturn(request);
 
         // then
-        assertThat(orderDetail.getStatusCode()).isEqualTo(DELIVERY_COMPLETED.getCode());
-        assertThat(orderDetail.getReason()).isNull();
+        assertThat(orderDetail.getStatusCode()).isEqualTo(RETURN_INIT.getCode());
         assertThat(product.getStock()).isEqualTo(7L);
 
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -230,7 +229,6 @@ class OrderReturnControllerTest {
 
         // then
         assertThat(orderDetail.getStatusCode()).isEqualTo(RETURN_INIT.getCode());
-        assertThat(orderDetail.getReason()).isEqualTo("단순변심");
         assertThat(product.getStock()).isEqualTo(8L);
 
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -308,7 +306,6 @@ class OrderReturnControllerTest {
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(memberCoupon.getUsedDate()).isNull();
         assertThat(orderDetail.getStatusCode()).isEqualTo(DELIVERY_COMPLETED.getCode());
-        assertThat(orderDetail.getReason()).isNull();
         assertThat(product.getStock()).isEqualTo(7L);
 
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -386,7 +383,6 @@ class OrderReturnControllerTest {
         assertThat(memberCoupon.getIsUsed()).isFalse();
         assertThat(memberCoupon.getUsedDate()).isNull();
         assertThat(orderDetail.getStatusCode()).isEqualTo(RETURN_INIT.getCode());
-        assertThat(orderDetail.getReason()).isEqualTo("단순변심");
         assertThat(product.getStock()).isEqualTo(8L);
 
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -586,7 +582,6 @@ class OrderReturnControllerTest {
         LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
         OrderDetail orderDetail = OrderDetail.builder()
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .product(product)
@@ -643,7 +638,6 @@ class OrderReturnControllerTest {
         LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 9, 3, 10);
         OrderDetail orderDetail = OrderDetail.builder()
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .reducedQuantity(0L)
@@ -710,7 +704,6 @@ class OrderReturnControllerTest {
         OrderDetail orderDetail = OrderDetail.builder()
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .product(product)
@@ -777,24 +770,32 @@ class OrderReturnControllerTest {
         OrderDetail orderDetail = OrderDetail.builder()
                 .memberCoupon(memberCoupon)
                 .orderNo("1")
-                .reason("단순변심")
                 .cancelledAt(cancelledAt)
                 .quantity(10L)
                 .product(product)
-                .reducedQuantity(0L)
+                .reducedQuantity(1L)
                 .price(1000L)
                 .statusCode(RELEASE_PENDING.getCode())
                 .build();
 
+        OrderCancelReturn cancelDetail = OrderCancelReturn.builder()
+                .orderDetail(orderDetail)
+                .refundAmount(1000L)
+                .quantity(1L)
+                .statusCode(ORDER_PARTIAL_CANCEL.getCode())
+                .reason("단순변심")
+                .build();
+
+        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
         testContainer.orderDetailCommendRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
-        Long orderDetailId = 1L;
+        Long orderCancelId = 1L;
         Long memberId = 1L;
 
         // when
-        ApiResponse<GetReturnDetailHttp.Response> result = testContainer.orderReturnController.getReturnDetail(orderDetailId, memberId);
+        ApiResponse<GetReturnDetailHttp.Response> result = testContainer.orderReturnController.getReturnDetail(orderCancelId, memberId);
 
         // then
         assertThat(result.getCode()).isEqualTo(OK.value());
@@ -815,7 +816,7 @@ class OrderReturnControllerTest {
         assertThat(result.getData().getRefundInfo().getDeliveryFee()).isEqualTo(MemberShipPrice.BASIC.getDeliveryFee());
         assertThat(result.getData().getRefundInfo().getRefundFee()).isEqualTo(MemberShipPrice.BASIC.getRefundFee());
         assertThat(result.getData().getRefundInfo().getDiscountPrice()).isEqualTo(1000L);
-        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(10000L);
+        assertThat(result.getData().getRefundInfo().getTotalPrice()).isEqualTo(1000L);
     }
 
     @Test

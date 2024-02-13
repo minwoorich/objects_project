@@ -24,7 +24,8 @@ public class OrderDetailQueryRepositoryImpl implements OrderDetailQueryRepositor
 
     @Override
     public OrderDetail findById(Long id) {
-        return orderDetailJpaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
+        return orderDetailJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
     }
 
     @Override
