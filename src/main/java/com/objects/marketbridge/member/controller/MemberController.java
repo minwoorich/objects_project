@@ -37,11 +37,18 @@ public class MemberController {
        return ApiResponse.ok(addressesResponses);
     }
 
-    @PatchMapping("/update-address")
+    @PatchMapping("/update-address/{addressId}")
     public ApiResponse<List<GetAddressesResponse>> updateAddress(
-            @AuthMemberId Long memberId ,@Valid @RequestBody AddAddressRequestDto request){
-//
-        List<GetAddressesResponse> addressesResponses = memberService.updateMemberAddress(memberId,request);
+            @AuthMemberId Long memberId ,@Valid @RequestBody AddAddressRequestDto request ,
+            @PathVariable Long addressId){
+        List<GetAddressesResponse> addressesResponses = memberService.updateMemberAddress(memberId,addressId,request);
+        return ApiResponse.ok(addressesResponses);
+    }
+
+    @DeleteMapping("/delete-address/{addressId}")
+    public ApiResponse<List<GetAddressesResponse>> deleteAddress(
+            @AuthMemberId Long memberId ,@PathVariable Long addressId){
+        List<GetAddressesResponse> addressesResponses = memberService.deleteMemberAddress(memberId,addressId);
         return ApiResponse.ok(addressesResponses);
     }
 

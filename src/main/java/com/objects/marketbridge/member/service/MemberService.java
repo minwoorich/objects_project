@@ -44,10 +44,16 @@ public class MemberService {
         return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
-    public List<GetAddressesResponse> updateMemberAddress(Long memberId,AddAddressRequestDto request){
+    public List<GetAddressesResponse> updateMemberAddress(Long memberId,Long addressId,AddAddressRequestDto request){
         Member member = memberRepository.findById(memberId);
-        Address addressValueByAddressId = addressRepository.findAddressValueByAddressId(request.getAddressId(), memberId);
-        addressValueByAddressId.update(request.getAddressValue());
+        Address address = addressRepository.findById(addressId);
+        address.update(request.getAddressValue());
+        return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
+    }
+
+    public List<GetAddressesResponse> deleteMemberAddress(Long memberId,Long addressId){
+        Member member = memberRepository.findById(memberId);
+        addressRepository.deleteById(addressId);
         return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
