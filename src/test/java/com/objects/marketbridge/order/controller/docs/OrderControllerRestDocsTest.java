@@ -334,7 +334,7 @@ public class OrderControllerRestDocsTest  {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("orders-detail-list",
+                .andDo(document("order-detail-list",
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("orderNo").description("주문 번호")
