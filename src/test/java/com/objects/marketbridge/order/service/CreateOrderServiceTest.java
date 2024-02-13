@@ -8,10 +8,7 @@ import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.*;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
-import com.objects.marketbridge.order.service.port.AddressRepository;
-import com.objects.marketbridge.order.service.port.OrderCommendRepository;
-import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
-import com.objects.marketbridge.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.order.service.port.*;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.coupon.CouponRepository;
 import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
@@ -48,12 +45,18 @@ class CreateOrderServiceTest {
     @Autowired AddressRepository addressRepository;
     @Autowired OrderDetailQueryRepository orderDetailQueryRepository;
     @Autowired OrderCommendRepository orderCommendRepository;
+    @Autowired OrderDetailCommendRepository orderDetailCommendRepository;
     @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired MemberCouponRepository memberCouponRepository;
     @Autowired EntityManager em;
 
     @BeforeEach
     void init(){
+        // clear 로직
+        productRepository.deleteAllInBatch();
+        orderCommendRepository.deleteAllInBatch();
+        orderDetailCommendRepository.deleteAllInBatch();
+
         // member 생성
         Member member = createMember();
         memberRepository.save(member);
@@ -330,9 +333,9 @@ class CreateOrderServiceTest {
 
         //then
         assertThat(products).hasSize(3);
-        for (int i = 0; i < products.size(); i++) {
-            assertThat(products.get(i).getStock()).isEqualTo(stocks.get(i)-quantities.get(i));
-        }
+        assertThat(products.get(0).getStock()).isEqualTo(stocks.get(0)-quantities.get(0));
+        assertThat(products.get(1).getStock()).isEqualTo(stocks.get(1)-quantities.get(1));
+        assertThat(products.get(2).getStock()).isEqualTo(stocks.get(2)-quantities.get(2));
     }
 
     @DisplayName("주문량이 재고가 많을 경우 예외를 발생시켜야한다")
