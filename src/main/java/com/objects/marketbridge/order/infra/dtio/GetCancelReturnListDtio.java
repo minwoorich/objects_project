@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GetCancelReturnListDtio {
 
@@ -16,22 +14,14 @@ public class GetCancelReturnListDtio {
     public static class Response {
         private LocalDateTime cancelReceiptDate;
         private LocalDateTime orderDate;
-        private String orderNo;
-        private List<OrderDetailInfo> orderDetailInfos = new ArrayList<>();
+        private OrderDetailInfo orderDetailInfo;
 
         @Builder
         @QueryProjection
-        public Response(LocalDateTime cancelReceiptDate, LocalDateTime orderDate, String orderNo) {
+        public Response(LocalDateTime cancelReceiptDate, LocalDateTime orderDate, OrderDetailInfo orderDetailInfo) {
             this.cancelReceiptDate = cancelReceiptDate;
             this.orderDate = orderDate;
-            this.orderNo = orderNo;
-        }
-
-        public void changeOrderDetailInfos(List<OrderDetailInfo> orderDetailInfos) {
-            if (orderDetailInfos == null) {
-                throw new IllegalArgumentException("주어진 주문 상세 리스트가 존재하지 않습니다.");
-            }
-            this.orderDetailInfos = orderDetailInfos;
+            this.orderDetailInfo = orderDetailInfo;
         }
     }
 

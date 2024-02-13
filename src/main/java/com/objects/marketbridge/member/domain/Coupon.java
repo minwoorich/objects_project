@@ -53,12 +53,26 @@ public class Coupon extends BaseEntity {
         this.endDate = endDate;
     }
 
+    public static Coupon create(Product product, String name, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+        return Coupon.builder()
+                .product(product)
+                .name(name)
+                .price(price)
+                .count(count)
+                .minimumPrice(minimumPrice)
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
+    }
+
     public void addMemberCoupon(MemberCoupon memberCoupon) {
         memberCoupons.add(memberCoupon);
         memberCoupon.setCoupon(this);
     }
 
-    public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
-        memberCoupons.forEach(memberCoupon -> memberCoupon.changeUsageInfo(dateTimeHolder));
+    public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder, Long memberId) {
+        memberCoupons.stream()
+                .filter(m -> m.getMember().getId().equals(memberId))
+                        .forEach(m -> m.changeUsageInfo(dateTimeHolder));
     }
 }

@@ -19,8 +19,8 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     }
 
     @Override
-    public MemberCoupon findByMember_IdAndCoupon_Id(Long memberId, Long couponId) {
-        return memberCouponJpaRepository.findByMember_IdAndCoupon_Id(memberId, couponId);
+    public MemberCoupon findByMemberIdAndCouponId(Long memberId, Long couponId) {
+        return memberCouponJpaRepository.findByMemberIdAndCouponId(memberId, couponId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

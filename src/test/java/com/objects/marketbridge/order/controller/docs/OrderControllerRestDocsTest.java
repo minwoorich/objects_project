@@ -4,16 +4,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.config.KakaoPayConfig;
 import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
+import com.objects.marketbridge.common.enums.CardCoType;
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
+import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.order.controller.OrderController;
 import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderDetailHttp;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Response;
+import com.objects.marketbridge.order.controller.dto.select.OrderInfo;
+import com.objects.marketbridge.order.controller.dto.select.PaymentInfo;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.GetOrderService;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
+import com.objects.marketbridge.order.service.port.OrderDtoRepository;
+import com.objects.marketbridge.payment.domain.PaymentType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,28 +30,34 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Condition;
+import static com.objects.marketbridge.order.controller.dto.select.OrderInfo.OrderDetailInfo;
+import static com.objects.marketbridge.order.controller.dto.select.OrderInfo.create;
+import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,16 +65,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(OrderController.class)
 @ExtendWith(RestDocumentationExtension.class)
-public class OrderControllerRestDocsTest  {
+public class OrderControllerRestDocsTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
-
     @MockBean CreateCheckoutService createCheckoutService;
     @MockBean CreateOrderService createOrderService;
     @MockBean KakaoPayConfig kakaoPayConfig;
     @MockBean KakaoPayService kakaoPayService;
     @MockBean GetOrderService getOrderService;
+    @MockBean OrderDtoRepository orderDtoRepository;
 
 
     @BeforeEach
@@ -229,4 +243,194 @@ public class OrderControllerRestDocsTest  {
 
         return List.of(productValue1, productValue2);
     }
+
+
+    @DisplayName("전체 주문들을 조회 할 수 있다")
+    @Test
+    @WithMockCustomUser
+    void getOrders() throws Exception {
+
+        // given
+        Response expectedResponse = Response.create(createOrderInfosSizeOne(createOrderDetailInfosSizeOne()));
+
+        given(getOrderService.search(any(Pageable.class), any(Condition.class))).willReturn(expectedResponse);
+
+        //when, then
+        mockMvc.perform(get("/orders")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .param("sort", "createdAt,DESC")
+                        .param("year", "2024")
+                        .param("keyword", "자전거")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("order-list",
+                                preprocessResponse(prettyPrint()),
+                                queryParameters(
+                                    parameterWithName("page").description("페이지 번호"),
+                                    parameterWithName("size").description("페이지 사이즈"),
+                                    parameterWithName("sort").description("정렬기준,정렬순서"),
+                                    parameterWithName("year").description("연도"),
+                                    parameterWithName("keyword").description("검색 키워드")
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("응답 코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("HTTP 응답"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터"),
+
+                                        fieldWithPath("data.orderInfos[]").type(JsonFieldType.ARRAY)
+                                                .description("주문 리스트"),
+                                        fieldWithPath("data.orderInfos[].orderNo").type(JsonFieldType.STRING)
+                                                .description("주문 번호"),
+                                        fieldWithPath("data.orderInfos[].createdAt").type(JsonFieldType.STRING)
+                                                .description("주문 생성 일자"),
+
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[]").type(JsonFieldType.ARRAY)
+                                                .description("상세 주문 리스트"),
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].orderNo").type(JsonFieldType.STRING)
+                                                .description("부모 주문 번호"),
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].orderDetailId").type(JsonFieldType.NUMBER)
+                                                .description("상세 주문 아이디(PK)"),
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].productId").type(JsonFieldType.NUMBER)
+                                                .description("상품 아이디(PK)"),
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].quantity").type(JsonFieldType.NUMBER)
+                                                .description("상품 수량"),
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].price").type(JsonFieldType.NUMBER)
+                                                .description("(1개당) 상품 가격"),
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].statusCode").type(JsonFieldType.STRING)
+                                                .description("주문 상태"),
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].deliveredDate").type(JsonFieldType.STRING)
+                                                .description("배송 일자"),
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].productThumbImageUrl").type(JsonFieldType.STRING)
+                                                .description("상품 썸네일 이미지 URL"),
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].productName").type(JsonFieldType.STRING)
+                                                .description("상품 이름"),
+                                        fieldWithPath("data.orderInfos[].orderDetailInfos[].isOwn").type(JsonFieldType.BOOLEAN)
+                                                .description("마켓브릿지 상품인지 입점 판매자 상품인지 구분하는 값")
+                                )));
+
+    }
+
+
+
+    @DisplayName("상세 주문을 조회할 수 있다")
+    @Test
+    @WithMockCustomUser
+    void getOrderDetails() throws Exception {
+        //given
+        GetOrderDetailHttp.Response response = createGetOrderDetailHttpResponse();
+        given(getOrderService.getOrderDetails(anyString())).willReturn(response);
+
+        //when, then
+        mockMvc.perform(get("/orders/{orderNo}", "orderNo1")
+                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("order-detail-list",
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("orderNo").description("주문 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+
+                                fieldWithPath("data.orderInfo").type(JsonFieldType.OBJECT)
+                                        .description("주문 정보"),
+                                fieldWithPath("data.orderInfo.createdAt").type(JsonFieldType.STRING)
+                                        .description("주문 일자 (yyyy.MM.dd)"),
+                                fieldWithPath("data.orderInfo.orderNo").type(JsonFieldType.STRING)
+                                        .description("주문 번호"),
+
+                                fieldWithPath("data.orderInfo.orderDetailInfos[]").type(JsonFieldType.ARRAY)
+                                        .description("주문 상세 정보"),
+                                fieldWithPath("data.orderInfo.orderDetailInfos[].orderNo").type(JsonFieldType.STRING)
+                                        .description("주문 번호"),
+                                fieldWithPath("data.orderInfo.orderDetailInfos[].orderDetailId").type(JsonFieldType.NUMBER)
+                                        .description("주문 상세 아이디(PK)"),
+                                fieldWithPath("data.orderInfo.orderDetailInfos[].productId").type(JsonFieldType.NUMBER)
+                                        .description("상품 아이디(PK)"),
+                                fieldWithPath("data.orderInfo.orderDetailInfos[].quantity").type(JsonFieldType.NUMBER)
+                                        .description("상품 수량"),
+                                fieldWithPath("data.orderInfo.orderDetailInfos[].price").type(JsonFieldType.NUMBER)
+                                        .description("상품 가격"),
+                                fieldWithPath("data.orderInfo.orderDetailInfos[].statusCode").type(JsonFieldType.STRING)
+                                        .description("주문 상태"),
+                                fieldWithPath("data.orderInfo.orderDetailInfos[].deliveredDate").type(JsonFieldType.STRING)
+                                        .description("배송 도착 일자 (yyyy.MM.dd)"),
+                                fieldWithPath("data.orderInfo.orderDetailInfos[].productThumbImageUrl").type(JsonFieldType.STRING)
+                                        .description("상품 썸네일 URL"),
+                                fieldWithPath("data.orderInfo.orderDetailInfos[].productName").type(JsonFieldType.STRING)
+                                        .description("상품 이름"),
+                                fieldWithPath("data.orderInfo.orderDetailInfos[].isOwn").type(JsonFieldType.BOOLEAN)
+                                        .description("마켓브릿지 상품인지, 입점판매자 상품인지 구분하는 값"),
+
+                                fieldWithPath("data.addressValue").type(JsonFieldType.OBJECT)
+                                        .description("배송지 정보"),
+                                fieldWithPath("data.addressValue.phoneNo").type(JsonFieldType.STRING)
+                                        .description("구매자 전화번호"),
+                                fieldWithPath("data.addressValue.name").type(JsonFieldType.STRING)
+                                        .description("구매자 이름"),
+                                fieldWithPath("data.addressValue.city").type(JsonFieldType.STRING)
+                                        .description("도시명"),
+                                fieldWithPath("data.addressValue.street").type(JsonFieldType.STRING)
+                                        .description("도로명주소"),
+                                fieldWithPath("data.addressValue.zipcode").type(JsonFieldType.STRING)
+                                        .description("우편번호"),
+                                fieldWithPath("data.addressValue.detail").type(JsonFieldType.STRING)
+                                        .description("상세주소"),
+                                fieldWithPath("data.addressValue.alias").type(JsonFieldType.STRING)
+                                        .description("배송지 별칭"),
+
+                                fieldWithPath("data.paymentInfo").type(JsonFieldType.OBJECT)
+                                        .description("결제 정보"),
+                                fieldWithPath("data.paymentInfo.paymentMethod").type(JsonFieldType.STRING)
+                                        .description("결제 수단"),
+                                fieldWithPath("data.paymentInfo.cardIssuerName").type(JsonFieldType.STRING)
+                                        .description("카드사 (현금 결제일 경우 null)"),
+                                fieldWithPath("data.paymentInfo.totalAmount").type(JsonFieldType.NUMBER)
+                                        .description("총 주문 금액 (할인 미적용 금액)"),
+                                fieldWithPath("data.paymentInfo.discountAmount").type(JsonFieldType.NUMBER)
+                                        .description("총 할인 금액"),
+                                fieldWithPath("data.paymentInfo.deliveryFee").type(JsonFieldType.NUMBER)
+                                        .description("배송비")
+                        )));
+
+    }
+
+    private GetOrderDetailHttp.Response createGetOrderDetailHttpResponse() {
+        return GetOrderDetailHttp.Response.create(
+                create("2024.01.19", "AAAA-1111-1111-1111", createOrderDetailInfosSizeOne()),
+                AddressValue.create("01012345678", "홍길동", "서울", "세종대로 333-1", "12345", "민들레아파트 110동 2323호", "우리집"),
+                PaymentInfo.create(PaymentType.CARD.toString(), CardCoType.KAKAOBANK.toString(), 2000L, 0L, 0L));
+    }
+
+    private List<OrderDetailInfo> createOrderDetailInfosSizeOne() {
+        OrderDetailInfo od1 =
+                OrderDetailInfo.create("AAAA-1111-1111-1111", 1L, 1L, 2L, 1000L, PAYMENT_COMPLETED.getCode(), "2024.01.23", "http://example/product/thumb1", "자전거", true);
+
+        return Arrays.asList(od1);
+    }
+
+    private List<OrderInfo> createOrderInfosSizeOne(List<OrderDetailInfo> orderDetailInfos) {
+        OrderInfo o1 = OrderInfo.create("2024.01.19", "AAAA-1111-1111-1111", orderDetailInfos);
+
+        return List.of(o1);
+    }
+
+
 }

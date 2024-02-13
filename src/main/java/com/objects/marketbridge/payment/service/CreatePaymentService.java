@@ -1,6 +1,8 @@
 package com.objects.marketbridge.payment.service;
 
+import com.objects.marketbridge.common.dto.KakaoPayApproveRequest;
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
+import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.controller.dto.CompleteOrderHttp;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static com.objects.marketbridge.common.config.KakaoPayConfig.ONE_TIME_CID;
 import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
 
 @Service
@@ -22,6 +25,8 @@ public class CreatePaymentService {
 
     private final PaymentRepository paymentRepository;
     private final OrderQueryRepository orderQueryRepository;
+    private final KakaoPayService kakaoPayService;
+
 
     @Transactional
     public CompleteOrderHttp.Response create(KakaoPayApproveResponse response) {
@@ -37,7 +42,6 @@ public class CreatePaymentService {
         // 3. orderDetail 의 statusCode 업데이트
         payment.changeStatusCode(PAYMENT_COMPLETED.getCode());
 
-        // TODO : payment 대신 order?
         return CompleteOrderHttp.Response.of(payment);
     }
 
@@ -51,5 +55,20 @@ public class CreatePaymentService {
         LocalDateTime approvedAt = response.getApprovedAt();
 
         return Payment.create(orderNo, paymentMethod, tid, cardInfo, amount, approvedAt);
+    }
+
+    public KakaoPayApproveResponse approve(String orderNo, String pgToken) {
+        Order order = orderQueryRepository.findByOrderNoWithMember(orderNo);
+        return kakaoPayService.approve(createKakaoRequest(order, pgToken));
+    }
+    private KakaoPayApproveRequest createKakaoRequest(Order order, String pgToken) {
+        return KakaoPayApproveRequest.builder()
+                .pgToken(pgToken)
+                .partnerUserId(order.getMember().getId().toString())
+                .partnerOrderId(order.getOrderNo())
+                .tid(order.getTid())
+                .totalAmount(order.getTotalPrice())
+                .cid(ONE_TIME_CID)
+                .build();
     }
 }

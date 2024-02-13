@@ -52,16 +52,56 @@ include::api/member/kakaoPaySubsSubscribtion.adoc[]
 {empty}
 
 == *주문/결제*
+include::api/order/ordercheckout.adoc[]
+{empty}
+{empty}
+
+include::api/order/ordercreate.adoc[]
+{empty}
+{empty}
+
+include::api/payment/paymentcreate.adoc[]
+{empty}
+{empty}
+
+include::api/payment/paymentcancel.adoc[]
+{empty}
+{empty}
+
+include::api/order/orderlist.adoc[]
+{empty}
+{empty}
+
+include::api/order/orderdetaillist.adoc[]
+{empty}
+{empty}
+
+== *반품/취소*
+include::api/order/ordercancelrequest.adoc[]
+{empty}
+{empty}
 
 include::api/order/ordercancelreturn.adoc[]
 {empty}
 {empty}
 
-include::api/order/ordercancel.adoc[]
+include::api/order/ordercanceldetail.adoc[]
 {empty}
 {empty}
 
-include::api/order/orderreturn.adoc[]
+include::api/order/orderconfirmcancel.adoc[]
+{empty}
+{empty}
+
+include::api/order/orderreturnrequest.adoc[]
+{empty}
+{empty}
+
+include::api/order/orderreturndetail.adoc[]
+{empty}
+{empty}
+
+include::api/order/orderconfirmreturn.adoc[]
 {empty}
 {empty}
 
@@ -69,22 +109,6 @@ include::api/order/ordercancelreturnlist.adoc[]
 {empty}
 {empty}
 
-include::api/order/ordercancelreturndetail.adoc[]
-{empty}
-{empty}
 
-[[OrderCreate-API]]
-== OrderCreate API
-include::api/order/ordercreate.adoc[]
 
-[[OrderCheckout-API]]
-== OrderCheckout API
 
-include::api/order/ordercheckout.adoc[]
-{empty}
-{empty}
-
-// [[Order-API]]
-// == Order API
-//
-// include::api/order/ordercancel.adoc[]

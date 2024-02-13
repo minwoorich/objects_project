@@ -1,17 +1,20 @@
 package com.objects.marketbridge.order.service;
 
-import com.objects.marketbridge.member.domain.Address;
-import com.objects.marketbridge.member.domain.Coupon;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.member.domain.Address;
+import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.domain.*;
+import com.objects.marketbridge.order.domain.CalcTotalDiscountService;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
-import com.objects.marketbridge.product.infra.coupon.CouponRepository;
+import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_INIT;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,7 +36,7 @@ public class CreateOrderService {
     private final OrderCommendRepository orderCommendRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
-    private final CouponRepository couponRepository;
+    private final MemberCouponRepository memberCouponRepository;
     private final AddressRepository addressRepository;
     private final CalcTotalDiscountService calcTotalDiscountService;
     private final DateTimeHolder dateTimeHolder;
@@ -75,16 +80,16 @@ public class CreateOrderService {
 
             Product product = productRepository.findById(productValue.getProductId());
             // 쿠폰이 적용안된 product 가 존재할 경우 그냥 null 저장
-            Coupon coupon = (productValue.getCouponId() != null) ? couponRepository.findById(productValue.getCouponId()) : null ;
+            MemberCoupon memberCoupon = (productValue.getCouponId() != null) ? memberCouponRepository.findByMemberIdAndCouponId(order.getMember().getId(), productValue.getCouponId()) : null;
             String orderNo = order.getOrderNo();
             Long quantity = productValue.getQuantity();
-            Long price = product.getPrice();
             String tid = order.getTid();
+            Long price = product.getPrice();
             Long sellerId = productValue.getSellerId();
 
             // OrderDetail 엔티티 생성
             OrderDetail orderDetail =
-                    OrderDetail.create(tid, order, product, orderNo, coupon, quantity, price, sellerId, StatusCodeType.ORDER_INIT.getCode());
+                    OrderDetail.create(tid, order, product, orderNo, memberCoupon,price, quantity, sellerId, ORDER_INIT.getCode());
 
             // orderDetails 에 추가
             orderDetails.add(orderDetail);

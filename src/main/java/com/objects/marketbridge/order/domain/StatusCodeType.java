@@ -18,10 +18,15 @@ public enum StatusCodeType {
      * FAILURE      07
      * FAULT        08
      * DISPOSAL     09
+     * RETURN       10
      */
     ORDER_INIT("주문생성", "OR00"),
     ORDER_RECEIVED("주문접수", "OR01"),
-    ORDER_CANCEL("주문취소", "OR02"),
+    ORDER_CANCEL("주문취소", "OR05"),
+    ORDER_RETURN("주문반품", "OR10"),
+
+    ORDER_PARTIAL_CANCEL("부분취소", "OP05"),
+    ORDER_PARTIAL_RETURN("부분반품", "OP10"),
 
     PAYMENT_PENDING("결제대기", "PM01"),
     PAYMENT_COMPLETED("결제완료", "PM04"),

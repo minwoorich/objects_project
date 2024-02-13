@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Objects;
 
 import static com.objects.marketbridge.order.domain.MemberShipPrice.BASIC;
@@ -17,24 +16,20 @@ public class RequestCancelDto {
     @Getter
     @NoArgsConstructor
     public static class Response {
-        private List<ProductInfo> productInfos;
+        private ProductInfo productInfo;
         private CancelRefundInfo cancelRefundInfo;
 
         @Builder
-        private Response(List<ProductInfo> productInfos, CancelRefundInfo cancelRefundInfo) {
-            this.productInfos = productInfos;
+        private Response(ProductInfo productInfo, CancelRefundInfo cancelRefundInfo) {
+            this.productInfo = productInfo;
             this.cancelRefundInfo = cancelRefundInfo;
         }
 
-        public static Response of(List<OrderDetail> orderDetails, String memberShip) {
+        public static Response of(OrderDetail orderDetail, Long numberOfCancellation, String memberShip) {
             return Response.builder()
-                    .productInfos(
-                            orderDetails.stream()
-                            // TODO Product로 인해 N+1 문제 발생 예상 (of)
-                            .map(ProductInfo::of)
-                            .toList()
-                    )// TODO coupon 으로 인해 N+1문제 발생할 것으로 예상 (of) -> fetchJoin으로 쿠폰까지 조인후 해결
-                    .cancelRefundInfo(CancelRefundInfo.of(orderDetails, memberShip))
+                    // TODO coupon 으로 인해 N+1문제 발생할 것으로 예상 (of) -> fetchJoin으로 쿠폰까지 조인후 해결
+                    .productInfo(ProductInfo.of(orderDetail, numberOfCancellation))
+                    .cancelRefundInfo(CancelRefundInfo.of(orderDetail, memberShip, numberOfCancellation))
                     .build();
         }
     }
@@ -55,11 +50,11 @@ public class RequestCancelDto {
             this.image = image;
         }
 
-        public static ProductInfo of(OrderDetail orderDetail) {
+        public static ProductInfo of(OrderDetail orderDetail, Long numberOfCancellation) {
             return ProductInfo.builder()
-                    .quantity(orderDetail.getQuantity())
+                    .quantity(numberOfCancellation)
                     .name(orderDetail.getProduct().getName())
-                    .price(orderDetail.getProduct().getPrice())
+                    .price(orderDetail.getPrice())
                     .image(orderDetail.getProduct().getThumbImg())
                     .build();
         }
@@ -81,33 +76,34 @@ public class RequestCancelDto {
             this.totalPrice = totalPrice;
         }
 
-        public static CancelRefundInfo of(List<OrderDetail> orderDetails, String memberShip) {
+        public static CancelRefundInfo of(OrderDetail orderDetail, String memberShip, Long numberOfCancellation) {
             if (isBasicMember(memberShip)) {
-                return createDto(orderDetails, BASIC.getDeliveryFee(), BASIC.getRefundFee());
+                return createDto(orderDetail, BASIC.getDeliveryFee(), BASIC.getRefundFee(), numberOfCancellation);
             }
-            return createDto(orderDetails, WOW.getDeliveryFee(), WOW.getRefundFee());
+            return createDto(orderDetail, WOW.getDeliveryFee(), WOW.getRefundFee(), numberOfCancellation);
         }
 
         private static boolean isBasicMember(String memberShip) {
             return Objects.equals(memberShip, MembershipType.BASIC.getText());
         }
 
-        private static CancelRefundInfo createDto(List<OrderDetail> orderDetails, Long deliveryFee, Long refundFee) {
+        private static CancelRefundInfo createDto(OrderDetail orderDetail, Long deliveryFee, Long refundFee, Long quantity) {
+            Long discountPrice = 0L;
+
+            if (hasMemberCoupon(orderDetail)) {
+                discountPrice = orderDetail.getMemberCoupon().getCoupon().getPrice();
+            }
+
             return CancelRefundInfo.builder()
-                    .discountPrice( // TODO coupon 으로 인해 N+1문제 발생할 것으로 예상 -> fetchJoin으로 쿠폰까지 조인후 해결
-                            orderDetails.stream()
-                                    .filter(orderDetail -> orderDetail.getCoupon() != null)
-                                    .mapToLong(orderDetail -> orderDetail.getCoupon().getPrice())
-                                    .sum()
-                    )
-                    .totalPrice(
-                            orderDetails.stream()
-                                    .mapToLong(OrderDetail::totalAmount)
-                                    .sum()
-                    )
+                    .discountPrice(discountPrice)
+                    .totalPrice(Long.valueOf(orderDetail.totalAmount(quantity)))
                     .deliveryFee(deliveryFee)
                     .refundFee(refundFee)
                     .build();
+        }
+
+        private static boolean hasMemberCoupon(OrderDetail orderDetail) {
+            return orderDetail.getMemberCoupon() != null;
         }
     }
 

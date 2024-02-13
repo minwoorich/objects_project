@@ -26,4 +26,12 @@ public class CardInfo {
         this.cardPurchaseName = cardPurchaseName;
         this.cardInstallMonth = cardInstallMonth;
     }
+
+    public static CardInfo create(String cardIssuerName, String cardPurchaseName, String cardInstallMonth) {
+        return CardInfo.builder()
+                .cardIssuerName(cardIssuerName)
+                .cardPurchaseName(cardPurchaseName)
+                .cardInstallMonth(cardInstallMonth)
+                .build();
+    }
 }

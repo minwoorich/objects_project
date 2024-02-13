@@ -55,4 +55,20 @@ public class KakaoPayApproveResponse {
         this.quantity = quantity;
         this.approvedAt = approvedAt;
     }
+
+    public static KakaoPayApproveResponse create(String aid, String tid, String sid, String cid, String partnerOrderId, String partnerUserId, String paymentMethodType, Amount amount, CardInfo cardInfo, String orderName, Long quantity, LocalDateTime createdAt, LocalDateTime approvedAt, String payload) {
+        return KakaoPayApproveResponse.builder()
+                .aid(aid)
+                .tid(tid)
+                .sid(sid)
+                .cid(cid)
+                .partnerOrderId(partnerOrderId)
+                .partnerUserId(partnerUserId)
+                .amount(amount)
+                .cardInfo(cardInfo)
+                .orderName(orderName)
+                .quantity(quantity)
+                .approvedAt(approvedAt)
+                .build();
+    }
 }

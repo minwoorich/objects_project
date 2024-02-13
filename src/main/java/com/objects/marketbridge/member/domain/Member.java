@@ -59,6 +59,19 @@ public class Member extends BaseEntity {
         address.setMember(this);
     }
 
+    // 비즈니스 로직
+    public static Member create(String membership, String email, String password, String name, String phoneNo, Boolean isAlert, Boolean isAgree) {
+        return Member.builder()
+                .membership(membership)
+                .email(email)
+                .password(password)
+                .name(name)
+                .phoneNo(phoneNo)
+                .isAlert(isAlert)
+                .isAgree(isAgree)
+                .build();
+    }
+
 }
 
 

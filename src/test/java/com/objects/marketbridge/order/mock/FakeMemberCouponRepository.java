@@ -12,7 +12,7 @@ public class FakeMemberCouponRepository implements MemberCouponRepository {
     }
 
     @Override
-    public MemberCoupon findByMember_IdAndCoupon_Id(Long MemberId, Long CouponId) {
+    public MemberCoupon findByMemberIdAndCouponId(Long MemberId, Long CouponId) {
         return null;
     }
 

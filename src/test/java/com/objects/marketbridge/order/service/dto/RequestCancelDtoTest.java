@@ -1,146 +1,226 @@
 package com.objects.marketbridge.order.service.dto;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.member.domain.Coupon;
+import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.member.domain.MembershipType;
-import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.QUANTITY_EXCEEDED;
+import static com.objects.marketbridge.order.domain.MemberShipPrice.BASIC;
+import static com.objects.marketbridge.order.domain.MemberShipPrice.WOW;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 class RequestCancelDtoTest {
 
     @Test
-    @DisplayName("일반 맴버십인 경우 배송비 3000원, 반품비 1000원으로 Response 변환할 수 있다.")
-    public void response_of_BASIC() {
+    @DisplayName("Response 변환할 수 있다. (BASIC and NoCoupon)")
+    public void response_of_BASIC_and_NoCoupon() {
         // given
         String memberShip = MembershipType.BASIC.getText();
 
-        Product product1 = Product.builder()
-                .price(1000L)
+        Product product = Product.builder()
                 .name("빵빵이")
                 .thumbImg("빵빵이 이미지")
                 .build();
-        Product product2 = Product.builder()
-                .price(2000L)
-                .name("옥지얌")
-                .thumbImg("옥지얌 이미지")
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
+                .product(product)
+                .price(1000L)
+                .quantity(3L)
                 .build();
 
-        Coupon coupon1 = Coupon.builder()
-                .price(1000L)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
-                .build();
-
-        OrderDetail orderDetail1 = OrderDetail.builder()
-                .coupon(coupon1)
-                .product(product1)
-                .price(1000L)
-                .quantity(2L)
-                .build();
-        OrderDetail orderDetail2 = OrderDetail.builder()
-                .coupon(coupon2)
-                .product(product2)
-                .price(2000L)
-                .quantity(2L)
-                .build();
-        List<OrderDetail> orderDetails = List.of(orderDetail1, orderDetail2);
+        Long numberOfCancellation = 2L;
 
         // when
-        RequestCancelDto.Response result = RequestCancelDto.Response.of(orderDetails, memberShip);
+        RequestCancelDto.Response result = RequestCancelDto.Response.of(orderDetail, numberOfCancellation, memberShip);
 
         // then
-        assertThat(result.getProductInfos()).hasSize(2)
+        assertThat(result.getProductInfo())
                 .extracting("quantity", "name", "price", "image")
-                .contains(
-                        tuple(2L, "빵빵이", 1000L, "빵빵이 이미지"),
-                        tuple(2L, "옥지얌", 2000L, "옥지얌 이미지")
-                );
+                .contains(2L, "빵빵이", 1000L, "빵빵이 이미지");
 
         assertThat(result.getCancelRefundInfo())
                 .extracting("deliveryFee", "refundFee", "discountPrice", "totalPrice")
-                .contains(3000L, 1000L, 3000L, 6000L);
-
+                .contains(BASIC.getDeliveryFee(), BASIC.getRefundFee(), 0L, 2000L);
     }
 
     @Test
-    @DisplayName("와우 맴버십인 경우 배송비 0원, 반품비 0원으로 Response로 변환할 수 있다.")
-    public void response_of_WOW() {
+    @DisplayName("Response 변환할 수 있다. (BASIC and Coupon)")
+    public void response_of_BASIC_and_Coupon() {
         // given
-        String memberShip = MembershipType.WOW.getText();
+        String memberShip = MembershipType.BASIC.getText();
 
-        Product product1 = Product.builder()
-                .price(1000L)
+        Product product = Product.builder()
                 .name("빵빵이")
                 .thumbImg("빵빵이 이미지")
                 .build();
-        Product product2 = Product.builder()
-                .price(2000L)
-                .name("옥지얌")
-                .thumbImg("옥지얌 이미지")
-                .build();
 
-        Coupon coupon1 = Coupon.builder()
+        Coupon coupon = Coupon.builder()
+                .product(product)
                 .price(1000L)
                 .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
+
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .coupon(coupon)
                 .build();
 
-        OrderDetail orderDetail1 = OrderDetail.builder()
-                .coupon(coupon1)
-                .product(product1)
+        OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
+                .memberCoupon(memberCoupon)
+                .product(product)
                 .price(1000L)
-                .quantity(2L)
+                .quantity(3L)
                 .build();
-        OrderDetail orderDetail2 = OrderDetail.builder()
-                .coupon(coupon2)
-                .product(product2)
-                .price(2000L)
-                .quantity(2L)
-                .build();
-        List<OrderDetail> orderDetails = List.of(orderDetail1, orderDetail2);
+
+        Long numberOfCancellation = 2L;
 
         // when
-        RequestCancelDto.Response result = RequestCancelDto.Response.of(orderDetails, memberShip);
+        RequestCancelDto.Response result = RequestCancelDto.Response.of(orderDetail, numberOfCancellation, memberShip);
 
         // then
-        assertThat(result.getProductInfos()).hasSize(2)
+        assertThat(result.getProductInfo())
                 .extracting("quantity", "name", "price", "image")
-                .contains(
-                        tuple(2L, "빵빵이", 1000L, "빵빵이 이미지"),
-                        tuple(2L, "옥지얌", 2000L, "옥지얌 이미지")
-                );
+                .contains(2L, "빵빵이", 1000L, "빵빵이 이미지");
 
         assertThat(result.getCancelRefundInfo())
                 .extracting("deliveryFee", "refundFee", "discountPrice", "totalPrice")
-                .contains(0L, 0L, 3000L, 6000L);
+                .contains(BASIC.getDeliveryFee(), BASIC.getRefundFee(), 1000L, 2000L);
+    }
+
+    @Test
+    @DisplayName("Response 변환할 수 있다. (WOW and NoCoupon)")
+    public void response_of_WOW_and_NoCoupon() {
+        // given
+        String memberShip = MembershipType.WOW.getText();
+
+        Product product = Product.builder()
+                .name("빵빵이")
+                .thumbImg("빵빵이 이미지")
+                .build();
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .product(product)
+                .reducedQuantity(0L)
+                .price(1000L)
+                .quantity(3L)
+                .build();
+
+        Long numberOfCancellation = 2L;
+
+        // when
+        RequestCancelDto.Response result = RequestCancelDto.Response.of(orderDetail, numberOfCancellation, memberShip);
+
+        // then
+        assertThat(result.getProductInfo())
+                .extracting("quantity", "name", "price", "image")
+                .contains(2L, "빵빵이", 1000L, "빵빵이 이미지");
+
+        assertThat(result.getCancelRefundInfo())
+                .extracting("deliveryFee", "refundFee", "discountPrice", "totalPrice")
+                .contains(WOW.getDeliveryFee(), WOW.getRefundFee(), 0L, 2000L);
+    }
+
+    @Test
+    @DisplayName("Response 변환할 수 있다. (WOW and Coupon)")
+    public void response_of_WOW_and_Coupon() {
+        // given
+        String memberShip = MembershipType.WOW.getText();
+
+        Product product = Product.builder()
+                .name("빵빵이")
+                .thumbImg("빵빵이 이미지")
+                .build();
+
+        Coupon coupon = Coupon.builder()
+                .product(product)
+                .price(1000L)
+                .build();
+
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .coupon(coupon)
+                .build();
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .memberCoupon(memberCoupon)
+                .reducedQuantity(0L)
+                .product(product)
+                .price(1000L)
+                .quantity(3L)
+                .build();
+
+        Long numberOfCancellation = 2L;
+
+        // when
+        RequestCancelDto.Response result = RequestCancelDto.Response.of(orderDetail, numberOfCancellation, memberShip);
+
+        // then
+        assertThat(result.getProductInfo())
+                .extracting("quantity", "name", "price", "image")
+                .contains(2L, "빵빵이", 1000L, "빵빵이 이미지");
+
+        assertThat(result.getCancelRefundInfo())
+                .extracting("deliveryFee", "refundFee", "discountPrice", "totalPrice")
+                .contains(WOW.getDeliveryFee(), WOW.getRefundFee(), 1000L, 2000L);
+    }
+
+    @Test
+    @DisplayName("상품 취소 수량이 주문 상세 수량보다 많을경우 에러를 던진다.")
+    public void response_of_Error() {
+        // given
+        String memberShip = MembershipType.WOW.getText();
+
+        Product product = Product.builder()
+                .name("빵빵이")
+                .thumbImg("빵빵이 이미지")
+                .build();
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .product(product)
+                .reducedQuantity(0L)
+                .price(1000L)
+                .quantity(3L)
+                .build();
+
+        Long numberOfCancellation = 4L;
+
+        // when // then
+        assertThatThrownBy(() -> RequestCancelDto.Response.of(orderDetail, numberOfCancellation, memberShip))
+                .isInstanceOf(CustomLogicException.class)
+                .hasMessage("수량이 초과 되었습니다.")
+                .satisfies(exception -> {
+                    CustomLogicException customLogicException = (CustomLogicException) exception;
+                    assertThat(customLogicException.getErrorCode()).isEqualTo(QUANTITY_EXCEEDED);
+                    assertThat(customLogicException.getHttpStatus()).isEqualTo(BAD_REQUEST);
+                });
     }
 
     @Test
     @DisplayName("주문 상세를 ProductInfo로 변환")
     public void productInfo_of() {
         // given
-        Product product1 = Product.builder()
-                .price(1000L)
+        Product product = Product.builder()
                 .name("빵빵이")
                 .thumbImg("빵빵이 이미지")
                 .build();
 
         OrderDetail orderDetail = OrderDetail.builder()
-                .product(product1)
-                .price(product1.getPrice())
-                .quantity(2L)
+                .reducedQuantity(0L)
+                .product(product)
+                .price(1000L)
+                .quantity(3L)
                 .build();
 
+        Long numberOfCancellation = 2L;
+
         // when
-        RequestCancelDto.ProductInfo result = RequestCancelDto.ProductInfo.of(orderDetail);
+        RequestCancelDto.ProductInfo result = RequestCancelDto.ProductInfo.of(orderDetail, numberOfCancellation);
 
         // then
         assertThat(result).extracting("quantity", "name", "price", "image")
@@ -148,71 +228,138 @@ class RequestCancelDtoTest {
     }
 
     @Test
-    @DisplayName("주문 상세 리스트와 멤버십이 주어지면 CancelRefundInfo를 반한다.(BASIC)")
-    public void CancelRefundInfo_of_BASIC() {
+    @DisplayName("주문 상세 리스트와 멤버십이 주어지면 CancelRefundInfo를 반환한다.(BASIC and NoCoupon)")
+    public void CancelRefundInfo_of_BASIC_and_NoCoupon() {
         // given
         String memberShip = MembershipType.BASIC.getText();
 
-        Coupon coupon1 = Coupon.builder()
+        OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
                 .price(1000L)
-                .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
+                .quantity(3L)
                 .build();
 
-        OrderDetail orderDetail1 = OrderDetail.builder()
-                .coupon(coupon1)
-                .price(1000L)
-                .quantity(2L)
-                .build();
-        OrderDetail orderDetail2 = OrderDetail.builder()
-                .coupon(coupon2)
-                .price(2000L)
-                .quantity(2L)
-                .build();
-        List<OrderDetail> orderDetails = List.of(orderDetail1, orderDetail2);
+        Long numberOfCancellation = 2L;
 
         // when
-        RequestCancelDto.CancelRefundInfo result = RequestCancelDto.CancelRefundInfo.of(orderDetails, memberShip);
+        RequestCancelDto.CancelRefundInfo result = RequestCancelDto.CancelRefundInfo.of(orderDetail, memberShip, numberOfCancellation);
 
         // then
         assertThat(result)
                 .extracting("deliveryFee", "refundFee", "discountPrice", "totalPrice")
-                .contains(3000L, 1000L, 3000L, 6000L);
+                .contains(BASIC.getDeliveryFee(), BASIC.getRefundFee(), 0L, 2000L);
     }
 
     @Test
-    @DisplayName("주문 상세 리스트와 멤버십이 주어지면 CancelRefundInfo를 반한다.(WOW)")
-    public void CancelRefundInfo_of_WOW() {
+    @DisplayName("주문 상세 리스트와 멤버십이 주어지면 CancelRefundInfo를 반한다.(BASIC and Coupon)")
+    public void CancelRefundInfo_of_BASIC_and_Coupon() {
         // given
-        String memberShip = MembershipType.WOW.getText();
+        String memberShip = MembershipType.BASIC.getText();
 
-        Coupon coupon1 = Coupon.builder()
+        Coupon coupon = Coupon.builder()
                 .price(1000L)
                 .build();
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
+
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .coupon(coupon)
                 .build();
 
-        OrderDetail orderDetail1 = OrderDetail.builder()
-                .coupon(coupon1)
+        OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
+                .memberCoupon(memberCoupon)
                 .price(1000L)
-                .quantity(2L)
+                .quantity(3L)
                 .build();
-        OrderDetail orderDetail2 = OrderDetail.builder()
-                .coupon(coupon2)
-                .price(2000L)
-                .quantity(2L)
-                .build();
-        List<OrderDetail> orderDetails = List.of(orderDetail1, orderDetail2);
+
+        Long numberOfCancellation = 2L;
 
         // when
-        RequestCancelDto.CancelRefundInfo result = RequestCancelDto.CancelRefundInfo.of(orderDetails, memberShip);
+        RequestCancelDto.CancelRefundInfo result = RequestCancelDto.CancelRefundInfo.of(orderDetail, memberShip, numberOfCancellation);
 
         // then
         assertThat(result)
                 .extracting("deliveryFee", "refundFee", "discountPrice", "totalPrice")
-                .contains(0L, 0L, 3000L, 6000L);
+                .contains(BASIC.getDeliveryFee(), BASIC.getRefundFee(), 1000L, 2000L);
+    }
+
+    @Test
+    @DisplayName("주문 상세 리스트와 멤버십이 주어지면 CancelRefundInfo를 반한다.(WOW and NoCoupon)")
+    public void CancelRefundInfo_of_WOW_and_NoCoupon() {
+        // given
+        String memberShip = MembershipType.WOW.getText();
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
+                .price(1000L)
+                .quantity(3L)
+                .build();
+
+        Long numberOfCancellation = 2L;
+
+        // when
+        RequestCancelDto.CancelRefundInfo result = RequestCancelDto.CancelRefundInfo.of(orderDetail, memberShip, numberOfCancellation);
+
+        // then
+        assertThat(result)
+                .extracting("deliveryFee", "refundFee", "discountPrice", "totalPrice")
+                .contains(WOW.getDeliveryFee(), WOW.getRefundFee(), 0L, 2000L);
+    }
+
+    @Test
+    @DisplayName("주문 상세 리스트와 멤버십이 주어지면 CancelRefundInfo를 반한다.(WOW and Coupon)")
+    public void CancelRefundInfo_of_WOW_and_Coupon() {
+        // given
+        String memberShip = MembershipType.WOW.getText();
+
+        Coupon coupon = Coupon.builder()
+                .price(1000L)
+                .build();
+
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .coupon(coupon)
+                .build();
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
+                .memberCoupon(memberCoupon)
+                .price(1000L)
+                .quantity(3L)
+                .build();
+
+        Long numberOfCancellation = 2L;
+
+        // when
+        RequestCancelDto.CancelRefundInfo result = RequestCancelDto.CancelRefundInfo.of(orderDetail, memberShip, numberOfCancellation);
+
+        // then
+        assertThat(result)
+                .extracting("deliveryFee", "refundFee", "discountPrice", "totalPrice")
+                .contains(WOW.getDeliveryFee(), WOW.getRefundFee(), 1000L, 2000L);
+    }
+
+    @Test
+    @DisplayName("상품 취소 수량이 주문 상세 수량보다 많을경우 에러를 던진다.")
+    public void CancelRefundInfo_of_Error() {
+        // given
+        String memberShip = MembershipType.WOW.getText();
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(0L)
+                .quantity(3L)
+                .build();
+
+        Long numberOfCancellation = 4L;
+
+        // when // then
+        assertThatThrownBy(() -> RequestCancelDto.CancelRefundInfo.of(orderDetail, memberShip, numberOfCancellation))
+                .isInstanceOf(CustomLogicException.class)
+                .hasMessage("수량이 초과 되었습니다.")
+                .satisfies(exception -> {
+                    CustomLogicException customLogicException = (CustomLogicException) exception;
+                    assertThat(customLogicException.getErrorCode()).isEqualTo(QUANTITY_EXCEEDED);
+                    assertThat(customLogicException.getHttpStatus()).isEqualTo(BAD_REQUEST);
+                });
+
     }
 
 }

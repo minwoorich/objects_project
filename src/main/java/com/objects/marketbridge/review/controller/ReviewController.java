@@ -2,6 +2,7 @@ package com.objects.marketbridge.review.controller;
 
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
+import com.objects.marketbridge.common.security.annotation.UserAuthorize;
 import com.objects.marketbridge.review.dto.*;
 import com.objects.marketbridge.review.service.*;
 import jakarta.validation.Valid;
@@ -32,7 +33,7 @@ public class ReviewController {
 
 
 
-    //리뷰아이디로 리뷰 단건 조회
+    //리뷰아이디로 리뷰상세 단건 조회
     @GetMapping("/review/{reviewId}")
     public ApiResponse<ReviewAllValuesDto> getReview
         (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
@@ -42,7 +43,7 @@ public class ReviewController {
 
 
 
-    //상품별 리뷰 리스트 조회
+    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 likes 많은순 내림차순 정렬)
     //http://localhost:8080/product/1/reviews?page=0&sortBy=createdAt
     //http://localhost:8080/product/1/reviews?page=0&sortBy=likes
     @GetMapping("/product/{productId}/reviews")
@@ -51,42 +52,25 @@ public class ReviewController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy) {
 
-//        Pageable pageRequest = PageRequest.of(page, 5, Sort.by(sortBy).descending());
-        Pageable pageRequest;
-//        Page<ReviewWholeInfoDto> response = reviewService.getProductReviews(productId, pageRequest, sortBy);
-        Page<ReviewWholeInfoDto> response;
-        if (sortBy.equals("likes")) {
-            pageRequest = PageRequest.of(page, 5, Sort.by("likes").descending());
-            response = reviewService.getProductReviewsByLikes(productId, pageRequest, sortBy);
-        } else {
-            pageRequest = PageRequest.of(page, 5, Sort.by(sortBy).descending());
-            response = reviewService.getProductReviewsByCreatedAt(productId, pageRequest, sortBy);
-        }
-
+        Pageable pageRequest = PageRequest.of(page, 5, Sort.by(sortBy).descending());
+        Page<ReviewWholeInfoDto> response = reviewService.getProductReviews(productId, pageRequest, sortBy);
         return ApiResponse.ok(response);
     }
 
 
 
-    //회원별 리뷰 리스트 조회
+    //회원별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 likes 많은순 내림차순 정렬)
     //http://localhost:8080/member/1/reviews?page=0&sortBy=createdAt
     //http://localhost:8080/member/1/reviews?page=0&sortBy=likes
     @GetMapping("/member/{memberId}/reviews")
+    @UserAuthorize
     public ApiResponse<Page<ReviewWholeInfoDto>> getMemberReviews(
-            @PathVariable("memberId") @AuthMemberId Long memberId,
+            @PathVariable("memberId") Long memberId,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy) {
 
-        Pageable pageRequest;
-        Page<ReviewWholeInfoDto> response;
-        if (sortBy.equals("likes")) {
-            pageRequest = PageRequest.of(page, 5, Sort.by("likes").descending());
-            response = reviewService.getMemberReviewsByLikes(memberId, pageRequest, sortBy);
-        } else {
-            pageRequest = PageRequest.of(page, 5, Sort.by(sortBy).descending());
-            response = reviewService.getMemberReviewsByCreatedAt(memberId, pageRequest, sortBy);
-        }
-
+        Pageable pageRequest = PageRequest.of(page, 5, Sort.by(sortBy).descending());
+        Page<ReviewWholeInfoDto> response = reviewService.getMemberReviews(memberId, pageRequest, sortBy);
         return ApiResponse.ok(response);
     }
 
@@ -102,10 +86,11 @@ public class ReviewController {
 
 
 
-    //멤버별 리뷰 총갯수 조회
+    //회원별 리뷰 총갯수 조회
     @GetMapping("/member/{memberId}/reviews-count")
+    @UserAuthorize
     public ApiResponse<ReviewsCountDto> getMemberReviewsCount
-        (@PathVariable("memberId") @AuthMemberId Long memberId){
+        (@PathVariable("memberId") Long memberId){
         ReviewsCountDto reviewsCountDto = reviewService.getMemberReviewsCount(memberId);
         return ApiResponse.ok(reviewsCountDto);
     }

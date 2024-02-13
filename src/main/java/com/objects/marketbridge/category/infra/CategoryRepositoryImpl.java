@@ -10,16 +10,54 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class CategoryRepositoryImpl implements CategoryRepository {
 
     private final CategoryJpaRepository categoryJpaRepository;
+
+//    @Override
+//    public Category findById(Long id) {
+//        return categoryJpaRepository.findById(id)
+//                .orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
+//    }
+//
+//    @Override
+//    public void save(Category category) {
+//        categoryJpaRepository.save(category);
+//    }
+//
+//    @Override
+//    public void saveAll(List<Category> categories) {
+//        categoryJpaRepository.saveAll(categories);
+//    }
+//
+//    @Override
+//    public Category findByName(String name) {
+//        return categoryJpaRepository.findByName(name).orElseGet(() -> Category.builder().name("EMPTY").build());
+//    }
+//
+//    @Override
+//    public List<Category> findAllByLevelAndParentIdIsNull(Long level) {
+//        return categoryJpaRepository.findAllByLevelAndParentIdIsNull(level).orElseGet(ArrayList::new);
+//    }
+//
+//    @Override
+//    public List<Category> findAllByLevelAndParentId(Long level, Long parentId) {
+//        // null일 때 빈 배열 반환
+//        return categoryJpaRepository.findAllByLevelAndParentId(level, parentId).orElseGet(ArrayList::new);
+//    }
+//
+//    @Override
+//    public List<Category> findAllByParentId(Long parentId) {
+//        return categoryJpaRepository.findAllByParentId(parentId).orElseGet(ArrayList::new);
+//    }
+
     @Override
     public Category findById(Long id) {
-        return categoryJpaRepository.findById(id)
-                .orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
+        return categoryJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -34,23 +72,21 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public Category findByName(String name) {
-        return categoryJpaRepository.findByName(name).orElseGet(() -> Category.builder().name("EMPTY").build());
+        return categoryJpaRepository.findByName(name);
     }
 
     @Override
     public List<Category> findAllByLevelAndParentIdIsNull(Long level) {
-        return categoryJpaRepository.findAllByLevelAndParentIdIsNull(level).orElseGet(ArrayList::new);
+        return categoryJpaRepository.findAllByLevelAndParentIdIsNull(level);
     }
 
     @Override
     public List<Category> findAllByLevelAndParentId(Long level, Long parentId) {
-        // null일 때 빈 배열 반환
-        return categoryJpaRepository.findAllByLevelAndParentId(level, parentId).orElseGet(ArrayList::new);
+        return categoryJpaRepository.findAllByLevelAndParentId(level, parentId);
     }
 
     @Override
     public List<Category> findAllByParentId(Long parentId) {
-        return categoryJpaRepository.findAllByParentId(parentId).orElseGet(ArrayList::new);
+        return findAllByParentId(parentId);
     }
-
 }

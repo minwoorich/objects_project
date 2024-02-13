@@ -19,4 +19,8 @@ public interface OrderDetailQueryRepository {
 
     List<OrderDetail> findByOrderNoAndProduct_IdIn(String orderNo, List<Long> productIds);
 
+    List<OrderDetail> findByIdIn(List<Long> orderDetailIds);
+
+    List<OrderDetail> findByOrderNoAndOrderDetail_In(String orderNo, List<Long> orderDetailIds);
+
 }

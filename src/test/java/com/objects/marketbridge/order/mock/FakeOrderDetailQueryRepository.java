@@ -1,15 +1,19 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
+import com.objects.marketbridge.product.domain.Product;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
 
 public class FakeOrderDetailQueryRepository extends BaseFakeOrderDetailRepository implements OrderDetailQueryRepository {
     @Override
     public OrderDetail findById(Long id) {
-        return null;
+        return getInstance().getData().stream()
+                .filter(od -> od.getId().equals(id))
+                .findAny()
+                .orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
     }
 
     @Override
@@ -37,6 +41,21 @@ public class FakeOrderDetailQueryRepository extends BaseFakeOrderDetailRepositor
         return getInstance().getData().stream()
                 .filter(od -> od.getOrder().getOrderNo().equals(orderNo)
                         && productIds.contains(od.getProduct().getId()))
+                .toList();
+    }
+
+    @Override
+    public List<OrderDetail> findByIdIn(List<Long> orderDetailIds) {
+        return getInstance().getData().stream()
+                .filter(orderDetail -> orderDetailIds.contains(orderDetail.getId()))
+                .toList();
+    }
+
+    @Override
+    public List<OrderDetail> findByOrderNoAndOrderDetail_In(String orderNo, List<Long> orderDetailIds) {
+        return getInstance().getData().stream()
+                .filter(od -> od.getOrder().getOrderNo().equals(orderNo)
+                        && orderDetailIds.contains(od.getId()))
                 .toList();
     }
 }

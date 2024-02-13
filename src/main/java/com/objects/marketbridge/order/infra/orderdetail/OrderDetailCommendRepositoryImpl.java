@@ -31,13 +31,13 @@ public class OrderDetailCommendRepositoryImpl implements OrderDetailCommendRepos
     }
 
     @Override
-    public void addReason(Long orderId, String reason) {
-        orderDetailJpaRepository.addReason(orderId, reason);
+    public void save(OrderDetail orderDetail) {
+        orderDetailJpaRepository.save(orderDetail);
     }
 
     @Override
-    public void save(OrderDetail orderDetail) {
-        orderDetailJpaRepository.save(orderDetail);
+    public OrderDetail saveAndReturnEntity(OrderDetail orderDetail) {
+        return orderDetailJpaRepository.save(orderDetail);
     }
 
     @Override

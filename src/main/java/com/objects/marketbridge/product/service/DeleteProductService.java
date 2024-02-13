@@ -3,7 +3,7 @@ package com.objects.marketbridge.product.service;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.domain.ProductImage;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
-import com.objects.marketbridge.product.service.port.ImageRepository;
+import com.objects.marketbridge.image.infra.ImageRepository;
 import com.objects.marketbridge.product.service.port.ProductImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

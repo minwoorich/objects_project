@@ -14,8 +14,6 @@ public interface ReviewRepository {
 
     void delete(Review review);
 
-//    List<Review> findAllByProductId(Long productId);
-
     Page<Review> findAllByProductId(Long productId, Pageable pageable);
 
     Page<Review> findAllByMemberId(Long memberId, Pageable pageable);

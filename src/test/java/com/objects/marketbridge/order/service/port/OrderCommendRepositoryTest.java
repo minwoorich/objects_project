@@ -81,26 +81,4 @@ class OrderCommendRepositoryTest {
         assertThat(savedOrder.getId()).isEqualTo(foundOrder.get().getId());
     }
 
-    @Test
-    @DisplayName("주문 아이디로 주문, 주문상세, 상품을 한번에 조회 할 수 있다.")
-    @Rollback(value = false)
-    public void findOrderWithDetailsAndProduct() {
-        // given
-        Order order = Order.builder().build();
-        Product product = Product.builder().build();
-        OrderDetail orderDetail = OrderDetail.builder()
-                .order(order)
-                .product(product)
-                .build();
-        order.addOrderDetail(orderDetail);
-        productRepository.save(product);
-        orderCommendRepository.save(order);
-
-        // when
-//        Order findOrder = orderQueryRepository.findOrderWithDetailsAndProduct(order.getId()).get();
-
-        // then
-//        assertThat(findOrder.getId()).isEqualTo(order.getId());
-    }
-
 }

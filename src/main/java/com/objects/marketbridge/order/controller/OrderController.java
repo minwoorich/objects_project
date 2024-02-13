@@ -1,17 +1,16 @@
 package com.objects.marketbridge.order.controller;
 
 import com.objects.marketbridge.common.config.KakaoPayConfig;
-import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
-import com.objects.marketbridge.common.security.annotation.UserAuthorize;
-import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
+import com.objects.marketbridge.common.security.annotation.UserAuthorize;
+import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
-import com.objects.marketbridge.order.controller.dto.GetOrderHttp;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderDetailHttp;
+import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.service.CreateCheckoutService;
 import com.objects.marketbridge.order.service.CreateOrderService;
 import com.objects.marketbridge.order.service.GetOrderService;
@@ -19,10 +18,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static com.objects.marketbridge.common.config.KakaoPayConfig.ONE_TIME_CID;
@@ -74,30 +73,31 @@ public class OrderController {
         return request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
     }
 
-    // TODO : 전체 주문 목록 조회 컨트롤러 완성해야함
-    @GetMapping("/orders/list")
+    @GetMapping("/orders")
     public ApiResponse<GetOrderHttp.Response> getOrders(
             @AuthMemberId Long memberId,
-            GetOrderHttp.Condition condition,
-            Pageable pageable
-    ) {
-        condition.setMemberId(memberId);
-        GetOrderHttp.Response response = getOrderService.find(pageable, condition);
-        return null;
+            @RequestParam(name = "year") String year,
+            @RequestParam(name = "keyword") String keyword,
+            @PageableDefault(value = 5, sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
+
+        GetOrderHttp.Response response = getOrderService.search(pageable, createCondition(year, keyword, memberId));
+
+        return ApiResponse.ok(response);
     }
 
-    @GetMapping("/test")
-    public ApiResponse<String> test(@RequestParam(name = "input") String input) throws CustomLogicException{
-        if (input.equals("bad")) {
-            throw CustomLogicException.builder()
-                    .timestamp(LocalDateTime.now())
-                    .errorCode(ErrorCode.BALANCE_INSUFFICIENT)
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .message("치명적인 예외가 발생했습니다")
-                    .build();
-        }
-
-        return ApiResponse.ok("good");
+    private GetOrderHttp.Condition createCondition(String year, String keyword, Long memberId) {
+        return GetOrderHttp.Condition.builder()
+                .keyword(keyword)
+                .year(year)
+                .memberId(memberId)
+                .build();
     }
 
+    @UserAuthorize
+    @GetMapping("/orders/{orderNo}")
+    public ApiResponse<GetOrderDetailHttp.Response> getOrderDetails(
+            @PathVariable(name = "orderNo") String orderNo){
+        GetOrderDetailHttp.Response orderDetail = getOrderService.getOrderDetails(orderNo);
+        return ApiResponse.ok(orderDetail);
+    }
 }
