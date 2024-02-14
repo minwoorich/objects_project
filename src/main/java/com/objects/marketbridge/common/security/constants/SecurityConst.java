@@ -12,7 +12,7 @@ public class SecurityConst {
 
     public static final String AUTH = "auth";
 
-    public static final String SECRET_KEY = "${spring.jwt.secret}";
+    public static final String SECRET_KEY = "${jwt.secret}";
 
     public static final String BEARER = "bearer";
 
