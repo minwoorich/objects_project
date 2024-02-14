@@ -24,7 +24,7 @@ jobs:
           cat << EOF >> ./application.yml
           
           ${{secrets.HOST}}
-          ${{secrets.JWT_SECRET}}t
+          ${{secrets.JWT_SECRET}}
           EOF
           cat ./application.yml
         shell: bash
