@@ -12,7 +12,7 @@ endif::[]
 :sectlinks:
 :hardbreaks:
 Doc Writer <Team Objects Backend>
-v1.0, 2024-01-25
+v0.1, 2024-02-14
 
 == *회원*
 
@@ -56,7 +56,7 @@ include::api/member/reissue.adoc[]
 {empty}
 {empty}
 
-== *멤버십*
+=== *멤버십*
 include::api/member/kakaoPaySubsReady.adoc[]
 {empty}
 {empty}
@@ -68,6 +68,8 @@ include::api/member/kakaoPaySubsApproved.adoc[]
 include::api/member/kakaoPaySubsSubscribtion.adoc[]
 {empty}
 {empty}
+{empty}
+{empty}
 
 == *상품*
 {empty}
@@ -75,7 +77,8 @@ include::api/member/kakaoPaySubsSubscribtion.adoc[]
 {empty}
 {empty}
 
-== *주문/결제*
+== *주문*
+=== *주문서/결제*
 include::api/order/ordercheckout.adoc[]
 {empty}
 {empty}
@@ -100,14 +103,14 @@ include::api/order/orderdetaillist.adoc[]
 {empty}
 {empty}
 
-== *반품/취소*
+=== *반품/취소*
 include::api/order/ordercancelrequest.adoc[]
 {empty}
 {empty}
 
-include::api/order/ordercancelreturn.adoc[]
-{empty}
-{empty}
+// include::api/order/ordercancelreturn.adoc[]
+// {empty}
+// {empty}
 
 include::api/order/ordercanceldetail.adoc[]
 {empty}
@@ -132,7 +135,3 @@ include::api/order/orderconfirmreturn.adoc[]
 include::api/order/ordercancelreturnlist.adoc[]
 {empty}
 {empty}
-
-
-
-

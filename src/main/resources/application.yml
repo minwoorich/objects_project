@@ -6,6 +6,49 @@ spring:
 spring:
   config:
     activate:
+      on-profile: dev
+
+  sql:
+    init:
+      platform: mysql # 이거 없으면 mysql 인식 못함
+
+  jwt: # CLI 명령어 - openssl rand -base64 32 로 생성된 값
+    secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/MarketBridge
+    username: objects
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      show-sql: true
+      properties:
+        hibernate:
+          format_sql: true
+          default_batch_fetch_size: 100
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+logging:
+  level:
+    org.hibernate.sql: debug
+
+payment:
+  kakao:
+    secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
+
+host: "http://146.56.112.155:8080"
+
+---
+
+spring:
+  config:
+    activate:
       on-profile: local
 
   sql:

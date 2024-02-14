@@ -3,12 +3,15 @@ package com.objects.marketbridge.common.security.service;
 import com.objects.marketbridge.common.security.constants.SecurityConst;
 import com.objects.marketbridge.common.security.constants.SecurityErrConst;
 import com.objects.marketbridge.common.security.domain.CustomUserDetails;
+import com.objects.marketbridge.common.security.domain.TokenType;
 import com.objects.marketbridge.common.security.dto.JwtTokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +24,10 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.objects.marketbridge.common.security.constants.SecurityConst.*;
+import static com.objects.marketbridge.common.security.domain.TokenType.AccessToken;
+import static com.objects.marketbridge.common.security.domain.TokenType.RefreshToken;
+
 /**
  * Spring security와 JWT 토큰을 사용하여 인증과 권한 부여를 처리하는 클래스
  */
@@ -29,18 +36,17 @@ import java.util.stream.Collectors;
 public class JwtTokenProviderImpl implements JwtTokenProvider {
 
     private final Key KEY;
-//    private final JwtTokenService jwtTokenService;
+    private final JwtTokenService jwtTokenService;
 
-    public JwtTokenProviderImpl(@Value(SecurityConst.SECRET_KEY) String secretKey
-//                            , @Autowired JwtTokenService jwtTokenService
+    public JwtTokenProviderImpl(@Value(SecurityConst.SECRET_KEY) String secretKey, @Autowired JwtTokenService jwtTokenService
     ) {
+        this.jwtTokenService = jwtTokenService;
         // base64 문자열을 byte 배열로 변환
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 
         // jjwt라이브러리의 Keys 클래스는 토큰 서명 및 검증에 필요한 키를 생성하는 다양한 메서드를 제공함.
         // hmacShaKeyFor 메서드는 HMAC SHA-256키를 생성 함.
         this.KEY = Keys.hmacShaKeyFor(keyBytes);
-//        this.jwtTokenService = jwtTokenService;
     }
 
     /**
@@ -51,10 +57,10 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
         Long userId = principal.getId();
         String role = getRole(principal.getAuthorities());
 
-        String accessToken = issueToken(userId, role, SecurityConst.ACCESS_TOKEN_EXPIRE_TIME);
-        String refreshToken = issueToken(userId, role, SecurityConst.REFRESH_TOKEN_EXPIRE_TIME);
+        String accessToken = issueToken(userId, role, ACCESS_TOKEN_EXPIRE_TIME);
+        String refreshToken = issueToken(userId, role, REFRESH_TOKEN_EXPIRE_TIME);
 
-//        saveTokenToRedis(userId, accessToken, refreshToken);
+        saveTokenToRedis(userId, accessToken, refreshToken);
 
         return createJwtTokenDto(accessToken, refreshToken);
     }
@@ -152,8 +158,8 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
      */
     @Override
     public void deleteToken(Long userId) {
-//        jwtTokenService.deleteToken(userId, AccessToken);
-//        jwtTokenService.deleteToken(userId, RefreshToken);
+        jwtTokenService.deleteToken(userId, AccessToken);
+        jwtTokenService.deleteToken(userId, RefreshToken);
     }
 
     /**
@@ -162,15 +168,15 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
     @Override
     public boolean checkTokenRegistration(String uri, String token, Authentication authentication) {
 
-//        Long userId = getCustomUserDetails(authentication).getId();
-//        TokenType tokenType = uri.equals(RE_ISSUE_URI) ? RefreshToken : AccessToken;
-//
-//        boolean isExists = jwtTokenService.isExistToken(userId, tokenType, token);;
-//
-//        if (!isExists)  {
-//            deleteToken(userId);
-//            return false;
-//        }
+        Long userId = getCustomUserDetails(authentication).getId();
+        TokenType tokenType = uri.equals(RE_ISSUE_URI) ? RefreshToken : AccessToken;
+
+        boolean isExists = jwtTokenService.isExistToken(userId, tokenType, token);;
+
+        if (!isExists)  {
+            deleteToken(userId);
+            return false;
+        }
 
         return true;
     }
@@ -227,8 +233,8 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
      * 레디스에 토큰 저장
      */
     private void saveTokenToRedis(Long userId, String accessToken, String refreshToken) {
-//        jwtTokenService.saveToken(userId, AccessToken, accessToken, ACCESS_TOKEN_EXPIRE_TIME);
-//        jwtTokenService.saveToken(userId, RefreshToken, refreshToken, REFRESH_TOKEN_EXPIRE_TIME);
+        jwtTokenService.saveToken(userId, AccessToken, accessToken, ACCESS_TOKEN_EXPIRE_TIME);
+        jwtTokenService.saveToken(userId, RefreshToken, refreshToken, REFRESH_TOKEN_EXPIRE_TIME);
     }
 
 }
