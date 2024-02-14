@@ -22,8 +22,9 @@ jobs:
         run: |
           cd ./src/main/resources
           cat << EOF >> ./application.yml
+          
           ${{secrets.HOST}}
-          ${{secrets.JWT_SECRET}}
+          ${{secrets.JWT_SECRET}}t
           EOF
           cat ./application.yml
         shell: bash
@@ -41,7 +42,7 @@ jobs:
           docker push app
 
       - name: execute remote ssh & deploy server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@mastert
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}

@@ -105,10 +105,6 @@ payment:
 
 host: "http://localhost:8080/"
 
-jwt:
-  # CLI 명령어 - openssl rand -base64 64 로 생성된 값
-  secret: fMRb9kle/ImDQ7wB8+XPnuVH15M6xp60jKS7/mF7dNMFEvt9kNe4WioJfsHT6J6F4bynR8rqAR2Z8zYboQSG+A==
-
 ---
 
 spring:
