@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: dev
+    default: local
 
 ---
 
@@ -50,7 +50,7 @@ payment:
   kakao:
     secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
 
-host: "http://localhost:8080"
+host: "http://localhost:8080/"
 
 jwt:
   # CLI 명령어 - openssl rand -base64 64 로 생성된 값
@@ -81,8 +81,6 @@ spring:
 
   jpa:
     show-sql: true
-    # (2.5~) Hibernate 초기화 이후 data-mysql.sql 실행
-    # 이게 없으면 data-mysql.sql 스크립트가 수행 안 되고 에러 발생합니당.
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
@@ -104,6 +102,9 @@ payment:
     secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
 
 host: "http://localhost:8080/"
+
+jwt:
+  secret: fMRb9kle/ImDQ7wB8+XPnuVH15M6xp60jKS7/mF7dNMFEvt9kNe4WioJfsHT6J6F4bynR8rqAR2Z8zYboQSG+A==
 
 ---
 
