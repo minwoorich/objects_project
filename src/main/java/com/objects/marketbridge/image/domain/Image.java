@@ -17,14 +17,10 @@ public class Image extends BaseEntity {
     @Column(name = "image_id")
     private Long id;
 
-    //String으로 할것. 예시 : ImageType.ITEM_IMG.toString()
-    private String type;
-
     private String url;
 
     @Builder
-    private Image(String type, String url) {
-        this.type = type;
+    private Image(String url) {
         this.url = url;
     }
 }

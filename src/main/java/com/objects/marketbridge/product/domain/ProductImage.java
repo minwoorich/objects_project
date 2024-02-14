@@ -26,6 +26,9 @@ public class ProductImage extends BaseEntity {
     @JoinColumn(name = "image_id")
     private Image image;
 
+    //String으로 할것. 예시 : ImageType.ITEM_IMG.toString()
+    private String type;
+
     private Long seqNo;
 
     @Builder

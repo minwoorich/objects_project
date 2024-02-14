@@ -29,22 +29,31 @@ public class OrderCancelReturn extends BaseEntity {
 
     private Long refundAmount;
 
+    private String previousStateCode;
+
     @Builder
-    private OrderCancelReturn(OrderDetail orderDetail, String statusCode, Long quantity, String reason, Long refundAmount) {
+    public OrderCancelReturn(OrderDetail orderDetail, String statusCode, Long quantity, String reason, Long refundAmount, String previousStateCode) {
         this.orderDetail = orderDetail;
         this.statusCode = statusCode;
         this.quantity = quantity;
         this.reason = reason;
         this.refundAmount = refundAmount;
+        this.previousStateCode = previousStateCode;
     }
 
-    public static OrderCancelReturn create(OrderDetail orderDetail, String statusCode, String reason) {
+    public static OrderCancelReturn create(OrderDetail orderDetail, CancelReturnStatusCode statusInfo, String reason) {
         return OrderCancelReturn.builder()
                 .orderDetail(orderDetail)
                 .quantity(orderDetail.getReducedQuantity())
                 .reason(reason)
-                .statusCode(statusCode)
+                .statusCode(statusInfo.getStatusCode())
                 .refundAmount(Long.valueOf(orderDetail.cancelAmount()))
+                .previousStateCode(statusInfo.getPreviousStatusCode())
                 .build();
+    }
+
+    public void withdraw() {
+        this.statusCode = StatusCodeType.RETURN_CANCEL.getCode();
+        orderDetail.withdraw(quantity, previousStateCode);
     }
 }

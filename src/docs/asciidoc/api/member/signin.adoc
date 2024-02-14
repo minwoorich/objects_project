@@ -1,6 +1,6 @@
 ==== *로그 인*
 
-image:image/signin.png[]
+image:../image/signin.png[]
 
 .*HTTP Request*
 include::{snippets}/auth-sign-in/http-request.adoc[]

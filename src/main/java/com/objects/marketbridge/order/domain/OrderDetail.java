@@ -82,6 +82,14 @@ public class OrderDetail extends BaseEntity {
     }
 
     // 비즈니스 로직
+    public void increaseReducedQuantity(Long reducedQuantity) {
+        this.reducedQuantity += reducedQuantity;
+    }
+
+    public void decreaseReducedQuantity(Long reducedQuantity) {
+        this.reducedQuantity -= reducedQuantity;
+    }
+
     public void changeStatusCode(String statusCode) {
         this.statusCode = statusCode;
     }
@@ -117,7 +125,7 @@ public class OrderDetail extends BaseEntity {
                 .build();
     }
 
-    public String cancel(Long numberOfCancellations, DateTimeHolder dateTimeHolder) {
+    public CancelReturnStatusCode cancel(Long numberOfCancellations, DateTimeHolder dateTimeHolder) {
         // TODO 정책 정해야 함
         if (impossibleCancel())
             throw CustomLogicException.createBadRequestError(NON_CANCELLABLE_PRODUCT, dateTimeHolder);
@@ -125,11 +133,11 @@ public class OrderDetail extends BaseEntity {
         return changeStatus(numberOfCancellations, dateTimeHolder, ORDER_CANCEL.getCode());
     }
 
-    public void returns(Long numberOfReturns, DateTimeHolder dateTimeHolder) {
+    public CancelReturnStatusCode returns(Long numberOfReturns, DateTimeHolder dateTimeHolder) {
         if (impossibleReturn())
             throw CustomLogicException.createBadRequestError(NON_RETURNABLE_PRODUCT, dateTimeHolder);
 
-        changeStatus(numberOfReturns, dateTimeHolder, RETURN_INIT.getCode());
+        return changeStatus(numberOfReturns, dateTimeHolder, RETURN_INIT.getCode());
     }
 
     public Integer totalAmount(Long quantity, LocalDateTime dateTime) {
@@ -164,12 +172,14 @@ public class OrderDetail extends BaseEntity {
         this.product = product;
     }
 
-    private String changeStatus(Long numberOfReduce, DateTimeHolder dateTimeHolder, String statusCode) {
+    private CancelReturnStatusCode changeStatus(Long numberOfReduce, DateTimeHolder dateTimeHolder, String statusCode) {
         validateQuantity(numberOfReduce, dateTimeHolder);
 
-        updateProductAndStatus(numberOfReduce, statusCode);
+        String previousStatusCode = updateProductAndStatus(numberOfReduce, statusCode);
 
-        return determineReturnOrCancelStatus(statusCode);
+        String cancelReturnStatusCode = determineReturnOrCancelStatus(statusCode);
+
+        return new CancelReturnStatusCode(previousStatusCode, cancelReturnStatusCode);
     }
 
     private void validateQuantity(Long numberOfReduce, DateTimeHolder dateTimeHolder) {
@@ -178,21 +188,25 @@ public class OrderDetail extends BaseEntity {
         }
     }
 
-    private void updateProductAndStatus(Long numberOfReduce, String statusCode) {
+    private String updateProductAndStatus(Long numberOfReduce, String statusCode) {
+        String status = this.statusCode;
+
         this.product.increase(numberOfReduce);
         this.statusCode = statusCode;
         this.reducedQuantity += numberOfReduce;
         returnMemberCoupon();
+
+        return status;
     }
 
     private String determineReturnOrCancelStatus(String statusCode) {
-        boolean isOrderCancel = statusCode.equals(ORDER_CANCEL.getCode());
-        boolean isWholeOrder = Objects.equals(quantity, reducedQuantity);
+        boolean isCancel = statusCode.equals(ORDER_CANCEL.getCode());
+        boolean isWhole = Objects.equals(quantity, reducedQuantity);
 
-        if (isWholeOrder) {
-            return isOrderCancel ? ORDER_CANCEL.getCode() : ORDER_RETURN.getCode();
+        if (isWhole) {
+            return isCancel ? ORDER_CANCEL.getCode() : ORDER_RETURN.getCode();
         } else {
-            return isOrderCancel ? ORDER_PARTIAL_CANCEL.getCode() : ORDER_PARTIAL_RETURN.getCode();
+            return isCancel ? ORDER_PARTIAL_CANCEL.getCode() : ORDER_PARTIAL_RETURN.getCode();
         }
     }
 
@@ -213,4 +227,10 @@ public class OrderDetail extends BaseEntity {
         return !Objects.equals(DELIVERY_COMPLETED.getCode(), this.statusCode);
     }
 
+    public void withdraw(Long quantity, String previousStateCode) {
+        product.decrease(quantity);
+        memberCoupon.changeUsageInfo(cancelledAt);
+        reducedQuantity -= quantity;
+        statusCode = previousStateCode;
+    }
 }

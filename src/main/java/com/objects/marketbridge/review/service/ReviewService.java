@@ -74,7 +74,7 @@ public class ReviewService {
         for (int i = 0; i < reviewImgUrls.size(); i++) {
             String reviewImgUrl = reviewImgUrls.get(i);
             Image image = Image.builder()
-                    .type(ImageType.REVIEW_IMG.toString())
+//                    .type(ImageType.REVIEW_IMG.toString())
                     .url(reviewImgUrl)
                     .build();
             ReviewImage reviewImage = ReviewImage.builder()
@@ -235,7 +235,7 @@ public class ReviewService {
         for (int i = 0; i < updatedReviewImgUrls.size(); i++) {
             String reviewImgUrl = updatedReviewImgUrls.get(i);
             Image image = Image.builder()
-                    .type(ImageType.REVIEW_IMG.toString())
+//                    .type(ImageType.REVIEW_IMG.toString())
                     .url(reviewImgUrl)
                     .build();
             ReviewImage reviewImage = ReviewImage.builder()

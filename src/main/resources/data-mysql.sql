@@ -155,18 +155,18 @@ VALUES
     ('OptionCategory9', NOW(), NOW(), NULL),
     ('OptionCategory10', NOW(), NOW(), NULL);
 
-INSERT INTO image (type, url, created_at, updated_at, deleted_at)
+INSERT INTO image (url, created_at, updated_at, deleted_at)
 VALUES
-    ('Type1', 'URL1', NOW(), NOW(), NULL),
-    ('Type2', 'URL2', NOW(), NOW(), NULL),
-    ('Type3', 'URL3', NOW(), NOW(), NULL),
-    ('Type4', 'URL4', NOW(), NOW(), NULL),
-    ('Type5', 'URL5', NOW(), NOW(), NULL),
-    ('Type6', 'URL6', NOW(), NOW(), NULL),
-    ('Type7', 'URL7', NOW(), NOW(), NULL),
-    ('Type8', 'URL8', NOW(), NOW(), NULL),
-    ('Type9', 'URL9', NOW(), NOW(), NULL),
-    ('Type10', 'URL10', NOW(), NOW(), NULL);
+    ('URL1', NOW(), NOW(), NULL),
+    ('URL2', NOW(), NOW(), NULL),
+    ('URL3', NOW(), NOW(), NULL),
+    ('URL4', NOW(), NOW(), NULL),
+    ('URL5', NOW(), NOW(), NULL),
+    ('URL6', NOW(), NOW(), NULL),
+    ('URL7', NOW(), NOW(), NULL),
+    ('URL8', NOW(), NOW(), NULL),
+    ('URL9', NOW(), NOW(), NULL),
+    ('URL10', NOW(), NOW(), NULL);
 
 INSERT INTO product_image (product_id, image_id, seq_no, created_at, updated_at, deleted_at)
 VALUES

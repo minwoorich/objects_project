@@ -1,10 +1,10 @@
 ==== *주문 생성*
 
 .*진입점*
-image:image/order/create/req_order_create.png[]
+image:../image/order/create/req_order_create.png[]
 
 .*반환*
-image:image/order/create/resp_order_create.png[]
+image:../image/order/create/resp_order_create.png[]
 
 .*HTTP Request*
 include::{snippets}/order-create/http-request.adoc[]
