@@ -24,4 +24,9 @@ public class CartCommendRepositoryImpl implements CartCommendRepository {
     public void saveAll(List<Cart> carts) {
         cartJpaRepository.saveAll(carts);
     }
+
+    @Override
+    public void deleteAllInBatch() {
+        cartJpaRepository.deleteAllInBatch();
+    }
 }

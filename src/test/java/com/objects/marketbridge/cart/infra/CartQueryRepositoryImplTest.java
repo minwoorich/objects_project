@@ -8,6 +8,7 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,13 @@ class CartQueryRepositoryImplTest {
     @Autowired CartCommendRepository cartCommendRepository;
     @Autowired ProductRepository productRepository;
     @Autowired MemberRepository memberRepository;
+
+    @AfterEach
+    void clear() {
+        cartCommendRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+        memberRepository.deleteAllInBatch();
+    }
 
     @DisplayName("상품 번호를 통해 카트를 조회할 수 있다")
     @Test

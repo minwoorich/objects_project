@@ -11,4 +11,7 @@ public interface CartJpaRepository extends JpaRepository<Cart, Long> {
 
     @Query("select c from Cart c where c.product.productNo = :productNo")
     Optional<Cart> findByProductNo(@Param("productNo") String productNo);
+
+    @Override
+    void deleteAllInBatch();
 }

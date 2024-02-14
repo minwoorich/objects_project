@@ -10,4 +10,6 @@ public interface CartCommendRepository {
 
     void saveAll(List<Cart> carts);
 
+    void deleteAllInBatch();
+
 }
