@@ -25,6 +25,7 @@ jobs:
           ${{secrets.HOST}}
           ${{secrets.JWT_SECRET}}
           EOF
+          cat ./application.yml
         shell: bash
 
       - name: Build with Gradle
