@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUPLICATE_OPERATION;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT_OF_STOCK;
 
 @Service
 @Slf4j
@@ -34,9 +35,10 @@ public class AddToCartService {
     }
 
     private Cart create(CreateCartDto createCartDto) {
-        Member member = memberRepository.findById(createCartDto.getMemberId());
         Product product = productRepository.findByProductNo(createCartDto.getProductNo());
         Long quantity = createCartDto.getQuantity();
+        product.verifyStockAvailable(quantity); // 2. 재고 검사
+        Member member = memberRepository.findById(createCartDto.getMemberId());
         Boolean isSubs = createCartDto.getIsSubs();
 
         return Cart.create(member, product, isSubs, quantity);
