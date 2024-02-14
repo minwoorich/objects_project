@@ -1,4 +1,6 @@
 FROM amazoncorretto:17
+LABEL maintainer="jeongin <jeonginflow@gmail.com>"
+
 #VOLUME /tmp
 
 WORKDIR /app
