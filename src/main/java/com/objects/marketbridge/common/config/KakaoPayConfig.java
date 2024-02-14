@@ -8,22 +8,19 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class KakaoPayConfig {
 
+    // 카카오페이 BASE_URL
     public static final String KAKAO_BASE_URL = "https://open-api.kakaopay.com/online/v1/payment";
 
+    // 카카오페이 API 엔드포인트
     public static final String READY_END_POINT = "/ready";
-
     public static final String APPROVE_END_POINT = "/approve";
-
     public static final String SUBS_END_POINT = "/subscription";
-
     public static final String CANCEL_END_POINT = "/cancel";
-
     public static final String ORDER_END_POINT = "/order";
 
+    // 카카오페이 CID 및 AUTH_SCHEME
     public static final String ONE_TIME_CID = "TC0ONETIME";
-
     public static final String SUBS_CID = "TCSUBSCRIP";
-
     public static final String AUTH_SCHEME = "DEV_SECRET_KEY ";
 
     @Value("${payment.kakao.secret_key_dev}")
