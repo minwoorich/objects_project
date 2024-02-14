@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUPLICATE_OPERATION;
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT_OF_STOCK;
 
 @Service
 @Slf4j
