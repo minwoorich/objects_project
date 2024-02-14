@@ -78,7 +78,7 @@ public class CreateProductService {
         for (ProductImageDto productImageDto: productImageDtoList) {
             // 이미지 저장
             Image image = Image.builder()
-                    .type(productImageDto.getType())
+//                    .type(productImageDto.getType())
                     .url(productImageDto.getImgUrl())
                     .build();
             imageRepository.save(image);

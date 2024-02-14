@@ -42,3 +42,5 @@ out/
 spy.log
 
 .Ds_Store
+
+./src/main/resources/docs/

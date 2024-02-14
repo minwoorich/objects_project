@@ -212,28 +212,24 @@ DROP TABLE IF EXISTS order_detail;
 
 CREATE TABLE order_detail
 (
-    order_detail_id bigint auto_increment
+    order_detail_id  bigint auto_increment
         primary key,
-CREATE TABLE order_detail (
-                              order_detail_id	bigint auto_increment
-                                  primary key,
 
-    order_id        bigint,
-    product_id      bigint,
-    order_no        varchar(255),
-    member_coupon_id  bigint,
-    reward_type     varchar(255),
-    quantity        bigint,
-    price           bigint,
-    seller_id       bigint,
-    status_code     varchar(255),
-    tid             varchar(255),
-    delivered_date  datetime(6),
-    reason          text,
-    cancelled_at    datetime(6),
-    created_at      datetime(6),
-    updated_at      datetime(6),
-    deleted_at      datetime(6)
+    order_id         bigint,
+    product_id       bigint,
+    member_coupon_id bigint,
+    seller_id        bigint,
+    quantity         bigint,
+    order_no         varchar(255),
+    price            bigint,
+    status_code      varchar(255),
+    delivered_date   datetime(6),
+    tid              varchar(255),
+    cancelled_at     datetime(6),
+    reducedQuantity  bigint,
+    created_at       datetime(6),
+    updated_at       datetime(6),
+    deleted_at       datetime(6)
 );
 
 DROP TABLE IF EXISTS payment;
@@ -243,38 +239,39 @@ CREATE TABLE payment
     payment_id         bigint auto_increment
         primary key,
 
-                         order_id	bigint	,
-                         order_no	varchar(255)	,
-                         payment_method	varchar(255)	,
-                         tid	varchar(255)	,
-                         card_issuer_name	varchar(255)	,
-                         card_purchase_name	varchar(255)	,
-                         card_no	varchar(255)	,
-                         card_install_month	BIGINT	,
-                         total_amount BIGINT,
-                         discount_amount BIGINT,
-                         tax_free_amount BIGINT,
-                         approved_at	datetime(6)	,
-                         pg_token       varchar(255),
-                         deleted_at	datetime(6)	,
-                         updated_at	datetime(6)	,
-                         created_at	datetime(6)
+    order_id           bigint,
+    order_no           varchar(255),
+    payment_method     varchar(255),
+    tid                varchar(255),
+    card_issuer_name   varchar(255),
+    card_purchase_name varchar(255),
+    card_no            varchar(255),
+    card_install_month BIGINT,
+    total_amount       BIGINT,
+    discount_amount    BIGINT,
+    tax_free_amount    BIGINT,
+    approved_at        datetime(6),
+    pg_token           varchar(255),
+    deleted_at         datetime(6),
+    updated_at         datetime(6),
+    created_at         datetime(6)
 );
 
 DROP TABLE IF EXISTS review;
 
-CREATE TABLE review (
-                        review_id	bigint auto_increment
-                            primary key,
+CREATE TABLE review
+(
+    review_id       bigint auto_increment
+        primary key,
 
-                        member_id	bigint	,
-                        product_id	bigint	,
-                        order_detail_id bigint,
-                        content	text	,
-                        rating	bigint	,
-                        created_at	datetime(6)	,
-                        updated_at	datetime(6)	,
-                        deleted_at	datetime(6)
+    member_id       bigint,
+    product_id      bigint,
+    order_detail_id bigint,
+    content         text,
+    rating          bigint,
+    created_at      datetime(6),
+    updated_at      datetime(6),
+    deleted_at      datetime(6)
 );
 
 DROP TABLE IF EXISTS review_image;
