@@ -21,8 +21,10 @@ jobs:
       - name: Add to application.yml
         run: |
           cd ./src/main/resources
-          echo ${{secrets.HOST}} >> ./application.yml
-          echo ${{secrets.JWT_SECRET}} >> ./application.yml
+          cat << EOF >> ./application.yml
+          ${{secrets.HOST}}
+          ${{secrets.JWT_SECRET}}
+          EOF
         shell: bash
 
       - name: Build with Gradle
