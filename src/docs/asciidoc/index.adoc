@@ -39,19 +39,36 @@ include::api/member/reissue.adoc[]
 {empty}
 {empty}
 
-== *멤버십*
+=== *멤버십*
 include::api/member/kakaoPaySubsReady.adoc[]
 {empty}
+{empty}
+
 include::api/member/kakaoPaySubsApproved.adoc[]
 {empty}
+{empty}
+
 include::api/member/kakaoPaySubsSubscribtion.adoc[]
+{empty}
+{empty}
+{empty}
+{empty}
+
 == *상품*
 {empty}
 {empty}
 {empty}
 {empty}
 
-== *주문/결제*
+=== *장바구니*
+
+include::api/order/ordercreate.adoc[]
+{empty}
+{empty}
+
+include::api/order/ordercheckout.adoc[]
+{empty}
+{empty}
 
 include::api/order/ordercancelreturn.adoc[]
 {empty}
@@ -72,19 +89,3 @@ include::api/order/ordercancelreturnlist.adoc[]
 include::api/order/ordercancelreturndetail.adoc[]
 {empty}
 {empty}
-
-[[OrderCreate-API]]
-== OrderCreate API
-include::api/order/ordercreate.adoc[]
-
-[[OrderCheckout-API]]
-== OrderCheckout API
-
-include::api/order/ordercheckout.adoc[]
-{empty}
-{empty}
-
-// [[Order-API]]
-// == Order API
-//
-// include::api/order/ordercancel.adoc[]
