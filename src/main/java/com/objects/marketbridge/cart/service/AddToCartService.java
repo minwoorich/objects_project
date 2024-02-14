@@ -35,10 +35,9 @@ public class AddToCartService {
 
     private Cart create(CreateCartDto createCartDto) {
         Product product = productRepository.findByProductNo(createCartDto.getProductNo());
-        Long quantity = createCartDto.getQuantity();
-        product.verifyStockAvailable(quantity); // 2. 재고 검사
         Member member = memberRepository.findById(createCartDto.getMemberId());
         Boolean isSubs = createCartDto.getIsSubs();
+        Long quantity = createCartDto.getQuantity();
 
         return Cart.create(member, product, isSubs, quantity);
     }

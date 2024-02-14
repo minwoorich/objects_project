@@ -41,6 +41,9 @@ public class Cart extends BaseEntity {
     }
 
     public static Cart create(Member member, Product product, Boolean isSubs, Long quantity) {
+        // 1. 재고 검증 로직
+        product.verifyStockAvailable(quantity);
+
         return Cart.builder()
                 .member(member)
                 .product(product)
