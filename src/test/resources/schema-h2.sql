@@ -374,7 +374,10 @@ CREATE TABLE cart (
                       member_id	bigint	,
                       product_id	bigint	,
                       is_subs	bit	,
-                      quantity	bigint
+                      quantity	bigint,
+                      created_at	datetime(6)	,
+                      updated_at	datetime(6)	,
+                      deleted_at	datetime(6)
 );
 
 DROP TABLE IF EXISTS prod_option;
