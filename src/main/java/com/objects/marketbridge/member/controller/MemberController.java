@@ -40,14 +40,14 @@ public class MemberController {
     @PatchMapping("/update-address/{addressId}")
     public ApiResponse<List<GetAddressesResponse>> updateAddress(
             @AuthMemberId Long memberId ,@Valid @RequestBody AddAddressRequestDto request ,
-            @PathVariable Long addressId){
+            @PathVariable (name = "addressId") Long addressId){
         List<GetAddressesResponse> addressesResponses = memberService.updateMemberAddress(memberId,addressId,request);
         return ApiResponse.ok(addressesResponses);
     }
 
     @DeleteMapping("/delete-address/{addressId}")
     public ApiResponse<List<GetAddressesResponse>> deleteAddress(
-            @AuthMemberId Long memberId ,@PathVariable Long addressId){
+            @AuthMemberId Long memberId ,@PathVariable (name = "addressId")  Long addressId){
         List<GetAddressesResponse> addressesResponses = memberService.deleteMemberAddress(memberId,addressId);
         return ApiResponse.ok(addressesResponses);
     }
