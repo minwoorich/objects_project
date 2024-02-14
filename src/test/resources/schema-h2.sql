@@ -308,7 +308,6 @@ create table review_likes
         primary key,
     review_id       bigint      null,
     member_id       bigint      null,
-    likes           bigint      null,
     created_at      datetime(6) null,
     updated_at      datetime(6) null,
     deleted_at      datetime(6) null
