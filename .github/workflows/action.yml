@@ -42,7 +42,7 @@ jobs:
           docker push app
 
       - name: execute remote ssh & deploy server
-        uses: appleboy/ssh-action@mastert
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
