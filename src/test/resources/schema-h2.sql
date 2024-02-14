@@ -168,7 +168,7 @@ create table order_detail
     status_code      varchar(255) null,
     tid              varchar(255) null,
     delivered_date   datetime(6)  null,
-    reducedQuantity  bigint       null,
+    reduced_quantity  bigint       null,
     cancelled_at     datetime(6)  null,
     created_at       datetime(6)  null,
     updated_at       datetime(6)  null,
@@ -308,6 +308,7 @@ create table review_likes
         primary key,
     review_id       bigint      null,
     member_id       bigint      null,
+    likes           bigint      null,
     created_at      datetime(6) null,
     updated_at      datetime(6) null,
     deleted_at      datetime(6) null
