@@ -20,6 +20,23 @@ include::api/member/checkemail.adoc[]
 {empty}
 {empty}
 
+=== *주소*
+include::api/member/findAddress.adoc[]
+{empty}
+{empty}
+
+include::api/member/addAddress.adoc[]
+{empty}
+{empty}
+
+include::api/member/updateAddress.adoc[]
+{empty}
+{empty}
+
+include::api/member/deleteAddress.adoc[]
+{empty}
+{empty}
+
 === *인증*
 include::api/member/signup.adoc[]
 {empty}
