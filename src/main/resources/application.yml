@@ -1,48 +1,6 @@
 spring:
   profiles:
-    default: local
-
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-
-  sql:
-    init:
-      platform: mysql # 이거 없으면 mysql 인식 못함
-
-  jwt: # CLI 명령어 - openssl rand -base64 32 로 생성된 값
-    secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/MarketBridge
-    username: objects
-    password: 1234
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-      show-sql: true
-      properties:
-        hibernate:
-          format_sql: true
-          default_batch_fetch_size: 100
-
-  data:
-    redis:
-      host: localhost
-      port: 6379
-
-logging:
-  level:
-    org.hibernate.sql: debug
-
-payment:
-  kakao:
-    secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
-
-host: "http://146.56.112.155:8080"
+    default: dev
 
 ---
 
@@ -54,30 +12,26 @@ spring:
   sql:
     init:
       mode: always
-      platform: mysql # 이거 없으면 mysql 인식 못함
-
-  jwt: # CLI 명령어 - openssl rand -base64 32 로 생성된 값
-    secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
+      # 이거 없으면 mysql 인식 못함
+      platform: mysql
 
   datasource:
     url: jdbc:mysql://localhost:3306/MarketBridge
     username: objects
     password: 1234
 
-#datasource:
-#url: jdbc:h2:tcp://localhost/~/Marketbridge
-#username: sa
-#password:
   jpa:
+    show-sql: true
+    # (2.5~) Hibernate 초기화 이후 data-mysql.sql 실행
+    # 이게 없으면 data-mysql.sql 스크립트가 수행 안 되고 에러 발생합니당.
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
-      show-sql: true
-      properties:
-        hibernate:
-          format_sql: true
-          default_batch_fetch_size: 100
-      defer-datasource-initialization: true # (2.5~) Hibernate 초기화 이후 data-mysql.sql 실행
-    # 이게 없으면 data-mysql.sql 스크립트가 수행 안 되고 에러 발생합니당.
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
 
   h2:
     console:
@@ -98,6 +52,10 @@ payment:
 
 host: "http://localhost:8080"
 
+jwt:
+  # CLI 명령어 - openssl rand -base64 64 로 생성된 값
+  secret: fMRb9kle/ImDQ7wB8+XPnuVH15M6xp60jKS7/mF7dNMFEvt9kNe4WioJfsHT6J6F4bynR8rqAR2Z8zYboQSG+A==
+
 ---
 
 spring:
@@ -115,25 +73,23 @@ spring:
       mode: always
       platform: h2
 
-  jwt: # CLI 명령어 - openssl rand -base64 32 로 생성된 값
-    secret: VZvl0mIgwU2UmDMXqa7CL79kdBUYz+IvHQWmNsWT4uA=
-
   datasource:
-#    url: jdbc:h2:tcp://localhost/~/Marketbridge
     url: jdbc:h2:mem:~/Marketbridge
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
   jpa:
+    show-sql: true
+    # (2.5~) Hibernate 초기화 이후 data-mysql.sql 실행
+    # 이게 없으면 data-mysql.sql 스크립트가 수행 안 되고 에러 발생합니당.
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
     properties:
       hibernate:
-        show_sql: true
         format_sql: true
         default_batch_fetch_size: 100
-    defer-datasource-initialization: true
 
   h2:
     console:
@@ -148,3 +104,35 @@ payment:
     secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
 
 host: "http://localhost:8080/"
+
+jwt:
+  # CLI 명령어 - openssl rand -base64 64 로 생성된 값
+  secret: fMRb9kle/ImDQ7wB8+XPnuVH15M6xp60jKS7/mF7dNMFEvt9kNe4WioJfsHT6J6F4bynR8rqAR2Z8zYboQSG+A==
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  sql:
+    init:
+      platform: mysql # 이거 없으면 mysql 인식 못함
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+logging:
+  level:
+    org.hibernate.sql: debug
+
+payment:
+  kakao:
+    secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
