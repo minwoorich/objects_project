@@ -12,6 +12,7 @@ import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +21,7 @@ import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUP
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class AddToCartService {
 
     private final CartCommendRepository cartCommendRepository;
@@ -27,10 +29,11 @@ public class AddToCartService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
-    public void add(CreateCartDto createCartDto) {
+    public Cart add(CreateCartDto createCartDto) {
         // 1. 이미 장바구니에 담긴 상품인지 아닌지 검증
         validDuplicate(createCartDto.getProductNo());
-        cartCommendRepository.save(create(createCartDto));
+
+        return cartCommendRepository.save(create(createCartDto));
     }
 
     private Cart create(CreateCartDto createCartDto) {

@@ -2,8 +2,10 @@ package com.objects.marketbridge.cart.infra;
 
 import com.objects.marketbridge.cart.domain.Cart;
 import com.objects.marketbridge.cart.service.port.CartQueryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -18,5 +20,10 @@ public class CartQueryRepositoryImpl implements CartQueryRepository {
     @Override
     public Optional<Cart> findByProductNo(String productNo) {
         return cartJpaRepository.findByProductNo(productNo);
+    }
+
+    @Override
+    public Cart findById(Long id) {
+        return cartJpaRepository.findById(id).orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
     }
 }

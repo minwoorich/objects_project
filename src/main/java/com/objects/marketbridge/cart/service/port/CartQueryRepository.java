@@ -7,6 +7,7 @@ import java.util.Optional;
 public interface CartQueryRepository {
     Optional<Cart> findByProductNo(String productNo);
 
+    Cart findById(Long id);
 
 
 }
