@@ -179,7 +179,7 @@ public class OrderControllerRestDocsTest {
                                 fieldWithPath("productValues").type(JsonFieldType.ARRAY)
                                         .description("주문 상품 정보"),
 
-                                fieldWithPath("productValues[].productId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("productValues[].productNo").type(JsonFieldType.STRING)
                                         .description("상품 아이디"),
                                 fieldWithPath("productValues[].couponId").type(JsonFieldType.NUMBER)
                                         .description("사용한 쿠폰 아이디"),
@@ -231,14 +231,14 @@ public class OrderControllerRestDocsTest {
                 .deliveredDate("2024-01-21")
                 .sellerId(1L)
                 .couponId(1L)
-                .productId(1L)
+                .productNo("productNo1")
                 .quantity(1L).build();
 
         ProductValue productValue2 = ProductValue.builder()
                 .deliveredDate("2024-01-21")
                 .sellerId(2L)
                 .couponId(2L)
-                .productId(2L)
+                .productNo("productNo2")
                 .quantity(2L).build();
 
         return List.of(productValue1, productValue2);

@@ -14,8 +14,7 @@ spring:
   sql:
     init:
 #      mode: always
-      # 이거 없으면 mysql 인식 못함
-      platform: mysql
+      platform: mysql # 이거 없으면 mysql 인식 못함
       mode: never
 
   datasource:
