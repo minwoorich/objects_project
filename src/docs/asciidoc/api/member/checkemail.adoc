@@ -1,6 +1,6 @@
 ==== *이메일 중복 체크*
 
-image:image/checkemail.png[]
+image:../image/checkemail.png[]
 
 .*HTTP Request*
 include::{snippets}/member-check-email/http-request.adoc[]
