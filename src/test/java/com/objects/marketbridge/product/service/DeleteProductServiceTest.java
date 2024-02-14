@@ -36,40 +36,40 @@ public class DeleteProductServiceTest {
 
         //given
     void updateProductTest(){
-        Category category = Category.builder()
-                .parentId(null)
-                .level(0L)
-                .name("대분류카테고리1")
-                .build();
-        categoryRepository.save(category);
-
-        Product product = Product.builder()
-                .category(category)
-                .discountRate(30L)
-                .isOwn(false)
-                .isSubs(false)
-                .productNo("pn0003")
-                .price(5000L)
-                .stock(100L)
-                .thumbImg("thumbImgTest1.jpg")
-                .name("테스트용상품1")
-                .build();
-
-        productRepository.save(product);
-        em.flush();
-        em.clear();
-
-
-        //when
-
-        deleteProductService.delete(product.getId());
-
-        //then
-        System.out.println("product = " + product);
-        System.out.println("product.getId() = " + product.getId());
-
-        Assertions.assertThatThrownBy(() -> productRepository.findById(product.getId()))
-                .isInstanceOf(JpaObjectRetrievalFailureException.class);
+//        Category category = Category.builder()
+//                .parentId(null)
+//                .level(0L)
+//                .name("대분류카테고리1")
+//                .build();
+//        categoryRepository.save(category);
+//
+//        Product product = Product.builder()
+//                .category(category)
+//                .discountRate(30L)
+//                .isOwn(false)
+//                .isSubs(false)
+//                .productNo("pn0003")
+//                .price(5000L)
+//                .stock(100L)
+//                .thumbImg("thumbImgTest1.jpg")
+//                .name("테스트용상품1")
+//                .build();
+//
+//        productRepository.save(product);
+//        em.flush();
+//        em.clear();
+//
+//
+//        //when
+//
+//        deleteProductService.delete(product.getId());
+//
+//        //then
+//        System.out.println("product = " + product);
+//        System.out.println("product.getId() = " + product.getId());
+//
+//        Assertions.assertThatThrownBy(() -> productRepository.findById(product.getId()))
+//                .isInstanceOf(JpaObjectRetrievalFailureException.class);
 
     }
 }

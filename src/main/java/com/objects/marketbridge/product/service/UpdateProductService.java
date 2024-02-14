@@ -122,7 +122,7 @@ public class UpdateProductService {
         for (int i = 0; i<imgUrls.size(); i++) {
             // 이미지 저장
             Image image = Image.builder()
-                    .type(type)
+//                    .type(type)
                     .url(imgUrls.get(i))
                     .build();
             imageRepository.save(image);
