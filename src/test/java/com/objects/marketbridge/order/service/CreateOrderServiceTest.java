@@ -8,10 +8,7 @@ import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.*;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
-import com.objects.marketbridge.order.service.port.AddressRepository;
-import com.objects.marketbridge.order.service.port.OrderCommendRepository;
-import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
-import com.objects.marketbridge.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.order.service.port.*;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.coupon.CouponRepository;
 import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
@@ -48,12 +45,18 @@ class CreateOrderServiceTest {
     @Autowired AddressRepository addressRepository;
     @Autowired OrderDetailQueryRepository orderDetailQueryRepository;
     @Autowired OrderCommendRepository orderCommendRepository;
+    @Autowired OrderDetailCommendRepository orderDetailCommendRepository;
     @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired MemberCouponRepository memberCouponRepository;
     @Autowired EntityManager em;
 
     @BeforeEach
     void init(){
+        // clear 로직
+        productRepository.deleteAllInBatch();
+        orderCommendRepository.deleteAllInBatch();
+        orderDetailCommendRepository.deleteAllInBatch();
+
         // member 생성
         Member member = createMember();
         memberRepository.save(member);
@@ -95,16 +98,19 @@ class CreateOrderServiceTest {
     private List<Product> createProducts() {
 
         Product product1 = Product.builder()
+                .productNo("productNo1")
                 .name("가방")
                 .price(1000L)
                 .stock(5L).build();
 
         Product product2 = Product.builder()
+                .productNo("productNo2")
                 .name("티비")
                 .stock(5L)
                 .price(2000L).build();
 
         Product product3 = Product.builder()
+                .productNo("productNo3")
                 .name("워치")
                 .stock(5L)
                 .price(3000L).build();
@@ -167,7 +173,7 @@ class CreateOrderServiceTest {
     private long getTotalOrderPrice(List<ProductValue> productValues) {
 
         return productValues.stream().mapToLong(p ->
-                productRepository.findById(p.getProductId()).getPrice() * p.getQuantity()
+                productRepository.findByProductNo(p.getProductNo()).getPrice() * p.getQuantity()
         ).sum();
     }
 
@@ -189,10 +195,10 @@ class CreateOrderServiceTest {
         assertThat(orderDetails).hasSize(3);
 
         for (int i = 0; i < orderDetails.size(); i++) {
-            assertThat(orderDetails.get(i).getProduct().getId()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()).getId());
+            assertThat(orderDetails.get(i).getProduct().getId()).isEqualTo(productRepository.findByProductNo(createOrderDto.getProductValues().get(i).getProductNo()).getId());
             assertThat(orderDetails.get(i).getOrderNo()).isEqualTo(createOrderDto.getOrderNo());
             assertThat(orderDetails.get(i).getQuantity()).isEqualTo(createOrderDto.getProductValues().get(i).getQuantity());
-            assertThat(orderDetails.get(i).getPrice()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()).getPrice());
+            assertThat(orderDetails.get(i).getPrice()).isEqualTo(productRepository.findByProductNo(createOrderDto.getProductValues().get(i).getProductNo()).getPrice());
             assertThat(orderDetails.get(i).getStatusCode()).isEqualTo(StatusCodeType.ORDER_INIT.getCode());
         }
     }
@@ -330,9 +336,9 @@ class CreateOrderServiceTest {
 
         //then
         assertThat(products).hasSize(3);
-        for (int i = 0; i < products.size(); i++) {
-            assertThat(products.get(i).getStock()).isEqualTo(stocks.get(i)-quantities.get(i));
-        }
+        assertThat(products.get(0).getStock()).isEqualTo(stocks.get(0)-quantities.get(0));
+        assertThat(products.get(1).getStock()).isEqualTo(stocks.get(1)-quantities.get(1));
+        assertThat(products.get(2).getStock()).isEqualTo(stocks.get(2)-quantities.get(2));
     }
 
     @DisplayName("주문량이 재고가 많을 경우 예외를 발생시켜야한다")
@@ -358,19 +364,19 @@ class CreateOrderServiceTest {
         List<Product> products = productRepository.findAll();
 
         ProductValue productValue1 = ProductValue.builder()
-                .productId(coupons.get(0).getProduct().getId())
+                .productNo(coupons.get(0).getProduct().getProductNo())
                 .couponId(coupons.get(0).getId())
                 .quantity(1L)
                 .build();
 
         ProductValue productValue2 = ProductValue.builder()
-                .productId(coupons.get(1).getProduct().getId())
+                .productNo(coupons.get(1).getProduct().getProductNo())
                 .couponId(coupons.get(1).getId())
                 .quantity(2L)
                 .build();
 
         ProductValue productValue3 = ProductValue.builder()
-                .productId(products.get(2).getId())
+                .productNo(products.get(2).getProductNo())
                 .quantity(lastQuantity)
                 .build();
 

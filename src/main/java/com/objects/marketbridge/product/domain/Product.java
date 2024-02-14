@@ -131,7 +131,7 @@ public class Product extends BaseEntity {
         stock -= quantity;
     }
 
-    private void verifyStockAvailable(Long quantity) {
+    public void verifyStockAvailable(Long quantity) {
         if (stock - quantity < 0) {
             throw CustomLogicException.builder()
                     .errorCode(OUT_OF_STOCK)
