@@ -252,9 +252,9 @@ CREATE TABLE payment
     tax_free_amount    BIGINT,
     approved_at        datetime(6),
     pg_token           varchar(255),
-    deleted_at         datetime(6),
+    created_at         datetime(6),
     updated_at         datetime(6),
-    created_at         datetime(6)
+    deleted_at         datetime(6)
 );
 
 DROP TABLE IF EXISTS review;
@@ -297,7 +297,6 @@ CREATE TABLE review_likes
         primary key,
     review_id       bigint,
     member_id       bigint,
-    likes           bigint,
     created_at      datetime(6),
     updated_at      datetime(6),
     deleted_at      datetime(6)
@@ -339,7 +338,7 @@ CREATE TABLE survey_content
     survey_content_id         bigint auto_increment
         primary key,
 
-    review_survey_category_id bigint,
+    survey_category_id        bigint,
     seq_no                    bigint,
     content                   varchar(255),
     created_at                datetime(6),
@@ -391,7 +390,10 @@ CREATE TABLE cart
     member_id  bigint,
     product_id bigint,
     is_subs    bit,
-    quantity   bigint
+    quantity   bigint,
+    created_at       datetime(6),
+    updated_at       datetime(6),
+    deleted_at       datetime(6)
 );
 
 DROP TABLE IF EXISTS prod_option;
