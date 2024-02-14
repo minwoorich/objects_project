@@ -43,4 +43,4 @@ spy.log
 
 .Ds_Store
 
-./src/main/resources/docs/
+/src/main/resources/static/docs/index.html
