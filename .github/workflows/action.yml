@@ -23,10 +23,10 @@ jobs:
           cd ./src/main/resources
           cat << EOF >> ./application.yml
           
-          http://${{ secrets.SSH_HOST }}:8080
+          host: "http://${{ secrets.SSH_HOST }}:8080"
+          
           ${{secrets.JWT_SECRET}}
           EOF
-          cat ./application.yml
 
         shell: bash
 
