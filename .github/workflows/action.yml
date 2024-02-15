@@ -56,7 +56,7 @@ jobs:
             cd ~
             docker-compose up -d
             docker image prune -f
-            whoami
-            ls -al
+            docker ps -a
+            
 
 
