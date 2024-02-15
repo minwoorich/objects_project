@@ -25,7 +25,6 @@
 
     private final MembershipRepository membershipRepository;
     private final MemberRepository memberRepository;
-
     private final KakaoPayService kakaoPayService;
 
     @Transactional

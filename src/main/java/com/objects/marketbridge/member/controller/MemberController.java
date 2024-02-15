@@ -5,6 +5,7 @@ import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.member.dto.AddAddressRequestDto;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
 import com.objects.marketbridge.member.dto.GetAddressesResponse;
+import com.objects.marketbridge.member.dto.WishlistResponse;
 import com.objects.marketbridge.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -58,13 +59,21 @@ public class MemberController {
         return ApiResponse.ok(checkedResultDto);
     }
 
-
-    @PostMapping("/addWish/{productId}")
-    public void addWish(
-            @AuthMemberId Long memberId ,
-            @PathVariable (name = "productId") Long productId) {
-
-    }
+    //Wishlist 시작
+//    @GetMapping("/wishlist")
+//    public ApiResponse<WishlistResponse> findWishlistByMemberId(@AuthMemberId Long memberId){
+////        WishlistResponse wishlistResponse= memberService.findWishlistById(memberId);
+//        return ApiResponse.ok(wishlistResponse);
+//    }
+//
+//    @PostMapping("/wishlist/{productId}")
+//    public ApiResponse<WishlistResponse> addWish(
+//            @AuthMemberId Long memberId ,
+//            @PathVariable (name = "productId") Long productId) {
+//        WishlistResponse wishlistResponse= memberService.findWishlistById(memberId);
+//        memberService.addWish(memberId,productId);
+//        return ApiResponse.ok(wishlistResponse);
+//    }
 
 
 }

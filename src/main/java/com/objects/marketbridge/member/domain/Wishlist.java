@@ -1,5 +1,6 @@
 package com.objects.marketbridge.member.domain;
 
+import com.objects.marketbridge.product.domain.ProdOption;
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -21,13 +22,14 @@ public class Wishlist extends BaseEntity{
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prod_option_id")
+    private ProdOption productOption;
 
     @Builder
-    public Wishlist(Member member, Product product) {
+    public Wishlist(Member member, ProdOption productOption) {
         this.member = member;
-        this.product = product;
+        this.productOption = productOption;
     }
+
 }
