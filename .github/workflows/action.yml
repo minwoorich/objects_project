@@ -23,7 +23,7 @@ jobs:
           cd ./src/main/resources
           cat << EOF >> ./application.yml
           
-          ${{secrets.HOST}}
+          http://${{ secrets.SSH_HOST }}:8080
           ${{secrets.JWT_SECRET}}
           EOF
 
@@ -48,8 +48,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           scripts:
-            docker rm $(sudo docker ps -a)
-            docker pull ${{ secrets.DOCKER_REPO }}:0.1
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:0.1
+            docker rm mb-app
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:0.1
             cd ~
             docker-compose up -d
             docker image prune -f
