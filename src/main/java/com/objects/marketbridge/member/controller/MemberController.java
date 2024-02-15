@@ -23,13 +23,13 @@ public class MemberController {
     private final MemberService memberService;
 
 
-    @GetMapping("/find-address")
+    @GetMapping("/address")
     public ApiResponse<List<GetAddressesResponse>> findAddrress(@AuthMemberId Long memberId){
         List<GetAddressesResponse> addressesResponses =memberService.findByMemberId(memberId);
         return ApiResponse.ok(addressesResponses);
     }
 
-    @PostMapping("/add-address")
+    @PostMapping("/address")
     public ApiResponse<List<GetAddressesResponse>> addAddressValue(
             @AuthMemberId Long memberId,
             @Valid @RequestBody AddAddressRequestDto request){
@@ -37,7 +37,7 @@ public class MemberController {
        return ApiResponse.ok(addressesResponses);
     }
 
-    @PatchMapping("/update-address/{addressId}")
+    @PatchMapping("/address/{addressId}")
     public ApiResponse<List<GetAddressesResponse>> updateAddress(
             @AuthMemberId Long memberId ,@Valid @RequestBody AddAddressRequestDto request ,
             @PathVariable (name = "addressId") Long addressId){
@@ -45,7 +45,7 @@ public class MemberController {
         return ApiResponse.ok(addressesResponses);
     }
 
-    @DeleteMapping("/delete-address/{addressId}")
+    @DeleteMapping("/address/{addressId}")
     public ApiResponse<List<GetAddressesResponse>> deleteAddress(
             @AuthMemberId Long memberId ,@PathVariable (name = "addressId")  Long addressId){
         List<GetAddressesResponse> addressesResponses = memberService.deleteMemberAddress(memberId,addressId);
@@ -58,4 +58,14 @@ public class MemberController {
         return ApiResponse.ok(checkedResultDto);
     }
 
+
+    @PostMapping("/addWish/{productId}")
+    public void addWish(
+            @AuthMemberId Long memberId ,
+            @PathVariable (name = "productId") Long productId) {
+
+    }
+
+
 }
+
