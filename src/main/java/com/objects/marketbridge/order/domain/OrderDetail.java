@@ -219,17 +219,4 @@ public class OrderDetail extends BaseEntity {
         return !Objects.equals(DELIVERY_COMPLETED.getCode(), this.statusCode);
     }
 
-    public void withdraw(Long withdrawQuantity, String previousStateCode) {
-        valifyReducedQuantity(withdrawQuantity);
-        product.decrease(withdrawQuantity);
-        memberCoupon.changeUsageInfo(cancelledAt);
-        statusCode = previousStateCode;
-    }
-
-    private void valifyReducedQuantity(Long quantity) {
-        if (reducedQuantity - quantity < 0) {
-            throw CustomLogicException.createBadRequestError(OUT_OF_WITHDRAW_QUANTITY);
-        }
-        reducedQuantity -= quantity;
-    }
 }

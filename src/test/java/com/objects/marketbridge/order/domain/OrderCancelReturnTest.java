@@ -1,20 +1,11 @@
 package com.objects.marketbridge.order.domain;
 
-import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.member.domain.Coupon;
-import com.objects.marketbridge.member.domain.MemberCoupon;
-import com.objects.marketbridge.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT_OF_STOCK;
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT_OF_WITHDRAW_QUANTITY;
-import static com.objects.marketbridge.order.domain.StatusCodeType.*;
+import static com.objects.marketbridge.order.domain.StatusCodeType.DELIVERY_COMPLETED;
+import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_PARTIAL_RETURN;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 class OrderCancelReturnTest {
 
