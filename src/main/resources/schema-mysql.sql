@@ -16,6 +16,20 @@ CREATE TABLE member
     deleted_at datetime(6)
 );
 
+DROP TABLE IF EXISTS wishlist;
+
+CREATE TABLE wishlist (
+                            wishlist_id	bigint auto_increment
+                                primary key,
+
+                            member_id	bigint	,
+                            product_id  bigint  ,
+                            created_at	datetime(6)	,
+                            updated_at	datetime(6)	,
+                            deleted_at	datetime(6),
+                            UNIQUE (member_id, product_id)
+);
+
 DROP TABLE IF EXISTS membership;
 
 CREATE TABLE membership
@@ -23,7 +37,7 @@ CREATE TABLE membership
     membership_id      bigint auto_increment
         primary key,
 
-    member_id          varchar(255),
+    member_id          bigint,
     cid                varchar(255),
     tid                varchar(255),
     sid                varchar(255),

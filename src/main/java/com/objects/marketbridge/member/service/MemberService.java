@@ -2,6 +2,7 @@ package com.objects.marketbridge.member.service;
 
 import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.domain.Wishlist;
 import com.objects.marketbridge.member.dto.AddAddressRequestDto;
 import com.objects.marketbridge.member.dto.CheckedResultDto;
 import com.objects.marketbridge.member.dto.GetAddressesResponse;
@@ -56,6 +57,12 @@ public class MemberService {
         addressRepository.deleteById(addressId);
         return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
+
+//    public List<Wishlist> addWishlist (Long memberId , Long productId){
+//
+//
+//        return
+//    }
 
     @Transactional
     public void save(Member member) {
