@@ -34,7 +34,6 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew clean build
-          find $(pwd) -name index.html
 
       - name: web docker build and push
         run: |
@@ -56,6 +55,3 @@ jobs:
             docker-compose up -d
             docker image prune -f
             docker ps -a
-            
-
-

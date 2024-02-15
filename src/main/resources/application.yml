@@ -114,10 +114,6 @@ spring:
     activate:
       on-profile: dev
 
-  sql:
-    init:
-      platform: mysql
-
   jpa:
     show-sql: true
     hibernate:
