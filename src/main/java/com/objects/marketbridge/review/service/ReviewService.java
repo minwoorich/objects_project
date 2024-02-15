@@ -91,7 +91,7 @@ public class ReviewService {
         ReviewLikes reviewLikes = ReviewLikes.builder()
                 .review(review)
                 .member(member)
-                .likes(0L)
+//                .likes(0L)
                 .build();
         reviewLikesRepository.save(reviewLikes);
 
@@ -150,7 +150,7 @@ public class ReviewService {
                                 .reviewImgUrls(review.getReviewImages().stream()
                                         .map(reviewImage -> reviewImage.getImage().getUrl()).collect(Collectors.toList()))
                                 .content(review.getContent())
-                                .likes(reviewLikesRepository.findByReviewId(review.getId()).getLikes())
+//                                .likes(reviewLikesRepository.findByReviewId(review.getId()).getLikes())
                                 .build())
                 .collect(Collectors.toList());
         return new PageImpl<>(reviewWholeInfoDtoList, pageable, reviews.getTotalElements());
@@ -180,7 +180,7 @@ public class ReviewService {
                                 .reviewImgUrls(review.getReviewImages().stream()
                                         .map(reviewImage -> reviewImage.getImage().getUrl()).collect(Collectors.toList()))
                                 .content(review.getContent())
-                                .likes(reviewLikesRepository.findByReviewId(review.getId()).getLikes())
+//                                .likes(reviewLikesRepository.findByReviewId(review.getId()).getLikes())
                                 .build())
                 .collect(Collectors.toList());
         return new PageImpl<>(reviewWholeInfoDtoList, pageable, reviews.getTotalElements());

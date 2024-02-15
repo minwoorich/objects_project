@@ -30,6 +30,11 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
+    public void deleteById(Long id) {
+        addressJpaRepository.deleteById(id);
+    }
+
+    @Override
     public void saveAll(List<Address> addresses) {
         addressJpaRepository.saveAll(addresses);
     }

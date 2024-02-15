@@ -149,7 +149,7 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
                 .setSubject(userId.toString())
                 .claim(SecurityConst.AUTH, role)
                 .setExpiration(new Date(expirationTime))
-                .signWith(KEY, SignatureAlgorithm.HS256)
+                .signWith(KEY, SignatureAlgorithm.HS512)
                 .compact();
     }
 

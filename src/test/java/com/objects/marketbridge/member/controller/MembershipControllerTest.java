@@ -10,7 +10,6 @@ import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
 import com.objects.marketbridge.member.controller.request.CreateSubsRequest;
 import com.objects.marketbridge.member.dto.CreateSubsDto;
 import com.objects.marketbridge.member.service.MemberShipService;
-import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import org.junit.jupiter.api.BeforeEach;

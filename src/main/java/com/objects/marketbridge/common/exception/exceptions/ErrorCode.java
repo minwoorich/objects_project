@@ -26,7 +26,7 @@ public enum ErrorCode {
     NON_CANCELLABLE_PRODUCT("취소가 불가능한 상품입니다."),
     NON_RETURNABLE_PRODUCT("반품이 불가능한 상품입니다."),
     NON_CANCELLABLE_RETURNABLE_PRODUCT("취소/반품이 불가능한 상품입니다."),
-    OUT_OF_WITHDRAW_QUANTITY("반품 철회 수량을 초과하였습니다.");
+    DUPLICATE_OPERATION("이미 완료되었습니다");
 
     private final String message;
 

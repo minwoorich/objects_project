@@ -14,6 +14,8 @@ public interface AddressRepository {
 
     Address findAddressValueByAddressId(Long addressId ,Long memberId);
 
+    void deleteById(Long addressId);
+
     void saveAll(List<Address> addresses);
 
     void deleteAllInBatch();

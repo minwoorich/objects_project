@@ -25,12 +25,14 @@ public class ReviewLikes {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private Long likes;
+//    private Long likes;
 
     @Builder
-    public ReviewLikes(Review review, Member member, Long likes) {
+    public ReviewLikes(Review review, Member member
+//                       , Long likes
+    ) {
         this.review = review;
         this.member = member;
-        this.likes = likes;
+//        this.likes = likes;
     }
 }

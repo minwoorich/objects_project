@@ -12,18 +12,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GetAddressesResponse {
 
+    private Long addressId;
+
     private AddressValue addressValue;
 
     private Boolean isDefault;
 
     @Builder
-    public GetAddressesResponse(AddressValue addressValue, Boolean isDefault) {
+    public GetAddressesResponse(Long addressId ,AddressValue addressValue, Boolean isDefault) {
+        this.addressId =addressId;
         this.addressValue = addressValue;
         this.isDefault = isDefault;
     }
 
     public static GetAddressesResponse of(Address address){
         return GetAddressesResponse.builder()
+                .addressId(address.getId())
                 .addressValue(address.getAddressValue())
                 .isDefault(address.getIsDefault()).build();
     }
