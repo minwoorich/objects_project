@@ -28,23 +28,31 @@ public class CategoryController {
 
 
     //조회
-    //전체(라지,미디엄,스몰). 라지가 해당 미디엄 전부를, 미디엄이 해당 스몰 전부를 포함하는 형태로 JSON형식.
+    //전체(1depth,2depth,3depth). 1depth가 하위의 2depth 전부를, 2depth 카테고리가 하위의 3depth 전부를 포함하는 형태로 JSON형식.
     @UserAuthorize
     @GetMapping("/categories/getTotalCategories")
     public List<CategoryDto> getTotalCategories() {
         return categoryService.getTotalCategories();
     }
-    //특정부모카테고리(라지)의 미디엄(스몰 포함) 전체.
+
+    //특정부모카테고리(1depth)의 2depth(3depth 포함) 전체.
     @UserAuthorize
     @GetMapping("/categories/get2DepthCategories/{parentId}")
     public List<CategoryDto> get2DepthCategories(@PathVariable("parentId") Long parentId) {
         return categoryService.get2DepthCategories(parentId);
     }
-    //특정부모카테고리(미디엄)의 스몰 전체.
+
+    //특정부모카테고리(2depth)의 3depth 전체.
     @UserAuthorize
     @GetMapping("/categories/get3DepthCategories/{parentId}")
     public List<CategoryDto> get3DepthCategories(@PathVariable("parentId") Long parentId) {
         return categoryService.get3DepthCategories(parentId);
     }
 
+    // 하위 카테고리 전체 조회
+    @UserAuthorize
+    @GetMapping("/categories")
+    public List<CategoryDto> getLowerCategories(@RequestParam("categoryId") Long categoryId) {
+        return categoryService.getLowerCategories(categoryId);
+    }
 }
