@@ -26,7 +26,7 @@ jobs:
           ${{secrets.HOST}}
           ${{secrets.JWT_SECRET}}
           EOF
-          cat ./application.yml
+
         shell: bash
 
       - name: Build with Gradle
@@ -37,9 +37,8 @@ jobs:
       - name: web docker build and push
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker buildx build --platform linux/arm64/v8 -t app .
-          docker tag app ${{ secrets.DOCKER_REPO }}:0.1
-          docker push app
+          docker buildx build --platform linux/arm64/v8 -t jeongin/market-bridge-app:0.1 .
+          docker push jeongin/market-bridge-app:0.1
 
       - name: execute remote ssh & deploy server
         uses: appleboy/ssh-action@master
