@@ -139,21 +139,21 @@ class CreateOrderHttpTest {
     private List<ProductValue> createProductValues(){
         ProductValue productValue1 = ProductValue.builder()
                 .sellerId(1L)
-                .productId(1L)
+                .productNo("productNo1")
                 .couponId(1L)
                 .quantity(1L)
                 .deliveredDate("2023-03-31").build();
 
         ProductValue productValue2 = ProductValue.builder()
                 .sellerId(2L)
-                .productId(2L)
+                .productNo("productNo2")
                 .couponId(2L)
                 .quantity(1L)
                 .deliveredDate("2023-03-31").build();
 
         ProductValue productValue3 = ProductValue.builder()
                 .sellerId(3L)
-                .productId(3L)
+                .productNo("productNo2")
                 .couponId(3L)
                 .quantity(1L)
                 .deliveredDate("2023-03-31").build();

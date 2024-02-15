@@ -60,4 +60,9 @@ public class FakeProductRepository implements ProductRepository {
     public void delete(Product product) {
 
     }
+
+    @Override
+    public Product findByProductNo(String productNo) {
+        return null;
+    }
 }
