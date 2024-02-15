@@ -26,6 +26,7 @@ jobs:
           http://${{ secrets.SSH_HOST }}:8080
           ${{secrets.JWT_SECRET}}
           EOF
+          cat ./application.yml
 
         shell: bash
 

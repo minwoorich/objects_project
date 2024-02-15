@@ -1,4 +1,4 @@
-FROM amazoncorretto:17
+FROM amazoncorretto:17-alpine-jdk
 LABEL maintainer="jeongin <jeonginflow@gmail.com>"
 
 #VOLUME /tmp
