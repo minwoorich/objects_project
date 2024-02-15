@@ -2,6 +2,7 @@ package com.objects.marketbridge.order.domain;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.member.domain.Coupon;
 import com.objects.marketbridge.member.domain.MemberCoupon;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.product.domain.Product;
@@ -440,6 +441,95 @@ class OrderDetailTest {
         assertThat(result).isEqualTo(10000L);
     }
 
+    @Test
+    @DisplayName("반품 철회시 여러 상태값이 바뀐다.")
+    public void withdraw() {
+        // given
+        Product product = Product.builder()
+                .stock(10L)
+                .build();
+
+        Coupon coupon = Coupon.builder()
+                .product(product)
+                .price(1000L)
+                .build();
+
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .coupon(coupon)
+                .usedDate(LocalDateTime.now())
+                .isUsed(false)
+                .build();
+
+        LocalDateTime cancelledAt = LocalDateTime.of(2024, 2, 1, 14, 12, 40);
+        OrderDetail orderDetail = OrderDetail.builder()
+                .product(product)
+                .memberCoupon(memberCoupon)
+                .reducedQuantity(3L)
+                .cancelledAt(cancelledAt)
+                .statusCode(ORDER_PARTIAL_RETURN.getCode())
+                .build();
+
+        Long withdrawQuantity = 3L;
+        String previousStatusCode = DELIVERY_COMPLETED.getCode();
+
+        // when
+        orderDetail.withdraw(withdrawQuantity, previousStatusCode);
+
+        // then
+        assertThat(product.getStock()).isEqualTo(7L);
+        assertThat(memberCoupon.getUsedDate()).isEqualTo(cancelledAt);
+        assertThat(memberCoupon.getIsUsed()).isTrue();
+        assertThat(orderDetail.getReducedQuantity()).isEqualTo(0L);
+        assertThat(orderDetail.getStatusCode()).isEqualTo(previousStatusCode);
+    }
+
+    @Test
+    @DisplayName("철회했던 수량보다 많은 양을 철회하면 예외가 발생한다.")
+    public void withdraw_OUT_OF_WITHDRAW_QUANTITY_ERROR() {
+        // given
+        OrderDetail orderDetail = OrderDetail.builder()
+                .reducedQuantity(3L)
+                .build();
+
+        Long withdrawQuantity = 4L;
+
+        // when // then
+        assertThatThrownBy(() -> orderDetail.withdraw(withdrawQuantity, null))
+                .isInstanceOf(CustomLogicException.class)
+                .hasMessage(OUT_OF_WITHDRAW_QUANTITY.getMessage())
+                .satisfies(exception -> {
+                    CustomLogicException customLogicException = (CustomLogicException) exception;
+                    assertThat(customLogicException.getErrorCode()).isEqualTo(OUT_OF_WITHDRAW_QUANTITY);
+                    assertThat(customLogicException.getHttpStatus()).isEqualTo(BAD_REQUEST);
+                });
+    }
+
+    @Test
+    @DisplayName("철회한 수량이 남아있는 상품 재고보다 많을경우 에러가 발생한다.")
+    public void withdraw_OUT_OF_STOCK_ERROR() {
+        // given
+        Product product = Product.builder()
+                .stock(1L)
+                .build();
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .product(product)
+                .reducedQuantity(3L)
+                .build();
+
+        Long withdrawQuantity = 2L;
+
+        // when // then
+        assertThatThrownBy(() -> orderDetail.withdraw(withdrawQuantity, null))
+                .isInstanceOf(CustomLogicException.class)
+                .hasMessage("재고가 부족합니다")
+                .satisfies(exception -> {
+                    CustomLogicException customLogicException = (CustomLogicException) exception;
+                    assertThat(customLogicException.getErrorCode()).isEqualTo(OUT_OF_STOCK);
+                    assertThat(customLogicException.getHttpStatus()).isEqualTo(BAD_REQUEST);
+                });
+    }
+
     private static OrderDetail createOrderDetail(long quantity, long price) {
         return OrderDetail.builder()
                 .quantity(quantity)
@@ -468,5 +558,6 @@ class OrderDetailTest {
                 .quantity(quantity)
                 .build();
     }
+
 
 }

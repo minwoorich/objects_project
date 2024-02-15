@@ -82,14 +82,6 @@ public class OrderDetail extends BaseEntity {
     }
 
     // 비즈니스 로직
-    public void increaseReducedQuantity(Long reducedQuantity) {
-        this.reducedQuantity += reducedQuantity;
-    }
-
-    public void decreaseReducedQuantity(Long reducedQuantity) {
-        this.reducedQuantity -= reducedQuantity;
-    }
-
     public void changeStatusCode(String statusCode) {
         this.statusCode = statusCode;
     }
@@ -109,7 +101,7 @@ public class OrderDetail extends BaseEntity {
                 .build();
     }
 
-    public static OrderDetail create(OrderDetail orderDetail, String reason, String statusCode) {
+    public static OrderDetail create(OrderDetail orderDetail, String statusCode) {
         return OrderDetail.builder()
                 .orderNo(orderDetail.getOrderNo())
                 .tid(orderDetail.getTid())
@@ -227,10 +219,17 @@ public class OrderDetail extends BaseEntity {
         return !Objects.equals(DELIVERY_COMPLETED.getCode(), this.statusCode);
     }
 
-    public void withdraw(Long quantity, String previousStateCode) {
-        product.decrease(quantity);
+    public void withdraw(Long withdrawQuantity, String previousStateCode) {
+        valifyReducedQuantity(withdrawQuantity);
+        product.decrease(withdrawQuantity);
         memberCoupon.changeUsageInfo(cancelledAt);
-        reducedQuantity -= quantity;
         statusCode = previousStateCode;
+    }
+
+    private void valifyReducedQuantity(Long quantity) {
+        if (reducedQuantity - quantity < 0) {
+            throw CustomLogicException.createBadRequestError(OUT_OF_WITHDRAW_QUANTITY);
+        }
+        reducedQuantity -= quantity;
     }
 }

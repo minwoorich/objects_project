@@ -1,7 +1,6 @@
 package com.objects.marketbridge.payment.infra;
 
 import com.objects.marketbridge.common.dto.KakaoPayApproveRequest;
-import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.payment.service.dto.PaymentDto;

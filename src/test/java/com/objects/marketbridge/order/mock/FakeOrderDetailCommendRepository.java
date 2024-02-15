@@ -25,7 +25,7 @@ public class FakeOrderDetailCommendRepository extends BaseFakeOrderDetailReposit
     @Override
     public OrderDetail saveAndReturnEntity(OrderDetail orderDetail) {
         save(orderDetail);
-        return OrderDetail.create(orderDetail, ORDER_PARTIAL_CANCEL.getCode(), ORDER_PARTIAL_CANCEL.getCode());
+        return OrderDetail.create(orderDetail, ORDER_PARTIAL_CANCEL.getCode());
     }
 
     @Override
