@@ -21,21 +21,26 @@ jobs:
       - name: Add to application.yml
         run: |
           cd ./src/main/resources
-          echo ${{secrets.HOST}} >> ./application.yml
-          echo ${{secrets.JWT_SECRET}} >> ./application.yml
+          cat << EOF >> ./application.yml
+          
+          host: "http://${{ secrets.SSH_HOST }}:8080"
+          
+          ${{secrets.JWT_SECRET}}
+          EOF
+
         shell: bash
 
       - name: Build with Gradle
         run: |
           chmod +x gradlew
           ./gradlew clean build
+          find $(pwd) -name index.html
 
       - name: web docker build and push
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker buildx build --platform linux/arm64/v8 -t app .
-          docker tag app ${{ secrets.DOCKER_REPO }}:latest
-          docker push app
+          docker buildx build --platform linux/arm64/v8 -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:0.1 .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:0.1
 
       - name: execute remote ssh & deploy server
         uses: appleboy/ssh-action@master
@@ -44,11 +49,13 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          scripts:
-            docker rm $(sudo docker ps -a)
-            docker pull ${{ secrets.DOCKER_REPO }}:latest
+          port: 22
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:0.1
             cd ~
             docker-compose up -d
             docker image prune -f
+            docker ps -a
+            
 
 
