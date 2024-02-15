@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor
 public class ProductValue {
-    Long productId;
+    String productNo;
     Long sellerId;
     Long couponId;
     Long quantity;
     String deliveredDate;
 
     @Builder
-    private ProductValue(Long productId, Long sellerId, Long couponId, Long quantity, String deliveredDate) {
-        this.productId = productId;
+    private ProductValue(String productNo, Long sellerId, Long couponId, Long quantity, String deliveredDate) {
+        this.productNo = productNo;
         this.sellerId = sellerId;
         this.couponId = couponId;
         this.quantity = quantity;

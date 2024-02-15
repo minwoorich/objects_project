@@ -78,7 +78,7 @@ public class CreateOrderService {
 
         for (ProductValue productValue : productValues) {
 
-            Product product = productRepository.findById(productValue.getProductId());
+            Product product = productRepository.findByProductNo(productValue.getProductNo());
             // 쿠폰이 적용안된 product 가 존재할 경우 그냥 null 저장
             MemberCoupon memberCoupon = (productValue.getCouponId() != null) ? memberCouponRepository.findByMemberIdAndCouponId(order.getMember().getId(), productValue.getCouponId()) : null;
             String orderNo = order.getOrderNo();
