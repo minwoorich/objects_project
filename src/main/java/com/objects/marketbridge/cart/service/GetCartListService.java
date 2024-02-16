@@ -1,9 +1,9 @@
 package com.objects.marketbridge.cart.service;
 
-import com.objects.marketbridge.cart.controller.dto.GetCartListHttp;
 import com.objects.marketbridge.cart.domain.Cart;
 import com.objects.marketbridge.cart.service.dto.GetCartDto;
 import com.objects.marketbridge.cart.service.port.CartQueryRepository;
+import com.objects.marketbridge.common.interceptor.SliceResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -22,12 +22,12 @@ public class GetCartListService {
 
     private final CartQueryRepository cartQueryRepository;
 
-    public GetCartListHttp.Response get(Pageable pageable, Long memberId) {
+    public SliceResponse<GetCartDto> get(Pageable pageable, Long memberId) {
 
         Slice<Cart> slicedCart = cartQueryRepository.findSlicedCart(pageable, memberId);
         Slice<GetCartDto> cartInfos = new SliceImpl<>(convertEntityToDto(slicedCart.getContent()), pageable, slicedCart.hasNext());
 
-        return GetCartListHttp.Response.of(cartInfos);
+        return new SliceResponse<>(cartInfos);
     }
 
     private List<GetCartDto> convertEntityToDto(List<Cart> carts) {

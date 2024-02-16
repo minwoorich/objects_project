@@ -1,7 +1,6 @@
 package com.objects.marketbridge.cart.service;
 
 
-import com.objects.marketbridge.cart.controller.dto.GetCartListHttp;
 import com.objects.marketbridge.cart.domain.Cart;
 import com.objects.marketbridge.cart.service.dto.GetCartDto;
 import com.objects.marketbridge.cart.service.port.CartCommendRepository;
@@ -16,7 +15,6 @@ import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import com.objects.marketbridge.product.service.port.OptionRepository;
 import com.objects.marketbridge.product.service.port.ProdOptionRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -128,17 +126,17 @@ class GetCartListServiceTest {
         Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
 
         //when
-        GetCartListHttp.Response response = getCartListService.get(pageRequest, member.getId());
+        SliceResponse<GetCartDto> sliceResponse = getCartListService.get(pageRequest, member.getId());
 
         //then
-        assertThat(response.getCartItems()).isInstanceOf(SliceResponse.class);
-        assertThat(response.getCartItems().getSize()).isEqualTo(pageSize);
-        assertThat(response.getCartItems().getSort().getDirection()).isEqualTo(Sort.Direction.DESC.toString());
-        assertThat(response.getCartItems().getSort().getOrderProperty()).isEqualTo("createdAt");
-        assertThat(response.getCartItems().getCurrentPage()).isEqualTo(0);
-        assertThat(response.getCartItems().isFirst()).isTrue();
-        assertThat(response.getCartItems().isLast()).isFalse();
-        assertThat(response.getCartItems().getContent()).hasSize(pageSize);
+        assertThat(sliceResponse).isInstanceOf(SliceResponse.class);
+        assertThat(sliceResponse.getSize()).isEqualTo(pageSize);
+        assertThat(sliceResponse.getSort().getDirection()).isEqualTo(Sort.Direction.DESC.toString());
+        assertThat(sliceResponse.getSort().getOrderProperty()).isEqualTo("createdAt");
+        assertThat(sliceResponse.getCurrentPage()).isEqualTo(0);
+        assertThat(sliceResponse.isFirst()).isTrue();
+        assertThat(sliceResponse.isLast()).isFalse();
+        assertThat(sliceResponse.getContent()).hasSize(pageSize);
     }
 
     @DisplayName("장바구니를 조회할 수 있다")
@@ -152,15 +150,15 @@ class GetCartListServiceTest {
         Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
 
         //when
-        GetCartListHttp.Response response = getCartListService.get(pageRequest, member.getId());
+        SliceResponse<GetCartDto> sliceResponse = getCartListService.get(pageRequest, member.getId());
 
         //then
         // response.getCartItems().getContent()의 각 요소가 GetCartDto 클래스의 인스턴스인지 확인
-        assertThat(response.getCartItems().getContent())
+        assertThat(sliceResponse.getContent())
                 .allSatisfy(cartItem -> assertThat(cartItem).isInstanceOf(GetCartDto.class));
 
         // 각각의 CartInfo 객체가 2개의 옵션을 가지고 있으며 각 옵션 이름은 '옵션1', '옵션2' 여야 한다.
-        assertThat(response.getCartItems().getContent())
+        assertThat(sliceResponse.getContent())
                 .extracting(GetCartDto::getOptionNames)
                 .as("OptionNames의 크기는 2여야 합니다.")
                 .allMatch(optionNames -> optionNames.size() == 2)
