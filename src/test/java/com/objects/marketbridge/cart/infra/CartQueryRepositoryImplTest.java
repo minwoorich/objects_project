@@ -2,12 +2,12 @@ package com.objects.marketbridge.cart.infra;
 
 import com.objects.marketbridge.cart.domain.Cart;
 import com.objects.marketbridge.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.cart.service.port.CartDtoRepository;
 import com.objects.marketbridge.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +29,7 @@ import static org.assertj.core.api.Assertions.*;
 class CartQueryRepositoryImplTest {
 
     @Autowired CartQueryRepository cartQueryRepository;
+    @Autowired CartDtoRepository cartDtoRepository;
     @Autowired CartCommendRepository cartCommendRepository;
     @Autowired ProductRepository productRepository;
     @Autowired MemberRepository memberRepository;
@@ -97,6 +98,7 @@ class CartQueryRepositoryImplTest {
 
         //then
         assertThat(slicedCart.isFirst()).isTrue();
+        assertThat(slicedCart.hasNext()).isTrue();
         assertThat(slicedCart.getNumberOfElements()).isEqualTo(2);
         assertThat(slicedCart.getContent().size()).isEqualTo(2);
         assertThat(slicedCart.getContent().get(0).getProduct().getProductNo()).isEqualTo("productNo6");// 최신 등록 순
@@ -138,6 +140,7 @@ class CartQueryRepositoryImplTest {
 
         //then
         assertThat(slicedCart.isLast()).isTrue();
+        assertThat(slicedCart.hasNext()).isFalse();
         assertThat(slicedCart.getNumberOfElements()).isEqualTo(2);
         assertThat(slicedCart.getContent().size()).isEqualTo(2);
         assertThat(slicedCart.getContent().get(0).getProduct().getProductNo()).isEqualTo("productNo2");// 최신 등록 순

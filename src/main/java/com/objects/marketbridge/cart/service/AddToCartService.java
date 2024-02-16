@@ -21,7 +21,7 @@ import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUP
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class AddToCartService {
 
     private final CartCommendRepository cartCommendRepository;
@@ -29,6 +29,7 @@ public class AddToCartService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
+    @Transactional
     public Cart add(CreateCartDto createCartDto) {
         // 1. 이미 장바구니에 담긴 상품인지 아닌지 검증
         validDuplicate(createCartDto.getProductNo());

@@ -35,6 +35,11 @@ public class CartQueryRepositoryImpl implements CartQueryRepository {
     }
 
     @Override
+    public List<Cart> findAll() {
+        return cartJpaRepository.findAll();
+    }
+
+    @Override
     public Optional<Cart> findByProductNo(String productNo) {
         return cartJpaRepository.findByProductNo(productNo);
     }
