@@ -6,7 +6,6 @@ import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 public class FakeOrderQueryRepository extends BaseFakeOrderRepository implements OrderQueryRepository {
@@ -41,6 +40,11 @@ public class FakeOrderQueryRepository extends BaseFakeOrderRepository implements
 
     @Override
     public Page<Order> findAllPaged(GetOrderHttp.Condition condition, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Order findByOrderNoFetchJoin(String orderNo) {
         return null;
     }
 }

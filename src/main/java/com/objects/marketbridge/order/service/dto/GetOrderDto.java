@@ -57,20 +57,4 @@ public class GetOrderDto {
                 .orderDetails(order.getOrderDetails().stream().map(GetOrderDetailDto::of).collect(Collectors.toList()))
                 .build();
     }
-
-    public static GetOrderDto create(Long memberId, AddressValue address, String orderName, String orderNo, Long totalDiscount, Long totalPrice, Long realPrice, LocalDateTime createdAt, String paymentMethod, String cardIssuerName, List<GetOrderDetailDto> orderDetails) {
-        return GetOrderDto.builder()
-                .memberId(memberId)
-                .address(address)
-                .orderNo(orderNo)
-                .orderName(orderName)
-                .totalDiscount(totalDiscount)
-                .totalPrice(totalPrice)
-                .realPrice(realPrice)
-                .createdAt(createdAt)
-                .paymentMethod(paymentMethod)
-                .cardIssuerName(cardIssuerName)
-                .orderDetails(orderDetails)
-                .build();
-    }
 }
