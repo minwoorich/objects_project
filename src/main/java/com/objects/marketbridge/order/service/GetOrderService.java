@@ -26,7 +26,6 @@ import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.
 @Transactional(readOnly = true)
 public class GetOrderService {
 
-    private final OrderDtoRepository orderDtoRepository;
     private final OrderQueryRepository orderQueryRepository;
 
     public PageResponse<GetOrderHttp.Response> search(Pageable pageable, Condition condition) {
@@ -42,8 +41,8 @@ public class GetOrderService {
     }
 
     public GetOrderDetailHttp.Response getOrderDetails(String orderNo) {
-        GetOrderDto getOrderDto = orderDtoRepository.findByOrderNo(orderNo);
+        Order order = orderQueryRepository.findByOrderNoFetchJoin(orderNo);
 
-        return GetOrderDetailHttp.Response.of(getOrderDto);
+        return GetOrderDetailHttp.Response.of(GetOrderDto.of(order));
     }
 }

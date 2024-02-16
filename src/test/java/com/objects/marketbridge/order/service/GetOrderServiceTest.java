@@ -160,8 +160,8 @@ class GetOrderServiceTest {
 
         // when
         PageResponse<GetOrderHttp.Response> response1 = getOrderService.search(pageRequest1, condition);
-        PageResponse<GetOrderHttp.Response> response2 = getOrderService.search(pageRequest1, condition);
-        PageResponse<GetOrderHttp.Response> response3 = getOrderService.search(pageRequest1, condition);
+        PageResponse<GetOrderHttp.Response> response2 = getOrderService.search(pageRequest2, condition);
+        PageResponse<GetOrderHttp.Response> response3 = getOrderService.search(pageRequest3, condition);
 
         //then
         assertThat(response1.getContent()).hasSize(4);
@@ -169,7 +169,7 @@ class GetOrderServiceTest {
         assertThat(response3.getContent()).hasSize(0);
     }
 
-    @DisplayName("상세 주문 조회")
+    @DisplayName("주문 상세 조회")
     @Test
     void getOrderDetails(){
         //given
