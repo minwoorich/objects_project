@@ -7,6 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
@@ -37,8 +38,8 @@ public class SliceResponse<T> {
 
         public SortResponse(Sort sort) {
             this.sorted = sort.isSorted();
-            this.direction = sort.stream().map(Sort.Order::getDirection).toString();
-            this.orderProperty = sort.stream().map(Sort.Order::getProperty).toString();
+            this.direction = sort.stream().map(o -> o.getDirection().toString()).collect(Collectors.joining(","));
+            this.orderProperty = sort.stream().map(Sort.Order::getProperty).collect(Collectors.joining(", "));
         }
     }
 }
