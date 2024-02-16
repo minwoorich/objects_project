@@ -27,7 +27,13 @@ public class FakePaymentClient implements PaymentClient {
 
     @Override
     public PaymentDto payment(Order order, String pgToken) {
-        return null;
+        return PaymentDto.builder()
+                .orderName(order.getOrderName())
+                .quantity(3L)
+                .totalAmount(order.getTotalPrice())
+                .discountAmount(order.getTotalDiscount())
+                .taxFreeAmount(0L)
+                .build();
     }
 
 }
