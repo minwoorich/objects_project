@@ -7,8 +7,6 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
-import com.objects.marketbridge.order.infra.dtio.OrderDtio;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.product.domain.Product;
@@ -16,7 +14,6 @@ import com.objects.marketbridge.product.infra.coupon.CouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest
 @Slf4j
-class OrderDtioRepositoryTest {
+class OrderQueryRepositoryTest {
 
     @Autowired
     OrderCommendRepository orderCommendRepository;
@@ -47,7 +43,7 @@ class OrderDtioRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
     @Autowired
-    OrderDtoRepository orderDtoRepository;
+    OrderQueryRepository orderQueryRepository;
     @Autowired
     CouponRepository couponRepository;
     @Autowired
@@ -88,7 +84,7 @@ class OrderDtioRepositoryTest {
 
         Payment payment = createPayment("카드", "카카오뱅크");
 
-                                                                                                                                   // 상품 번호
+        // 상품 번호
         Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3), payment); // 1,2,3
         Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6), payment); // 1,2,4
         Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9), payment); // 1,3,4
@@ -101,7 +97,7 @@ class OrderDtioRepositoryTest {
                 = createCondition(member.getId(), "상품", String.valueOf(LocalDateTime.now().getYear()));
 
         //when
-        Page<OrderDtio> orders1_3_c1 = orderDtoRepository.findAllPaged(condition1, pageSize1_3);
+        Page<Order> orders1_3_c1 = orderQueryRepository.findAllPaged(condition1, pageSize1_3);
 
         //then
         assertThat(orders1_3_c1.getSize()).isEqualTo(3);
@@ -117,64 +113,6 @@ class OrderDtioRepositoryTest {
                 .memberId(memberId)
                 .keyword(keyword)
                 .year(year)
-                .build();
-    }
-
-
-
-    @DisplayName("상세 주문 조회 하기(member, address, orderDetails, product, payment 전부 fetch join)")
-    @Test
-    void getOrderDetails() {
-        // given
-        Member member = createMember("1");
-        Address address = createAddress("서울", "세종대로", "민들레아파트");
-        member.addAddress(address);
-        memberRepository.save(member);
-
-        Product product1 = createProduct(1000L, "1");
-        Product product2 = createProduct(2000L, "2");
-        Product product3 = createProduct(3000L, "3");
-        productRepository.saveAll(List.of(product1, product2, product3));
-
-        OrderDetail orderDetail1 = createOrderDetail(product1,  1L, "1");
-        OrderDetail orderDetail2 = createOrderDetail(product2,  1L, "1");
-        OrderDetail orderDetail3 = createOrderDetail(product3,  1L, "1");
-
-        Payment payment = createPayment("카드", "카카오뱅크");
-
-        Order order = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3), payment);
-
-        orderCommendRepository.save(order);
-
-        // when
-        OrderDtio orderDtio = orderDtoRepository.findByOrderNo(order.getOrderNo());
-
-        //then
-        assertThat(orderDtio.getMemberId()).isEqualTo(member.getId());
-        assertThat(orderDtio.getAddress()).isEqualTo(address.getAddressValue());
-
-        assertThat(orderDtio.getOrderDetails()).hasSize(3);
-        assertThat(orderDtio.getOrderDetails().get(0).getOrderDetailId()).isEqualTo(orderDetail1.getId());
-        assertThat(orderDtio.getOrderDetails().get(1).getOrderDetailId()).isEqualTo(orderDetail2.getId());
-        assertThat(orderDtio.getOrderDetails().get(2).getOrderDetailId()).isEqualTo(orderDetail3.getId());
-
-        assertThat(orderDtio.getOrderDetails().get(0).getProduct().getProductId()).isEqualTo(product1.getId());
-        assertThat(orderDtio.getOrderDetails().get(1).getProduct().getProductId()).isEqualTo(product2.getId());
-        assertThat(orderDtio.getOrderDetails().get(2).getProduct().getProductId()).isEqualTo(product3.getId());
-
-        assertThat(orderDtio.getPaymentMethod()).isEqualTo(payment.getPaymentMethod());
-        assertThat(orderDtio.getCardIssuerName()).isEqualTo(payment.getCardInfo().getCardIssuerName());
-
-    }
-
-    private Payment createPayment(String paymentMethod, String cardIssuerName) {
-        CardInfo cardInfo = CardInfo.builder()
-                .cardIssuerName(cardIssuerName)
-                .build();
-
-        return Payment.builder()
-                .paymentMethod(paymentMethod)
-                .cardInfo(cardInfo)
                 .build();
     }
 
@@ -229,4 +167,14 @@ class OrderDtioRepositoryTest {
                 .build();
     }
 
+    private Payment createPayment(String paymentMethod, String cardIssuerName) {
+        CardInfo cardInfo = CardInfo.builder()
+                .cardIssuerName(cardIssuerName)
+                .build();
+
+        return Payment.builder()
+                .paymentMethod(paymentMethod)
+                .cardInfo(cardInfo)
+                .build();
+    }
 }
