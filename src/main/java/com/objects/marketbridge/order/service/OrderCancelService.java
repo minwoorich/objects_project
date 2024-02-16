@@ -51,8 +51,8 @@ public class OrderCancelService extends OrderCancelReturnService {
         return RequestCancelDto.Response.of(orderDetail, numberOfCancellation, membership);
     }
 
-    public GetCancelDetailDto.Response findCancelDetail(Long orderCancelId, String membership) {
-        OrderCancelReturn cancelDetail = orderCancelReturnQueryRepository.findById(orderCancelId);
+    public GetCancelDetailDto.Response findCancelDetail(Long cancelledOrderDetailId, String membership) {
+        OrderCancelReturn cancelDetail = orderCancelReturnQueryRepository.findById(cancelledOrderDetailId);
 
         return GetCancelDetailDto.Response.of(cancelDetail, membership, dateTimeHolder);
     }

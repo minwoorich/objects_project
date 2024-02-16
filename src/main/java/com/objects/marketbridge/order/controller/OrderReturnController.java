@@ -41,14 +41,13 @@ public class OrderReturnController {
         return ApiResponse.ok(RequestReturnHttp.Response.of(orderReturnService.findReturnInfo(orderDetailId, numberOfReturns, membership)));
     }
 
-    // TODO test 작성 , restdocs
     @GetMapping("/return/detail")
     public ApiResponse<GetReturnDetailHttp.Response> getReturnDetail(
-            @RequestParam(name = "orderReturnId") Long orderReturnId,
+            @RequestParam(name = "returnedOrderDetailId") Long returnedOrderDetailId,
             @AuthMemberId Long memberId
     ) {
         String membership = memberRepository.findById(memberId).getMembership();
-        return ApiResponse.ok(GetReturnDetailHttp.Response.of(orderReturnService.findReturnDetail(orderReturnId, membership)));
+        return ApiResponse.ok(GetReturnDetailHttp.Response.of(orderReturnService.findReturnDetail(returnedOrderDetailId, membership)));
     }
 
 }
