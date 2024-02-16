@@ -298,7 +298,7 @@ public class OrderReturnControllerRestDocsTest {
                         get("/orders/return/detail")
                                 .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                                 .accept(MediaType.APPLICATION_JSON)
-                                .param("orderReturnId", "1")
+                                .param("returnedOrderDetailId", "1")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -306,7 +306,7 @@ public class OrderReturnControllerRestDocsTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
-                                parameterWithName("orderReturnId")
+                                parameterWithName("returnedOrderDetailId")
                                         .description("반품 상세 ID")
                         ),
                         responseFields(

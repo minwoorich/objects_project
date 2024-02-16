@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.objects.marketbridge.order.domain.StatusCodeType.*;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -52,8 +54,4 @@ public class OrderCancelReturn extends BaseEntity {
                 .build();
     }
 
-    public void withdraw() {
-        this.statusCode = StatusCodeType.RETURN_CANCEL.getCode();
-        orderDetail.withdraw(quantity, previousStateCode);
-    }
 }

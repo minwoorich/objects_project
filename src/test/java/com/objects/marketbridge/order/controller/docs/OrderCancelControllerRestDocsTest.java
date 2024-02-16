@@ -294,7 +294,7 @@ public class OrderCancelControllerRestDocsTest {
                         get("/orders/cancel/detail")
                                 .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                                 .accept(MediaType.APPLICATION_JSON)
-                                .param("orderCancelId", "1")
+                                .param("cancelledOrderDetailId", "1")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -302,7 +302,7 @@ public class OrderCancelControllerRestDocsTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
-                                parameterWithName("orderCancelId")
+                                parameterWithName("cancelledOrderDetailId")
                                         .description("주문 취소 ID")
                         ),
                         responseFields(
