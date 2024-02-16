@@ -7,6 +7,7 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.service.dto.GetOrderDto;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.product.domain.Product;
@@ -114,6 +115,50 @@ class OrderQueryRepositoryTest {
                 .keyword(keyword)
                 .year(year)
                 .build();
+    }
+
+    @DisplayName("상세 주문 조회 하기(member, address, orderDetails, product, payment 전부 fetch join)")
+    @Test
+    void getOrderDetails() {
+        // given
+        Member member = createMember("1");
+        Address address = createAddress("서울", "세종대로", "민들레아파트");
+        member.addAddress(address);
+        memberRepository.save(member);
+
+        Product product1 = createProduct(1000L, "1");
+        Product product2 = createProduct(2000L, "2");
+        Product product3 = createProduct(3000L, "3");
+        productRepository.saveAll(List.of(product1, product2, product3));
+
+        OrderDetail orderDetail1 = createOrderDetail(product1,  1L, "1");
+        OrderDetail orderDetail2 = createOrderDetail(product2,  1L, "1");
+        OrderDetail orderDetail3 = createOrderDetail(product3,  1L, "1");
+
+        Payment payment = createPayment("카드", "카카오뱅크");
+
+        Order order = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3), payment);
+        orderCommendRepository.save(order);
+
+        // when
+        Order findOrder = orderQueryRepository.findByOrderNoFetchJoin(order.getOrderNo());
+
+        //then
+        assertThat(findOrder.getMember().getId()).isEqualTo(member.getId());
+        assertThat(findOrder.getAddress().getAddressValue()).isEqualTo(address.getAddressValue());
+
+        assertThat(findOrder.getOrderDetails()).hasSize(3);
+        assertThat(findOrder.getOrderDetails().get(0).getId()).isEqualTo(orderDetail1.getId());
+        assertThat(findOrder.getOrderDetails().get(1).getId()).isEqualTo(orderDetail2.getId());
+        assertThat(findOrder.getOrderDetails().get(2).getId()).isEqualTo(orderDetail3.getId());
+
+        assertThat(findOrder.getOrderDetails().get(0).getProduct().getId()).isEqualTo(product1.getId());
+        assertThat(findOrder.getOrderDetails().get(1).getProduct().getId()).isEqualTo(product2.getId());
+        assertThat(findOrder.getOrderDetails().get(2).getProduct().getId()).isEqualTo(product3.getId());
+
+        assertThat(findOrder.getPayment().getPaymentMethod()).isEqualTo(payment.getPaymentMethod());
+        assertThat(findOrder.getPayment().getCardInfo().getCardIssuerName()).isEqualTo(payment.getCardInfo().getCardIssuerName());
+
     }
 
     private Order createOrder(Member member1, Address address, String orderNo, List<OrderDetail> orderDetails, Payment payment) {

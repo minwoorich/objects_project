@@ -24,6 +24,7 @@ import static com.objects.marketbridge.member.domain.QAddress.address;
 import static com.objects.marketbridge.member.domain.QMember.member;
 import static com.objects.marketbridge.order.domain.QOrder.order;
 import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
+import static com.objects.marketbridge.payment.domain.QPayment.payment;
 import static com.objects.marketbridge.product.domain.QProduct.product;
 import static com.querydsl.core.types.ExpressionUtils.count;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
@@ -136,5 +137,24 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
     private BooleanExpression eqMemberId(Long memberId) {
         return order.member.id.eq(memberId);
+    }
+
+    @Override
+    public Order findByOrderNoFetchJoin(String orderNo) {
+        return queryFactory
+                .selectFrom(order)
+                .innerJoin(order.address, address)
+                .innerJoin(order.member, member)
+                .innerJoin(order.payment, payment).fetchJoin()
+                .innerJoin(order.orderDetails, orderDetail).fetchJoin()
+                .innerJoin(orderDetail.product, product).fetchJoin()
+                .where(
+                        eqOrderNo(orderNo)
+                )
+                .fetchOne();
+    }
+
+    private BooleanExpression eqOrderNo(String orderNo) {
+        return order.orderNo.eq(orderNo);
     }
 }
