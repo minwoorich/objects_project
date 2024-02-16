@@ -1,7 +1,10 @@
 package com.objects.marketbridge.order.mock;
 
+import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,32 +35,12 @@ public class FakeOrderQueryRepository extends BaseFakeOrderRepository implements
     }
 
     @Override
-    public Order findByOrderNoWithOrderDetails(String orderNo) {
-        return null;
-    }
-
-    @Override
-    public Order findByIdWithOrderDetailsAndProduct(Long orderId) {
-        return null;
-    }
-
-    @Override
     public Order findByOrderNoWithOrderDetailsAndProduct(String orderNo) {
         return null;
     }
 
     @Override
-    public Order findByIdWithOrderDetail(Long orderId) {
-        return null;
-    }
-
-    @Override
-    public List<Order> findDistinctWithDetailsByMemberId(Long memberId) {
-        return null;
-    }
-
-    @Override
-    public Order findByTid(String tid) {
+    public Page<Order> findAllPaged(GetOrderHttp.Condition condition, Pageable pageable) {
         return null;
     }
 }
