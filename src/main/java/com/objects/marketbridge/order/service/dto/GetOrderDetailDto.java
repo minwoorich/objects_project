@@ -1,17 +1,18 @@
-package com.objects.marketbridge.order.infra.dtio;
+package com.objects.marketbridge.order.service.dto;
 
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.domain.StatusCodeType;
 import com.objects.marketbridge.product.domain.Product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
-public class OrderDetailDtio {
+public class GetOrderDetailDto {
 
     private Long orderDetailId;
     private ProductDto product;
@@ -23,7 +24,7 @@ public class OrderDetailDtio {
     private LocalDateTime cancelledAt;
 
     @Builder
-    public OrderDetailDtio(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime cancelledAt) {
+    public GetOrderDetailDto(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime cancelledAt) {
         this.orderDetailId = orderDetailId;
         this.product = product;
         this.quantity = quantity;
@@ -33,8 +34,8 @@ public class OrderDetailDtio {
         this.cancelledAt = cancelledAt;
     }
 
-    public static OrderDetailDtio of(OrderDetail orderDetail) {
-        return OrderDetailDtio.builder()
+    public static GetOrderDetailDto of(OrderDetail orderDetail) {
+        return GetOrderDetailDto.builder()
                 .orderDetailId(orderDetail.getId())
                 .quantity(orderDetail.getQuantity())
                 .orderNo(orderDetail.getOrderNo())
@@ -45,8 +46,8 @@ public class OrderDetailDtio {
                 .build();
     }
 
-    public static OrderDetailDtio create(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode,   LocalDateTime cancelledAt) {
-        return OrderDetailDtio.builder()
+    public static GetOrderDetailDto create(Long orderDetailId, ProductDto product, Long quantity, String orderNo, Long price, String statusCode, LocalDateTime cancelledAt) {
+        return GetOrderDetailDto.builder()
                 .orderDetailId(orderDetailId)
                 .product(product)
                 .quantity(quantity)
@@ -63,7 +64,7 @@ public class OrderDetailDtio {
     public static class ProductDto{
 
         private Long productId;
-        private String optionName;
+        private List<String> optionNames;
         private Boolean isOwn; // 로켓 true , 오픈 마켓 false
         private String name;
         private Long price;
@@ -71,9 +72,9 @@ public class OrderDetailDtio {
         private String productNo;
 
         @Builder
-        private ProductDto(Long productId, String optionName, Boolean isOwn, String name, Long price, String thumbImg, String productNo) {
+        private ProductDto(Long productId, List<String> optionNames, Boolean isOwn, String name, Long price, String thumbImg, String productNo) {
             this.productId = productId;
-            this.optionName = optionName;
+            this.optionNames = optionNames;
             this.isOwn = isOwn;
             this.name = name;
             this.price = price;
@@ -84,19 +85,19 @@ public class OrderDetailDtio {
         public static ProductDto of(Product product) {
             return ProductDto.builder()
                     .productId(product.getId())
-                    .name(product.getName())
+                    .optionNames(product.getProdOptions().stream().map(po -> po.getOption().getName()).collect(Collectors.toList()))
                     .isOwn(product.getIsOwn())
+                    .name(product.getName())
                     .price(product.getPrice())
                     .thumbImg(product.getThumbImg())
                     .productNo(product.getProductNo())
                     .build();
-
         }
 
-        public static ProductDto create(Long productId, String optionName, Boolean isOwn, String name, Long price, String thumbImg, String productNo) {
+        public static ProductDto create(Long productId, List<String> optionNames, Boolean isOwn, String name, Long price, String thumbImg, String productNo) {
             return ProductDto.builder()
                     .productId(productId)
-                    .optionName(optionName)
+                    .optionNames(optionNames)
                     .isOwn(isOwn)
                     .name(name)
                     .price(price)
