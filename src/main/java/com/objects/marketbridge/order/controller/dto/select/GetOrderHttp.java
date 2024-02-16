@@ -1,10 +1,11 @@
 package com.objects.marketbridge.order.controller.dto.select;
 
-import com.objects.marketbridge.order.infra.dtio.OrderDtio;
+import com.objects.marketbridge.order.service.dto.GetOrderDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,22 +14,23 @@ public class GetOrderHttp {
     @Getter
     @NoArgsConstructor
     public static class Response {
-        List<OrderInfo> orderInfos;
+
+        private String orderNo;
+        private String createdAt;// yyyy.MM.dd HH:mm:ss
+        private List<OrderDetailInfo> orderDetailInfos;
 
         @Builder
-        private Response(List<OrderInfo> orderInfos) {
-            this.orderInfos = orderInfos;
+        public Response(String createdAt, String orderNo, List<OrderDetailInfo> orderDetailInfos) {
+            this.createdAt = createdAt;
+            this.orderNo = orderNo;
+            this.orderDetailInfos = orderDetailInfos;
         }
 
-        public static Response of(List<OrderDtio> orderDtios) {
+        public static Response of(GetOrderDto getOrderDto) {
             return Response.builder()
-                    .orderInfos(orderDtios.stream().map(OrderInfo::of).collect(Collectors.toList()))
-                    .build();
-        }
-
-        public static Response create(List<OrderInfo> orderInfos) {
-            return Response.builder()
-                    .orderInfos(orderInfos)
+                    .createdAt(getOrderDto.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .orderNo(getOrderDto.getOrderNo())
+                    .orderDetailInfos(getOrderDto.getOrderDetails().stream().map(OrderDetailInfo::of).collect(Collectors.toList()))
                     .build();
         }
     }
@@ -47,5 +49,4 @@ public class GetOrderHttp {
             this.memberId = memberId;
         }
     }
-
 }
