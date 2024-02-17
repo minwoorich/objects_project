@@ -1,8 +1,8 @@
 package com.objects.marketbridge.order.domain;
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.member.domain.Coupon;
-import com.objects.marketbridge.member.domain.MemberCoupon;
+import com.objects.marketbridge.coupon.domain.Coupon;
+import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;

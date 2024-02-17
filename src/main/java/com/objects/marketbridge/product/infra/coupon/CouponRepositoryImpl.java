@@ -1,6 +1,6 @@
 package com.objects.marketbridge.product.infra.coupon;
 
-import com.objects.marketbridge.member.domain.Coupon;
+import com.objects.marketbridge.coupon.domain.Coupon;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

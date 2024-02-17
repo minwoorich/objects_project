@@ -1,5 +1,7 @@
 package com.objects.marketbridge.payment.service;
 
+import com.objects.marketbridge.coupon.domain.Coupon;
+import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.member.domain.*;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.Order;
@@ -25,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
 import static org.assertj.core.api.Assertions.assertThat;
