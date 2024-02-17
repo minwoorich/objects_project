@@ -44,7 +44,7 @@ public class FakeOrderQueryRepository extends BaseFakeOrderRepository implements
     }
 
     @Override
-    public Order findByOrderNoFetchJoin(String orderNo) {
+    public Order findByOrderIdFetchJoin(Long orderId) {
         return null;
     }
 }

@@ -40,8 +40,8 @@ public class CartQueryRepositoryImpl implements CartQueryRepository {
     }
 
     @Override
-    public Optional<Cart> findByProductNo(String productNo) {
-        return cartJpaRepository.findByProductNo(productNo);
+    public Optional<Cart> findByProductId(Long productId) {
+        return cartJpaRepository.findByProductId(productId);
     }
 
     @Override

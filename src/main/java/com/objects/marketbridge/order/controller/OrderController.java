@@ -93,10 +93,10 @@ public class OrderController {
     }
 
     @UserAuthorize
-    @GetMapping("/orders/{orderNo}")
+    @GetMapping("/orders/{orderId}")
     public ApiResponse<GetOrderDetailHttp.Response> getOrderDetails(
-            @PathVariable(name = "orderNo") String orderNo){
+            @PathVariable(name = "orderId") Long orderId){
 
-        return ApiResponse.ok(getOrderService.getOrderDetails(orderNo));
+        return ApiResponse.ok(getOrderService.getOrderDetails(orderId));
     }
 }

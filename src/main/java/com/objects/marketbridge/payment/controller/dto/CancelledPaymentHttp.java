@@ -1,6 +1,7 @@
 package com.objects.marketbridge.payment.controller.dto;
 
 import com.objects.marketbridge.common.dto.KakaoPayOrderResponse;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.payment.domain.SelectedCardInfo;
@@ -9,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,12 +49,12 @@ public class CancelledPaymentHttp {
         public static CancelledPaymentHttp.Response of(KakaoPayOrderResponse kakaoResp, Order order) {
             // null 처리를 위한 로직
             SelectedCardInfo cardInfo = filterCardInfo(kakaoResp.getSelectedCardInfo());
-
-
+            String canceledAt = filterCanceledAt(kakaoResp.getCanceledAt());
             return Response.builder()
                     .paymentMethodType(kakaoResp.getPaymentMethodType())
                     .orderName(kakaoResp.getItemName())
-                    .canceledAt(kakaoResp.getCanceledAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .canceledAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .canceledAt(canceledAt)
                     .kakaoStatus(kakaoResp.getKakaoStatus())
                     .cardInstallMonth(cardInfo.getInstallMonth())
                     .cardIssuerName(cardInfo.getCardCorpName())
@@ -68,6 +70,13 @@ public class CancelledPaymentHttp {
                 return SelectedCardInfo.create(cardInfo.getCardBin(), cardInfo.getInstallMonth(), cardInfo.getCardCorpName());
             }
             return SelectedCardInfo.create(null, null, null);
+        }
+
+        private static String filterCanceledAt(LocalDateTime canceledAt) {
+            if (canceledAt != null) {
+                return canceledAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            }
+            return null;
         }
 
 

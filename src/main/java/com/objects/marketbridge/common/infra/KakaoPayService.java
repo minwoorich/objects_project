@@ -3,17 +3,23 @@ package com.objects.marketbridge.common.infra;
 
 import com.objects.marketbridge.common.config.KakaoPayConfig;
 import com.objects.marketbridge.common.dto.*;
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+
+import java.time.LocalDateTime;
 
 import static com.objects.marketbridge.common.config.KakaoPayConfig.*;
 import static com.objects.marketbridge.common.security.constants.SecurityConst.AUTHORIZATION;
@@ -30,8 +36,6 @@ public class KakaoPayService {
     private final KakaoPayConfig kakaoPayConfig;
 
     public KakaoPayReadyResponse ready(KakaoPayReadyRequest request) {
-
-//        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
 
         RestClient restClient = setup();
 
@@ -59,8 +63,6 @@ public class KakaoPayService {
 
     //정기구독 2회차
     public KakaoPayApproveResponse subsApprove(KakaoPaySubsApproveRequest request) {
-
-//        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
 
         RestClient restClient = setup();
 
@@ -94,15 +96,21 @@ public class KakaoPayService {
     // 정기결제 상태조회
 
     // 주문조회
-    public KakaoPayOrderResponse getOrders(KakaoPayOrderRequest request) {
+    public KakaoPayOrderResponse getOrders(KakaoPayOrderRequest request) throws RestClientException{
 
         RestClient restClient = setup();
 
-        return restClient.post()
+        KakaoPayOrderResponse response = restClient.post()
                 .uri(ORDER_END_POINT)
                 .body(request)
                 .retrieve()
                 .body(KakaoPayOrderResponse.class);
+
+        if (response == null) {
+            throw new RestClientException("카카오페이 API 호출에 실패 했습니다");
+        }
+
+        return response;
     }
 
 
@@ -113,7 +121,7 @@ public class KakaoPayService {
                 .baseUrl(KAKAO_BASE_URL)
                 .defaultHeaders((httpHeaders -> {
                     httpHeaders.add(AUTHORIZATION, AUTH_SCHEME+ kakaoPayConfig.getSecretKeyDev());
-                    httpHeaders.add(ACCEPT, APPLICATION_JSON.toString()+";charset=UTF-8");
+                    httpHeaders.add(ACCEPT, APPLICATION_JSON+";charset=UTF-8");
                     httpHeaders.add(CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
                 }))
                 .build();

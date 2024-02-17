@@ -10,11 +10,13 @@ import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.controller.dto.CancelledPaymentHttp;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class QuitPaymentService {
 
     private final OrderCommendRepository orderCommendRepository;
@@ -40,7 +42,8 @@ public class QuitPaymentService {
     public CancelledPaymentHttp.Response response(String orderNo) {
         Order order = orderQueryRepository.findByOrderNo(orderNo);
         KakaoPayOrderRequest kakaoPayOrderRequest = KakaoPayOrderRequest.create(KakaoPayConfig.ONE_TIME_CID, order.getTid());
-        CancelledPaymentHttp.Response response = CancelledPaymentHttp.Response.of(kakaoPayService.getOrders(kakaoPayOrderRequest), order);
+        KakaoPayOrderResponse kakaoResponse = kakaoPayService.getOrders(kakaoPayOrderRequest);
+        CancelledPaymentHttp.Response response = CancelledPaymentHttp.Response.of(kakaoResponse, order);
 
         return response;
     }

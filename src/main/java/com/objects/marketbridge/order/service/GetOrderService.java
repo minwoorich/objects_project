@@ -40,8 +40,8 @@ public class GetOrderService {
         return new PageResponse<>(new PageImpl<>(response, pageable, pagedOrders.getTotalElements()));
     }
 
-    public GetOrderDetailHttp.Response getOrderDetails(String orderNo) {
-        Order order = orderQueryRepository.findByOrderNoFetchJoin(orderNo);
+    public GetOrderDetailHttp.Response getOrderDetails(Long orderId) {
+        Order order = orderQueryRepository.findByOrderIdFetchJoin(orderId);
 
         return GetOrderDetailHttp.Response.of(GetOrderDto.of(order));
     }

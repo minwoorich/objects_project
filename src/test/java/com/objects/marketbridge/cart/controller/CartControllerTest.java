@@ -70,7 +70,7 @@ class CartControllerTest {
     @WithMockCustomUser
     void addToCart() throws Exception {
         // given
-        CreateCartHttp.Request request = CreateCartHttp.Request.create("productNo", 1L, false);
+        CreateCartHttp.Request request = CreateCartHttp.Request.create(1L, 1L, false);
         given(addToCartService.add(request.toDto(anyLong()))).willReturn(any(Cart.class));
 
 
@@ -89,8 +89,8 @@ class CartControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("productNo").type(JsonFieldType.STRING)
-                                        .description("상품 번호"),
+                                fieldWithPath("productId").type(JsonFieldType.NUMBER)
+                                        .description("상품 아이디"),
                                 fieldWithPath("quantity").type(JsonFieldType.NUMBER)
                                         .description("상품 수량"),
                                 fieldWithPath("isSubs").type(JsonFieldType.BOOLEAN)

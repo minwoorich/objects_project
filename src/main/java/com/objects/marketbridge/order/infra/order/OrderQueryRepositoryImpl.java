@@ -140,7 +140,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
     }
 
     @Override
-    public Order findByOrderNoFetchJoin(String orderNo) {
+    public Order findByOrderIdFetchJoin(Long orderId) {
         return queryFactory
                 .selectFrom(order)
                 .innerJoin(order.address, address)
@@ -149,12 +149,12 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
                 .innerJoin(order.orderDetails, orderDetail).fetchJoin()
                 .innerJoin(orderDetail.product, product).fetchJoin()
                 .where(
-                        eqOrderNo(orderNo)
+                        eqOrderId(orderId)
                 )
                 .fetchOne();
     }
 
-    private BooleanExpression eqOrderNo(String orderNo) {
-        return order.orderNo.eq(orderNo);
+    private BooleanExpression eqOrderId(Long orderId) {
+        return order.id.eq(orderId);
     }
 }

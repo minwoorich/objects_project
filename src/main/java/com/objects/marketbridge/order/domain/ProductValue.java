@@ -1,6 +1,7 @@
 package com.objects.marketbridge.order.domain;
 
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,15 +10,16 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor
 public class ProductValue {
-    String productNo;
+    @NotEmpty
+    Long productId;
     Long sellerId;
     Long couponId;
     Long quantity;
     String deliveredDate;
 
     @Builder
-    private ProductValue(String productNo, Long sellerId, Long couponId, Long quantity, String deliveredDate) {
-        this.productNo = productNo;
+    public ProductValue(Long productId, Long sellerId, Long couponId, Long quantity, String deliveredDate) {
+        this.productId = productId;
         this.sellerId = sellerId;
         this.couponId = couponId;
         this.quantity = quantity;

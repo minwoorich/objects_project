@@ -141,7 +141,7 @@ class OrderQueryRepositoryTest {
         orderCommendRepository.save(order);
 
         // when
-        Order findOrder = orderQueryRepository.findByOrderNoFetchJoin(order.getOrderNo());
+        Order findOrder = orderQueryRepository.findByOrderIdFetchJoin(order.getId());
 
         //then
         assertThat(findOrder.getMember().getId()).isEqualTo(member.getId());

@@ -171,8 +171,12 @@ public class OrderControllerRestDocsTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("amount").type(JsonFieldType.NUMBER)
-                                        .description("총 주문 금액"),
+                                fieldWithPath("totalAmount").type(JsonFieldType.NUMBER)
+                                        .description("총 주문 금액 (쿠폰 할인 적용 전)"),
+                                fieldWithPath("totalDiscountAmount").type(JsonFieldType.NUMBER)
+                                        .description("할인 금액"),
+                                fieldWithPath("realAmount").type(JsonFieldType.NUMBER)
+                                        .description("실 결제 금액 (할인 적용 후)"),
                                 fieldWithPath("addressId").type(JsonFieldType.NUMBER)
                                         .description("배송지 ID"),
                                 fieldWithPath("orderName").type(JsonFieldType.STRING)
@@ -182,7 +186,7 @@ public class OrderControllerRestDocsTest {
                                 fieldWithPath("productValues").type(JsonFieldType.ARRAY)
                                         .description("주문 상품 정보"),
 
-                                fieldWithPath("productValues[].productNo").type(JsonFieldType.STRING)
+                                fieldWithPath("productValues[].productId").type(JsonFieldType.NUMBER)
                                         .description("상품 아이디"),
                                 fieldWithPath("productValues[].couponId").type(JsonFieldType.NUMBER)
                                         .description("사용한 쿠폰 아이디"),
@@ -191,7 +195,7 @@ public class OrderControllerRestDocsTest {
                                 fieldWithPath("productValues[].quantity").type(JsonFieldType.NUMBER)
                                         .description("주문 상품 수량"),
                                 fieldWithPath("productValues[].deliveredDate").type(JsonFieldType.STRING)
-                                        .description("예상 배송 날짜")
+                                        .description("예상 배송 날짜 (yyyy-MM-dd HH:mm:ss)")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -222,7 +226,9 @@ public class OrderControllerRestDocsTest {
 
     private CreateOrderHttp.Request getCreateOrderRequest(List<ProductValue> productValues) {
         return CreateOrderHttp.Request.builder()
-                .amount(20000L)
+                .totalAmount(20000L)
+                .realAmount(15000L)
+                .totalDiscountAmount(5000L)
                 .addressId(1L)
                 .orderName("가방외 1건")
                 .productValues(productValues)
@@ -234,14 +240,14 @@ public class OrderControllerRestDocsTest {
                 .deliveredDate("2024-01-21")
                 .sellerId(1L)
                 .couponId(1L)
-                .productNo("productNo1")
+                .productId(1L)
                 .quantity(1L).build();
 
         ProductValue productValue2 = ProductValue.builder()
                 .deliveredDate("2024-01-21")
                 .sellerId(2L)
                 .couponId(2L)
-                .productNo("productNo2")
+                .productId(2L)
                 .quantity(2L).build();
 
         return List.of(productValue1, productValue2);
@@ -371,10 +377,10 @@ public class OrderControllerRestDocsTest {
                 .paymentInfo(createPaymentInfo())
                 .build();
 
-        given(getOrderService.getOrderDetails(anyString())).willReturn(response);
+        given(getOrderService.getOrderDetails(anyLong())).willReturn(response);
 
         //when,
-        MockHttpServletRequestBuilder requestBuilder = get("/orders/{orderNo}", "orderNo1")
+        MockHttpServletRequestBuilder requestBuilder = get("/orders/{orderId}", "1")
                 .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                 .accept(MediaType.APPLICATION_JSON);
         // then
@@ -384,7 +390,7 @@ public class OrderControllerRestDocsTest {
                 .andDo(document("order-detail-list",
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("orderNo").description("주문 번호")
+                                parameterWithName("orderId").description("주문 번호")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

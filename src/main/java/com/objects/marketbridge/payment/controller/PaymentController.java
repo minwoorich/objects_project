@@ -1,6 +1,8 @@
 package com.objects.marketbridge.payment.controller;
 
 import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.payment.controller.dto.CancelledPaymentHttp;
 import com.objects.marketbridge.payment.controller.dto.CompleteOrderHttp;
@@ -8,10 +10,14 @@ import com.objects.marketbridge.payment.service.CreatePaymentService;
 import com.objects.marketbridge.payment.service.QuitPaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClientException;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,17 +42,26 @@ public class PaymentController {
     }
 
     @GetMapping("/kakao-pay/fail/{orderNo}") // 결제 승인 실패
-    public ApiResponse<?> kakaoPaymentApproveFail(@PathVariable(name = "orderNo") String orderNo){
+    public ApiResponse<?> kakaoPaymentApproveFail(
+            @PathVariable(name = "orderNo") String orderNo){
         // TODO : 결제 승인 실패로직 추가해야함
 
         return ApiResponse.ok(null);
     }
 
     @GetMapping("/kakao-pay/cancel/{orderNo}") // 결제 승인 취소
-    public ApiResponse<CancelledPaymentHttp.Response> kakaoPaymentApproveCancel(@PathVariable(name = "orderNo") String orderNo){
+    public ApiResponse<CancelledPaymentHttp.Response> kakaoPaymentApproveCancel(
+            @PathVariable(name = "orderNo") String orderNo){
 
-        CancelledPaymentHttp.Response response = quitPaymentService.response(orderNo);
-        quitPaymentService.cancel(orderNo);
+        CancelledPaymentHttp.Response response = null;
+
+        try {
+            response = quitPaymentService.response(orderNo);
+        } catch (RestClientException e) {
+            log.error(e.getMessage(), e);
+        }finally {
+            quitPaymentService.cancel(orderNo);
+        }
 
         return ApiResponse.ok(response);
     }

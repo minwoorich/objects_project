@@ -57,8 +57,8 @@ class CartQueryRepositoryImplTest {
         cartCommendRepository.saveAll(List.of(cart1, cart2));
 
         //when
-        Optional<Cart> findProduct1 = cartQueryRepository.findByProductNo("productNo1");
-        Optional<Cart> findProduct2 = cartQueryRepository.findByProductNo("productNo2");
+        Optional<Cart> findProduct1 = cartQueryRepository.findByProductId(product1.getId());
+        Optional<Cart> findProduct2 = cartQueryRepository.findByProductId(product1.getId());
 
         //then
         assertThat(findProduct1.isPresent()).isTrue();
@@ -86,7 +86,13 @@ class CartQueryRepositoryImplTest {
         Cart cart4 = Cart.create(member, product4, false, 1L);
         Cart cart5 = Cart.create(member, product5, false, 1L);
         Cart cart6 = Cart.create(member, product6, false, 1L);
-        cartCommendRepository.saveAll(List.of(cart1, cart2, cart3, cart4, cart5, cart6));
+//        cartCommendRepository.saveAll(List.of(cart1, cart2, cart3, cart4, cart5, cart6));
+        cartCommendRepository.save(cart1);
+        cartCommendRepository.save(cart2);
+        cartCommendRepository.save(cart3);
+        cartCommendRepository.save(cart4);
+        cartCommendRepository.save(cart5);
+        cartCommendRepository.save(cart6);
 
         int pageNumber = 0;
         int pageSize = 2;
@@ -128,7 +134,13 @@ class CartQueryRepositoryImplTest {
         Cart cart4 = Cart.create(member, product4, false, 1L);
         Cart cart5 = Cart.create(member, product5, false, 1L);
         Cart cart6 = Cart.create(member, product6, false, 1L);
-        cartCommendRepository.saveAll(List.of(cart1, cart2, cart3, cart4, cart5, cart6));
+//        cartCommendRepository.saveAll(List.of(cart1, cart2, cart3, cart4, cart5, cart6));
+        cartCommendRepository.save(cart1);
+        cartCommendRepository.save(cart2);
+        cartCommendRepository.save(cart3);
+        cartCommendRepository.save(cart4);
+        cartCommendRepository.save(cart5);
+        cartCommendRepository.save(cart6);
 
         int pageNumber = 1;
         int pageSize = 4;

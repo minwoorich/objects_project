@@ -14,7 +14,7 @@ public interface OrderQueryRepository {
 
     Order findByOrderNo(String orderNo);
 
-    Order findByOrderNoFetchJoin(String orderNo);
+    Order findByOrderIdFetchJoin(Long orderId);
 
     Order findByOrderNoWithMember(String orderNo);
 
