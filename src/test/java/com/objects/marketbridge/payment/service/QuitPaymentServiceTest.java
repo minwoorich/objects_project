@@ -13,7 +13,7 @@ import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.coupon.CouponRepository;
+import com.objects.marketbridge.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;

@@ -13,7 +13,7 @@ import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
+import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
