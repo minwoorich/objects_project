@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.cart.controller.dto.CreateCartHttp;
 import com.objects.marketbridge.cart.domain.Cart;
 import com.objects.marketbridge.cart.service.AddToCartService;
+import com.objects.marketbridge.cart.service.GetCartListService;
+import com.objects.marketbridge.cart.service.dto.GetCartDto;
+import com.objects.marketbridge.common.interceptor.SliceResponse;
+import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -23,14 +30,19 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,6 +55,7 @@ class CartControllerTest {
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
     @MockBean AddToCartService addToCartService;
+    @MockBean GetCartListService getCartListService;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -54,9 +67,10 @@ class CartControllerTest {
 
     @DisplayName("[API] POST/carts 테스트")
     @Test
+    @WithMockCustomUser
     void addToCart() throws Exception {
         // given
-        CreateCartHttp.Request request = CreateCartHttp.Request.create("productNo", 1L, false);
+        CreateCartHttp.Request request = CreateCartHttp.Request.create(1L, 1L, false);
         given(addToCartService.add(request.toDto(anyLong()))).willReturn(any(Cart.class));
 
 
@@ -75,8 +89,8 @@ class CartControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("productNo").type(JsonFieldType.STRING)
-                                        .description("상품 번호"),
+                                fieldWithPath("productId").type(JsonFieldType.NUMBER)
+                                        .description("상품 아이디"),
                                 fieldWithPath("quantity").type(JsonFieldType.NUMBER)
                                         .description("상품 수량"),
                                 fieldWithPath("isSubs").type(JsonFieldType.BOOLEAN)
@@ -93,5 +107,114 @@ class CartControllerTest {
                                         .description("응답 데이터")
                         )
                 ));
+    }
+
+    @DisplayName("[API] GET/carts 테스트")
+    @Test
+    @WithMockCustomUser
+    void getCartItems() throws Exception {
+
+        //given
+        int pageNumber = 0;
+        int pageSize = 1;
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        SliceResponse<GetCartDto> sliceResponse = new SliceResponse<>(new SliceImpl<>(createDto(), pageRequest, true));
+
+        given(getCartListService.get(any(Pageable.class), anyLong())).willReturn(sliceResponse);
+
+        //when
+        MockHttpServletRequestBuilder requestBuilder =
+                get("/carts")
+                        .param("page", "0")
+                        .param("size", "1")
+                        .param("sort", "createdAt,DESC")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .accept(MediaType.APPLICATION_JSON);
+
+        //then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("cart-list",
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("page").description("페이지 번호"),
+                                parameterWithName("size").description("페이지 사이즈"),
+                                parameterWithName("sort").description("정렬기준, 정렬순서")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+
+                                fieldWithPath("data.content[].productId").type(JsonFieldType.NUMBER)
+                                        .description("상품 아이디"),
+                                fieldWithPath("data.content[].productNo").type(JsonFieldType.STRING)
+                                        .description("상품 고유 번호"),
+                                fieldWithPath("data.content[].productName").type(JsonFieldType.STRING)
+                                        .description("상품 이름"),
+                                fieldWithPath("data.content[].productPrice").type(JsonFieldType.NUMBER)
+                                        .description("상품 가격 (할인 전)"),
+                                fieldWithPath("data.content[].quantity").type(JsonFieldType.NUMBER)
+                                        .description("상품 수량"),
+                                fieldWithPath("data.content[].discountRate").type(JsonFieldType.NUMBER)
+                                        .description("상품 할인율 (쿠폰할인 제외)"),
+                                fieldWithPath("data.content[].thumbImageUrl").type(JsonFieldType.STRING)
+                                        .description("상품 썸네일 이미지"),
+                                fieldWithPath("data.content[].isOwn").type(JsonFieldType.BOOLEAN)
+                                        .description("마켓브릿지 상품인지 입점 판매자 상품인지 판별하는 값"),
+                                fieldWithPath("data.content[].isSubs").type(JsonFieldType.BOOLEAN)
+                                        .description("정기 구독 상품인지 판별하는 값"),
+                                fieldWithPath("data.content[].stock").type(JsonFieldType.NUMBER)
+                                        .description("상품 재고"),
+                                fieldWithPath("data.content[].deliveryFee").type(JsonFieldType.NUMBER)
+                                        .description("배송비"),
+                                fieldWithPath("data.content[].deliveredDate").type(JsonFieldType.STRING)
+                                        .description("예상 도착 일자(yyyy.MM.dd)"),
+                                fieldWithPath("data.content[].optionNames[]").type(JsonFieldType.ARRAY)
+                                        .description("선택한 옵션 리스트"),
+
+                                fieldWithPath("data.sort").type(JsonFieldType.OBJECT)
+                                        .description("정렬"),
+                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬 되었는지 안 되었는지 판별하는 값"),
+                                fieldWithPath("data.sort.direction").type(JsonFieldType.STRING)
+                                        .description("정렬 순서 (DESC, ASC)"),
+                                fieldWithPath("data.sort.orderProperty").type(JsonFieldType.STRING)
+                                        .description("정렬 기준"),
+
+                                fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER)
+                                        .description("현재 페이지"),
+                                fieldWithPath("data.size").type(JsonFieldType.NUMBER)
+                                        .description("페이지 사이즈"),
+                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
+                                        .description("첫 페이지 인지 판별 하는 값"),
+                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
+                                        .description("마지막 페이지 인지 판별 하는 값")
+                        )
+                ));
+    }
+
+    private List<GetCartDto> createDto() {
+        return List.of(GetCartDto.builder()
+                .productId(1L)
+                .productNo("111111111-111111111")
+                .productName("티셔츠")
+                .productPrice(20000L)
+                .quantity(1L)
+                .discountRate(5L)
+                .thumbImageUrl("thumbImageUrl")
+                .isOwn(true)
+                .isSubs(false)
+                .stock(9999L)
+                .deliveryFee(0L)
+                .deliveredDate("2024.09.09")
+                .optionNames(List.of("빨강", "XL"))
+                .build());
     }
 }

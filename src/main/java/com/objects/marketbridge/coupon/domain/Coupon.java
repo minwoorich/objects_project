@@ -1,6 +1,7 @@
-package com.objects.marketbridge.member.domain;
+package com.objects.marketbridge.coupon.domain;
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

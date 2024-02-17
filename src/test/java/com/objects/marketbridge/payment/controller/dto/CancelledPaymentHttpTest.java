@@ -64,7 +64,7 @@ class CancelledPaymentHttpTest {
         OrderDetail orderDetail2 = OrderDetail.create("tid1", null, product2, "orderNo1", null, 2000L, 1L, null, PAYMENT_COMPLETED.getCode());
         OrderDetail orderDetail3 = OrderDetail.create("tid1", null, product3, "orderNo1", null, 3000L, 1L, null, PAYMENT_COMPLETED.getCode());
 
-        Order order = createOrder(member, address, "상품1 외 2건", "orderNo1", 6000L, "tid1", List.of(orderDetail1, orderDetail2, orderDetail3), null);
+        Order order = createOrder(member, address, "상품1 외 2건", "orderNo1", 6000L, 6000L, 0L, "tid1", List.of(orderDetail1, orderDetail2, orderDetail3), null);
         orderCommendRepository.save(order);
     }
 
@@ -76,8 +76,8 @@ class CancelledPaymentHttpTest {
         return AddressValue.create(phoneNo, name, city, street, zipcode, detail, alias);
     }
 
-    private Order createOrder(Member member, Address address, String orderName, String orderNo, Long totalPrice, String tid, List<OrderDetail> orderDetails, Payment payment) {
-        Order order = Order.create(member, address, orderName, orderNo, totalPrice, tid);
+    private Order createOrder(Member member, Address address, String orderName, String orderNo, Long totalPrice,Long realPrice,Long totalDiscount, String tid, List<OrderDetail> orderDetails, Payment payment) {
+        Order order = Order.create(member, address, orderName, orderNo, totalPrice, realPrice, totalDiscount, tid);
 
         // order <-> orderDetail 연관관계
         orderDetails.forEach(order::addOrderDetail);
@@ -101,7 +101,7 @@ class CancelledPaymentHttpTest {
                 .amount(Amount.create(6000L, 0L, 0L))
                 .itemName("상품1 외 2건")
                 .selectedCardInfo(SelectedCardInfo.create("cardBin", 0L, KAKAOBANK.toString()))
-                .canceledAt(LocalDateTime.of(2024, 1, 1, 12, 0, 0))
+                .canceledAt(null) // 결제 취소가 아니라 주문 취소 했을때 날짜임. 결제 취소시 null
                 .approvedAt(LocalDateTime.of(2024,1,1,11,0,0))
                 .build();
 
@@ -111,7 +111,7 @@ class CancelledPaymentHttpTest {
         //then
         Assertions.assertThat(result.getPaymentMethodType()).isEqualTo(CARD.toString());
         Assertions.assertThat(result.getOrderName()).isEqualTo("상품1 외 2건");
-        Assertions.assertThat(result.getCanceledAt()).isEqualTo("2024-01-01 12:00:00");
+        Assertions.assertThat(result.getCanceledAt()).isNull();
         Assertions.assertThat(result.getKakaoStatus()).isEqualTo(CANCEL_PAYMENT.toString());
         Assertions.assertThat(result.getCardIssuerName()).isEqualTo(KAKAOBANK.toString());
         Assertions.assertThat(result.getTotalAmount()).isEqualTo(6000L);
@@ -135,8 +135,8 @@ class CancelledPaymentHttpTest {
                 .paymentMethodType(MONEY.toString())
                 .amount(Amount.create(6000L, 0L, 0L))
                 .itemName("상품1 외 2건")
-                .selectedCardInfo(null)
-                .canceledAt(LocalDateTime.of(2024, 1, 1, 12, 0, 0))
+                .selectedCardInfo(null)// 결제 취소가 아니라 주문 취소 했을때 날짜임. 결제 취소시 null
+                .canceledAt(null)
                 .approvedAt(LocalDateTime.of(2024,1,1,11,0,0))
                 .build();
 
@@ -147,7 +147,7 @@ class CancelledPaymentHttpTest {
         //then
         Assertions.assertThat(result.getPaymentMethodType()).isEqualTo(MONEY.toString());
         Assertions.assertThat(result.getOrderName()).isEqualTo("상품1 외 2건");
-        Assertions.assertThat(result.getCanceledAt()).isEqualTo("2024-01-01 12:00:00");
+        Assertions.assertThat(result.getCanceledAt()).isNull();
         Assertions.assertThat(result.getKakaoStatus()).isEqualTo(CANCEL_PAYMENT.toString());
         Assertions.assertThat(result.getCardIssuerName()).isNull();
         Assertions.assertThat(result.getTotalAmount()).isEqualTo(6000L);

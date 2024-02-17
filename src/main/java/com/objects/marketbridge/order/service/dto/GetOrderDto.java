@@ -1,4 +1,4 @@
-package com.objects.marketbridge.order.infra.dtio;
+package com.objects.marketbridge.order.service.dto;
 
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.order.domain.Order;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
-public class OrderDtio {
+public class GetOrderDto {
 
     private Long memberId;
     private AddressValue address;
@@ -25,10 +25,10 @@ public class OrderDtio {
     private String paymentMethod;
     private String cardIssuerName;
 
-    private List<OrderDetailDtio> orderDetails;
+    private List<GetOrderDetailDto> orderDetails;
 
     @Builder
-    private OrderDtio(Long memberId, AddressValue address, String orderName, String orderNo, Long totalDiscount, Long totalPrice, Long realPrice, LocalDateTime createdAt, String paymentMethod, String cardIssuerName, List<OrderDetailDtio> orderDetails) {
+    private GetOrderDto(Long memberId, AddressValue address, String orderName, String orderNo, Long totalDiscount, Long totalPrice, Long realPrice, LocalDateTime createdAt, String paymentMethod, String cardIssuerName, List<GetOrderDetailDto> orderDetails) {
         this.memberId = memberId;
         this.address = address;
         this.orderName = orderName;
@@ -42,8 +42,8 @@ public class OrderDtio {
         this.orderDetails = orderDetails;
     }
 
-    public static OrderDtio of(Order order) {
-        return OrderDtio.builder()
+    public static GetOrderDto of(Order order) {
+        return GetOrderDto.builder()
                 .memberId(order.getMember().getId())
                 .address(order.getAddress().getAddressValue())
                 .orderName(order.getOrderName())
@@ -54,23 +54,7 @@ public class OrderDtio {
                 .createdAt(order.getCreatedAt())
                 .paymentMethod(order.getPayment().getPaymentMethod())
                 .cardIssuerName(order.getPayment().getCardInfo().getCardIssuerName())
-                .orderDetails(order.getOrderDetails().stream().map(OrderDetailDtio::of).collect(Collectors.toList()))
-                .build();
-    }
-
-    public static OrderDtio create(Long memberId, AddressValue address, String orderName, String orderNo, Long totalDiscount, Long totalPrice, Long realPrice, LocalDateTime createdAt, String paymentMethod, String cardIssuerName, List<OrderDetailDtio> orderDetails) {
-        return OrderDtio.builder()
-                .memberId(memberId)
-                .address(address)
-                .orderNo(orderNo)
-                .orderName(orderName)
-                .totalDiscount(totalDiscount)
-                .totalPrice(totalPrice)
-                .realPrice(realPrice)
-                .createdAt(createdAt)
-                .paymentMethod(paymentMethod)
-                .cardIssuerName(cardIssuerName)
-                .orderDetails(orderDetails)
+                .orderDetails(order.getOrderDetails().stream().map(GetOrderDetailDto::of).collect(Collectors.toList()))
                 .build();
     }
 }

@@ -26,6 +26,14 @@ public class CustomLogicException extends RuntimeException {
         this.timestamp = timestamp;
     }
 
+    @Builder(builderMethodName = "builderWithCause")
+    private CustomLogicException(String message, Throwable cause, ErrorCode errorCode,HttpStatus httpStatus, LocalDateTime timestamp) {
+        super(message, cause);
+        this.httpStatus = httpStatus;
+        this.errorCode = errorCode;
+        this.timestamp = timestamp;
+    }
+
     public CustomLogicException(String message) {
         super(message);
     }

@@ -135,3 +135,12 @@ include::api/order/orderconfirmreturn.adoc[]
 include::api/order/ordercancelreturnlist.adoc[]
 {empty}
 {empty}
+
+== *장바구니*
+include::api/cart/cartadd.adoc[]
+{empty}
+{empty}
+
+include::api/cart/cartlist.adoc[]
+{empty}
+{empty}

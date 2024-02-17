@@ -3,7 +3,7 @@ package com.objects.marketbridge.order.domain;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.BaseEntity;
-import com.objects.marketbridge.member.domain.MemberCoupon;
+import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.*;

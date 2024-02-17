@@ -56,7 +56,7 @@ public class KakaoPayApproveResponse {
         this.approvedAt = approvedAt;
     }
 
-    public static KakaoPayApproveResponse create(String aid, String tid, String sid, String cid, String partnerOrderId, String partnerUserId, String paymentMethodType, Amount amount, CardInfo cardInfo, String orderName, Long quantity, LocalDateTime createdAt, LocalDateTime approvedAt, String payload) {
+    public static KakaoPayApproveResponse create(String aid, String tid, String sid, String cid, String partnerOrderId, String partnerUserId,  Amount amount, CardInfo cardInfo, String orderName, Long quantity, LocalDateTime createdAt, LocalDateTime approvedAt, String payload) {
         return KakaoPayApproveResponse.builder()
                 .aid(aid)
                 .tid(tid)

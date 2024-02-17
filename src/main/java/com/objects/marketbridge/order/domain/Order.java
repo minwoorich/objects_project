@@ -100,7 +100,7 @@ public class Order extends BaseEntity {
         orderDetails.forEach(orderDetail -> orderDetail.changeStatusCode(statusCode));
     }
 
-    public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, String tid) {
+    public static Order create(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice, Long totalDiscount, String tid) {
 
         return Order.builder()
                 .member(member)
@@ -108,14 +108,10 @@ public class Order extends BaseEntity {
                 .orderName(orderName)
                 .orderNo(orderNo)
                 .totalPrice(totalPrice)
+                .realPrice(realPrice)
+                .totalDiscount(totalDiscount)
                 .tid(tid)
                 .build();
-    }
-
-    public void calcTotalDiscount(CalcTotalDiscountService service) {
-
-        totalDiscount = service.calculate(this);
-        realPrice = totalPrice - totalDiscount;
     }
 
     public void stockDecrease() {
