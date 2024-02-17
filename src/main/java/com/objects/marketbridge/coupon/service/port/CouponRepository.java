@@ -1,4 +1,4 @@
-package com.objects.marketbridge.product.infra.coupon;
+package com.objects.marketbridge.coupon.service.port;
 
 import com.objects.marketbridge.coupon.domain.Coupon;
 

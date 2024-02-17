@@ -1,4 +1,4 @@
-package com.objects.marketbridge.product.infra.coupon;
+package com.objects.marketbridge.coupon.infra;
 
 import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import org.springframework.data.jpa.repository.JpaRepository;
