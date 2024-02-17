@@ -4,28 +4,22 @@ package com.objects.marketbridge.common.infra;
 import com.objects.marketbridge.common.config.KakaoPayConfig;
 import com.objects.marketbridge.common.dto.*;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.util.UriComponentsBuilder;
-
 
 import java.time.LocalDateTime;
 
 import static com.objects.marketbridge.common.config.KakaoPayConfig.*;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.EXTERNAL_API_FAILURE;
 import static com.objects.marketbridge.common.security.constants.SecurityConst.AUTHORIZATION;
 import static io.jsonwebtoken.Header.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.ACCEPT;
-import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
 
 @Slf4j
@@ -48,17 +42,26 @@ public class KakaoPayService {
 
 
     //정기구독 1회차 , 단건결제
-    public KakaoPayApproveResponse approve(KakaoPayApproveRequest request) {
+    public KakaoPayApproveResponse approve(KakaoPayApproveRequest request) throws CustomLogicException{
 
-//        MultiValueMap<String, String> requestMap = request.toMultiValueMap();
+        try {
+            RestClient restClient = setup();
 
-        RestClient restClient = setup();
+            return restClient.post()
+                    .uri(APPROVE_END_POINT)
+                    .body(request)
+                    .retrieve()
+                    .body(KakaoPayApproveResponse.class);
 
-        return restClient.post()
-                .uri(APPROVE_END_POINT)
-                .body(request)
-                .retrieve()
-                .body(KakaoPayApproveResponse.class);
+        } catch (Exception e) {
+            throw CustomLogicException.builderWithCause()
+                    .cause(e)
+                    .message(e.getMessage())
+                    .errorCode(EXTERNAL_API_FAILURE)
+                    .timestamp(LocalDateTime.now())
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
     }
 
     //정기구독 2회차
@@ -96,24 +99,27 @@ public class KakaoPayService {
     // 정기결제 상태조회
 
     // 주문조회
-    public KakaoPayOrderResponse getOrders(KakaoPayOrderRequest request) throws RestClientException{
+    public KakaoPayOrderResponse getOrders(KakaoPayOrderRequest request){
 
-        RestClient restClient = setup();
+        try {
+            RestClient restClient = setup();
 
-        KakaoPayOrderResponse response = restClient.post()
-                .uri(ORDER_END_POINT)
-                .body(request)
-                .retrieve()
-                .body(KakaoPayOrderResponse.class);
+            return restClient.post()
+                    .uri(ORDER_END_POINT)
+                    .body(request)
+                    .retrieve()
+                    .body(KakaoPayOrderResponse.class);
 
-        if (response == null) {
-            throw new RestClientException("카카오페이 API 호출에 실패 했습니다");
+        } catch (Exception e) {
+            throw CustomLogicException.builderWithCause()
+                    .cause(e)
+                    .message(e.getMessage())
+                    .errorCode(EXTERNAL_API_FAILURE)
+                    .timestamp(LocalDateTime.now())
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .build();
         }
-
-        return response;
     }
-
-
 
     private RestClient setup() {
 

@@ -15,7 +15,7 @@ public class ProductValue {
     Long sellerId;
     Long couponId;
     Long quantity;
-    String deliveredDate;
+    String deliveredDate; // yyyy-MM-dd HH:mm:ss
 
     @Builder
     public ProductValue(Long productId, Long sellerId, Long couponId, Long quantity, String deliveredDate) {

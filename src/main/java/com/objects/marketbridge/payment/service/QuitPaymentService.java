@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClientException;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class QuitPaymentService {
         Order order = orderQueryRepository.findByOrderNo(orderNo);
 
         // 1) 사용했던 쿠폰들 다시 되돌리기
-        order.changeMemberCouponInfo(dateTimeHolder);
+        order.changeMemberCouponInfo(null);
 
         // 2) 감소했던 재고 다시 되돌리기
         order.stockIncrease();
@@ -39,12 +40,12 @@ public class QuitPaymentService {
         orderCommendRepository.deleteByOrderNo(orderNo);
     }
 
-    public CancelledPaymentHttp.Response response(String orderNo) {
-        Order order = orderQueryRepository.findByOrderNo(orderNo);
-        KakaoPayOrderRequest kakaoPayOrderRequest = KakaoPayOrderRequest.create(KakaoPayConfig.ONE_TIME_CID, order.getTid());
-        KakaoPayOrderResponse kakaoResponse = kakaoPayService.getOrders(kakaoPayOrderRequest);
-        CancelledPaymentHttp.Response response = CancelledPaymentHttp.Response.of(kakaoResponse, order);
+    public CancelledPaymentHttp.Response response(String orderNo) throws RestClientException {
 
-        return response;
+        Order order = orderQueryRepository.findByOrderNo(orderNo);
+
+        KakaoPayOrderResponse kakaoResponse = kakaoPayService.getOrders(KakaoPayOrderRequest.create(KakaoPayConfig.ONE_TIME_CID, order.getTid()));
+
+        return CancelledPaymentHttp.Response.of(kakaoResponse, order);
     }
 }

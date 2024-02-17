@@ -22,7 +22,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RestControllerAdvice
 public class ExControllerAdvice  {
 
-
     // 비즈니스 로직 예외
     @ExceptionHandler(value = CustomLogicException.class)
     @ResponseStatus(BAD_REQUEST)
