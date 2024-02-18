@@ -7,6 +7,7 @@ import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.product.domain.Option;
 import com.objects.marketbridge.product.domain.ProdOption;
 import com.objects.marketbridge.product.domain.Product;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 @ActiveProfiles("test")
+@Slf4j
 class GetCartDtoTest {
 
 
@@ -45,29 +47,24 @@ class GetCartDtoTest {
             .hasFieldOrPropertyWithValue("minimumPrice", 15000L);
     }
 
-    @DisplayName("GetCartDto 의 of 메서드 테스트 ")
+    @DisplayName("GetCartDto 의 of 메서드 테스트 : 쿠폰이 존재하는 경우")
     @Test
-    void of_GetCartDto() {
+    void of_GetCartDto_1() {
 
         // given
         Member member = Member.builder().name("홍길동").email("test@email.com").build();
 
         Product product1 = createProduct("productNo1", "썸네일1", "상품1", 2000L, 9999L, 0L, true, false);
-        Product product2 = createProduct("productNo2", "썸네일1", "상품2", 2000L, 9999L, 0L, true, false);
 
         Option option1 = createOption("옵션1");
         Option option2 = createOption("옵션2");
 
         ProdOption prodOption1_1 = createProdOption(option1);
         ProdOption prodOption1_2 = createProdOption(option2);
-        ProdOption prodOption2_1 = createProdOption(option1);
-        ProdOption prodOption2_2 = createProdOption(option2);
 
 
         product1.addProdOptions(prodOption1_1);
         product1.addProdOptions(prodOption1_2);
-        product2.addProdOptions(prodOption2_1);
-        product2.addProdOptions(prodOption2_2);
 
         Coupon coupon1_1 = createCoupon("[상품1] 1000원", 1000L, 10000L, LocalDateTime.of(2024,1,1,0,0,0), 9999L, LocalDateTime.of(2023,1,1,0,0,0));
         Coupon coupon1_2 = createCoupon("[상품1] 5000원", 5000L, 20000L, LocalDateTime.of(2024,1,1,0,0,0), 9999L, LocalDateTime.of(2023,1,1,0,0,0));
@@ -76,12 +73,10 @@ class GetCartDtoTest {
         product1.addCoupons(coupon1_2);
 
         Cart cart1 = createCart(false, member, 1L, product1);
-        Cart cart2 = createCart(false, member, 1L, product2);
 
 
         // when
         GetCartDto cartDto1 = GetCartDto.of(cart1);
-        GetCartDto cartDto2 = GetCartDto.of(cart2);
 
         //then
         assertThat(cartDto1)
@@ -108,11 +103,34 @@ class GetCartDtoTest {
                         tuple("[상품1] 1000원", 1000L, "2024-01-01 00:00:00", 10000L),
                         tuple("[상품1] 5000원", 5000L, "2024-01-01 00:00:00", 20000L)
                 );
+    }
 
-        assertThat(cartDto2.getAvailableCoupons())
-                .as("cartDto2 는 쿠폰이 없는 상품이 담겨있다")
-                .hasSize(0);
+    @DisplayName("GetCartDto 의 of 메서드 테스트 : 쿠폰이 없는 경우")
+    @Test
+    void of_GetCartDto_2() {
 
+        // given
+        Member member = Member.builder().name("홍길동").email("test@email.com").build();
+
+        Product product2 = createProduct("productNo2", "썸네일1", "상품2", 2000L, 9999L, 0L, true, false);
+
+        Option option1 = createOption("옵션1");
+        Option option2 = createOption("옵션2");
+
+        ProdOption prodOption2_1 = createProdOption(option1);
+        ProdOption prodOption2_2 = createProdOption(option2);
+
+
+        product2.addProdOptions(prodOption2_1);
+        product2.addProdOptions(prodOption2_2);
+
+        Cart cart2 = createCart(false, member, 1L, product2);
+
+        // when
+        GetCartDto cartDto2 = GetCartDto.of(cart2);
+
+        //then
+        assertThat(cartDto2.getAvailableCoupons()).isNull();
     }
 
     private static Option createOption(String name) {
