@@ -18,10 +18,7 @@ public class CouponRepositoryImpl implements CouponRepository {
     public Coupon findById(Long id) {
         return couponJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
-    @Override
-    public List<Coupon> findAllByIds(List<Long> ids) {
-        return couponJpaRepository.findAllById(ids);
-    }
+
     @Override
     public void save(Coupon coupon) {
         couponJpaRepository.save(coupon);
