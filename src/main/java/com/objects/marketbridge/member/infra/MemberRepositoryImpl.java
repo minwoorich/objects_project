@@ -1,10 +1,14 @@
 package com.objects.marketbridge.member.infra;
 
 import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.dto.MemberEmail;
+import com.objects.marketbridge.member.dto.GetMemberInfo;
+import com.objects.marketbridge.member.dto.MemberId;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -54,5 +58,25 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public void deleteAllInBatch() {
         memberJpaRepository.deleteAllInBatch();
+    }
+
+    @Override
+    public GetMemberInfo getMemberInfoByIdAndPassword(Long memberId, String password) {
+        return memberJpaRepository.getMemberInfoByIdAndPassword(memberId, password).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public MemberEmail getEmailById(Long memberId) {
+        return memberJpaRepository.getEmailById(memberId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public MemberId findIdByNameAndEmail(String name, String email) {
+        return memberJpaRepository.findIdByNameAndEmail(name, email).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public MemberEmail findEmailByNameAndPhoneNo(String name, String phoneNo) {
+        return memberJpaRepository.findEmailByNameAndPhoneNo(name, phoneNo).orElseThrow(EntityNotFoundException::new);
     }
 }

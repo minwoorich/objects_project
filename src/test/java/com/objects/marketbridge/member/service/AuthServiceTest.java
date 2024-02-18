@@ -1,5 +1,6 @@
 package com.objects.marketbridge.member.service;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MembershipType;
 import com.objects.marketbridge.member.dto.SignUpDto;
@@ -101,7 +102,7 @@ class AuthServiceTest {
         //then
         assertThatThrownBy(() -> {
             authService.signUp(signUpDto);
-        }).isInstanceOf(BadRequestException.class);
+        }).isInstanceOf(CustomLogicException.class);
     }
 
 }
