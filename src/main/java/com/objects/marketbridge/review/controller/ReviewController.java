@@ -14,8 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 public class ReviewController {
@@ -45,7 +43,7 @@ public class ReviewController {
 
     //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 likes 많은순 내림차순 정렬)
     //http://localhost:8080/product/1/reviews?page=0&sortBy=createdAt
-    //http://localhost:8080/product/1/reviews?page=0&sortBy=likes
+    //http://localhost:8080/product/1/reviews?page=0&sortBy=liked
     @GetMapping("/product/{productId}/reviews")
     public ApiResponse<Page<ReviewWholeInfoDto>> getProductReviews(
             @PathVariable("productId") Long productId,
@@ -61,7 +59,7 @@ public class ReviewController {
 
     //회원별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 likes 많은순 내림차순 정렬)
     //http://localhost:8080/member/1/reviews?page=0&sortBy=createdAt
-    //http://localhost:8080/member/1/reviews?page=0&sortBy=likes
+    //http://localhost:8080/member/1/reviews?page=0&sortBy=liked
     @GetMapping("/member/{memberId}/reviews")
     @UserAuthorize
     public ApiResponse<Page<ReviewWholeInfoDto>> getMemberReviews(
@@ -73,7 +71,6 @@ public class ReviewController {
         Page<ReviewWholeInfoDto> response = reviewService.getMemberReviews(memberId, pageRequest, sortBy);
         return ApiResponse.ok(response);
     }
-
 
 
 
@@ -114,5 +111,48 @@ public class ReviewController {
         (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
         reviewService.deleteReview(reviewId, memberId);
         return ApiResponse.of(HttpStatus.OK);
+    }
+
+
+
+    //리뷰 좋아요 등록 또는 변경(True화/False화)
+//    @PostMapping("/review/{reviewId}/like")
+//    public ApiResponse<ReviewLikeDto> addReviewLike(
+//            @PathVariable("reviewId") Long reviewId,
+//            @AuthMemberId Long memberId) {
+//        // 리뷰에 대한 좋아요가 이미 있는지 확인
+//        if (reviewLikesRepository.existsByReviewIdAndMemberId(reviewId, memberId)) {
+//            // 이미 좋아요가 있는 경우에는 PATCH 요청으로 변경
+//            return changeReviewLike(reviewId, memberId);
+//        } else {
+//            // 좋아요가 없는 경우에는 새로운 좋아요 추가
+//            ReviewLikeDto response = reviewService.addReviewLike(reviewId, memberId);
+//            return ApiResponse.ok(response);
+//        }
+//    }
+//    @PatchMapping("/review/{reviewId}/like")
+//    public ApiResponse<ReviewLikeDto> changeReviewLike
+//        (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
+//        ReviewLikeDto response = reviewService.changeReviewLike(reviewId, memberId);
+//        return ApiResponse.ok(response);
+//    }
+
+    //리뷰 좋아요 등록 또는 변경(True화/False화)
+    @PostMapping("/review/{reviewId}/like")
+    public ApiResponse<ReviewLikeDto> addOrChangeReviewLike(
+            @PathVariable("reviewId") Long reviewId,
+            @AuthMemberId Long memberId) {
+        ReviewLikeDto response = reviewService.addOrChangeReviewLike(reviewId, memberId);
+        return ApiResponse.ok(response);
+    }
+
+
+
+    //리뷰 좋아요 총갯수 조회
+    @GetMapping("/review/{reviewId}/likes/count")
+    public ApiResponse<ReviewLikesCountDto> countReviewLikes
+    (@PathVariable("reviewId") Long reviewId) {
+        ReviewLikesCountDto response = reviewService.countReviewLikes(reviewId);
+        return ApiResponse.ok(response);
     }
 }

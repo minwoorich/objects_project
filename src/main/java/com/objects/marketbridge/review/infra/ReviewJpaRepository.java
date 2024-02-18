@@ -4,7 +4,6 @@ import com.objects.marketbridge.review.domain.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -14,7 +13,13 @@ public interface ReviewJpaRepository extends JpaRepository<Review, Long> {
 
     Page<Review> findAllByMemberId(Long memberId, Pageable pageable);
 
+    Page<Review> findAllByProductIdOrderByLikesDesc(Long productId, Pageable pageable);
+
+    Page<Review> findAllByMemberIdOrderByLikesDesc(Long memberId, Pageable pageable);
+
     Long countByProductId(Long productId);
 
     Long countByMemberId(Long memberId);
+
+    Page<Review> findAllByIdIn(List<Long> likedOrderedReviewIds, Pageable pageable);
 }
