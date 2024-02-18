@@ -49,10 +49,9 @@ public class GetCartDto {
         this.availableCoupons = availableCoupons;
     }
 
-    // TODO : .availableCoupons : of메서드에 추가
     public static GetCartDto of(Cart cart) {
         List<ProdOption> prodOptions = cart.getProduct().getProdOptions();
-        List<Coupon> coupons = cart.getProduct().getCoupons();
+        List<Coupon> coupons = cart.getProduct().getAvailableCoupons();
 
         return GetCartDto.builder()
                 .productId(cart.getProduct().getId())
