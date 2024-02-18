@@ -1,6 +1,7 @@
 package com.objects.marketbridge.product.domain;
 
 import com.objects.marketbridge.category.domain.Category;
+import com.objects.marketbridge.coupon.domain.Coupon;
 import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
@@ -42,6 +43,9 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product")
     private List<ProdTag> prodTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Coupon> coupons = new ArrayList<>();
 
     private Boolean isOwn; // 로켓 true , 오픈 마켓 false
 
@@ -99,6 +103,13 @@ public class Product extends BaseEntity {
     public void addProdTags(ProdTag prodTag){
         prodTags.add(prodTag);
         prodTag.setProduct(this);
+    }
+
+    public void addCoupons(Coupon coupon) {
+        if (!coupons.contains(coupon)) {
+            coupons.add(coupon);
+        }
+        coupon.addProduct(this);
     }
 
     public Product update(Category category, Boolean isOwn, String name, Long price,
