@@ -14,6 +14,10 @@ public interface ReviewRepository {
 
     void delete(Review review);
 
+    Page<Review> findAllByProductIdOrderByLikesDesc(Long productId, Pageable pageable);
+
+    Page<Review> findAllByMemberIdOrderByLikesDesc(Long memberId, Pageable pageable);
+
     Page<Review> findAllByProductId(Long productId, Pageable pageable);
 
     Page<Review> findAllByMemberId(Long memberId, Pageable pageable);
@@ -21,4 +25,6 @@ public interface ReviewRepository {
     Long countByProductId(Long productId);
 
     Long countByMemberId(Long memberId);
+
+    Page<Review> findAllByIdIn(List<Long> likedOrderedReviewIds, Pageable pageable);
 }

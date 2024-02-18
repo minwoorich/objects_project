@@ -5,9 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface ReviewLikesJpaRepository extends JpaRepository<ReviewLikes, Long> {
 
-    ReviewLikes findByReviewId(Long reviewId);
+    ReviewLikes findByReviewIdAndMemberId(Long reviewId, Long memberId);
 
     Page<ReviewLikes> findAllByReview_Product_Id(Long productId, Pageable pageable);
 
@@ -16,4 +18,14 @@ public interface ReviewLikesJpaRepository extends JpaRepository<ReviewLikes, Lon
     void delete(ReviewLikes reviewLikes);
 
     void deleteById(Long reviewLikesId);
+
+    void deleteByReviewId(Long reviewId);
+
+    Long countByReviewIdAndLikedIsTrue(Long reviewId);
+
+    Boolean existsByReviewIdAndMemberId(Long reviewId, Long memberId);
+
+    List<ReviewLikes> findAllByReviewId(Long reviewId);
+
+    void deleteAllByReviewId(Long reviewId);
 }
