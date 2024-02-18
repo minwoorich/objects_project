@@ -1,5 +1,6 @@
 package com.objects.marketbridge.member.service;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.dto.SignUpDto;
 import com.objects.marketbridge.member.service.port.AuthRepository;
@@ -11,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUPLICATE_ERROR;
+
 @Slf4j
 @Service
 @Builder
@@ -21,11 +24,11 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void signUp(SignUpDto signUpDto) throws BadRequestException {
+    public void signUp(SignUpDto signUpDto) {
 
         boolean isDuplicateEmail = memberService.isDuplicateEmail(signUpDto.getEmail()).isChecked();
 
-        if (isDuplicateEmail) throw new BadRequestException("이미 존재하는 이메일 입니다.");
+        if (isDuplicateEmail) throw CustomLogicException.createBadRequestError(DUPLICATE_ERROR);
 
         String encodedPassword = passwordEncoder.encode(signUpDto.getPassword());
         Member member = signUpDto.toEntity(encodedPassword);

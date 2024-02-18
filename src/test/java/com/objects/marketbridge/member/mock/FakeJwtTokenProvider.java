@@ -29,7 +29,7 @@ public class FakeJwtTokenProvider implements JwtTokenProvider {
     }
 
     @Override
-    public boolean validateToken(String token) throws BadRequestException {
+    public boolean validateToken(String token) {
         return false;
     }
 
