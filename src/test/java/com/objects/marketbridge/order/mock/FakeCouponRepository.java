@@ -12,8 +12,8 @@ public class FakeCouponRepository implements CouponRepository {
     }
 
     @Override
-    public void save(Coupon coupon) {
-
+    public Coupon save(Coupon coupon) {
+        return null;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class FakeCouponRepository implements CouponRepository {
     }
 
     @Override
-    public List<Coupon> findAllByMemberIdAndProductId() {
-        return null;
+    public void deleteAllInBatch() {
+
     }
 }

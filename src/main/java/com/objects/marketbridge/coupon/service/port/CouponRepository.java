@@ -7,9 +7,11 @@ import java.util.List;
 public interface CouponRepository {
     Coupon findById(Long id);
 
-    void save(Coupon coupon);
+    Coupon save(Coupon coupon);
 
     void saveAll(List<Coupon> coupons);
 
     List<Coupon> findAll();
+
+    void deleteAllInBatch();
 }
