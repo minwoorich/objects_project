@@ -27,7 +27,7 @@ public class GetCartDto {
     private Boolean isSubs;
     private Long stock;
     private Long deliveryFee;
-    private String deliveredDate; // yyyy.MM.dd
+    private String deliveredDate; // yyyy-MM-dd HH:mm:ss
     private List<String> optionNames;
     private List<CouponDto> availableCoupons;
 
@@ -65,7 +65,7 @@ public class GetCartDto {
                 .isSubs(cart.getProduct().getIsSubs())
                 .stock(cart.getProduct().getStock())
                 .deliveryFee(0L)
-                .deliveredDate("deliveredDate")
+                .deliveredDate("2024-01-01 00:00:00")
                 .optionNames(!prodOptions.isEmpty() ?
                         prodOptions.stream().map(po -> po.getOption().getName()).collect(toList()) : null)
                 .availableCoupons(!coupons.isEmpty() ?
