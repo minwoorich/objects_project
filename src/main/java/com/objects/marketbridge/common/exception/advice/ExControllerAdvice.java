@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -22,13 +21,14 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RestControllerAdvice
 public class ExControllerAdvice  {
 
-
     // 비즈니스 로직 예외
     @ExceptionHandler(value = CustomLogicException.class)
     @ResponseStatus(BAD_REQUEST)
     public ApiErrorResponse<ErrorResult> customExHandler(CustomLogicException e, HttpServletRequest httpRequest) {
         log.error("[exceptionHandler] {} ", e.getMessage());
-        log.error("[exceptionHandler] {} ", Arrays.toString(e.getStackTrace()));
+        for (StackTraceElement element : e.getStackTrace()) {
+            log.error("[exceptionHandler] {} ", element);
+        }
 
         ErrorResult errorResult = ErrorResult.builder()
                 .errorCode(e.getErrorCode())
@@ -44,7 +44,9 @@ public class ExControllerAdvice  {
     @ResponseStatus(BAD_REQUEST)
     public ApiErrorResponse<ErrorResult> handleMethodArgumentNotValidExHandler(Exception e, HttpRequest httpRequest) {
         log.error("[exceptionHandler] {} ", e.getMessage());
-        log.error("[exceptionHandler] {} ", Arrays.toString(e.getStackTrace()));
+        for (StackTraceElement element : e.getStackTrace()) {
+            log.error("[exceptionHandler] {} ", element);
+        }
 
         ErrorResult errorResult = ErrorResult.builder()
                 .errorCode(ErrorCode.INVALID_INPUT_VALUE)
@@ -59,6 +61,9 @@ public class ExControllerAdvice  {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ApiErrorResponse<ErrorResult> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpRequest httpRequest) {
         log.error("handleHttpRequestMethodNotSupportedException", e);
+        for (StackTraceElement element : e.getStackTrace()) {
+            log.error("[exceptionHandler] {} ", element);
+        }
         ErrorResult errorResult = ErrorResult.builder()
                 .errorCode(ErrorCode.METHOD_NOT_ALLOWED)
                 .timestamp(LocalDateTime.now().toString())
@@ -72,7 +77,9 @@ public class ExControllerAdvice  {
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ApiErrorResponse<String> serverExHandler(Exception e) {
         log.error("[exceptionHandler] ex : {}", e.getMessage());
-        log.error("[exceptionHandler] {} ", e);
+        for (StackTraceElement element : e.getStackTrace()) {
+            log.error("[exceptionHandler] {} ", element);
+        }
         return ApiErrorResponse.of(INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR, null, null);
     }
 }

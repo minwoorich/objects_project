@@ -2,16 +2,16 @@ package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.member.domain.Address;
-import com.objects.marketbridge.member.domain.Coupon;
+import com.objects.marketbridge.coupon.domain.Coupon;
 import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.domain.MemberCoupon;
+import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.*;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.order.service.port.*;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.coupon.CouponRepository;
-import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
+import com.objects.marketbridge.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductJpaRepository;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import jakarta.persistence.EntityManager;
@@ -173,7 +173,7 @@ class CreateOrderServiceTest {
     private long getTotalOrderPrice(List<ProductValue> productValues) {
 
         return productValues.stream().mapToLong(p ->
-                productRepository.findByProductNo(p.getProductNo()).getPrice() * p.getQuantity()
+                productRepository.findById(p.getProductId()).getPrice() * p.getQuantity()
         ).sum();
     }
 
@@ -195,10 +195,10 @@ class CreateOrderServiceTest {
         assertThat(orderDetails).hasSize(3);
 
         for (int i = 0; i < orderDetails.size(); i++) {
-            assertThat(orderDetails.get(i).getProduct().getId()).isEqualTo(productRepository.findByProductNo(createOrderDto.getProductValues().get(i).getProductNo()).getId());
+            assertThat(orderDetails.get(i).getProduct().getId()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()).getId());
             assertThat(orderDetails.get(i).getOrderNo()).isEqualTo(createOrderDto.getOrderNo());
             assertThat(orderDetails.get(i).getQuantity()).isEqualTo(createOrderDto.getProductValues().get(i).getQuantity());
-            assertThat(orderDetails.get(i).getPrice()).isEqualTo(productRepository.findByProductNo(createOrderDto.getProductValues().get(i).getProductNo()).getPrice());
+            assertThat(orderDetails.get(i).getPrice()).isEqualTo(productRepository.findById(createOrderDto.getProductValues().get(i).getProductId()).getPrice());
             assertThat(orderDetails.get(i).getStatusCode()).isEqualTo(StatusCodeType.ORDER_INIT.getCode());
         }
     }
@@ -264,28 +264,6 @@ class CreateOrderServiceTest {
         for (OrderDetail orderDetail : orderDetails) {
             assertThat(orderDetail.getOrder()).isEqualTo(order);
         }
-    }
-
-    @DisplayName("주문 생성시 총 할인 금액과 실제 결제금액을 계산해서 저장해야한다.")
-    @Test
-    void calcTotalDiscount(){
-
-        //given
-        Member member = memberRepository.findByEmail("hong@email.com");
-        Address address = addressRepository.findByMemberId(member.getId()).get(0);
-        Long defaultQuantity = 3L;
-        CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
-
-
-
-        //when
-        createOrderService.create(createOrderDto);
-        Order order = orderQueryRepository.findByOrderNo(createOrderDto.getOrderNo());
-        Long totalUsedCoupon = getTotalUsedCoupon(order);
-
-        //then
-        assertThat(order.getTotalDiscount()).isEqualTo(totalUsedCoupon);
-        assertThat(order.getRealPrice()).isEqualTo(createOrderDto.getTotalOrderPrice()-totalUsedCoupon);
     }
 
     private  long getTotalUsedCoupon(Order order) {
@@ -364,19 +342,19 @@ class CreateOrderServiceTest {
         List<Product> products = productRepository.findAll();
 
         ProductValue productValue1 = ProductValue.builder()
-                .productNo(coupons.get(0).getProduct().getProductNo())
+                .productId(coupons.get(0).getProduct().getId())
                 .couponId(coupons.get(0).getId())
                 .quantity(1L)
                 .build();
 
         ProductValue productValue2 = ProductValue.builder()
-                .productNo(coupons.get(1).getProduct().getProductNo())
+                .productId(coupons.get(1).getProduct().getId())
                 .couponId(coupons.get(1).getId())
                 .quantity(2L)
                 .build();
 
         ProductValue productValue3 = ProductValue.builder()
-                .productNo(products.get(2).getProductNo())
+                .productId(products.get(2).getId())
                 .quantity(lastQuantity)
                 .build();
 

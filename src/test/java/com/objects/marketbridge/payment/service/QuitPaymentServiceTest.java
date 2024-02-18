@@ -1,5 +1,7 @@
 package com.objects.marketbridge.payment.service;
 
+import com.objects.marketbridge.coupon.domain.Coupon;
+import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.member.domain.*;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.Order;
@@ -11,7 +13,7 @@ import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.coupon.CouponRepository;
+import com.objects.marketbridge.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -78,10 +79,10 @@ class QuitPaymentServiceTest {
 
 
         OrderDetail orderDetail1 = OrderDetail.create(null, null, product1, "orderNo1", memberCoupon1, 1000L, 1L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail2 = OrderDetail.create(null, null, product2, "orderNo1", memberCoupon2, 1000L, 1L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail3 = OrderDetail.create(null, null, product3, "orderNo1", memberCoupon3, 1000L, 1L, null, PAYMENT_COMPLETED.getCode());
+        OrderDetail orderDetail2 = OrderDetail.create(null, null, product2, "orderNo1", memberCoupon2, 2000L, 1L, null, PAYMENT_COMPLETED.getCode());
+        OrderDetail orderDetail3 = OrderDetail.create(null, null, product3, "orderNo1", memberCoupon3, 3000L, 1L, null, PAYMENT_COMPLETED.getCode());
 
-        Order order1 = createOrder(member, address, "상품1 외 2건", "orderNo1", 3000L, "tid1", List.of(orderDetail1, orderDetail2, orderDetail3), null);
+        Order order1 = createOrder(member, address, "상품1 외 2건", "orderNo1", 6000L, 1500L, 1500L, "tid1", List.of(orderDetail1, orderDetail2, orderDetail3), null);
 
         orderCommendRepository.save(order1);
     }
@@ -93,8 +94,8 @@ class QuitPaymentServiceTest {
         return AddressValue.create(phoneNo, name, city, street, zipcode, detail, alias);
     }
 
-    private Order createOrder(Member member, Address address, String orderName, String orderNo, Long totalPrice, String tid, List<OrderDetail> orderDetails, Payment payment) {
-        Order order = Order.create(member, address, orderName, orderNo, totalPrice, tid);
+    private Order createOrder(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice, Long totalDiscount, String tid, List<OrderDetail> orderDetails, Payment payment) {
+        Order order = Order.create(member, address, orderName, orderNo, totalPrice, realPrice, totalDiscount, tid);
 
         // order <-> orderDetail 연관관계
         orderDetails.forEach(order::addOrderDetail);

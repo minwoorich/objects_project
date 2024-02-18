@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: dev
+    default: local
 
 ---
 
@@ -34,10 +34,6 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
-
-  h2:
-    console:
-      enabled: true
 
   data:
     redis:
@@ -130,3 +126,8 @@ logging:
 payment:
   kakao:
     secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false

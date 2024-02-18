@@ -1,8 +1,8 @@
 package com.objects.marketbridge.order.service.dto;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.member.domain.Coupon;
-import com.objects.marketbridge.member.domain.MemberCoupon;
+import com.objects.marketbridge.coupon.domain.Coupon;
+import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.member.domain.MembershipType;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.product.domain.Product;

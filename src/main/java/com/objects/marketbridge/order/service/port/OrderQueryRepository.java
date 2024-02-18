@@ -1,34 +1,24 @@
 package com.objects.marketbridge.order.service.port;
 
 
+import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface OrderQueryRepository {
-
-
 
     Optional<Order> findById(Long orderId);
 
     Order findByOrderNo(String orderNo);
 
+    Order findByOrderIdFetchJoin(Long orderId);
+
     Order findByOrderNoWithMember(String orderNo);
 
-    Order findByOrderNoWithOrderDetails(String orderNo);
-
-    Order findByIdWithOrderDetailsAndProduct(Long orderId);
-
     Order findByOrderNoWithOrderDetailsAndProduct(String orderNo);
-
-//    Optional<Order> findWithOrderDetailsAndProduct(Long orderId);
-
-
-    Order findByIdWithOrderDetail(Long orderId);
-
-    List<Order> findDistinctWithDetailsByMemberId(Long memberId);
-
-    Order findByTid(String tid);
+    Page<Order> findAllPaged(GetOrderHttp.Condition condition, Pageable pageable);
 
 }
