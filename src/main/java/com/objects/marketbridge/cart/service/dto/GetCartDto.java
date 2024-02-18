@@ -62,7 +62,7 @@ public class GetCartDto {
                 .deliveryFee(0L)
                 .deliveredDate("deliveredDate")
                 .optionNames(cart.getProduct().getProdOptions().stream().map(po -> po.getOption().getName()).collect(Collectors.toList()))
-//                .availableCoupons()
+                .availableCoupons(cart.getProduct().getCoupons().stream().map(CouponDto::of).collect(Collectors.toList()))
                 .build();
     }
 
@@ -84,7 +84,7 @@ public class GetCartDto {
             this.minimumPrice = minimumPrice;
         }
 
-        private static CouponDto of(Coupon coupon) {
+        public static CouponDto of(Coupon coupon) {
             return CouponDto.builder()
                     .couponId(coupon.getId())
                     .name(coupon.getName())
