@@ -1,12 +1,11 @@
 package com.objects.marketbridge.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
 import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.member.dto.CheckedResultDto;
-import com.objects.marketbridge.member.dto.GetAddressesResponse;
+import com.objects.marketbridge.member.dto.*;
 import com.objects.marketbridge.member.service.MemberService;
-import com.objects.marketbridge.member.service.port.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,10 +32,10 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -61,8 +60,6 @@ public class MemberControllerTest {
 
     @MockBean
     private MemberService memberService;
-    @MockBean
-    private MemberRepository memberRepository;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -81,14 +78,14 @@ public class MemberControllerTest {
                 .willReturn(checkedResultDto);
 
         //when
-        ResultActions actions = mockMvc.perform(get("/member/check-email")
+        ResultActions actions = mockMvc.perform(get("/member/email-check")
                 .param("email", email)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
         actions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.checked").value(checkedResultDto.getChecked()))
-                .andDo(document("member-check-email",
+                .andDo(document("member-email-check",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
@@ -507,4 +504,265 @@ public class MemberControllerTest {
                          )
                  ));
      }
+
+
+   @Test
+   @WithMockCustomUser
+   public void getEmail() throws Exception {
+       //given
+       Long memberId = 1L;
+       MemberEmail memberEmail = MemberEmail.builder().email("test@test.com").build();
+
+       given(memberService.getEmail(memberId)).willReturn(memberEmail);
+
+       //when
+       ResultActions actions = mockMvc.perform(get("/member/account-email")
+               .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+               .contentType(MediaType.APPLICATION_JSON));
+
+       //then
+       actions.andExpect(status().isOk())
+               .andDo(document("member-account-email",
+                       preprocessRequest(prettyPrint()),
+                       preprocessResponse(prettyPrint()),
+                       responseFields(
+                               fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                       .description("코드"),
+                               fieldWithPath("status").type(JsonFieldType.STRING)
+                                       .description("상태"),
+                               fieldWithPath("message").type(JsonFieldType.STRING)
+                                       .description("메시지"),
+                               fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                       .description("응답 데이터"),
+                               fieldWithPath("data.email").type(JsonFieldType.STRING)
+                                       .description("로그인 이메일")
+                       )
+               ));
+   }
+
+    @Test
+    @WithMockCustomUser
+    public void getMemberInfo() throws Exception {
+        //given
+        Long memberId = 1L;
+        String password = "password";
+        GetMemberInfo memberInfo = GetMemberInfo.builder()
+                .email("test@test.com")
+                .name("테스트")
+                .phoneNo("01012341234")
+                .isAlert(true)
+                .isAgree(true)
+                .build();
+
+        given(memberService.getMemberInfo(memberId, password)).willReturn(memberInfo);
+
+        //when
+        ResultActions actions = mockMvc.perform(get("/member/account-info")
+                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                .param("password", password)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isOk())
+                .andDo(document("get-member-account-info",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("password").description("암호화된 비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.email").type(JsonFieldType.STRING)
+                                        .description("로그인 이메일"),
+                                fieldWithPath("data.name").type(JsonFieldType.STRING)
+                                        .description("이름"),
+                                fieldWithPath("data.phoneNo").type(JsonFieldType.STRING)
+                                        .description("휴대폰 번호"),
+                                fieldWithPath("data.isAlert").type(JsonFieldType.BOOLEAN)
+                                        .description("알림 동의 여부"),
+                                fieldWithPath("data.isAgree").type(JsonFieldType.BOOLEAN)
+                                        .description("마케팅 수신 동의 여부")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockCustomUser
+    public void updateMemberInfo() throws Exception {
+        //given
+        Long memberId = 1L;
+        UpdateMemberInfo updateMemberInfo = UpdateMemberInfo.builder()
+                .email("test@test.com")
+                .name("테스트")
+                .phoneNo("01012341234")
+                .password("password")
+                .isAlert(true)
+                .isAgree(true)
+                .build();
+
+        willDoNothing().given(memberService).updateMemberInfo(memberId, updateMemberInfo);
+
+        //when
+        ResultActions actions = mockMvc.perform(patch("/member/account-info")
+                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                .content(objectMapper.writeValueAsString(updateMemberInfo))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isOk())
+                .andDo(document("patch-member-account-info",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("email").type(JsonFieldType.STRING)
+                                        .description("이메일"),
+                                fieldWithPath("name").type(JsonFieldType.STRING)
+                                        .description("이름"),
+                                fieldWithPath("password").type(JsonFieldType.STRING)
+                                        .description("암호화 된 비밀번호"),
+                                fieldWithPath("phoneNo").type(JsonFieldType.STRING)
+                                        .description("휴대폰 번호"),
+                                fieldWithPath("isAlert").type(JsonFieldType.BOOLEAN)
+                                        .description("알림 동의 여부"),
+                                fieldWithPath("isAgree").type(JsonFieldType.BOOLEAN)
+                                        .description("마케팅 수신 동의 여부")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL)
+                                        .description("응답 데이터")
+
+                        )
+                ));
+    }
+
+    @Test
+    public void findMemberEmail() throws Exception {
+        //given;
+        String name = "테스트";
+        String phoneNo = "01000000000";
+        MemberEmail memberEmail = MemberEmail.builder().email("test@test.com").build();
+
+        given(memberService.findMemberEmail(name, phoneNo)).willReturn(memberEmail);
+
+        //when
+        ResultActions actions = mockMvc.perform(get("/member/email-find")
+                .param("name", name).param("phoneNo", phoneNo)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isOk())
+                .andDo(document("member-email-find",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("name").description("이름"),
+                                parameterWithName("phoneNo").description("휴대폰 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.email").type(JsonFieldType.STRING)
+                                        .description("가입된 멤버의 이메일(아이디)")
+                        )
+                ));
+    }
+
+    @Test
+    public void findMemberId() throws Exception {
+        //given;
+        String name = "테스트";
+        String email = "test@test.com";
+        MemberId memberId = MemberId.builder()
+                .memberId(1L)
+                .build();
+
+        given(memberService.findMemberId(name, email)).willReturn(memberId);
+
+        //when
+        ResultActions actions = mockMvc.perform(get("/member/password-find")
+                .param("name", name).param("email", email)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isOk())
+                .andDo(document("member-password-find",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("name").description("이름"),
+                                parameterWithName("email").description("이메일")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.memberId").type(JsonFieldType.NUMBER)
+                                        .description("가입된 멤버의 아이디")
+
+                        )
+                ));
+    }
+
+    @Test
+    public void updatePassword() throws Exception {
+        //given
+        UpdatePassword updatePassword = UpdatePassword.builder()
+                .memberId(1L)
+                .password("password")
+                .build();
+
+        willDoNothing().given(memberService).updatePassword(updatePassword);
+
+        //when
+        ResultActions actions = mockMvc.perform(patch("/member/password-reset")
+                .content(objectMapper.writeValueAsString(updatePassword))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isOk())
+                .andDo(document("member-password-reset",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
+                                        .description("GET /member/account-find 찾은 멤버 아이디"),
+                                fieldWithPath("password").type(JsonFieldType.STRING)
+                                        .description("암호화 된 비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL)
+                                        .description("응답 데이터")
+                        )
+                ));
+    }
 }

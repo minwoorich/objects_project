@@ -16,7 +16,7 @@ public interface JwtTokenProvider {
 
     Authentication getAuthentication(String token);
 
-    boolean validateToken(String token) throws BadRequestException;
+    boolean validateToken(String token);
 
     String issueToken(Long userId, String role, Long expiration);
 
