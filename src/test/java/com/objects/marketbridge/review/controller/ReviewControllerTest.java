@@ -474,4 +474,81 @@ public class ReviewControllerTest {
                         )
                 ));
     }
+
+
+
+    @Test
+    @WithMockCustomUser
+    @DisplayName("리뷰에_좋아요_상태를_변경하면_좋아요_상태가_변경_되고_응답한다.")
+    public void addOrChangeReviewLikeControllerTest() throws Exception {
+    //given
+        ReviewLikeDto mockResponse = ReviewLikeDto.builder()
+                .reviewId(1L)
+                .memberId(123L)
+                .liked(true)
+                .build();
+        given(reviewService.addOrChangeReviewLike(anyLong(), anyLong())).willReturn(mockResponse);
+
+    //when
+        mockMvc.perform(post("/review/1/like")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"reviewId\":1,\"memberId\":123,\"liked\":true}")
+                        .header("Authorization", "bearer AccessToken")) // 액세스 토큰
+                //then
+                .andExpect(status().isOk())
+                .andDo(document("review-add-or-change-review-like",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("reviewId").description("리뷰 ID"),
+                                fieldWithPath("memberId").description("회원 ID"),
+                                fieldWithPath("liked").description("좋아요 상태")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 코드"),
+                                fieldWithPath("status").description("응답 상태"),
+                                fieldWithPath("message").description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                fieldWithPath("data.reviewId").description("리뷰 ID"),
+                                fieldWithPath("data.memberId").description("멤버 ID"),
+                                fieldWithPath("data.liked").description("좋아요 상태")
+                        )
+                ));
+    }
+
+
+
+    @Test
+    @WithMockCustomUser
+    @DisplayName("리뷰의_좋아요_총갯수를_구하면_총갯수가_카운트되고_응답한다.")
+    public void countReviewLikesControllerTest() throws Exception {
+        // given
+        Long reviewId = 1L;
+        ReviewLikesCountDto mockResponse = ReviewLikesCountDto.builder()
+                .reviewId(reviewId)
+                .count(10L) // 임의의 좋아요 수
+                .build();
+        given(reviewService.countReviewLikes(reviewId)).willReturn(mockResponse);
+
+        // when // then
+        mockMvc.perform(get("/review/{reviewId}/likes/count", reviewId))
+                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.data.reviewId").value(reviewId))
+//                .andExpect(jsonPath("$.data.count").value(10L))
+                .andDo(document("review-count-review-likes",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("reviewId").description("리뷰 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 코드"),
+                                fieldWithPath("status").description("응답 상태"),
+                                fieldWithPath("message").description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                fieldWithPath("data.reviewId").description("리뷰 ID"),
+                                fieldWithPath("data.count").description("좋아요 수")
+                        )
+                ));
+    }
 }
