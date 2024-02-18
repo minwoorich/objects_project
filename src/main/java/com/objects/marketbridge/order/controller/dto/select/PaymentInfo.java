@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.controller.dto.select;
 
-import com.objects.marketbridge.order.infra.dtio.OrderDtio;
+import com.objects.marketbridge.order.service.dto.GetOrderDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,12 +23,12 @@ public class PaymentInfo {
         this.deliveryFee = deliveryFee;
     }
 
-    public static PaymentInfo of(OrderDtio orderDtio) {
+    public static PaymentInfo of(GetOrderDto getOrderDto) {
         return PaymentInfo.builder()
-                .totalAmount(orderDtio.getTotalPrice())
-                .discountAmount(orderDtio.getTotalDiscount())
-                .paymentMethod(orderDtio.getPaymentMethod())
-                .cardIssuerName(orderDtio.getCardIssuerName())
+                .totalAmount(getOrderDto.getTotalPrice())
+                .discountAmount(getOrderDto.getTotalDiscount())
+                .paymentMethod(getOrderDto.getPaymentMethod())
+                .cardIssuerName(getOrderDto.getCardIssuerName())
                 .build();
     }
 

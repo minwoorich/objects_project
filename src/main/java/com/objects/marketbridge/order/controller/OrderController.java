@@ -5,6 +5,7 @@ import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
+import com.objects.marketbridge.common.interceptor.PageResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.common.security.annotation.UserAuthorize;
 import com.objects.marketbridge.order.controller.dto.CreateCheckoutHttp;
@@ -74,15 +75,13 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public ApiResponse<GetOrderHttp.Response> getOrders(
+    public ApiResponse<PageResponse<GetOrderHttp.Response>> getOrders(
             @AuthMemberId Long memberId,
             @RequestParam(name = "year") String year,
             @RequestParam(name = "keyword") String keyword,
             @PageableDefault(value = 5, sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
 
-        GetOrderHttp.Response response = getOrderService.search(pageable, createCondition(year, keyword, memberId));
-
-        return ApiResponse.ok(response);
+        return ApiResponse.ok(getOrderService.search(pageable, createCondition(year, keyword, memberId)));
     }
 
     private GetOrderHttp.Condition createCondition(String year, String keyword, Long memberId) {
@@ -94,10 +93,10 @@ public class OrderController {
     }
 
     @UserAuthorize
-    @GetMapping("/orders/{orderNo}")
+    @GetMapping("/orders/{orderId}")
     public ApiResponse<GetOrderDetailHttp.Response> getOrderDetails(
-            @PathVariable(name = "orderNo") String orderNo){
-        GetOrderDetailHttp.Response orderDetail = getOrderService.getOrderDetails(orderNo);
-        return ApiResponse.ok(orderDetail);
+            @PathVariable(name = "orderId") Long orderId){
+
+        return ApiResponse.ok(getOrderService.getOrderDetails(orderId));
     }
 }

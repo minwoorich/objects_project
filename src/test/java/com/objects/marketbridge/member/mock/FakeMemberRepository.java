@@ -1,6 +1,9 @@
 package com.objects.marketbridge.member.mock;
 
 import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.dto.MemberEmail;
+import com.objects.marketbridge.member.dto.GetMemberInfo;
+import com.objects.marketbridge.member.dto.MemberId;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +49,26 @@ public class FakeMemberRepository implements MemberRepository {
     @Override
     public void deleteAllInBatch() {
 
+    }
+
+    @Override
+    public GetMemberInfo getMemberInfoByIdAndPassword(Long memberId, String password) {
+        return null;
+    }
+
+    @Override
+    public MemberEmail getEmailById(Long memberId) {
+        return null;
+    }
+
+    @Override
+    public MemberId findIdByNameAndEmail(String name, String email) {
+        return null;
+    }
+
+    @Override
+    public MemberEmail findEmailByNameAndPhoneNo(String name, String phoneNo) {
+        return null;
     }
 
     @Override

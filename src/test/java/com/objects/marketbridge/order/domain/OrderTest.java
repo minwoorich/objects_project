@@ -1,15 +1,15 @@
 package com.objects.marketbridge.order.domain;
 
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.member.domain.Coupon;
-import com.objects.marketbridge.member.domain.MemberCoupon;
+import com.objects.marketbridge.coupon.domain.Coupon;
+import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.coupon.CouponRepository;
-import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
+import com.objects.marketbridge.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;

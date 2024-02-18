@@ -8,22 +8,22 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CreateCartDto {
-    private String productNo;
+    private Long productId;
     private Long memberId;
     private Long quantity;
     private Boolean isSubs;
 
     @Builder
-    private CreateCartDto(String productNo, Long memberId, Long quantity, Boolean isSubs) {
-        this.productNo = productNo;
+    private CreateCartDto(Long productId, Long memberId, Long quantity, Boolean isSubs) {
+        this.productId = productId;
         this.memberId = memberId;
         this.quantity = quantity;
         this.isSubs = isSubs;
     }
 
-    public static CreateCartDto create(String productNo, Long memberId,Long quantity,  Boolean isSubs) {
+    public static CreateCartDto create(Long productId, Long memberId,Long quantity,  Boolean isSubs) {
         return CreateCartDto.builder()
-                .productNo(productNo)
+                .productId(productId)
                 .memberId(memberId)
                 .quantity(quantity)
                 .isSubs(isSubs)

@@ -21,7 +21,7 @@ import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUP
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class AddToCartService {
 
     private final CartCommendRepository cartCommendRepository;
@@ -29,23 +29,24 @@ public class AddToCartService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
+    @Transactional
     public Cart add(CreateCartDto createCartDto) {
         // 1. 이미 장바구니에 담긴 상품인지 아닌지 검증
-        validDuplicate(createCartDto.getProductNo());
+        validDuplicate(createCartDto.getProductId());
 
         return cartCommendRepository.save(create(createCartDto));
     }
 
     private Cart create(CreateCartDto createCartDto) {
-        Product product = productRepository.findByProductNo(createCartDto.getProductNo());
+        Product product = productRepository.findById(createCartDto.getProductId());
         Member member = memberRepository.findById(createCartDto.getMemberId());
         Boolean isSubs = createCartDto.getIsSubs();
         Long quantity = createCartDto.getQuantity();
 
         return Cart.create(member, product, isSubs, quantity);
     }
-    private void validDuplicate(String productNo) {
-        if (cartQueryRepository.findByProductNo(productNo).isPresent()) {
+    private void validDuplicate(Long productId) {
+        if (cartQueryRepository.findByProductId(productId).isPresent()) {
             throw CustomLogicException.createBadRequestError(DUPLICATE_OPERATION, "이미 장바구니에 담긴 상품입니다", LocalDateTime.now());
         }
     }

@@ -1,10 +1,11 @@
 package com.objects.marketbridge.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.objects.marketbridge.order.domain.Order;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+
+import static com.objects.marketbridge.common.config.KakaoPayConfig.ONE_TIME_CID;
 
 @Getter
 public class KakaoPayApproveRequest {
@@ -32,18 +33,15 @@ public class KakaoPayApproveRequest {
         this.totalAmount = totalAmount;
     }
 
-    public MultiValueMap<String, String> toMultiValueMap() {
-
-        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
-
-        requestMap.add("cid", cid);
-        requestMap.add("tid", tid);
-        requestMap.add("partner_order_id", partnerOrderId);
-        requestMap.add("partner_user_id",  partnerUserId);
-        requestMap.add("pg_token",  pgToken);
-        requestMap.add("total_amount",  totalAmount.toString());
-
-        return requestMap;
+    public static KakaoPayApproveRequest create(Order order, String pgToken) {
+        return KakaoPayApproveRequest.builder()
+                .pgToken(pgToken)
+                .partnerUserId(order.getMember().getId().toString())
+                .partnerOrderId(order.getOrderNo())
+                .tid(order.getTid())
+                .totalAmount(order.getRealPrice())
+                .cid(ONE_TIME_CID)
+                .build();
     }
 
 }
