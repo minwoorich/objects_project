@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: dev
+    default: local
 
 ---
 
@@ -13,8 +13,8 @@ spring:
   # 외부 DB를 사용 할 경우 true 로 해놔야 script(schema.sql, data.sql) 파일을 실행함
   sql:
     init:
-#      mode: always
-      platform: mysql # 이거 없으면 mysql 인식 못함
+      # 이거 없으면 mysql 인식 못함
+      platform: mysql
       mode: never
 
   datasource:
@@ -27,18 +27,13 @@ spring:
 
     # (2.5~) Hibernate 초기화 이후 data-mysql.sql 실행
     # 하이버네이트가 테이블들을 생성해주고, data.sql 로 데이터들을 초기화해줌 (ddl-auto 사용할때만 필요한 설정, schema.sql 따로 사용하면 필요없음)
-#    defer-datasource-initialization: true
+    # defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
-
-
-  h2:
-    console:
-      enabled: true
 
   data:
     redis:
@@ -84,9 +79,6 @@ spring:
 
   jpa:
     show-sql: true
-    # defer-datasource-initialization : (2.5~) Hibernate 초기화 이후 data.sql 실행
-    # 하이버네이트가 테이블들을 생성해주고, data.sql 로 데이터들을 초기화해줌 (ddl-auto 사용할 때만 필요한 설정, schema.sql 따로 사용하면 필요없음)
-#    defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
     properties:
@@ -106,10 +98,9 @@ payment:
   kakao:
     secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
 
-host: "http://localhost:8080/"
+host: "http://localhost:8080"
 
 jwt:
-  # CLI 명령어 - openssl rand -base64 64 로 생성된 값
   secret: fMRb9kle/ImDQ7wB8+XPnuVH15M6xp60jKS7/mF7dNMFEvt9kNe4WioJfsHT6J6F4bynR8rqAR2Z8zYboQSG+A==
 
 ---
@@ -118,10 +109,6 @@ spring:
   config:
     activate:
       on-profile: dev
-
-  sql:
-    init:
-      platform: mysql # 이거 없으면 mysql 인식 못함
 
   jpa:
     show-sql: true
@@ -139,3 +126,8 @@ logging:
 payment:
   kakao:
     secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false

@@ -11,28 +11,27 @@ public class CreateCartHttp {
     @NoArgsConstructor
     public static class Request{
 
-        private String productNo;
+        private Long productId;
         private Long quantity;
         private Boolean isSubs;
 
-
         @Builder
-        private Request(String productNo, Long quantity,  Boolean isSubs) {
-            this.productNo = productNo;
+        private Request(Long productId, Long quantity,  Boolean isSubs) {
+            this.productId = productId;
             this.quantity = quantity;
             this.isSubs = isSubs;
         }
 
-        public static Request create(String productNo, Long quantity, Boolean isSubs) {
+        public static Request create(Long productId, Long quantity, Boolean isSubs) {
             return Request.builder()
-                    .productNo(productNo)
+                    .productId(productId)
                     .quantity(quantity)
                     .isSubs(isSubs)
                     .build();
         }
 
         public CreateCartDto toDto(Long memberId) {
-            return CreateCartDto.create(productNo, memberId, quantity, isSubs);
+            return CreateCartDto.create(productId, memberId, quantity, isSubs);
         }
     }
 }

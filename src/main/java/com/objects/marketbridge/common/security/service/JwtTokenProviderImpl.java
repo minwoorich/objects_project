@@ -8,9 +8,7 @@ import com.objects.marketbridge.common.security.dto.JwtTokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -111,7 +109,7 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
      * 토큰의 유효성을 검증하는 메서드
      */
     @Override
-    public boolean validateToken(String token) throws BadRequestException {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(KEY)
@@ -119,15 +117,21 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
 
-        } catch (
-                SecurityException |
-                MalformedJwtException |
-                ExpiredJwtException |
-                UnsupportedJwtException |
-                IllegalStateException e
-        ) {
+        } catch (SecurityException e) {
             log.info(e.getMessage());
-            throw new BadRequestException(e.getMessage());
+            throw new SecurityException(e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.info(e.getMessage());
+            throw new MalformedJwtException(e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.info(e.getMessage());
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.info(e.getMessage());
+            throw new UnsupportedJwtException(e.getMessage());
+        } catch (IllegalStateException e) {
+            log.info(e.getMessage());
+            throw new IllegalStateException(e.getMessage());
         }
     }
 

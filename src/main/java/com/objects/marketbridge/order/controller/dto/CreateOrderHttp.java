@@ -2,12 +2,15 @@ package com.objects.marketbridge.order.controller.dto;
 
 import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.order.domain.ProductValue;
 import com.objects.marketbridge.order.service.dto.CreateOrderDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,17 +20,28 @@ public class CreateOrderHttp {
     @Getter
     @NoArgsConstructor
     public static class Request {
-        private Long amount;
+        private Long totalAmount;
+        private Long totalDiscountAmount; // 쿠폰 할인 만 적용
+        private Long realAmount;
         private Long addressId;
         private String orderName;
         private List<ProductValue> productValues;
 
         @Builder
-        public Request(Long amount, Long addressId, String orderName, List<ProductValue> productValues) {
-            this.amount = amount;
+        public Request(Long totalAmount, Long totalDiscountAmount, Long realAmount, Long addressId, String orderName, List<ProductValue> productValues) {
+            validAmount(totalAmount, totalDiscountAmount, realAmount);
+            this.totalAmount = totalAmount;
+            this.totalDiscountAmount = totalDiscountAmount;
+            this.realAmount = realAmount;
             this.addressId = addressId;
             this.orderName = orderName;
             this.productValues = productValues;
+        }
+
+        private void validAmount(Long totalAmount, Long totalDiscountAmount, Long realAmount) {
+            if (totalAmount != totalDiscountAmount + realAmount) {
+                throw CustomLogicException.createBadRequestError(ErrorCode.INVALID_INPUT_VALUE, "금액 계산이 맞지 않습니다", LocalDateTime.now());
+            }
         }
 
         public CreateOrderDto toDto(String orderNo, String tid, Long memberId) {
@@ -37,7 +51,9 @@ public class CreateOrderHttp {
                     .tid(tid)
                     .addressId(addressId)
                     .orderName(orderName)
-                    .totalOrderPrice(amount)
+                    .totalOrderPrice(totalAmount)
+                    .realOrderPrice(realAmount)
+                    .totalDiscountPrice(totalDiscountAmount)
                     .productValues(productValues)
                     .build();
         }
@@ -53,7 +69,7 @@ public class CreateOrderHttp {
                     .quantity(productValues.stream().mapToLong(ProductValue::getQuantity).sum())
                     .itemName(orderName)
                     .taxFreeAmount(0L)
-                    .totalAmount(amount)
+                    .totalAmount(realAmount)
                     .build();
         }
     }

@@ -1,6 +1,7 @@
 package com.objects.marketbridge.review.domain;
 
 import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,12 +26,24 @@ public class ReviewLikes {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private Long likes;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "product_id")
+//    private Product product;
+
+    private Boolean liked;
 
     @Builder
-    public ReviewLikes(Review review, Member member, Long likes) {
+    public ReviewLikes(Review review, Member member,
+//                       Product product,
+                       Boolean liked) {
         this.review = review;
         this.member = member;
-        this.likes = likes;
+//        this.product = product;
+        this.liked = liked;
+    }
+
+public Boolean changeLiked(){
+    this.liked = !liked;
+    return this.liked;
     }
 }

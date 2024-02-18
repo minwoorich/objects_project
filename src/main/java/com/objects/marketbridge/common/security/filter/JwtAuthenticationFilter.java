@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // 유효하지만 레디스에 저장이 되지 않은 토큰이면 에러(재발급 요청이면 refreshtoken을 검증);
                 if (!jwtTokenProvider.checkTokenRegistration(requestURI, token, authentication)) {
-                    throw new BadRequestException(SecurityErrConst.AUTHENTICATION_TOKEN_ERR);
+                    throw new BadCredentialsException(SecurityErrConst.AUTHENTICATION_TOKEN_ERR);
                 }
 
                 // spring security에서 현재 스레드의 보안 컨텍스트에 새로운 인증 정보를 설정

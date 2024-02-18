@@ -21,18 +21,16 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final AuthRepository authRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         AuthMember member = authRepository.findAuthMemberByEmail(email);
-
         // db에 저장하지 않고 여기서 권한 부여
         return CustomUserDetails.builder()
                 .id(member.id())
                 .email(member.email())
-                .password(passwordEncoder.encode(member.password()))
+                .password(member.password())
                 .roles(List.of("USER"))
                 .build();
     }

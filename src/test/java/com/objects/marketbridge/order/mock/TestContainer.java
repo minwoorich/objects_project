@@ -9,8 +9,8 @@ import com.objects.marketbridge.order.service.OrderCancelService;
 import com.objects.marketbridge.order.service.OrderReturnService;
 import com.objects.marketbridge.order.service.port.*;
 import com.objects.marketbridge.payment.service.port.PaymentClient;
-import com.objects.marketbridge.product.infra.coupon.CouponRepository;
-import com.objects.marketbridge.product.infra.coupon.MemberCouponRepository;
+import com.objects.marketbridge.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.Builder;
 

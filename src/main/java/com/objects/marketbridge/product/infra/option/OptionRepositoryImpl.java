@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class OptionRepositoryImpl implements OptionRepository {
@@ -27,5 +29,15 @@ public class OptionRepositoryImpl implements OptionRepository {
     public Option findByName(String name) {
         // 없는 경우 기본값 EMPTY로 반환
         return optionJpaRepository.findByName(name).orElseGet(()-> Option.builder().name("EMPTY").build());
+    }
+
+    @Override
+    public void deleteAllInBatch() {
+        optionJpaRepository.deleteAllInBatch();
+    }
+
+    @Override
+    public void saveAll(List<Option> options) {
+        optionJpaRepository.saveAll(options);
     }
 }

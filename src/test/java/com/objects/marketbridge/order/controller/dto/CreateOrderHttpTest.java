@@ -19,7 +19,9 @@ class CreateOrderHttpTest {
 
         // given
         CreateOrderHttp.Request request = CreateOrderHttp.Request.builder()
-                .amount(5000L)
+                .totalAmount(5000L)
+                .realAmount(4500L)
+                .totalDiscountAmount(500L)
                 .addressId(1L)
                 .orderName("가방외 2건")
                 .productValues(createProductValues())
@@ -40,6 +42,8 @@ class CreateOrderHttpTest {
                 "orderName",
                 "orderNo",
                 "totalOrderPrice",
+                "realOrderPrice",
+                "totalDiscountPrice",
                 "productValues")
                 .containsExactlyInAnyOrder(
                         "tid",
@@ -48,6 +52,8 @@ class CreateOrderHttpTest {
                 "가방외 2건",
                 "aaaa-aaaa-aaaa",
                 5000L,
+                4500L,
+                500L,
                 request.getProductValues()
         );
     }
@@ -58,7 +64,9 @@ class CreateOrderHttpTest {
 
         // given
         CreateOrderHttp.Request request = CreateOrderHttp.Request.builder()
-                .amount(5000L)
+                .totalAmount(5000L)
+                .realAmount(4500L)
+                .totalDiscountAmount(500L)
                 .addressId(1L)
                 .orderName("가방외 2건")
                 .productValues(createProductValues())
@@ -96,7 +104,7 @@ class CreateOrderHttpTest {
                         request.getProductValues().stream().mapToLong(ProductValue::getQuantity).sum(),
                         request.getOrderName(),
                         0L,
-                        request.getAmount()
+                        request.getRealAmount()
                 );
 
     }
@@ -139,21 +147,21 @@ class CreateOrderHttpTest {
     private List<ProductValue> createProductValues(){
         ProductValue productValue1 = ProductValue.builder()
                 .sellerId(1L)
-                .productNo("productNo1")
+                .productId(1L)
                 .couponId(1L)
                 .quantity(1L)
                 .deliveredDate("2023-03-31").build();
 
         ProductValue productValue2 = ProductValue.builder()
                 .sellerId(2L)
-                .productNo("productNo2")
+                .productId(2L)
                 .couponId(2L)
                 .quantity(1L)
                 .deliveredDate("2023-03-31").build();
 
         ProductValue productValue3 = ProductValue.builder()
                 .sellerId(3L)
-                .productNo("productNo2")
+                .productId(2L)
                 .couponId(3L)
                 .quantity(1L)
                 .deliveredDate("2023-03-31").build();
