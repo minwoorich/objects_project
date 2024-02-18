@@ -3,6 +3,7 @@ package com.objects.marketbridge.cart.service.dto;
 
 import com.objects.marketbridge.cart.domain.Cart;
 import com.objects.marketbridge.coupon.domain.Coupon;
+import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.product.domain.Option;
 import com.objects.marketbridge.product.domain.ProdOption;
@@ -62,12 +63,17 @@ class GetCartDtoTest {
         ProdOption prodOption1_1 = createProdOption(option1);
         ProdOption prodOption1_2 = createProdOption(option2);
 
-
         product1.addProdOptions(prodOption1_1);
         product1.addProdOptions(prodOption1_2);
 
+        MemberCoupon memberCoupon1_1 = MemberCoupon.builder().isUsed(false).member(member).build();
+        MemberCoupon memberCoupon1_2 = MemberCoupon.builder().isUsed(false).member(member).build();
+
         Coupon coupon1_1 = createCoupon("[상품1] 1000원", 1000L, 10000L, LocalDateTime.of(2024,1,1,0,0,0), 9999L, LocalDateTime.of(2023,1,1,0,0,0));
         Coupon coupon1_2 = createCoupon("[상품1] 5000원", 5000L, 20000L, LocalDateTime.of(2024,1,1,0,0,0), 9999L, LocalDateTime.of(2023,1,1,0,0,0));
+
+        coupon1_1.addMemberCoupon(memberCoupon1_1);
+        coupon1_2.addMemberCoupon(memberCoupon1_2);
 
         product1.addCoupons(coupon1_1);
         product1.addCoupons(coupon1_2);

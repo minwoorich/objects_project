@@ -162,7 +162,13 @@ class GetCartListServiceTest {
         product6.addProdOptions(prodOption6_2);
         product5.addCoupons(coupon6_1);
         product5.addCoupons(coupon6_2);
-        productRepository.saveAll(List.of(product1, product2, product3, product4, product5, product6));
+
+        productRepository.save(product1);
+        productRepository.save(product2);
+        productRepository.save(product3);
+        productRepository.save(product4);
+        productRepository.save(product5);
+        productRepository.save(product6);
 
         Cart cart1 = Cart.create(member, product1, false, 1L);
         Cart cart2 = Cart.create(member, product2, false, 1L);
