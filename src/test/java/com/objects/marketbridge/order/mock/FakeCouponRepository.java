@@ -12,13 +12,8 @@ public class FakeCouponRepository implements CouponRepository {
     }
 
     @Override
-    public List<Coupon> findAllByIds(List<Long> ids) {
+    public Coupon save(Coupon coupon) {
         return null;
-    }
-
-    @Override
-    public void save(Coupon coupon) {
-
     }
 
     @Override
@@ -29,5 +24,10 @@ public class FakeCouponRepository implements CouponRepository {
     @Override
     public List<Coupon> findAll() {
         return null;
+    }
+
+    @Override
+    public void deleteAllInBatch() {
+
     }
 }
