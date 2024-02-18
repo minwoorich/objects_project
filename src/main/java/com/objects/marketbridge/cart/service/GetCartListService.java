@@ -25,7 +25,6 @@ public class GetCartListService {
     public SliceResponse<GetCartDto> get(Pageable pageable, Long memberId) {
 
         Slice<Cart> slicedCart = cartQueryRepository.findSlicedCart(pageable, memberId);
-
         Slice<GetCartDto> cartInfos = new SliceImpl<>(convertEntityToDto(slicedCart.getContent()), pageable, slicedCart.hasNext());
 
         return new SliceResponse<>(cartInfos);
