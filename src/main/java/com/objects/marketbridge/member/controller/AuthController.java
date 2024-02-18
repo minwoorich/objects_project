@@ -28,13 +28,13 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Void> signUp(@Valid @RequestBody SignUpDto signUpDto) throws BadRequestException {
+    public ApiResponse<Void> signUp(@Valid @RequestBody SignUpDto signUpDto) {
         authService.signUp(signUpDto);
         return ApiResponse.create();
     }
 
     @PostMapping("/sign-in")
-    public ApiResponse<JwtTokenDto> signIn(@GetAuthentication CustomUserDetails principal) throws BadRequestException {
+    public ApiResponse<JwtTokenDto> signIn(@GetAuthentication CustomUserDetails principal) {
         JwtTokenDto jwtTokenDto = jwtTokenProvider.generateToken(principal);
         return ApiResponse.ok(jwtTokenDto);
     }

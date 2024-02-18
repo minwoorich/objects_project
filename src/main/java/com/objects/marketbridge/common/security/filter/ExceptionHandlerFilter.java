@@ -1,6 +1,9 @@
 package com.objects.marketbridge.common.security.filter;
 
 import com.objects.marketbridge.common.security.dto.ErrRes;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.objects.marketbridge.common.security.constants.SecurityErrConst.SIGN_IN_ERR;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
 
 
@@ -24,22 +26,28 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        }  catch (InternalAuthenticationServiceException | BadCredentialsException e) {
-            setErrRes(request, response, HttpStatus.UNAUTHORIZED, SIGN_IN_ERR);
+        }  catch (InternalAuthenticationServiceException |
+                  BadCredentialsException |
+                  ExpiredJwtException |
+                  SecurityException |
+                  MalformedJwtException |
+                  UnsupportedJwtException |
+                  IllegalStateException e) {
+
+            setErrRes(request, response, e.getMessage());
         }
     }
 
     private void setErrRes(
             HttpServletRequest request,
             HttpServletResponse response,
-            HttpStatus httpStatus,
             String message
     ) throws IOException {
-        response.setStatus(httpStatus.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(APPLICATION_JSON+"; "+"charset=UTF-8");
 
         response.getWriter().write(
-                ErrRes.of(httpStatus, message, request.getRequestURI()).convertToJson()
+                ErrRes.of(HttpStatus.UNAUTHORIZED, message, request.getRequestURI()).convertToJson()
         );
     }
 }

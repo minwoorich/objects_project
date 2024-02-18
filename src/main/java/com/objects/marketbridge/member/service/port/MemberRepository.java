@@ -1,7 +1,9 @@
 package com.objects.marketbridge.member.service.port;
 
-import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.dto.MemberEmail;
+import com.objects.marketbridge.member.dto.GetMemberInfo;
+import com.objects.marketbridge.member.dto.MemberId;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,4 +25,13 @@ public interface MemberRepository {
     Member findByIdWithAddresses(Long id);
 
     void deleteAllInBatch();
+
+    GetMemberInfo getMemberInfoByIdAndPassword(Long memberId, String password);
+
+    MemberEmail getEmailById(Long memberId);
+
+    MemberId findIdByNameAndEmail(String name, String email);
+
+    MemberEmail findEmailByNameAndPhoneNo(String name, String phoneNo);
+
 }

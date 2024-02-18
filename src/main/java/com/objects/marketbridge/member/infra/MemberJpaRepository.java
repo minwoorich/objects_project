@@ -1,7 +1,7 @@
 package com.objects.marketbridge.member.infra;
 
 import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.dto.AuthMember;
+import com.objects.marketbridge.member.dto.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,11 +15,19 @@ public interface MemberJpaRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmail(String email);
 
-    Optional<Member> findMemberById(Long id);
-
     @Query("SELECT DISTINCT m FROM Member m JOIN FETCH m.addresses WHERE m.id = :memberId")
     Optional<Member> findByIdWithAddresses(@Param("memberId") Long id);
     
     Optional<AuthMember> findAuthMemberByEmail(String email);
+
+    Optional<GetMemberInfo> getMemberInfoByIdAndPassword(Long memberId, String password);
+
+    Optional<MemberEmail> getEmailById(Long id);
+
+    @Query("SELECT new com.objects.marketbridge.member.dto.MemberId(m.id) FROM Member m WHERE m.name = :name AND m.email = :email")
+    Optional<MemberId> findIdByNameAndEmail(@Param("name") String name, @Param("email") String email);
+
+    Optional<MemberEmail> findEmailByNameAndPhoneNo(String name, String phoneNo);
+
 
 }
