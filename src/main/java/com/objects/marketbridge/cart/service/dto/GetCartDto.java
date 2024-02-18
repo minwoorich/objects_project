@@ -2,6 +2,7 @@ package com.objects.marketbridge.cart.service.dto;
 
 import com.objects.marketbridge.cart.domain.Cart;
 import com.objects.marketbridge.coupon.domain.Coupon;
+import com.objects.marketbridge.product.domain.ProdOption;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 @Getter
 @NoArgsConstructor
@@ -48,6 +51,9 @@ public class GetCartDto {
 
     // TODO : .availableCoupons : of메서드에 추가
     public static GetCartDto of(Cart cart) {
+        List<ProdOption> prodOptions = cart.getProduct().getProdOptions();
+        List<Coupon> coupons = cart.getProduct().getCoupons();
+
         return GetCartDto.builder()
                 .productId(cart.getProduct().getId())
                 .productNo(cart.getProduct().getProductNo())
@@ -61,8 +67,10 @@ public class GetCartDto {
                 .stock(cart.getProduct().getStock())
                 .deliveryFee(0L)
                 .deliveredDate("deliveredDate")
-                .optionNames(cart.getProduct().getProdOptions().stream().map(po -> po.getOption().getName()).collect(Collectors.toList()))
-                .availableCoupons(cart.getProduct().getCoupons().stream().map(CouponDto::of).collect(Collectors.toList()))
+                .optionNames(!prodOptions.isEmpty() ?
+                        prodOptions.stream().map(po -> po.getOption().getName()).collect(toList()) : null)
+                .availableCoupons(!coupons.isEmpty() ?
+                        coupons.stream().map(CouponDto::of).collect(toList()) : null)
                 .build();
     }
 

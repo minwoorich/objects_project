@@ -24,6 +24,8 @@ public class GetCartListService {
 
     public SliceResponse<GetCartDto> get(Pageable pageable, Long memberId) {
 
+        // TODO : 1) 쿠폰이 없는 경우 응답 데이터 테스트 해보기
+        //  2) 장바구니 조회 할때 특정 멤버가 소지하고 있는 쿠폰만 가져오는지 테스트 해야함
         Slice<Cart> slicedCart = cartQueryRepository.findSlicedCart(pageable, memberId);
         Slice<GetCartDto> cartInfos = new SliceImpl<>(convertEntityToDto(slicedCart.getContent()), pageable, slicedCart.hasNext());
 
