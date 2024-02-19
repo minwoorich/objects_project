@@ -246,6 +246,35 @@ class CartControllerTest {
                 .build();
     }
 
+    @DisplayName("[API] GET/carts/count 테스트")
+    @Test
+    @WithMockCustomUser
+    void countCartItems() throws Exception {
+        //given
+        given(getCartListService.countAll(anyLong())).willReturn(1L);
 
+        //when
+        MockHttpServletRequestBuilder requestBuilder =
+                get("/carts/count")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .accept(MediaType.APPLICATION_JSON);
 
+        //then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("cart-count",
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                        .description("응답 데이터")
+                        )
+                ));
+    }
 }
