@@ -30,6 +30,7 @@ public class Cart extends BaseEntity {
 
     private Boolean isSubs;
 
+
     private Long quantity;
 
     @Builder
