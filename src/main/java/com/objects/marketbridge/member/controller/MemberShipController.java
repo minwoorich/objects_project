@@ -22,6 +22,7 @@ import static com.objects.marketbridge.common.config.KakaoPayConfig.SUBS_CID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/membership")
+
 public class MemberShipController {
 
     private final MemberShipService memberShipService;
