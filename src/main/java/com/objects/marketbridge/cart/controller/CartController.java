@@ -43,7 +43,7 @@ public class CartController {
         return ApiResponse.ok(getCartListService.get(pageable, memberId));
     }
 
-    @GetMapping("/carts")
+    @GetMapping("/carts/count")
     public ApiResponse<Long> countCartItems(
             @AuthMemberId Long memberId) {
 

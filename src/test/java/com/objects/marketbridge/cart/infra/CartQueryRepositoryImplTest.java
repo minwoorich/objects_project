@@ -134,7 +134,7 @@ class CartQueryRepositoryImplTest {
         Cart cart4 = Cart.create(member, product4, false, 1L);
         Cart cart5 = Cart.create(member, product5, false, 1L);
         Cart cart6 = Cart.create(member, product6, false, 1L);
-//        cartCommendRepository.saveAll(List.of(cart1, cart2, cart3, cart4, cart5, cart6));
+
         cartCommendRepository.save(cart1);
         cartCommendRepository.save(cart2);
         cartCommendRepository.save(cart3);
@@ -159,5 +159,41 @@ class CartQueryRepositoryImplTest {
         assertThat(slicedCart.getContent().get(1).getProduct().getProductNo()).isEqualTo("productNo1");// 최신 등록 순
         assertThat(slicedCart.getContent().get(0).getMember().getEmail()).isEqualTo("test@email.com");
         assertThat(slicedCart.getContent().get(1).getMember().getEmail()).isEqualTo("test@email.com");
+    }
+
+    @DisplayName("회원이 장바구니 전체를 조회할 수 있다")
+    @Test
+    void countByMemberId(){
+        //given
+        Member member = Member.builder().email("test@email.com").build();
+        memberRepository.save(member);
+
+        Product product1 = Product.builder().stock(5L).productNo("productNo1").build();
+        Product product2 = Product.builder().stock(5L).productNo("productNo2").build();
+        Product product3 = Product.builder().stock(5L).productNo("productNo3").build();
+        Product product4 = Product.builder().stock(5L).productNo("productNo4").build();
+        Product product5 = Product.builder().stock(5L).productNo("productNo5").build();
+        Product product6 = Product.builder().stock(5L).productNo("productNo6").build();
+        productRepository.saveAll(List.of(product1, product2, product3, product4, product5, product6));
+
+        Cart cart1 = Cart.create(member, product1, false, 1L);
+        Cart cart2 = Cart.create(member, product2, false, 1L);
+        Cart cart3 = Cart.create(member, product3, false, 1L);
+        Cart cart4 = Cart.create(member, product4, false, 1L);
+        Cart cart5 = Cart.create(member, product5, false, 1L);
+        Cart cart6 = Cart.create(member, product6, false, 1L);
+
+        cartCommendRepository.save(cart1);
+        cartCommendRepository.save(cart2);
+        cartCommendRepository.save(cart3);
+        cartCommendRepository.save(cart4);
+        cartCommendRepository.save(cart5);
+        cartCommendRepository.save(cart6);
+
+        //when
+        Long countResult = cartQueryRepository.countByMemberId(member.getId());
+
+        //then
+        assertThat(countResult).isEqualTo(6);
     }
 }
