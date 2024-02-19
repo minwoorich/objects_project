@@ -7,6 +7,10 @@ import com.objects.marketbridge.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,13 +25,13 @@ public class MemberController {
     private final MemberService memberService;
 
 
-    @GetMapping("/find-address")
-    public ApiResponse<List<GetAddressesResponse>> findAddress(@AuthMemberId Long memberId){
+    @GetMapping("/address")
+    public ApiResponse<List<GetAddressesResponse>> findAddrress(@AuthMemberId Long memberId){
         List<GetAddressesResponse> addressesResponses =memberService.findByMemberId(memberId);
         return ApiResponse.ok(addressesResponses);
     }
 
-    @PostMapping("/add-address")
+    @PostMapping("/address")
     public ApiResponse<List<GetAddressesResponse>> addAddressValue(
             @AuthMemberId Long memberId,
             @Valid @RequestBody AddAddressRequestDto request){
@@ -35,7 +39,7 @@ public class MemberController {
        return ApiResponse.ok(addressesResponses);
     }
 
-    @PatchMapping("/update-address/{addressId}")
+    @PatchMapping("/address/{addressId}")
     public ApiResponse<List<GetAddressesResponse>> updateAddress(
             @AuthMemberId Long memberId ,@Valid @RequestBody AddAddressRequestDto request ,
             @PathVariable (name = "addressId") Long addressId){
@@ -43,7 +47,7 @@ public class MemberController {
         return ApiResponse.ok(addressesResponses);
     }
 
-    @DeleteMapping("/delete-address/{addressId}")
+    @DeleteMapping("/address/{addressId}")
     public ApiResponse<List<GetAddressesResponse>> deleteAddress(
             @AuthMemberId Long memberId ,@PathVariable (name = "addressId")  Long addressId){
         List<GetAddressesResponse> addressesResponses = memberService.deleteMemberAddress(memberId,addressId);
@@ -55,6 +59,32 @@ public class MemberController {
         CheckedResultDto checkedResultDto = memberService.isDuplicateEmail(email);
         return ApiResponse.ok(checkedResultDto);
     }
+
+    //Wishlist 시작
+    @GetMapping("/wishList-check")
+    public ApiResponse <Boolean> checkWishlistByMemberid(
+            @AuthMemberId Long memberId,
+            @RequestBody WishlistRequest request){
+        Boolean isWishlist = memberService.checkWishlist(memberId, request);
+        return ApiResponse.ok(isWishlist);
+    }
+
+    @GetMapping("/wishlist")
+    public ApiResponse<Slice<WishlistResponse>> findWishlistByMemberId(
+            @AuthMemberId Long memberId,
+            @PageableDefault(value = 5, sort = {"createdAt"}, direction = Sort.Direction.DESC)Pageable pageable){
+        Slice<WishlistResponse> wishlistResponse= memberService.findWishlistById(pageable,memberId);
+        return ApiResponse.ok(wishlistResponse);
+    }
+
+    @PostMapping("/wishlist")
+    public ApiResponse<String> addWish(
+            @AuthMemberId Long memberId ,
+            @RequestBody WishlistRequest request){
+        memberService.addWish(memberId,request);
+        return ApiResponse.create();
+    }
+
 
     @GetMapping("/account-email")
     public ApiResponse<MemberEmail> getEmail(@AuthMemberId Long memberId) {
@@ -94,3 +124,6 @@ public class MemberController {
 
 
 }
+
+
+

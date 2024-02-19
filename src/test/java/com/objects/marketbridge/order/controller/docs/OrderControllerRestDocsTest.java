@@ -390,7 +390,7 @@ public class OrderControllerRestDocsTest {
                 .andDo(document("order-detail-list",
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("orderId").description("주문 번호")
+                                parameterWithName("orderId").description("주문 아이디")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

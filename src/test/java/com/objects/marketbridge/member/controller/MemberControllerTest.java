@@ -1,18 +1,30 @@
 package com.objects.marketbridge.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.objects.marketbridge.common.interceptor.PageResponse;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.AddressValue;
+import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.domain.Wishlist;
 import com.objects.marketbridge.member.dto.*;
 import com.objects.marketbridge.member.service.MemberService;
+import com.objects.marketbridge.order.mock.TestContainer;
+import com.objects.marketbridge.order.mock.TestDateTimeHolder;
+import com.objects.marketbridge.product.domain.Option;
+import com.objects.marketbridge.product.domain.ProdOption;
+import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -23,11 +35,16 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -60,6 +77,19 @@ public class MemberControllerTest {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private ProductRepository productRepository;
+
+
+    private LocalDateTime orderDate = LocalDateTime.of(2024, 2, 9, 3, 9);
+    private DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+            .createTime(orderDate)
+            .build();
+    private TestContainer testContainer = TestContainer.builder()
+            .dateTimeHolder(dateTimeHolder)
+            .build();
+
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -109,6 +139,7 @@ public class MemberControllerTest {
 
 
     @Test
+    @DisplayName("등록되어 있는 주소를 찾아서 반환")
     public void testFindAddress() throws Exception{
         //given
         AddressValue addressValue1 = AddressValue.builder()
@@ -145,7 +176,7 @@ public class MemberControllerTest {
         given(memberService.findByMemberId(any())).willReturn(responses);
 
         //then
-        mockMvc.perform(get("/member/find-address")
+        mockMvc.perform(get("/member/address")
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -187,6 +218,7 @@ public class MemberControllerTest {
      }
 
      @Test
+     @DisplayName("주소를 새로 추가한다.")
      void addAddress() throws Exception{
         //given
          AddressValue addressValue1 = AddressValue.builder()
@@ -240,7 +272,7 @@ public class MemberControllerTest {
          // when ,then
          given(memberService.addMemberAddress(any(),any())).willReturn(responses);
 
-         mockMvc.perform(post("/member/add-address")
+         mockMvc.perform(post("/member/address")
                          .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                          .contentType(MediaType.APPLICATION_JSON)
                          .content(requestBody))
@@ -301,6 +333,7 @@ public class MemberControllerTest {
      }
 
      @Test
+     @DisplayName("등록되어 있는 주소를 찾아서 수정")
      void updateAddress() throws Exception{
         //given
          AddressValue addressValue1 = AddressValue.builder()
@@ -356,7 +389,7 @@ public class MemberControllerTest {
 
         //then
          String addressId = "1006"; // 예시로 사용할 주문 번호를 지정합니다.
-         mockMvc.perform(RestDocumentationRequestBuilders.patch("/member/update-address/{addressId}",addressId)
+         mockMvc.perform(RestDocumentationRequestBuilders.patch("/member/address/{addressId}",addressId)
                          .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                          .contentType(MediaType.APPLICATION_JSON)
                          .content(requestBody))
@@ -421,6 +454,7 @@ public class MemberControllerTest {
      }
 
      @Test
+     @DisplayName("등록되어 있는 주소를 찾아서 삭제")
      void deleteAddress() throws Exception{
         //given
          AddressValue addressValue1 = AddressValue.builder()
@@ -460,7 +494,7 @@ public class MemberControllerTest {
 
         //then
          String addressId = "1006";
-         mockMvc.perform(delete("/member/delete-address/{addressId}", addressId)
+         mockMvc.perform(delete("/member/address/{addressId}", addressId)
                          .header(HttpHeaders.AUTHORIZATION, "Bearer AccessToken")
                          .contentType(MediaType.APPLICATION_JSON))
                  .andExpect(status().isOk())
@@ -505,6 +539,315 @@ public class MemberControllerTest {
                  ));
      }
 
+    @Test
+    @DisplayName("wishlist 추가")
+    void addWishlist() throws Exception{
+        // Given
+        WishlistRequest request = WishlistRequest.builder()
+                .productId(1L)
+                .build();
+
+        // When Then
+        mockMvc.perform(post("/member/wishlist")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("add-wishlist",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("productId").type(JsonFieldType.NUMBER)
+                                        .description("추가할 제품의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL)
+                                        .description("응답 데이터")
+                        )
+                ));
+
+
+    }
+
+    @Test
+    @DisplayName("Wishlist에 담겨있는 상품인지 아닌지 조회")
+    void checkWishlist() throws Exception{
+        //given
+        Boolean response = false;
+
+        WishlistRequest request = WishlistRequest.builder()
+                .productId(1L)
+                .build();
+        //when,then
+        given(memberService.checkWishlist(any(),any())).willReturn(response);
+
+        mockMvc.perform(get("/member/wishList-check")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("check-wishlist",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("productId").type(JsonFieldType.NUMBER)
+                                        .description("추가할 제품의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터(false 추가 가능)")
+                        )
+                ));
+
+
+
+
+     }
+
+
+
+    @Test
+    @DisplayName("MemberId로 wishlist 조회")
+    void findWishlistByMemberId() throws Exception{
+        //given
+        Member member = Member.builder().email("wishTest@naver.con").build();
+
+        Product product1 = Product.builder()
+                .productNo("1")
+                .price(100L)
+                .name("롱패딩")
+                .thumbImg("static/image1")
+                .stock(1L)
+                .build();
+
+        Product product2 = Product.builder()
+                .productNo("2")
+                .price(200L)
+                .name("티셔츠")
+                .thumbImg("static/image2")
+                .stock(2L)
+                .build();
+
+        Product product3 = Product.builder()
+                .productNo("3")
+                .price(300L)
+                .name("숏패딩")
+                .thumbImg("static/image3")
+                .stock(3L)
+                .build();
+
+        Product product4 = Product.builder()
+                .productNo("4")
+                .price(400L)
+                .name("긴팔티셔츠")
+                .thumbImg("static/image4")
+                .stock(4L)
+                .build();
+
+        Product product5 = Product.builder()
+                .productNo("5")
+                .price(500L)
+                .name("후드티")
+                .thumbImg("static/image1")
+                .stock(5L)
+                .build();
+
+        testContainer.productRepository.save(product1);
+        testContainer.productRepository.save(product2);
+        testContainer.productRepository.save(product3);
+        testContainer.productRepository.save(product4);
+        testContainer.productRepository.save(product5);
+
+        Option option1 = Option.builder()
+                .name("M사이즈").build();
+
+        Option option2 = Option.builder()
+                .name("네이비컬러").build();
+
+        ProdOption prodOption1_1 = ProdOption.builder()
+                .option(option1).build();
+        ProdOption prodOption1_2 = ProdOption.builder()
+                .option(option2).build();
+
+
+        ProdOption prodOption2_1 = ProdOption.builder()
+                .option(option1).build();
+        ProdOption prodOption2_2 = ProdOption.builder()
+                .option(option2).build();
+
+
+        ProdOption prodOption3_1 = ProdOption.builder()
+                .option(option1).build();
+        ProdOption prodOption3_2 = ProdOption.builder()
+                .option(option2).build();
+
+
+        ProdOption prodOption4_1 = ProdOption.builder()
+                .option(option1).build();
+        ProdOption prodOption4_2 = ProdOption.builder()
+                .option(option2).build();
+
+
+        ProdOption prodOption5_1 = ProdOption.builder()
+                .option(option1).build();
+        ProdOption prodOption5_2 = ProdOption.builder()
+                .option(option2).build();
+
+        product1.addProdOptions(prodOption1_1);
+        product1.addProdOptions(prodOption1_2);
+
+        product2.addProdOptions(prodOption2_1);
+        product2.addProdOptions(prodOption2_2);
+
+        product3.addProdOptions(prodOption3_1);
+        product3.addProdOptions(prodOption3_2);
+
+        product4.addProdOptions(prodOption4_1);
+        product4.addProdOptions(prodOption4_2);
+
+        product5.addProdOptions(prodOption5_1);
+        product5.addProdOptions(prodOption5_2);
+
+        Wishlist wishlist1 = Wishlist.builder()
+                .member(member)
+                .product(product1).build();
+
+        Wishlist wishlist2 = Wishlist.builder()
+                .member(member)
+                .product(product2).build();
+
+        Wishlist wishlist3 = Wishlist.builder()
+                .member(member)
+                .product(product3).build();
+
+        Wishlist wishlist4 = Wishlist.builder()
+                .member(member)
+                .product(product4).build();
+
+        Wishlist wishlist5 = Wishlist.builder()
+                .member(member)
+                .product(product5).build();
+
+        int pageNumber = 0;
+        int pageSize = 1;
+        Sort sort = Sort.by(Sort.Order.desc("createdAt"));
+        Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
+        //when
+
+        Slice<Wishlist> mockSlice = new SliceImpl<>(Arrays.asList(wishlist1, wishlist2, wishlist3,wishlist4,wishlist5));
+        Slice<WishlistResponse> mockResponseSlice = new SliceImpl<>(mockSlice.getContent().stream()
+                .map(WishlistResponse::of)
+                .collect(Collectors.toList()), pageRequest, mockSlice.hasNext());
+
+        given(memberService.findWishlistById(any(Pageable.class), any())).willReturn(mockResponseSlice);
+        System.out.println("mockResponseSlice = " + mockResponseSlice.getContent().get(0).getProductId());
+        System.out.println("product1.getId() = " + product1.getId());
+
+        MockHttpServletRequestBuilder requestBuilder = get("/member/wishlist")
+                .param("page", "0")
+                .param("size", "2")
+                .param("sort", "createdAt,DESC")
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken");
+
+        //then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("find-wishlist",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("page").description("페이지 번호"),
+                                parameterWithName("size").description("페이지 사이즈"),
+                                parameterWithName("sort").description("정렬기준,정렬순서")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("데이터"),
+                                fieldWithPath("data.content").type(JsonFieldType.ARRAY)
+                                        .description("위시 리스트"),
+
+                                fieldWithPath("data.content[].productId").type(JsonFieldType.NUMBER)
+                                        .description("제품 ID").optional(),
+                                fieldWithPath("data.content[].optionNameList").type(JsonFieldType.ARRAY)
+                                        .description("옵션 목록"),
+                                fieldWithPath("data.content[].optionNameList[]").type(JsonFieldType.ARRAY)
+                                        .description("옵션 이름"),
+                                fieldWithPath("data.content[].price").type(JsonFieldType.NUMBER)
+                                        .description("가격"),
+                                fieldWithPath("data.content[].productName").type(JsonFieldType.STRING)
+                                        .description("제품 이름"),
+                                fieldWithPath("data.content[].thumbImgUrl").type(JsonFieldType.STRING)
+                                        .description("썸네일 이미지 URL"),
+                                fieldWithPath("data.content[].isSoldOut").type(JsonFieldType.BOOLEAN)
+                                        .description("품절 여부"),
+                                fieldWithPath("data.pageable").type(JsonFieldType.OBJECT)
+                                        .description("페이징 정보"),
+                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER)
+                                        .description("페이지 번호"),
+                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER)
+                                        .description("페이지 크기"),
+                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT)
+                                        .description("정렬 정보"),
+
+                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬 정보: 비어 있음 여부").optional(),
+                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬 정보: 정렬되었는지 여부").optional(),
+                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬 정보: 정렬되지 않았는지 여부").optional(),
+                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER)
+                                        .description("오프셋").optional(),
+                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN)
+                                        .description("페이징 여부").optional(),
+                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN)
+                                        .description("페이징되지 않음 여부").optional(),
+                                fieldWithPath("data.size").type(JsonFieldType.NUMBER)
+                                        .description("데이터 크기").optional(),
+                                fieldWithPath("data.number").type(JsonFieldType.NUMBER)
+                                        .description("현재 페이지 번호").optional(),
+                                fieldWithPath("data.sort").type(JsonFieldType.OBJECT)
+                                        .description("정렬 정보").optional(),
+                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬 정보: 비어 있음 여부").optional(),
+                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬 정보: 정렬되었는지 여부").optional(),
+                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN)
+                                        .description("정렬 정보: 정렬되지 않았는지 여부").optional(),
+                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
+                                        .description("현재 페이지의 요소 수").optional(),
+                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
+                                        .description("마지막 페이지 여부").optional(),
+                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
+                                        .description("첫 번째 페이지 여부").optional(),
+                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
+                                        .description("데이터가 비어 있는지 여부").optional()
+                        )
+                ));
+    }
 
    @Test
    @WithMockCustomUser
@@ -765,4 +1108,6 @@ public class MemberControllerTest {
                         )
                 ));
     }
+
+
 }

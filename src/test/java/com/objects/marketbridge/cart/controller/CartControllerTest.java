@@ -2,10 +2,15 @@ package com.objects.marketbridge.cart.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.cart.controller.dto.CreateCartHttp;
+import com.objects.marketbridge.cart.controller.dto.DeleteCartHttp;
+import com.objects.marketbridge.cart.controller.dto.UpdateCartHttp;
 import com.objects.marketbridge.cart.domain.Cart;
 import com.objects.marketbridge.cart.service.AddToCartService;
+import com.objects.marketbridge.cart.service.DeleteCartService;
 import com.objects.marketbridge.cart.service.GetCartListService;
+import com.objects.marketbridge.cart.service.UpdateCartService;
 import com.objects.marketbridge.cart.service.dto.GetCartDto;
+import com.objects.marketbridge.cart.service.dto.UpdateCartDto;
 import com.objects.marketbridge.common.interceptor.SliceResponse;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,16 +39,13 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,6 +59,8 @@ class CartControllerTest {
     @Autowired ObjectMapper objectMapper;
     @MockBean AddToCartService addToCartService;
     @MockBean GetCartListService getCartListService;
+    @MockBean UpdateCartService updateCartService;
+    @MockBean DeleteCartService deleteCartService;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -77,9 +82,9 @@ class CartControllerTest {
         // when
         MockHttpServletRequestBuilder requestBuilder =
                 post("/carts")
-                    .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON);
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON);
 
         // then
         mockMvc.perform(requestBuilder)
@@ -179,6 +184,19 @@ class CartControllerTest {
                                 fieldWithPath("data.content[].optionNames[]").type(JsonFieldType.ARRAY)
                                         .description("선택한 옵션 리스트"),
 
+                                fieldWithPath("data.content[].availableCoupons[]").type(JsonFieldType.ARRAY)
+                                        .description("사용 가능한 쿠폰 리스트"),
+                                fieldWithPath("data.content[].availableCoupons[].couponId").type(JsonFieldType.NUMBER)
+                                        .description("쿠폰 아이디"),
+                                fieldWithPath("data.content[].availableCoupons[].name").type(JsonFieldType.STRING)
+                                        .description("쿠폰 이름"),
+                                fieldWithPath("data.content[].availableCoupons[].price").type(JsonFieldType.NUMBER)
+                                        .description("쿠폰 금액"),
+                                fieldWithPath("data.content[].availableCoupons[].endDate").type(JsonFieldType.STRING)
+                                        .description("쿠폰 만료기한 (yyyy-MM-dd HH:mm:ss) "),
+                                fieldWithPath("data.content[].availableCoupons[].minimumPrice").type(JsonFieldType.NUMBER)
+                                        .description("최소 구매 조건 금액"),
+
                                 fieldWithPath("data.sort").type(JsonFieldType.OBJECT)
                                         .description("정렬"),
                                 fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
@@ -215,6 +233,133 @@ class CartControllerTest {
                 .deliveryFee(0L)
                 .deliveredDate("2024.09.09")
                 .optionNames(List.of("빨강", "XL"))
+                .availableCoupons(List.of(createCouponDto()))
                 .build());
+    }
+
+    private GetCartDto.CouponDto createCouponDto(){
+        return GetCartDto.CouponDto.builder()
+                .couponId(1L)
+                .name("1000원 할인 쿠폰")
+                .price(1000L)
+                .endDate("2024-12-10 00:00:00")
+                .minimumPrice(15000L)
+                .build();
+    }
+
+    @DisplayName("[API] GET/carts/count 테스트")
+    @Test
+    @WithMockCustomUser
+    void countCartItems() throws Exception {
+        //given
+        given(getCartListService.countAll(anyLong())).willReturn(1L);
+
+        //when
+        MockHttpServletRequestBuilder requestBuilder =
+                get("/carts/count")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .accept(MediaType.APPLICATION_JSON);
+
+        //then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("cart-count",
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                        .description("응답 데이터")
+                        )
+                ));
+    }
+
+    @DisplayName("[API] PATCH/carts/{cartId} 테스트")
+    @Test
+    @WithMockCustomUser
+    void updateCartItems() throws Exception {
+        //given
+
+        UpdateCartHttp.Request request = UpdateCartHttp.Request.builder().quantity(1L).build();
+        willDoNothing().given(updateCartService).update(any(UpdateCartDto.class));
+
+        //when
+        MockHttpServletRequestBuilder requestBuilder =
+                patch("/carts/{cartId}", "1")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON);
+
+        //then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("cart-update",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("cartId").description("장바구니 아이디")
+                        ),
+                        requestFields(
+                                fieldWithPath("quantity").type(JsonFieldType.NUMBER)
+                                        .description("장바구니 수량")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.STRING)
+                                        .description("응답 데이터")
+                        )
+                ));
+    }
+
+    @DisplayName("[API] DELETE /carts 테스트")
+    @Test
+    @WithMockCustomUser
+    void deleteCartItems() throws Exception {
+        //given
+        DeleteCartHttp.Request request = DeleteCartHttp.Request.builder().selectedCartIds(List.of(1L)).build();
+        willDoNothing().given(deleteCartService).delete(any(List.class));
+
+        //when
+        MockHttpServletRequestBuilder requestBuilder =
+                delete("/carts")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON);
+
+        //then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("cart-delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("selectedCartIds").type(JsonFieldType.ARRAY)
+                                        .description("선택한 장바구니 아이디 리스트")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.STRING)
+                                        .description("응답 데이터")
+                        )
+                ));
     }
 }

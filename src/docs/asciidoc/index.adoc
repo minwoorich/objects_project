@@ -64,6 +64,19 @@ include::api/member/deleteAddress.adoc[]
 {empty}
 {empty}
 
+=== *위시리스트*
+include::api/member/findWishlist.adoc[]
+{empty}
+{empty}
+
+include::api/member/addWishlist.adoc[]
+{empty}
+{empty}
+
+include::api/member/checkWishlist.adoc[]
+{empty}
+{empty}
+
 === *인증*
 include::api/member/signup.adoc[]
 {empty}
@@ -172,3 +185,18 @@ include::api/cart/cartadd.adoc[]
 include::api/cart/cartlist.adoc[]
 {empty}
 {empty}
+
+include::api/cart/cartcount.adoc[]
+{empty}
+{empty}
+
+include::api/cart/cartdelete.adoc[]
+{empty}
+{empty}
+
+include::api/cart/cartupdate.adoc[]
+{empty}
+{empty}
+
+
+

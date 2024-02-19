@@ -3,18 +3,26 @@ package com.objects.marketbridge.member.service;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.domain.Wishlist;
+import com.objects.marketbridge.member.dto.*;
 import com.objects.marketbridge.member.dto.*;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-
+import com.objects.marketbridge.member.service.port.WishRepository;
 import com.objects.marketbridge.order.service.port.AddressRepository;
+import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,16 +30,20 @@ import java.util.stream.Collectors;
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.INVALID_PASSWORD;
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.MEMBER_NOT_FOUND;
 
+import static com.objects.marketbridge.member.dto.WishlistResponse.of;
 
 @Slf4j
 @Service
 @Builder
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
+    private final WishRepository wishRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ProductRepository productRepository;
 
     public CheckedResultDto isDuplicateEmail(String email){
         boolean isDuplicateEmail = memberRepository.existsByEmail(email);
@@ -61,6 +73,31 @@ public class MemberService {
         Member member = memberRepository.findById(memberId);
         addressRepository.deleteById(addressId);
         return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
+    }
+
+    public Slice<WishlistResponse> findWishlistById(Pageable pageable, Long memberId){
+        Slice<Wishlist> wishlists = wishRepository.findByMemberId(pageable,memberId);
+        List<WishlistResponse> responses = wishlists.getContent()
+                .stream().map(WishlistResponse::of).collect(Collectors.toList());
+
+        return new SliceImpl<>(responses,pageable,wishlists.hasNext());
+    }
+
+    public Boolean checkWishlist(Long memberId,WishlistRequest request){
+        //true면 wishList에 이미 존재 false면 wishList 추가가능
+        Long wishResult = wishRepository.countByProductIdAndMemberId(memberId, request.getProductId());
+        return wishResult == 1L;
+    }
+
+    @Transactional
+    public void addWish(Long memberId, WishlistRequest request){
+        Member member = memberRepository.findById(memberId);
+        Product product = productRepository.findById(request.getProductId());
+
+        Wishlist wishlist = Wishlist.create(product , member);
+
+        wishRepository.save(wishlist);
+
     }
 
     @Transactional

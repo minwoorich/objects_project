@@ -1,6 +1,5 @@
 package com.objects.marketbridge.common.infra;
 
-
 import com.objects.marketbridge.common.config.KakaoPayConfig;
 import com.objects.marketbridge.common.dto.*;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;

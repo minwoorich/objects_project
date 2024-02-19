@@ -104,11 +104,23 @@ create table member_coupon
 )
 ;
 
+CREATE TABLE wishlist (
+    wishlist_id	bigint auto_increment
+        primary key,
+    member_id	bigint	        null,
+    product_id  bigint      null,
+    created_at	datetime(6)	    null,
+    updated_at	datetime(6)	    null,
+    deleted_at	datetime(6)     null,
+    UNIQUE (member_id, product_id)
+)
+;
+
 create table membership
 (
     membership_id      bigint auto_increment
         primary key,
-    member_id          varchar(255) null,
+    member_id          bigint       null,
     cid                varchar(255) null,
     tid                varchar(255) null,
     sid                varchar(255) null,
