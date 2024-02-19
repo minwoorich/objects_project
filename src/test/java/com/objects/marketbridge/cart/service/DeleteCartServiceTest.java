@@ -4,7 +4,7 @@ import com.objects.marketbridge.cart.domain.Cart;
 import com.objects.marketbridge.cart.service.port.CartCommendRepository;
 import com.objects.marketbridge.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -28,7 +28,8 @@ import static org.assertj.core.api.Assertions.*;
 class DeleteCartServiceTest {
 
     @Autowired DeleteCartService deleteCartService ;
-    @Autowired ProductRepository productRepository;
+    @Autowired
+    ProductRepository productRepository;
     @Autowired CartQueryRepository cartQueryRepository;
     @Autowired CartCommendRepository cartCommendRepository;
     @Autowired MemberRepository memberRepository;

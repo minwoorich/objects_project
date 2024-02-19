@@ -9,26 +9,27 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class ReviewAllValuesDto {
+public class ReviewSingleReadDto {
 
     private Long reviewId;
     private Long memberId;
     private Long productId;
-    private Long orderDetailId;
-    private List<String> reviewImgUrls = new ArrayList<>();
     private Integer rating; //별점, 1~5
+    private List<ReviewSurveyDataDto> reviewSurveyDataDtoList = new ArrayList<>();
     private String content;
+    private List<String> reviewImgUrls = new ArrayList<>();
 
     @Builder
-    public ReviewAllValuesDto(Long reviewId, Long memberId, Long productId,
-                              Long orderDetailId, List<String> reviewImgUrls,
-                              Integer rating, String content) {
+
+    public ReviewSingleReadDto(Long reviewId, Long memberId, Long productId, Integer rating,
+                               List<ReviewSurveyDataDto> reviewSurveyDataDtoList,
+                               String content, List<String> reviewImgUrls) {
         this.reviewId = reviewId;
         this.memberId = memberId;
         this.productId = productId;
-        this.orderDetailId = orderDetailId;
-        this.reviewImgUrls = reviewImgUrls;
         this.rating = rating;
+        this.reviewSurveyDataDtoList = reviewSurveyDataDtoList;
         this.content = content;
+        this.reviewImgUrls = reviewImgUrls;
     }
 }

@@ -15,7 +15,7 @@ import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.product.domain.Option;
 import com.objects.marketbridge.product.domain.ProdOption;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
