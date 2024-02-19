@@ -27,26 +27,28 @@ public class ProductImage extends BaseEntity {
     private Image image;
 
     //String으로 할것. 예시 : ImageType.ITEM_IMG.toString()
-    private String type;
+    private String imgType;
 
     private Long seqNo;
 
     @Builder
-    private ProductImage(Product product, Image image, Long seqNo) {
+    private ProductImage(Product product, Image image, Long seqNo,String imgType) {
         this.product = product;
         this.image = image;
         this.seqNo = seqNo;
+        this.imgType = imgType;
     }
 
     public void setProduct(Product product) { this.product = product; }
 
     public void setImage(Image image){ this.image = image; }
 
-    public static ProductImage create(Product product, Image image, Long seqNo){
+    public static ProductImage create(Product product, Image image, Long seqNo,String imgType){
         return ProductImage.builder()
                 .product(product)
                 .image(image)
                 .seqNo(seqNo)
+                .imgType(imgType)
                 .build();
     }
 

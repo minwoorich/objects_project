@@ -7,18 +7,32 @@ import com.objects.marketbridge.review.dto.*;
 import com.objects.marketbridge.review.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.hibernate.query.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.awt.print.Pageable;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class ReviewController {
 
     private final ReviewService reviewService;
+
+    //리뷰 서베이 선택창 조회
+    @GetMapping("/review-survey-options/{productId}")
+    @UserAuthorize
+    public ApiResponse<List<ReviewSurveyQuestionAndOptionsDto>> getReviewSurveyQuestionAndOptionsList
+        (@PathVariable("productId") Long productId){
+        List<ReviewSurveyQuestionAndOptionsDto> response
+                = reviewService.getReviewSurveyQuestionAndOptionsList(productId);
+        return ApiResponse.ok(response);
+    }
+
+
 
     //리뷰 등록
     @PostMapping("/review")
@@ -33,9 +47,9 @@ public class ReviewController {
 
     //리뷰아이디로 리뷰상세 단건 조회
     @GetMapping("/review/{reviewId}")
-    public ApiResponse<ReviewAllValuesDto> getReview
+    public ApiResponse<ReviewSingleReadDto> getReview
         (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
-        ReviewAllValuesDto response = reviewService.getReview(reviewId, memberId);
+        ReviewSingleReadDto response = reviewService.getReview(reviewId, memberId);
         return ApiResponse.ok(response);
     }
 
@@ -112,6 +126,7 @@ public class ReviewController {
         reviewService.deleteReview(reviewId, memberId);
         return ApiResponse.of(HttpStatus.OK);
     }
+
 
 
 //    //LIKE관련//

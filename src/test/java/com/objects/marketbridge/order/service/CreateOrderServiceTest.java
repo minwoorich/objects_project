@@ -13,7 +13,7 @@ import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductJpaRepository;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;

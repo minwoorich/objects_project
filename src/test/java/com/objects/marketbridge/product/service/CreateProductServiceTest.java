@@ -3,7 +3,7 @@ package com.objects.marketbridge.product.service;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.category.domain.Category;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import com.objects.marketbridge.product.dto.CreateProductDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class CreateProductServiceTest {
     CategoryRepository categoryRepository;
 
     @Autowired
-    CreateProductService createProductService;
+    ProductService productService;
 
     @Test
     void 상품_엔티티를_만들_수_있다(){
@@ -44,7 +44,7 @@ class CreateProductServiceTest {
                 .name("반팔티")
                 .categoryId(category.getId())
                 .build();
-        Product product = createProductService.createProduct(createProductDto);
+        Product product = productService.createProduct(createProductDto);
 
         Assertions.assertThat(product.getCategory().getLevel()).isEqualTo(0L);
     }
