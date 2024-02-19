@@ -2,6 +2,7 @@ package com.objects.marketbridge.cart.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.cart.controller.dto.CreateCartHttp;
+import com.objects.marketbridge.cart.controller.dto.DeleteCartHttp;
 import com.objects.marketbridge.cart.controller.dto.UpdateCartHttp;
 import com.objects.marketbridge.cart.domain.Cart;
 import com.objects.marketbridge.cart.service.AddToCartService;
@@ -308,6 +309,46 @@ class CartControllerTest {
                         requestFields(
                                 fieldWithPath("quantity").type(JsonFieldType.NUMBER)
                                         .description("장바구니 수량")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.STRING)
+                                        .description("응답 데이터")
+                        )
+                ));
+    }
+
+    @DisplayName("[API] DELETE /carts 테스트")
+    @Test
+    @WithMockCustomUser
+    void deleteCartItems() throws Exception {
+        //given
+        DeleteCartHttp.Request request = DeleteCartHttp.Request.builder().selectedCartIds(List.of(1L)).build();
+        willDoNothing().given(deleteCartService).delete(any(List.class));
+
+        //when
+        MockHttpServletRequestBuilder requestBuilder =
+                delete("/carts")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON);
+
+        //then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("cart-delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("selectedCartIds").type(JsonFieldType.ARRAY)
+                                        .description("선택한 장바구니 아이디 리스트")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
