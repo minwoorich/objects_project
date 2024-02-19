@@ -61,6 +61,14 @@ public class MemberController {
     }
 
     //Wishlist 시작
+    @GetMapping("/wishList-check")
+    public ApiResponse <Boolean> checkWishlistByMemberid(
+            @AuthMemberId Long memberId,
+            @RequestBody WishlistRequest request){
+        Boolean isWishlist = memberService.checkWishlist(memberId, request);
+        return ApiResponse.ok(isWishlist);
+    }
+
     @GetMapping("/wishlist")
     public ApiResponse<Slice<WishlistResponse>> findWishlistByMemberId(
             @AuthMemberId Long memberId,
@@ -76,6 +84,8 @@ public class MemberController {
         memberService.addWish(memberId,request);
         return ApiResponse.create();
     }
+
+
     @GetMapping("/account-email")
     public ApiResponse<MemberEmail> getEmail(@AuthMemberId Long memberId) {
         MemberEmail memberEmail = memberService.getEmail(memberId);
