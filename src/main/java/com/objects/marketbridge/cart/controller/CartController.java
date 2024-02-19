@@ -1,8 +1,10 @@
 package com.objects.marketbridge.cart.controller;
 
 import com.objects.marketbridge.cart.controller.dto.CreateCartHttp;
+import com.objects.marketbridge.cart.controller.dto.DeleteCartHttp;
 import com.objects.marketbridge.cart.controller.dto.UpdateCartHttp;
 import com.objects.marketbridge.cart.service.AddToCartService;
+import com.objects.marketbridge.cart.service.DeleteCartService;
 import com.objects.marketbridge.cart.service.GetCartListService;
 import com.objects.marketbridge.cart.service.UpdateCartService;
 import com.objects.marketbridge.cart.service.dto.GetCartDto;
@@ -27,6 +29,7 @@ public class CartController {
     private final AddToCartService addToCartService;
     private final GetCartListService getCartListService;
     private final UpdateCartService updateCartService;
+    private final DeleteCartService deleteCartService;
 
     @PostMapping("/carts")
     @ResponseStatus(HttpStatus.CREATED)
@@ -64,21 +67,12 @@ public class CartController {
         return ApiResponse.ok("update successful");
     }
 
-    @DeleteMapping("/carts/{cartId}")
-    public ApiResponse<String> deleteCartItem(
-            @AuthMemberId Long memberId,
-            @PathVariable("cartId") Long cartId) {
-
-        // TODO : 장바구니 삭제하는 서비스 작성
-        return ApiResponse.ok("delete successful");
-    }
-
     @DeleteMapping("/carts")
-    public ApiResponse<String> deleteAllCartItems(
-            @AuthMemberId Long memberId,
-            @PathVariable("cartId") Long cartId) {
+    @UserAuthorize
+    public ApiResponse<String> deleteCartItem(
+            @RequestBody DeleteCartHttp.Request request) {
 
-        // TODO : 장바구니 삭제하는 서비스 작성
+        deleteCartService.delete(request.getSelectedCartIds());
         return ApiResponse.ok("delete successful");
     }
 }
