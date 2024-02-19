@@ -4,16 +4,19 @@ import com.objects.marketbridge.cart.controller.dto.CreateCartHttp;
 import com.objects.marketbridge.cart.controller.dto.UpdateCartHttp;
 import com.objects.marketbridge.cart.service.AddToCartService;
 import com.objects.marketbridge.cart.service.GetCartListService;
+import com.objects.marketbridge.cart.service.UpdateCartService;
 import com.objects.marketbridge.cart.service.dto.GetCartDto;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.interceptor.SliceResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
+import com.objects.marketbridge.common.security.annotation.UserAuthorize;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
     private final AddToCartService addToCartService;
     private final GetCartListService getCartListService;
+    private final UpdateCartService updateCartService;
 
     @PostMapping("/carts")
     @ResponseStatus(HttpStatus.CREATED)
@@ -51,13 +55,13 @@ public class CartController {
     }
 
     @PatchMapping("/carts/{cartId}")
+    @UserAuthorize
     public ApiResponse<String> updateCartItems(
             @PathVariable(name = "cartId") Long cartId,
-            @RequestBody UpdateCartHttp.Request request,
-            @AuthMemberId Long memberId) {
+            @Validated @RequestBody UpdateCartHttp.Request request) {
 
-        // TODO : 장바구니 수량 수정하는 서비스 작성
-        return ApiResponse.ok("update success");
+        updateCartService.update(request.toDto(cartId));
+        return ApiResponse.ok("update successful");
     }
 
     @DeleteMapping("/carts/{cartId}")
@@ -66,7 +70,7 @@ public class CartController {
             @PathVariable("cartId") Long cartId) {
 
         // TODO : 장바구니 삭제하는 서비스 작성
-        return ApiResponse.ok("delete success");
+        return ApiResponse.ok("delete successful");
     }
 
     @DeleteMapping("/carts")
@@ -75,6 +79,6 @@ public class CartController {
             @PathVariable("cartId") Long cartId) {
 
         // TODO : 장바구니 삭제하는 서비스 작성
-        return ApiResponse.ok("delete success");
+        return ApiResponse.ok("delete successful");
     }
 }
