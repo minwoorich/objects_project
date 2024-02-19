@@ -112,6 +112,7 @@ include::api/member/kakaoPaySubsSubscribtion.adoc[]
 {empty}
 
 == *상품*
+include::api/product/productcreate.adoc[]
 {empty}
 {empty}
 {empty}

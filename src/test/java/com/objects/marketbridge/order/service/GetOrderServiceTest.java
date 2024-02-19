@@ -18,7 +18,7 @@ import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,10 +64,10 @@ class GetOrderServiceTest {
         member.addAddress(address);
         memberRepository.save(member);
 
-        Product product1 = Product.create(null, true, "상품1", 1000L, false, 100L, "썸네일1", 0L, "1번");
-        Product product2 = Product.create(null, true, "상품2", 2000L, false, 100L, "썸네일2", 0L, "2번");
-        Product product3 = Product.create(null, true, "상품3", 3000L, false, 100L, "썸네일3", 0L, "3번");
-        Product product4 = Product.create(null, true, "상품4", 4000L, false, 100L, "썸네일4", 0L, "4번");
+        Product product1 = Product.create(null, "상품1", 1000L, false, 100L, "썸네일1", 0L, "1번");
+        Product product2 = Product.create(null,  "상품2", 2000L, false, 100L, "썸네일2", 0L, "2번");
+        Product product3 = Product.create(null,  "상품3", 3000L, false, 100L, "썸네일3", 0L, "3번");
+        Product product4 = Product.create(null,  "상품4", 4000L, false, 100L, "썸네일4", 0L, "4번");
         productRepository.saveAll(List.of(product1, product2, product3, product4));
 
         OrderDetail orderDetail1 = OrderDetail.create("tid1", null, product1, "orderNo1", null, 1000L, 1L, null, PAYMENT_COMPLETED.getCode());

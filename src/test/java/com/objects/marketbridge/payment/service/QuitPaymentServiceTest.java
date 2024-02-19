@@ -14,7 +14,7 @@ import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.payment.service.port.PaymentRepository;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.coupon.service.port.CouponRepository;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,10 +55,10 @@ class QuitPaymentServiceTest {
         member.addAddress(address);
         memberRepository.save(member);
 
-        Product product1 = Product.create(null, true, "상품1", 1000L, false, 100L, "썸네일1", 0L, "1번");
-        Product product2 = Product.create(null, true, "상품2", 2000L, false, 100L, "썸네일2", 0L, "2번");
-        Product product3 = Product.create(null, true, "상품3", 3000L, false, 100L, "썸네일3", 0L, "3번");
-        Product product4 = Product.create(null, true, "상품4", 4000L, false, 100L, "썸네일4", 0L, "4번");
+        Product product1 = Product.create( true, "상품1", 1000L, false, 100L, "썸네일1", 0L, "1번");
+        Product product2 = Product.create(true, "상품2", 2000L, false, 100L, "썸네일2", 0L, "2번");
+        Product product3 = Product.create( true, "상품3", 3000L, false, 100L, "썸네일3", 0L, "3번");
+        Product product4 = Product.create( true, "상품4", 4000L, false, 100L, "썸네일4", 0L, "4번");
         productRepository.saveAll(List.of(product1, product2, product3, product4));
 
         Coupon coupon1 = Coupon.create(product1, "상품1쿠폰", 500L, 10L, 1000L, LocalDateTime.of(2024, 1, 1, 12, 0, 0), LocalDateTime.of(2025, 1, 1, 12, 0, 0));

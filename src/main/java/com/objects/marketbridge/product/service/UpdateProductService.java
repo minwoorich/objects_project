@@ -7,7 +7,7 @@ import com.objects.marketbridge.image.domain.ImageType;
 import com.objects.marketbridge.product.controller.request.UpdateProductRequestDto;
 import com.objects.marketbridge.product.controller.response.UpdateProductResponseDto;
 import com.objects.marketbridge.product.domain.*;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import com.objects.marketbridge.product.dto.UpdateProductDto;
 import com.objects.marketbridge.image.infra.ImageRepository;
 import com.objects.marketbridge.product.service.port.ProductImageRepository;
@@ -122,13 +122,12 @@ public class UpdateProductService {
         for (int i = 0; i<imgUrls.size(); i++) {
             // 이미지 저장
             Image image = Image.builder()
-//                    .type(type)
                     .url(imgUrls.get(i))
                     .build();
             imageRepository.save(image);
 
             //ProductImage 엔티티 생성 (정렬 순서대로 seqNo 할당)
-            ProductImage productImage = ProductImage.create( product, imageRepository.findById(image.getId()), Long.valueOf(i) );
+            ProductImage productImage = ProductImage.create( product, imageRepository.findById(image.getId()), Long.valueOf(i) ,type);
             productImages.add(productImage);
 
             // 연관관계 추가

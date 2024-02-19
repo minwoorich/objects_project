@@ -61,6 +61,10 @@ public class CategoryService {
         return categoryDtoList;
     }
 
+    public CategoryDto getCategoryById(Long categoryId){
+        return CategoryDto.of(categoryRepository.findById(categoryId));
+    }
+
     //내부 이용 메서드
     private List<CategoryDto> convertToDtoList(List<Category> categories) {
         List<CategoryDto> categoryDtos = new ArrayList<>();
