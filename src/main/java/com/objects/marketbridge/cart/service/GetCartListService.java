@@ -35,6 +35,6 @@ public class GetCartListService {
     }
 
     public Long countAll(Long memberId) {
-        return cartQueryRepository.countByMemberId();
+        return cartQueryRepository.countByMemberId(memberId);
     }
 }

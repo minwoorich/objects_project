@@ -75,4 +75,9 @@ public class CartQueryRepositoryImpl implements CartQueryRepository {
     private BooleanExpression eqMemberId(Long memberId) {
         return cart.member.id.eq(memberId);
     }
+
+    @Override
+    public Long countByMemberId(Long memberId) {
+        return cartJpaRepository.countByMemberId(memberId);
+    }
 }
