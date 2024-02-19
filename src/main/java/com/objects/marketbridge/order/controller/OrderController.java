@@ -54,24 +54,13 @@ public class OrderController {
         String orderNo = UUID.randomUUID().toString();
 
         // 1. kakaoPaymentReadyService 호출
-        KakaoPayReadyRequest kakaoReadyRequest = createKakaoReadyRequest(orderNo, createOrderRequest, memberId);
-        KakaoPayReadyResponse kakaoReadyResponse = kakaoPayService.ready(kakaoReadyRequest);
+        KakaoPayReadyResponse kakaoReadyResponse = createOrderService.ready(createOrderRequest, orderNo, memberId);
         String tid = kakaoReadyResponse.getTid();
 
         // 2. 주문 생성
         createOrderService.create(createOrderRequest.toDto(orderNo, tid, memberId));
 
         return ApiResponse.ok(CreateOrderHttp.Response.of(kakaoReadyResponse));
-    }
-
-    private KakaoPayReadyRequest createKakaoReadyRequest(String orderNo, CreateOrderHttp.Request request, Long memberId) {
-
-        String cid = ONE_TIME_CID;
-        String cancelUrl = kakaoPayConfig.getRedirectCancelUrl();
-        String failUrl = kakaoPayConfig.getRedirectFailUrl();
-        String approvalUrl = kakaoPayConfig.createApprovalUrl("/payment");
-
-        return request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
     }
 
     @GetMapping("/orders")
