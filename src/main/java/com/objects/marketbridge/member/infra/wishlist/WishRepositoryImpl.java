@@ -2,8 +2,10 @@ package com.objects.marketbridge.member.infra.wishlist;
 
 import com.objects.marketbridge.member.domain.Wishlist;
 import com.objects.marketbridge.member.service.port.WishRepository;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -24,6 +26,26 @@ public class WishRepositoryImpl implements WishRepository {
     public WishRepositoryImpl(WishiListJpaRepository wishiListJpaRepository, EntityManager em) {
         this.wishiListJpaRepository = wishiListJpaRepository;
         this.queryFactory = new JPAQueryFactory(em);
+    }
+
+    @Override
+    public Long countByProductIdAndMemberId(Long memberId, Long productId) {
+        return queryFactory
+                .select(ExpressionUtils.count(wishlist))
+                .from(wishlist)
+                .where(wishlist.member.id.eq(memberId)
+                        .and(wishlist.product.id.eq(productId)))
+                .fetchOne();
+    }
+
+    @Override
+    public Wishlist findbyId(Long wishlistId) {
+        return wishiListJpaRepository.findById(wishlistId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public List<Wishlist> findByMemberId(Long memberId) {
+        return wishiListJpaRepository.findByMemberId(memberId);
     }
 
     @Override
