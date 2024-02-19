@@ -2,10 +2,14 @@ package com.objects.marketbridge.cart.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.cart.controller.dto.CreateCartHttp;
+import com.objects.marketbridge.cart.controller.dto.UpdateCartHttp;
 import com.objects.marketbridge.cart.domain.Cart;
 import com.objects.marketbridge.cart.service.AddToCartService;
+import com.objects.marketbridge.cart.service.DeleteCartService;
 import com.objects.marketbridge.cart.service.GetCartListService;
+import com.objects.marketbridge.cart.service.UpdateCartService;
 import com.objects.marketbridge.cart.service.dto.GetCartDto;
+import com.objects.marketbridge.cart.service.dto.UpdateCartDto;
 import com.objects.marketbridge.common.interceptor.SliceResponse;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,16 +38,13 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,14 +54,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 class CartControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
-    @Autowired
-    ObjectMapper objectMapper;
-    @MockBean
-    AddToCartService addToCartService;
-    @MockBean
-    GetCartListService getCartListService;
+    @Autowired MockMvc mockMvc;
+    @Autowired ObjectMapper objectMapper;
+    @MockBean AddToCartService addToCartService;
+    @MockBean GetCartListService getCartListService;
+    @MockBean UpdateCartService updateCartService;
+    @MockBean DeleteCartService deleteCartService;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -273,6 +273,50 @@ class CartControllerTest {
                                 fieldWithPath("message").type(JsonFieldType.STRING)
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                        .description("응답 데이터")
+                        )
+                ));
+    }
+
+    @DisplayName("[API] PATCH/carts/{cartId} 테스트")
+    @Test
+    @WithMockCustomUser
+    void updateCartItems() throws Exception {
+        //given
+
+        UpdateCartHttp.Request request = UpdateCartHttp.Request.builder().quantity(1L).build();
+        willDoNothing().given(updateCartService).update(any(UpdateCartDto.class));
+
+        //when
+        MockHttpServletRequestBuilder requestBuilder =
+                patch("/carts/{cartId}", "1")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON);
+
+        //then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("cart-update",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("cartId").description("장바구니 아이디")
+                        ),
+                        requestFields(
+                                fieldWithPath("quantity").type(JsonFieldType.NUMBER)
+                                        .description("장바구니 수량")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.STRING)
                                         .description("응답 데이터")
                         )
                 ));
