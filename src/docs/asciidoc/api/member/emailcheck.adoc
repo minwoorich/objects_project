@@ -3,8 +3,8 @@
 image:../image/emailcheck.png[]
 
 .*HTTP Request*
-include::{snippets}/member-check-email/http-request.adoc[]
+include::{snippets}/member-email-check/http-request.adoc[]
 
 .*HTTP Response*
-include::{snippets}/member-check-email/http-response.adoc[]
-include::{snippets}/member-check-email/response-fields.adoc[]
+include::{snippets}/member-email-check/http-response.adoc[]
+include::{snippets}/member-email-check/response-fields.adoc[]
