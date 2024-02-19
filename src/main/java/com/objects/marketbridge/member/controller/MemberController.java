@@ -2,14 +2,15 @@ package com.objects.marketbridge.member.controller;
 
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
-import com.objects.marketbridge.member.dto.AddAddressRequestDto;
-import com.objects.marketbridge.member.dto.CheckedResultDto;
-import com.objects.marketbridge.member.dto.GetAddressesResponse;
-import com.objects.marketbridge.member.dto.WishlistResponse;
+import com.objects.marketbridge.member.dto.*;
 import com.objects.marketbridge.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,20 +61,21 @@ public class MemberController {
     }
 
     //Wishlist 시작
-//    @GetMapping("/wishlist")
-//    public ApiResponse<WishlistResponse> findWishlistByMemberId(@AuthMemberId Long memberId){
-////        WishlistResponse wishlistResponse= memberService.findWishlistById(memberId);
-//        return ApiResponse.ok(wishlistResponse);
-//    }
-//
-//    @PostMapping("/wishlist/{productId}")
-//    public ApiResponse<WishlistResponse> addWish(
-//            @AuthMemberId Long memberId ,
-//            @PathVariable (name = "productId") Long productId) {
-//        WishlistResponse wishlistResponse= memberService.findWishlistById(memberId);
-//        memberService.addWish(memberId,productId);
-//        return ApiResponse.ok(wishlistResponse);
-//    }
+    @GetMapping("/wishlist")
+    public ApiResponse<Slice<WishlistResponse>> findWishlistByMemberId(
+            @AuthMemberId Long memberId,
+            @PageableDefault(value = 5, sort = {"createdAt"}, direction = Sort.Direction.DESC)Pageable pageable){
+        Slice<WishlistResponse> wishlistResponse= memberService.findWishlistById(pageable,memberId);
+        return ApiResponse.ok(wishlistResponse);
+    }
+
+    @PostMapping("/wishlist")
+    public ApiResponse<String> addWish(
+            @AuthMemberId Long memberId ,
+            @RequestBody WishlistRequest request){
+        memberService.addWish(memberId,request);
+        return ApiResponse.create();
+    }
 
 
 }

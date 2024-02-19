@@ -4,8 +4,6 @@ import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.Wishlist;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.member.service.port.WishRepository;
-import com.objects.marketbridge.product.domain.Option;
-import com.objects.marketbridge.product.domain.ProdOption;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import com.objects.marketbridge.product.service.port.OptionRepository;
@@ -15,11 +13,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @Slf4j
@@ -45,42 +45,124 @@ class WishRepositoryImplTest {
     @Test
     void findByMemberId() throws Exception{
         //given
+        Pageable pageRequest = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "createdAt"));
+
         Member member = Member.builder()
                 .email("test@naver.com").build();
 
         memberRepository.save(member);
 
-        Product product = Product.builder()
+        Product product1 = Product.builder()
                 .productNo("1")
                 .price(100L).build();
 
-        productRepository.save(product);
+        Product product2 = Product.builder()
+                .productNo("2")
+                .price(200L).build();
 
-        Option option = Option.builder()
-                .name("Prod1의 option").build();
+        Product product3 = Product.builder()
+                .productNo("3")
+                .price(300L).build();
 
-        optionRepository.save(option);
+        Product product4 = Product.builder()
+                .productNo("4")
+                .price(400L).build();
 
-        ProdOption prodOption = ProdOption.builder()
-                .product(product)
-                .option(option).build();
+        Product product5 = Product.builder()
+                .productNo("5")
+                .price(500L).build();
 
-        prodOptionRepository.save(prodOption);
 
-        Wishlist wishlist = Wishlist.builder()
+//        Option option1 = Option.builder()
+//                .name("option1").build();
+//
+//        Option option2 = Option.builder()
+//                .name("option2").build();
+//
+//        optionRepository.save(option1);
+//        optionRepository.save(option2);
+//
+//        ProdOption prodOption1_1 = ProdOption.builder()
+//                .option(option1).build();
+//        ProdOption prodOption1_2 = ProdOption.builder()
+//                .option(option2).build();
+//
+//
+//        ProdOption prodOption2_1 = ProdOption.builder()
+//                .option(option1).build();
+//        ProdOption prodOption2_2 = ProdOption.builder()
+//                .option(option2).build();
+//
+//
+//        ProdOption prodOption3_1 = ProdOption.builder()
+//                .option(option1).build();
+//        ProdOption prodOption3_2 = ProdOption.builder()
+//                .option(option2).build();
+//
+//
+//        ProdOption prodOption4_1 = ProdOption.builder()
+//                .option(option1).build();
+//        ProdOption prodOption4_2 = ProdOption.builder()
+//                .option(option2).build();
+//
+//
+//        ProdOption prodOption5_1 = ProdOption.builder()
+//                .option(option1).build();
+//        ProdOption prodOption5_2 = ProdOption.builder()
+//                .option(option2).build();
+//
+//
+//        product1.addProdOptions(prodOption1_1);
+//        product1.addProdOptions(prodOption1_2);
+//
+//        product2.addProdOptions(prodOption2_1);
+//        product2.addProdOptions(prodOption2_2);
+//
+//        product3.addProdOptions(prodOption3_1);
+//        product3.addProdOptions(prodOption3_2);
+//
+//        product4.addProdOptions(prodOption4_1);
+//        product4.addProdOptions(prodOption4_2);
+//
+//        product5.addProdOptions(prodOption5_1);
+//        product5.addProdOptions(prodOption5_2);
+
+        productRepository.saveAll(List.of(product1,product2,product3,product4,product5));
+
+        Wishlist wishlist1 = Wishlist.builder()
                 .member(member)
-                .productOption(prodOption).build();
+                .product(product1).build();
 
-        wishRepository.save(wishlist);
+        Wishlist wishlist2 = Wishlist.builder()
+                .member(member)
+                .product(product2).build();
+
+        Wishlist wishlist3 = Wishlist.builder()
+                .member(member)
+                .product(product3).build();
+
+        Wishlist wishlist4 = Wishlist.builder()
+                .member(member)
+                .product(product4).build();
+
+        Wishlist wishlist5 = Wishlist.builder()
+                .member(member)
+                .product(product5).build();
+
+        wishRepository.saveAll(List.of(wishlist1,wishlist2,wishlist3,wishlist4,wishlist5));
         //when
-        List<Wishlist> wishlists = wishRepository.findByMemberId(member.getId());
+        Slice<Wishlist> wishlists = wishRepository.findByMemberId(pageRequest,member.getId());
+
+        log.info("prduct_id , {}",wishlists.getContent().get(0).getProduct().getId());
 
         //then
-        Assertions.assertThat(wishlists.size()).isEqualTo(1);
-        Assertions.assertThat(wishlists.get(0).getProductOption().getId()).isNotNull();
-        Assertions.assertThat(wishlists.get(0).getProductOption().getOption().getName()).isEqualTo("Prod1의 option");
-        Assertions.assertThat(wishlists.get(0).getProductOption().getProduct().getPrice()).isEqualTo(100L);
-        Assertions.assertThat(wishlists.get(0).getMember().getEmail()).isEqualTo("test@naver.com");
+        Assertions.assertThat(wishlists.getSize()).isEqualTo(2);
+        Assertions.assertThat(wishlists.getContent().get(0).getId()).isNotNull();
+        Assertions.assertThat(wishlists.getContent().get(0).getProduct().getPrice()).isEqualTo(500L);
+        Assertions.assertThat(wishlists.getContent().get(0).getMember().getEmail()).isEqualTo("test@naver.com");
+
+        Assertions.assertThat(wishlists.isFirst()).isTrue();
+        Assertions.assertThat(wishlists.getNumberOfElements()).isEqualTo(2);
     }
 
 }

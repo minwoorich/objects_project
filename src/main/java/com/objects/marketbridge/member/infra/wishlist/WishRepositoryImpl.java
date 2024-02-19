@@ -1,18 +1,18 @@
 package com.objects.marketbridge.member.infra.wishlist;
 
-import com.objects.marketbridge.member.domain.QMember;
 import com.objects.marketbridge.member.domain.Wishlist;
 import com.objects.marketbridge.member.service.port.WishRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 import static com.objects.marketbridge.member.domain.QMember.member;
 import static com.objects.marketbridge.member.domain.QWishlist.wishlist;
-import static com.objects.marketbridge.product.domain.QOption.option;
-import static com.objects.marketbridge.product.domain.QProdOption.prodOption;
 import static com.objects.marketbridge.product.domain.QProduct.product;
 
 @Repository
@@ -27,15 +27,29 @@ public class WishRepositoryImpl implements WishRepository {
     }
 
     @Override
-    public List<Wishlist> findByMemberId(Long memberId) {
-       return queryFactory
-               .select(wishlist)
-               .from(wishlist)
-               .join(wishlist.member , member).fetchJoin()
-               .join(wishlist.productOption , prodOption).fetchJoin()
-               .join(prodOption.product , product).fetchJoin()
-               .join(prodOption.option, option).fetchJoin()
-               .fetch();
+    public Slice<Wishlist> findByMemberId (Pageable pageable, Long memberId) {
+        List<Wishlist> wishlistResult = queryFactory
+                .selectFrom(wishlist)
+                .join(wishlist.product, product).fetchJoin()
+                .join(wishlist.member, member).fetchJoin()
+                .where(wishlist.member.id.eq(memberId))
+                .orderBy(wishlist.createdAt.desc())
+                .limit(pageable.getPageSize()+1)
+                .offset(pageable.getOffset())
+                .fetch();
+
+        boolean hasNext = false;
+        if (wishlistResult.size() > pageable.getPageSize()) {
+            wishlistResult.remove(pageable.getPageSize());
+            hasNext = true;
+        }
+
+        return new SliceImpl<>(wishlistResult,pageable,hasNext);
+    }
+
+    @Override
+    public void saveAll(List<Wishlist> wishlist) {
+        wishiListJpaRepository.saveAll(wishlist);
     }
 
     @Override

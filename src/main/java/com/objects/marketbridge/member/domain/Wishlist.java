@@ -1,5 +1,7 @@
 package com.objects.marketbridge.member.domain;
 
+import com.objects.marketbridge.member.dto.WishlistRequest;
+import com.objects.marketbridge.member.dto.WishlistResponse;
 import com.objects.marketbridge.product.domain.ProdOption;
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.*;
@@ -23,13 +25,19 @@ public class Wishlist extends BaseEntity{
     private Member member;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_option_id")
-    private ProdOption productOption;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Builder
-    public Wishlist(Member member, ProdOption productOption) {
+    public Wishlist(Member member, Product product) {
         this.member = member;
-        this.productOption = productOption;
+        this.product = product;
+    }
+
+    public static Wishlist of(Product product,Member member){
+        return Wishlist.builder()
+                .member(member)
+                .product(product).build();
     }
 
 }

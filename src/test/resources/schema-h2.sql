@@ -108,11 +108,11 @@ CREATE TABLE wishlist (
     wishlist_id	bigint auto_increment
         primary key,
     member_id	bigint	        null,
-    prod_option_id  bigint      null,
+    product_id  bigint      null,
     created_at	datetime(6)	    null,
     updated_at	datetime(6)	    null,
     deleted_at	datetime(6)     null,
-    UNIQUE (member_id, prod_option_id)
+    UNIQUE (member_id, product_id)
 )
 ;
 
