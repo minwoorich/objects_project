@@ -31,10 +31,13 @@ public class ReviewSurvey extends BaseEntity {
     @JoinColumn(name = "survey_content_id")
     private SurveyContent surveyContentId;
 
+    private String content;
+
     @Builder
-    private ReviewSurvey(Review reviewId, ReviewSurveyCategory reviewSurveyCategoryId , SurveyContent surveyContentId) {
+    private ReviewSurvey(Review reviewId, ReviewSurveyCategory reviewSurveyCategoryId , SurveyContent surveyContentId, String content) {
         this.reviewId = reviewId;
         this.reviewSurveyCategoryId = reviewSurveyCategoryId;
         this.surveyContentId = surveyContentId;
+        this.content=content;
     }
 }
