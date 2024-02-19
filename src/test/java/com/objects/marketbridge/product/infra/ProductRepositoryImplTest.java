@@ -1,7 +1,7 @@
 package com.objects.marketbridge.product.infra;
 
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

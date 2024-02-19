@@ -11,7 +11,7 @@ import com.objects.marketbridge.order.service.port.*;
 import com.objects.marketbridge.payment.service.port.PaymentClient;
 import com.objects.marketbridge.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import lombok.Builder;
 
 public class TestContainer {

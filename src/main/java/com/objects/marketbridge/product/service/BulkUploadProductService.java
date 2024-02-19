@@ -2,7 +2,7 @@
 //
 //import com.objects.marketbridge.category.domain.Category;
 //import com.objects.marketbridge.product.domain.Product;
-//import com.objects.marketbridge.product.infra.product.ProductRepository;
+//import com.objects.marketbridge.product.service.port.ProductRepository;
 //import com.objects.marketbridge.category.service.port.CategoryRepository;
 //import jakarta.persistence.EntityNotFoundException;
 //import lombok.RequiredArgsConstructor;
