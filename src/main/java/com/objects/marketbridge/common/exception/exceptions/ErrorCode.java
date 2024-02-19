@@ -3,10 +3,6 @@ package com.objects.marketbridge.common.exception.exceptions;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDateTime;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
@@ -26,7 +22,11 @@ public enum ErrorCode {
     NON_CANCELLABLE_PRODUCT("취소가 불가능한 상품입니다."),
     NON_RETURNABLE_PRODUCT("반품이 불가능한 상품입니다."),
     NON_CANCELLABLE_RETURNABLE_PRODUCT("취소/반품이 불가능한 상품입니다."),
-    DUPLICATE_OPERATION("이미 완료되었습니다");
+    DUPLICATE_OPERATION("이미 완료되었습니다"),
+    EXTERNAL_API_FAILURE("외부 API 호출에 실패하였습니다"),
+    DUPLICATE_ERROR("이미 존재합니다."),
+    INVALID_PASSWORD("비밀번호가 일치하지 않습니다."),
+    MEMBER_NOT_FOUND("회원 정보가 존재하지 않습니다.");
 
     private final String message;
 

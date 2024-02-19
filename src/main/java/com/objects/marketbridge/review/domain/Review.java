@@ -4,10 +4,7 @@ import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +30,15 @@ public class Review extends BaseEntity {
     private Long orderDetailId;
 
     @OneToMany(mappedBy = "review")
+//    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewImage> reviewImages = new ArrayList<>();
 
     // 별점
     private Integer rating; //1-5
 
     private String content;
+
+    private Long likes = 0L;
 
     @Builder
     public Review(Member member, Product product, Long orderDetailId,
@@ -55,5 +55,13 @@ public class Review extends BaseEntity {
         this.reviewImages = reviewImages;
         this.rating = rating;
         this.content = content;
+    }
+
+    public void increaseLikes(){
+        this.likes++;
+    }
+
+    public void decreaseLikes(){
+        this.likes--;
     }
 }

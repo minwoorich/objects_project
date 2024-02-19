@@ -13,10 +13,10 @@ import com.objects.marketbridge.payment.service.port.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClientException;
 
 import java.time.LocalDateTime;
 
-import static com.objects.marketbridge.common.config.KakaoPayConfig.ONE_TIME_CID;
 import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
 
 @Service
@@ -57,18 +57,8 @@ public class CreatePaymentService {
         return Payment.create(orderNo, paymentMethod, tid, cardInfo, amount, approvedAt);
     }
 
-    public KakaoPayApproveResponse approve(String orderNo, String pgToken) {
+    public KakaoPayApproveResponse approve(String orderNo, String pgToken) throws RestClientException {
         Order order = orderQueryRepository.findByOrderNoWithMember(orderNo);
-        return kakaoPayService.approve(createKakaoRequest(order, pgToken));
-    }
-    private KakaoPayApproveRequest createKakaoRequest(Order order, String pgToken) {
-        return KakaoPayApproveRequest.builder()
-                .pgToken(pgToken)
-                .partnerUserId(order.getMember().getId().toString())
-                .partnerOrderId(order.getOrderNo())
-                .tid(order.getTid())
-                .totalAmount(order.getTotalPrice())
-                .cid(ONE_TIME_CID)
-                .build();
+        return kakaoPayService.approve(KakaoPayApproveRequest.create(order, pgToken));
     }
 }

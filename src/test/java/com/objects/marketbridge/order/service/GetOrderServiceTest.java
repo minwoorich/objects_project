@@ -1,5 +1,7 @@
 package com.objects.marketbridge.order.service;
 
+import com.objects.marketbridge.common.enums.CardCoType;
+import com.objects.marketbridge.common.interceptor.PageResponse;
 import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.member.domain.Member;
@@ -11,12 +13,14 @@ import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
+import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,9 +46,17 @@ class GetOrderServiceTest {
     @Autowired GetOrderService getOrderService;
     @Autowired OrderCommendRepository orderCommendRepository;
     @Autowired OrderDtoRepository orderDtoRepository;
+    @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired ProductRepository productRepository;
 
+
+    @AfterEach
+    void clear() {
+        orderCommendRepository.deleteAllInBatch();
+        memberRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+    }
     @BeforeEach
     void init() {
         Address address = createAddress(createAddressValue("01011112222", "홍길동", "서울", "세종대로","11111", "민들레아파트110동3222호", "우리집"),true);
@@ -74,15 +86,15 @@ class GetOrderServiceTest {
         OrderDetail orderDetail11 = OrderDetail.create("tid4", null, product3, "orderNo4", null, 1000L, 4L, null, PAYMENT_COMPLETED.getCode());
         OrderDetail orderDetail12 = OrderDetail.create("tid4", null, product4, "orderNo4", null, 1000L, 4L, null, PAYMENT_COMPLETED.getCode());
 
-        Payment payment1 = createPayment("orderNo1", "카드", "tid1", createCardInfo("카카오뱅크", null, "0"), createAmount(3000L, 0L, 0L), LocalDateTime.of(2024,10,11,12,30,30));
-        Payment payment2 = createPayment("orderNo2", "카드", "tid2", createCardInfo("국민은행", null, "0"), createAmount(3000L, 0L, 0L), LocalDateTime.of(2024,10,11,12,30,30));
-        Payment payment3 = createPayment("orderNo3", "카드", "tid3", createCardInfo("신한은행",null, "0"), createAmount(3000L, 0L, 0L), LocalDateTime.of(2024,10,11,12,30,30));
+        Payment payment1 = createPayment("orderNo1", "카드", "tid1", createCardInfo(CardCoType.KAKAOBANK.toString(), null, "0"), createAmount(3000L, 0L, 0L), LocalDateTime.of(2024,10,11,12,30,30));
+        Payment payment2 = createPayment("orderNo2", "카드", "tid2", createCardInfo(CardCoType.KB.toString(), null, "0"), createAmount(3000L, 0L, 0L), LocalDateTime.of(2024,10,11,12,30,30));
+        Payment payment3 = createPayment("orderNo3", "카드", "tid3", createCardInfo(CardCoType.SHINHAN.toString(),null, "0"), createAmount(3000L, 0L, 0L), LocalDateTime.of(2024,10,11,12,30,30));
         Payment payment4 = createPayment("orderNo4", "현금", "tid4", createCardInfo(null, null, "0"), createAmount(3000L, 0L, 0L), LocalDateTime.of(2024,10,11,12,30,30));
 
-        Order order1 = createOrder(member, address, "상품1 외 2건", "orderNo1", 3000L, "tid1", List.of(orderDetail1, orderDetail2, orderDetail3), payment1);
-        Order order2 = createOrder(member, address, "상품1 외 2건", "orderNo2", 6000L, "tid2", List.of(orderDetail4, orderDetail5, orderDetail6), payment2);
-        Order order3 = createOrder(member, address, "상품1 외 2건", "orderNo3", 9000L, "tid3", List.of(orderDetail7, orderDetail8, orderDetail9), payment3);
-        Order order4 = createOrder(member, address, "상품2 외 2건", "orderNo4", 12000L, "tid4", List.of(orderDetail10, orderDetail11, orderDetail12), payment4);
+        Order order1 = createOrder(member, address, "상품1 외 2건", "orderNo1", 3000L, 3000L, 0L, "tid1", List.of(orderDetail1, orderDetail2, orderDetail3), payment1);
+        Order order2 = createOrder(member, address, "상품1 외 2건", "orderNo2", 6000L, 6000L, 0L,"tid2", List.of(orderDetail4, orderDetail5, orderDetail6), payment2);
+        Order order3 = createOrder(member, address, "상품1 외 2건", "orderNo3", 9000L, 9000L, 0L,"tid3", List.of(orderDetail7, orderDetail8, orderDetail9), payment3);
+        Order order4 = createOrder(member, address, "상품2 외 2건", "orderNo4", 12000L, 12000L, 0L,"tid4", List.of(orderDetail10, orderDetail11, orderDetail12), payment4);
 
         orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
     }
@@ -106,8 +118,8 @@ class GetOrderServiceTest {
         return CardInfo.create(cardIssuerName, cardPurchaseName, cardInstallMonth);
     }
 
-    private Order createOrder(Member member, Address address, String orderName, String orderNo, Long totalPrice, String tid, List<OrderDetail> orderDetails, Payment payment) {
-        Order order = Order.create(member, address, orderName, orderNo, totalPrice, tid);
+    private Order createOrder(Member member, Address address, String orderName, String orderNo, Long totalPrice, Long realPrice, Long totalDiscount, String tid, List<OrderDetail> orderDetails, Payment payment) {
+        Order order = Order.create(member, address, orderName, orderNo, totalPrice, realPrice, totalDiscount, tid);
 
         // order <-> orderDetail 연관관계
         orderDetails.forEach(order::addOrderDetail);
@@ -135,13 +147,12 @@ class GetOrderServiceTest {
                 = createCondition(member.getId(), "상품", String.valueOf(LocalDateTime.now().getYear()));
 
         // when
-        GetOrderHttp.Response response = getOrderService.search(pageRequest1, condition);
+        PageResponse<GetOrderHttp.Response> response = getOrderService.search(pageRequest1, condition);
 
         //then
-        assertThat(response.getOrderInfos()).hasSize(1);
-        assertThat(response.getOrderInfos().get(0).getOrderDetailInfos()).hasSize(3);
-        assertThat(response.getOrderInfos().get(0).getOrderDetailInfos().get(0).getOrderNo()).isEqualTo("orderNo1");
-        assertThat(response.getOrderInfos().get(0).getOrderDetailInfos().get(0).getProductName()).isEqualTo("상품1");
+        assertThat(response.getContent()).hasSize(1);
+        assertThat(response.getContent().get(0).getOrderDetailInfos()).hasSize(3);
+        assertThat(response.getContent().get(0).getOrderDetailInfos().get(0).getProductName()).isEqualTo("상품1");
 
     }
     @Test
@@ -156,31 +167,32 @@ class GetOrderServiceTest {
                 = createCondition(member.getId(), "상품", String.valueOf(LocalDateTime.now().getYear()));
 
         // when
-        GetOrderHttp.Response response1 = getOrderService.search(pageRequest1, condition);
-        GetOrderHttp.Response response2 = getOrderService.search(pageRequest2, condition);
-        GetOrderHttp.Response response3 = getOrderService.search(pageRequest3, condition);
+        PageResponse<GetOrderHttp.Response> response1 = getOrderService.search(pageRequest1, condition);
+        PageResponse<GetOrderHttp.Response> response2 = getOrderService.search(pageRequest2, condition);
+        PageResponse<GetOrderHttp.Response> response3 = getOrderService.search(pageRequest3, condition);
 
         //then
-        assertThat(response1.getOrderInfos()).hasSize(4);
-        assertThat(response2.getOrderInfos()).hasSize(2);
-        assertThat(response3.getOrderInfos()).hasSize(0);
+        assertThat(response1.getContent()).hasSize(4);
+        assertThat(response2.getContent()).hasSize(2);
+        assertThat(response3.getContent()).hasSize(0);
     }
 
-    @DisplayName("상세 주문 조회")
+    @DisplayName("주문 상세 조회")
     @Test
     void getOrderDetails(){
         //given
         String orderNo = "orderNo1";
+        Order order = orderQueryRepository.findByOrderNo(orderNo);
 
         //when
-        GetOrderDetailHttp.Response response = getOrderService.getOrderDetails(orderNo);
+        GetOrderDetailHttp.Response response = getOrderService.getOrderDetails(order.getId());
 
         //then
-        assertThat(response.getOrderInfo().getOrderNo()).isEqualTo(orderNo);
-        assertThat(response.getOrderInfo().getOrderDetailInfos()).hasSize(3);
-        assertThat(response.getOrderInfo().getOrderDetailInfos().get(0).getProductName()).isEqualTo("상품1");
+        assertThat(response.getOrderNo()).isEqualTo(orderNo);
+        assertThat(response.getOrderDetailInfos()).hasSize(3);
+        assertThat(response.getOrderDetailInfos().get(0).getProductName()).isEqualTo("상품1");
         assertThat(response.getAddressValue().getCity()).isEqualTo("서울");
-        assertThat(response.getPaymentInfo().getCardIssuerName()).isEqualTo("카카오뱅크");
+        assertThat(response.getPaymentInfo().getCardIssuerName()).isEqualTo(CardCoType.KAKAOBANK.toString());
     }
 
 }

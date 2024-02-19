@@ -1,6 +1,8 @@
 package com.objects.marketbridge.product.domain;
 
 import com.objects.marketbridge.category.domain.Category;
+import com.objects.marketbridge.coupon.domain.Coupon;
+import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT_OF_STOCK;
 
@@ -42,6 +45,9 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product")
     private List<ProdTag> prodTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Coupon> coupons = new ArrayList<>();
 
     private Boolean isOwn; // 로켓 true , 오픈 마켓 false
 
@@ -101,6 +107,13 @@ public class Product extends BaseEntity {
         prodTag.setProduct(this);
     }
 
+    public void addCoupons(Coupon coupon) {
+        if (!coupons.contains(coupon)) {
+            coupons.add(coupon);
+        }
+        coupon.addProduct(this);
+    }
+
     public Product update(Category category, Boolean isOwn, String name, Long price,
                           Boolean isSubs, Long stock, String thumbImg, Long discountRate,
                           String productNo ) {
@@ -140,5 +153,12 @@ public class Product extends BaseEntity {
                     .timestamp(LocalDateTime.now())
                     .build();
         }
+    }
+
+    public List<Coupon> getAvailableCoupons() {
+        return coupons.stream()
+                .filter(c -> c.getMemberCoupons().stream()
+                        .anyMatch(mc -> !mc.getIsUsed()))
+                .collect(Collectors.toList());
     }
 }

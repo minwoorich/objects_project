@@ -61,14 +61,15 @@ class AddToCartServiceTest {
     void add(){
         //given
         Member member = memberRepository.findByEmail("test@email.com");
-        CreateCartDto cartDto = CreateCartDto.create("productNo1", member.getId(), 2L, false);
+        Product product = productRepository.findByProductNo("productNo1");
+        CreateCartDto cartDto = CreateCartDto.create(product.getId(), member.getId(), 2L, false);
 
         //when
         Cart cart = addToCartService.add(cartDto);
 
         //then
         assertThat(cart.getMember().getId()).isEqualTo(cartDto.getMemberId());
-        assertThat(cart.getProduct().getProductNo()).isEqualTo(cartDto.getProductNo());
+        assertThat(cart.getProduct().getId()).isEqualTo(cartDto.getProductId());
     }
 
     @DisplayName("이미 장바구니에 담긴 상품일 경우 예외를 발생한다")
@@ -76,7 +77,8 @@ class AddToCartServiceTest {
     void add_validDuplicate(){
         //given
         Member member = memberRepository.findByEmail("test@email.com");
-        CreateCartDto cartDto = CreateCartDto.create("addedProductNo", member.getId(), 2L, false);
+        Product addedProduct = productRepository.findByProductNo("addedProductNo");
+        CreateCartDto cartDto = CreateCartDto.create(addedProduct.getId(), member.getId(), 2L, false);
 
         //when
         Throwable thrown = catchThrowable(() -> addToCartService.add(cartDto));
@@ -91,7 +93,8 @@ class AddToCartServiceTest {
     void add_outOfStock(){
         //given
         Member member = memberRepository.findByEmail("test@email.com");
-        CreateCartDto cartDto = CreateCartDto.create("outOfStockProductNo", member.getId(), 2L, false);
+        Product outOfStockProduct = productRepository.findByProductNo("outOfStockProductNo");
+        CreateCartDto cartDto = CreateCartDto.create(outOfStockProduct.getId(), member.getId(), 2L, false);
 
         //when
         Throwable thrown = catchThrowable(() -> addToCartService.add(cartDto));

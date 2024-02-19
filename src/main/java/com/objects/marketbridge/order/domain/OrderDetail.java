@@ -3,7 +3,7 @@ package com.objects.marketbridge.order.domain;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.BaseEntity;
-import com.objects.marketbridge.member.domain.MemberCoupon;
+import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.*;
@@ -82,14 +82,6 @@ public class OrderDetail extends BaseEntity {
     }
 
     // 비즈니스 로직
-    public void increaseReducedQuantity(Long reducedQuantity) {
-        this.reducedQuantity += reducedQuantity;
-    }
-
-    public void decreaseReducedQuantity(Long reducedQuantity) {
-        this.reducedQuantity -= reducedQuantity;
-    }
-
     public void changeStatusCode(String statusCode) {
         this.statusCode = statusCode;
     }
@@ -109,7 +101,7 @@ public class OrderDetail extends BaseEntity {
                 .build();
     }
 
-    public static OrderDetail create(OrderDetail orderDetail, String reason, String statusCode) {
+    public static OrderDetail create(OrderDetail orderDetail, String statusCode) {
         return OrderDetail.builder()
                 .orderNo(orderDetail.getOrderNo())
                 .tid(orderDetail.getTid())
@@ -227,10 +219,4 @@ public class OrderDetail extends BaseEntity {
         return !Objects.equals(DELIVERY_COMPLETED.getCode(), this.statusCode);
     }
 
-    public void withdraw(Long quantity, String previousStateCode) {
-        product.decrease(quantity);
-        memberCoupon.changeUsageInfo(cancelledAt);
-        reducedQuantity -= quantity;
-        statusCode = previousStateCode;
-    }
 }

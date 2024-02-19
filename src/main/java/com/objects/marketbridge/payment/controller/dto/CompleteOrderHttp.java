@@ -2,6 +2,7 @@ package com.objects.marketbridge.payment.controller.dto;
 
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.payment.domain.CardInfo;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.payment.service.dto.ProductInfoDto;
 import lombok.Builder;
@@ -46,12 +47,13 @@ public class CompleteOrderHttp {
         }
 
         public static Response of(Payment payment) {
+            CardInfo cardInfo = payment.getCardInfo();
             return Response.builder()
                     .paymentMethodType(payment.getPaymentMethod())
                     .orderName(payment.getOrder().getOrderName())
                     .approvedAt(payment.getApprovedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                    .cardIssuerName(payment.getCardInfo().getCardIssuerName())
-                    .cardInstallMonth(Long.parseLong(payment.getCardInfo().getCardInstallMonth()))
+                    .cardIssuerName(cardInfo != null ? cardInfo.getCardIssuerName() : null)
+                    .cardInstallMonth(cardInfo != null ? Long.parseLong(payment.getCardInfo().getCardInstallMonth()) : null)
                     .totalAmount(payment.getAmount().getTotalAmount())
                     .discountAmount(payment.getAmount().getDiscountAmount())
                     .taxFreeAmount(payment.getAmount().getTaxFreeAmount())

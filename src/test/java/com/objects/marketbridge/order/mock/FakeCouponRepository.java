@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.member.domain.Coupon;
-import com.objects.marketbridge.product.infra.coupon.CouponRepository;
+import com.objects.marketbridge.coupon.domain.Coupon;
+import com.objects.marketbridge.coupon.service.port.CouponRepository;
 
 import java.util.List;
 
@@ -12,13 +12,8 @@ public class FakeCouponRepository implements CouponRepository {
     }
 
     @Override
-    public List<Coupon> findAllByIds(List<Long> ids) {
+    public Coupon save(Coupon coupon) {
         return null;
-    }
-
-    @Override
-    public void save(Coupon coupon) {
-
     }
 
     @Override
@@ -29,5 +24,10 @@ public class FakeCouponRepository implements CouponRepository {
     @Override
     public List<Coupon> findAll() {
         return null;
+    }
+
+    @Override
+    public void deleteAllInBatch() {
+
     }
 }

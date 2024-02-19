@@ -8,7 +8,6 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.ConfirmReturnHttp;
 import com.objects.marketbridge.order.controller.dto.GetReturnDetailHttp;
 import com.objects.marketbridge.order.controller.dto.RequestReturnHttp;
-import com.objects.marketbridge.order.controller.dto.WithdrawHttp;
 import com.objects.marketbridge.order.service.OrderReturnService;
 import jakarta.validation.Valid;
 import lombok.Builder;
@@ -42,22 +41,13 @@ public class OrderReturnController {
         return ApiResponse.ok(RequestReturnHttp.Response.of(orderReturnService.findReturnInfo(orderDetailId, numberOfReturns, membership)));
     }
 
-    // TODO test 작성 , restdocs
     @GetMapping("/return/detail")
     public ApiResponse<GetReturnDetailHttp.Response> getReturnDetail(
-            @RequestParam(name = "orderReturnId") Long orderReturnId,
+            @RequestParam(name = "returnedOrderDetailId") Long returnedOrderDetailId,
             @AuthMemberId Long memberId
     ) {
         String membership = memberRepository.findById(memberId).getMembership();
-        return ApiResponse.ok(GetReturnDetailHttp.Response.of(orderReturnService.findReturnDetail(orderReturnId, membership)));
-    }
-
-    // 반품 철회 확정
-    @PostMapping("/cancel-return/list")
-    public ApiResponse<WithdrawHttp.Response> withdraw(
-            @RequestBody Long orderReturnId
-    ) {
-        return ApiResponse.ok(WithdrawHttp.Response.of(orderReturnService.withdraw(orderReturnId)));
+        return ApiResponse.ok(GetReturnDetailHttp.Response.of(orderReturnService.findReturnDetail(returnedOrderDetailId, membership)));
     }
 
 }

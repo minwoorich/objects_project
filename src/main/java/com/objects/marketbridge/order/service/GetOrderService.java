@@ -1,18 +1,24 @@
 package com.objects.marketbridge.order.service;
 
+import com.objects.marketbridge.common.interceptor.PageResponse;
 import com.objects.marketbridge.order.controller.dto.select.GetOrderDetailHttp;
 import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
-import com.objects.marketbridge.order.infra.dtio.OrderDtio;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.service.dto.GetOrderDto;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
+import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Condition;
-import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.Response;
 
 @Service
 @Slf4j
@@ -20,16 +26,23 @@ import static com.objects.marketbridge.order.controller.dto.select.GetOrderHttp.
 @Transactional(readOnly = true)
 public class GetOrderService {
 
-    private final OrderDtoRepository orderDtoRepository;
+    private final OrderQueryRepository orderQueryRepository;
 
-    public GetOrderHttp.Response search(Pageable pageable, Condition condition) {
-        Page<OrderDtio> pagedOrders = orderDtoRepository.findAllPaged(condition, pageable);
-        return Response.of(pagedOrders.getContent());
+    public PageResponse<GetOrderHttp.Response> search(Pageable pageable, Condition condition) {
+
+        Page<Order> pagedOrders = orderQueryRepository.findAllPaged(condition, pageable);
+
+        List<GetOrderHttp.Response> response = pagedOrders.stream()
+                .map(GetOrderDto::of)           // Order -> GetOrderDto
+                .map(GetOrderHttp.Response::of) // GetOrderDto -> GetOrderHttp.Response
+                .toList();
+
+        return new PageResponse<>(new PageImpl<>(response, pageable, pagedOrders.getTotalElements()));
     }
 
-    public GetOrderDetailHttp.Response getOrderDetails(String orderNo) {
-        OrderDtio orderDtio = orderDtoRepository.findByOrderNo(orderNo);
+    public GetOrderDetailHttp.Response getOrderDetails(Long orderId) {
+        Order order = orderQueryRepository.findByOrderIdFetchJoin(orderId);
 
-        return GetOrderDetailHttp.Response.of(orderDtio);
+        return GetOrderDetailHttp.Response.of(GetOrderDto.of(order));
     }
 }

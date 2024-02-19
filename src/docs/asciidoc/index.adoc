@@ -16,7 +16,34 @@ v0.1, 2024-02-14
 
 == *회원*
 
-include::api/member/checkemail.adoc[]
+include::api/member/emailcheck.adoc[]
+{empty}
+{empty}
+
+=== *아이디/비밀번호 찾기*
+include::api/member/memberEmailFind.adoc[]
+{empty}
+{empty}
+
+include::api/member/memberPasswordFind.adoc[]
+{empty}
+{empty}
+
+include::api/member/memberPasswordReset.adoc[]
+{empty}
+{empty}
+
+=== *개인정보수정*
+
+include::api/member/memberEmail.adoc[]
+{empty}
+{empty}
+
+include::api/member/getMemberAccountInfo.adoc[]
+{empty}
+{empty}
+
+include::api/member/patchMemberAccountInfo.adoc[]
 {empty}
 {empty}
 
@@ -133,5 +160,14 @@ include::api/order/orderconfirmreturn.adoc[]
 {empty}
 
 include::api/order/ordercancelreturnlist.adoc[]
+{empty}
+{empty}
+
+== *장바구니*
+include::api/cart/cartadd.adoc[]
+{empty}
+{empty}
+
+include::api/cart/cartlist.adoc[]
 {empty}
 {empty}

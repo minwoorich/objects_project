@@ -18,15 +18,15 @@ public class SurveyContent extends BaseEntity {
     private Long id;
 
     // TODO
-    private Long surveyCategoryId;
+    private Long reviewSurveyCategoryId;
 
     private Integer seqNo; // 1,2,3
 
     private String content;
 
     @Builder
-    private SurveyContent(Long surveyCategoryId, Integer seqNo, String content) {
-        this.surveyCategoryId = surveyCategoryId;
+    private SurveyContent(Long reviewSurveyCategoryId, Integer seqNo, String content) {
+        this.reviewSurveyCategoryId = reviewSurveyCategoryId;
         this.seqNo = seqNo;
         this.content = content;
     }

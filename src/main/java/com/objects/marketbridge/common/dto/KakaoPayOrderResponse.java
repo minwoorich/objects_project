@@ -44,7 +44,7 @@ public class KakaoPayOrderResponse {
     private LocalDateTime approvedAt; // YYYY-MM-DDTHH:MM:SS (ISO8601)
 
     @JsonProperty("canceled_at")
-    private LocalDateTime canceledAt; // YYYY-MM-DDTHH:MM:SS (ISO8601)
+    private LocalDateTime canceledAt; // YYYY-MM-DDTHH:MM:SS (ISO8601) // 결제 취소가 아니라 주문 취소 했을때 날짜임. 결제 취소시 null
 
     @JsonProperty("selected_card_info")
     private SelectedCardInfo selectedCardInfo;
