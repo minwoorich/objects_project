@@ -14,17 +14,15 @@ public class CouponRepositoryImpl implements CouponRepository {
 
     private final CouponJpaRepository couponJpaRepository;
 
+
     @Override
     public Coupon findById(Long id) {
         return couponJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
+
     @Override
-    public List<Coupon> findAllByIds(List<Long> ids) {
-        return couponJpaRepository.findAllById(ids);
-    }
-    @Override
-    public void save(Coupon coupon) {
-        couponJpaRepository.save(coupon);
+    public Coupon save(Coupon coupon) {
+        return couponJpaRepository.save(coupon);
     }
 
     @Override
@@ -35,5 +33,10 @@ public class CouponRepositoryImpl implements CouponRepository {
     @Override
     public List<Coupon> findAll() {
         return couponJpaRepository.findAll();
+    }
+
+    @Override
+    public void deleteAllInBatch() {
+        couponJpaRepository.deleteAllInBatch();
     }
 }

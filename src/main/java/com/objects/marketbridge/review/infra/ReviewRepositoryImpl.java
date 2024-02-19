@@ -33,6 +33,16 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
+    public Page<Review> findAllByProductIdOrderByLikesDesc(Long productId, Pageable pageable) {
+        return reviewJpaRepository.findAllByProductIdOrderByLikesDesc(productId, pageable);
+    }
+
+    @Override
+    public Page<Review> findAllByMemberIdOrderByLikesDesc(Long memberId, Pageable pageable) {
+        return reviewJpaRepository.findAllByMemberIdOrderByLikesDesc(memberId, pageable);
+    }
+
+    @Override
     public Page<Review> findAllByProductId(Long productId, Pageable pageable) {
         return reviewJpaRepository.findAllByProductId(productId, pageable);
     }
@@ -48,5 +58,10 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     public Long countByMemberId(Long memberId) {
         return reviewJpaRepository.countByMemberId(memberId);
+    }
+
+    @Override
+    public Page<Review> findAllByIdIn(List<Long> likedOrderedReviewIds, Pageable pageable) {
+        return reviewJpaRepository.findAllByIdIn(likedOrderedReviewIds, pageable);
     }
 }

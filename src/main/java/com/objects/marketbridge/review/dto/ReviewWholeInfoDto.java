@@ -25,7 +25,7 @@ public class ReviewWholeInfoDto {
     private List<String> reviewImgUrls = new ArrayList<>();
     private String content;
 //    private String reviewSurveyContent; //일단 생략
-    private Long likes; //Review-like 엔티티 및 DB테이블 추가.
+    private Long likes; //count된 like수.
 
     @Builder
     public ReviewWholeInfoDto(String productName, String memberName,

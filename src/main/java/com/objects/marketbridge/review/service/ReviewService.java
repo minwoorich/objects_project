@@ -1,7 +1,6 @@
 package com.objects.marketbridge.review.service;
 
 import com.objects.marketbridge.image.domain.Image;
-import com.objects.marketbridge.image.domain.ImageType;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.OrderDetail;
@@ -88,12 +87,14 @@ public class ReviewService {
             reviewImages.add(reviewImage);
         }
 
-        ReviewLikes reviewLikes = ReviewLikes.builder()
-                .review(review)
-                .member(member)
-//                .likes(0L)
-                .build();
-        reviewLikesRepository.save(reviewLikes);
+        //바로 밑 부분은 없어도 됨.
+//        ReviewLikes reviewLikes = ReviewLikes.builder()
+//                .review(review)
+//                .member(member)
+//                //.product(product)
+//                .liked(false)
+//                .build();
+//        reviewLikesRepository.save(reviewLikes);
 
         reviewRepository.save(review);
 
@@ -128,14 +129,40 @@ public class ReviewService {
 
 
 
-    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 likes 많은순 내림차순 정렬)
+//    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 likes 많은순 내림차순 정렬)
+//    @Transactional
+//    public Page<ReviewWholeInfoDto> getProductReviews(Long productId, Pageable pageable, String sortBy) {
+//        Page<Review> reviews;
+//        if (sortBy.equals("likes")) {
+//            Page<ReviewLikes> reviewLikesPage = reviewLikesRepository.findAllByReview_Product_Id(productId, pageable);
+//            List<Review> reviewList = reviewLikesPage.stream().map(ReviewLikes::getReview).collect(Collectors.toList());
+//            reviews = new PageImpl<>(reviewList, pageable, reviewLikesPage.getTotalElements());
+//        } else {
+//            reviews = reviewRepository.findAllByProductId(productId, pageable);
+//        }
+//
+//        List<ReviewWholeInfoDto> reviewWholeInfoDtoList = reviews.getContent().stream().map(
+//                        review -> ReviewWholeInfoDto.builder()
+//                                .productName(review.getProduct().getName())
+//                                .memberName(review.getMember().getName())
+//                                .rating(review.getRating())
+//                                .createdAt(review.getCreatedAt())
+//                                .sellerName("MarketBridge")
+//                                .reviewImgUrls(review.getReviewImages().stream()
+//                                        .map(reviewImage -> reviewImage.getImage().getUrl()).collect(Collectors.toList()))
+//                                .content(review.getContent())
+//                                .likes(reviewLikesRepository.countByReviewIdAndLikedIsTrue(review.getId()))
+//                                .build())
+//                .collect(Collectors.toList());
+//        return new PageImpl<>(reviewWholeInfoDtoList, pageable, reviews.getTotalElements());
+//    }
+
+    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 liked 많은순 내림차순 정렬)
     @Transactional
     public Page<ReviewWholeInfoDto> getProductReviews(Long productId, Pageable pageable, String sortBy) {
         Page<Review> reviews;
         if (sortBy.equals("likes")) {
-            Page<ReviewLikes> reviewLikesPage = reviewLikesRepository.findAllByReview_Product_Id(productId, pageable);
-            List<Review> reviewList = reviewLikesPage.stream().map(ReviewLikes::getReview).collect(Collectors.toList());
-            reviews = new PageImpl<>(reviewList, pageable, reviewLikesPage.getTotalElements());
+            reviews = reviewRepository.findAllByProductIdOrderByLikesDesc(productId, pageable);
         } else {
             reviews = reviewRepository.findAllByProductId(productId, pageable);
         }
@@ -150,7 +177,7 @@ public class ReviewService {
                                 .reviewImgUrls(review.getReviewImages().stream()
                                         .map(reviewImage -> reviewImage.getImage().getUrl()).collect(Collectors.toList()))
                                 .content(review.getContent())
-//                                .likes(reviewLikesRepository.findByReviewId(review.getId()).getLikes())
+                                .likes(review.getLikes()) // 변경된 부분: Review 엔티티의 likes 필드 사용.
                                 .build())
                 .collect(Collectors.toList());
         return new PageImpl<>(reviewWholeInfoDtoList, pageable, reviews.getTotalElements());
@@ -158,14 +185,39 @@ public class ReviewService {
 
 
 
-    //회원별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 likes 많은순 내림차순 정렬)
+//    //회원별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 liked 많은순 내림차순 정렬)
+//    @Transactional
+//    public Page<ReviewWholeInfoDto> getMemberReviews(Long memberId, Pageable pageable, String sortBy) {
+//        Page<Review> reviews;
+//        if (sortBy.equals("likes")) {
+//            Page<ReviewLikes> reviewLikesPage = reviewLikesRepository.findAllByReview_Member_Id(memberId, pageable);
+//            List<Review> reviewList = reviewLikesPage.stream().map(ReviewLikes::getReview).collect(Collectors.toList());
+//            reviews = new PageImpl<>(reviewList, pageable, reviewLikesPage.getTotalElements());
+//        } else {
+//            reviews = reviewRepository.findAllByMemberId(memberId, pageable);
+//        }
+//
+//        List<ReviewWholeInfoDto> reviewWholeInfoDtoList = reviews.getContent().stream().map(
+//                        review -> ReviewWholeInfoDto.builder()
+//                                .productName(review.getProduct().getName())
+//                                .memberName(review.getMember().getName())
+//                                .rating(review.getRating())
+//                                .createdAt(review.getCreatedAt())
+//                                .sellerName("MarketBridge")
+//                                .reviewImgUrls(review.getReviewImages().stream()
+//                                        .map(reviewImage -> reviewImage.getImage().getUrl()).collect(Collectors.toList()))
+//                                .content(review.getContent())
+//                                .likes(reviewLikesRepository.countByReviewIdAndLikedIsTrue(review.getId()))
+//                                .build())
+//                .collect(Collectors.toList());
+//        return new PageImpl<>(reviewWholeInfoDtoList, pageable, reviews.getTotalElements());
+//    }
+        //회원별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 liked 많은순 내림차순 정렬)
     @Transactional
     public Page<ReviewWholeInfoDto> getMemberReviews(Long memberId, Pageable pageable, String sortBy) {
         Page<Review> reviews;
         if (sortBy.equals("likes")) {
-            Page<ReviewLikes> reviewLikesPage = reviewLikesRepository.findAllByReview_Member_Id(memberId, pageable);
-            List<Review> reviewList = reviewLikesPage.stream().map(ReviewLikes::getReview).collect(Collectors.toList());
-            reviews = new PageImpl<>(reviewList, pageable, reviewLikesPage.getTotalElements());
+            reviews = reviewRepository.findAllByMemberIdOrderByLikesDesc(memberId, pageable);
         } else {
             reviews = reviewRepository.findAllByMemberId(memberId, pageable);
         }
@@ -180,7 +232,7 @@ public class ReviewService {
                                 .reviewImgUrls(review.getReviewImages().stream()
                                         .map(reviewImage -> reviewImage.getImage().getUrl()).collect(Collectors.toList()))
                                 .content(review.getContent())
-//                                .likes(reviewLikesRepository.findByReviewId(review.getId()).getLikes())
+                                .likes(reviewLikesRepository.countByReviewIdAndLikedIsTrue(review.getId()))
                                 .build())
                 .collect(Collectors.toList());
         return new PageImpl<>(reviewWholeInfoDtoList, pageable, reviews.getTotalElements());
@@ -262,7 +314,6 @@ public class ReviewService {
     @Transactional
     public void deleteReview(Long reviewId, Long memberId){
         Review findReview = reviewRepository.findById(reviewId);
-        reviewRepository.delete(findReview);
 
         List<ReviewImage> findReviewImages = reviewImageRepository.findAllByReviewId(reviewId);
         for (ReviewImage findReviewImage : findReviewImages) {
@@ -277,6 +328,77 @@ public class ReviewService {
             imageRepository.deleteById(findImageId);
         }
 
-        reviewLikesRepository.deleteById(reviewId);
+        reviewLikesRepository.deleteAllByReviewId(reviewId);
+
+        reviewRepository.delete(findReview);
+    }
+
+
+
+    //리뷰 좋아요 등록 또는 변경(True화/False화)
+    @Transactional
+    public ReviewLikeDto addOrChangeReviewLike(Long reviewId, Long memberId) {
+        if (reviewLikesRepository.existsByReviewIdAndMemberId(reviewId, memberId)) {
+            // 이미 좋아요가 있는 경우에는 좋아요 상태 변경 로직을 수행
+            return changeReviewLike(reviewId, memberId);
+        } else {
+            // 좋아요가 없는 경우에는 새로운 좋아요 추가
+            return addReviewLike(reviewId, memberId);
+        }
+    }
+    @Transactional
+    public ReviewLikeDto addReviewLike(Long reviewId, Long memberId) {
+        // 좋아요 추가 로직 추가
+
+        Review findReview = reviewRepository.findById(reviewId);
+        ReviewLikes reviewLikes = ReviewLikes.builder()
+                .review(findReview)
+                .member(memberRepository.findById(memberId))
+//                .product(findReview.getProduct())
+                .liked(true) // 처음에는 좋아요 상태를 true로 설정(등록자체가 좋아요를 누른것이므로)
+                .build();
+
+        findReview.increaseLikes();
+        reviewLikesRepository.save(reviewLikes);
+
+        return ReviewLikeDto.builder()
+                .reviewId(reviewId)
+                .memberId(memberId)
+                .liked(true)
+                .build();
+    }
+    @Transactional
+    public ReviewLikeDto changeReviewLike(Long reviewId, Long memberId) {
+        ReviewLikes findReviewLikes = reviewLikesRepository.findByReviewIdAndMemberId(reviewId, memberId);
+
+        System.out.println("findReviewLikes.getLiked() == " + findReviewLikes.getLiked());
+        Boolean changedLiked = findReviewLikes.changeLiked();
+        System.out.println("changedLiked == " + changedLiked);
+
+        Review findReview = reviewRepository.findById(reviewId);
+        if(changedLiked == true){
+            findReview.increaseLikes();
+        } else {
+            findReview.decreaseLikes();
+        }
+
+        reviewLikesRepository.save(findReviewLikes);
+        System.out.println("after Change:findLiked == " + findReviewLikes.getLiked());
+        reviewRepository.save(findReview);
+
+        ReviewLikeDto reviewLikeDto = ReviewLikeDto.builder().reviewId(reviewId).memberId(memberId).liked(changedLiked).build();
+        return reviewLikeDto;
+    }
+
+
+
+    //리뷰 좋아요 총갯수 조회
+    @Transactional
+    public ReviewLikesCountDto countReviewLikes(Long reviewId) {
+        Review findReview = reviewRepository.findById(reviewId);
+        Long count = reviewLikesRepository.countByReviewIdAndLikedIsTrue(reviewId);
+        ReviewLikesCountDto reviewLikesCountDto
+                = ReviewLikesCountDto.builder().reviewId(reviewId).count(count).build();
+        return reviewLikesCountDto;
     }
 }
