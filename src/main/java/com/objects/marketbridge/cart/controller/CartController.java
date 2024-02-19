@@ -47,9 +47,7 @@ public class CartController {
     public ApiResponse<Long> countCartItems(
             @AuthMemberId Long memberId) {
 
-        // TODO : 카운트 쿼리 날리는 서비스 작성
-        Long result = 1L;
-        return ApiResponse.ok(result);
+        return ApiResponse.ok(getCartListService.countAll(memberId));
     }
 
     @PatchMapping("/carts/{cartId}")
