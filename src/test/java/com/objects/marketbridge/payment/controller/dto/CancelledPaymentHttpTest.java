@@ -56,9 +56,9 @@ class CancelledPaymentHttpTest {
         Product product3 = Product.create(true, "상품3", 3000L, false, 100L, "썸네일3", 0L, "3번");
         productRepository.saveAll(List.of(product1, product2, product3));
 
-        OrderDetail orderDetail1 = OrderDetail.create("tid1", null, product1, "orderNo1", null, 1000L, 1L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail2 = OrderDetail.create("tid1", null, product2, "orderNo1", null, 2000L, 1L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail3 = OrderDetail.create("tid1", null, product3, "orderNo1", null, 3000L, 1L, null, PAYMENT_COMPLETED.getCode());
+        OrderDetail orderDetail1 = OrderDetail.create("tid1", null, product1, "orderNo1", null, 1000L, 1L, null, PAYMENT_COMPLETED.getCode(), null);
+        OrderDetail orderDetail2 = OrderDetail.create("tid1", null, product2, "orderNo1", null, 2000L, 1L, null, PAYMENT_COMPLETED.getCode(), null);
+        OrderDetail orderDetail3 = OrderDetail.create("tid1", null, product3, "orderNo1", null, 3000L, 1L, null, PAYMENT_COMPLETED.getCode(), null);
 
         Order order = createOrder(member, address, "상품1 외 2건", "orderNo1", 6000L, 6000L, 0L, "tid1", List.of(orderDetail1, orderDetail2, orderDetail3), null);
         orderCommendRepository.save(order);

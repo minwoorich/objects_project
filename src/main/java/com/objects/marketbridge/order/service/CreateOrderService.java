@@ -1,10 +1,15 @@
 package com.objects.marketbridge.order.service;
 
+import com.objects.marketbridge.common.config.KakaoPayConfig;
+import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
+import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
+import com.objects.marketbridge.common.infra.KakaoPayService;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.order.controller.dto.CreateOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.domain.ProductValue;
@@ -23,10 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.objects.marketbridge.common.config.KakaoPayConfig.ONE_TIME_CID;
 import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_INIT;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class CreateOrderService {
@@ -38,6 +43,8 @@ public class CreateOrderService {
     private final MemberCouponRepository memberCouponRepository;
     private final AddressRepository addressRepository;
     private final DateTimeHolder dateTimeHolder;
+    private final KakaoPayService kakaoPayService;
+    private final KakaoPayConfig kakaoPayConfig;
 
     @Transactional
     public void create(CreateOrderDto createOrderDto) {
@@ -86,7 +93,7 @@ public class CreateOrderService {
 
             // OrderDetail 엔티티 생성
             OrderDetail orderDetail =
-                    OrderDetail.create(tid, order, product, orderNo, memberCoupon, price, quantity, sellerId, ORDER_INIT.getCode());
+                    OrderDetail.create(tid, order, product, orderNo, memberCoupon, price, quantity, sellerId, ORDER_INIT.getCode(), dateTimeHolder);
 
             // orderDetails 에 추가
             orderDetails.add(orderDetail);
@@ -96,5 +103,18 @@ public class CreateOrderService {
         }
 
         return orderDetails;
+    }
+
+    public KakaoPayReadyResponse ready(CreateOrderHttp.Request createOrderRequest, String orderNo, Long memberId) {
+        return kakaoPayService.ready(createKakaoReadyRequest(orderNo, createOrderRequest, memberId));
+    }
+    private KakaoPayReadyRequest createKakaoReadyRequest(String orderNo, CreateOrderHttp.Request request, Long memberId) {
+
+        String cid = ONE_TIME_CID;
+        String approvalUrl = kakaoPayConfig.createApprovalUrl("/payment");
+        String failUrl = kakaoPayConfig.getRedirectFailUrl();
+        String cancelUrl = kakaoPayConfig.getRedirectCancelUrl();
+
+        return request.toKakaoReadyRequest(orderNo, memberId, cid, approvalUrl, failUrl, cancelUrl);
     }
 }

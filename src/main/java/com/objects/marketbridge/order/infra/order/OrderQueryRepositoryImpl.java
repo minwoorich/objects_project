@@ -1,8 +1,10 @@
 package com.objects.marketbridge.order.infra.order;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.utils.MyQueryDslUtil;
 import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.order.domain.QOrder;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -16,10 +18,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.RESOUCRE_NOT_FOUND;
 import static com.objects.marketbridge.member.domain.QAddress.address;
 import static com.objects.marketbridge.member.domain.QMember.member;
 import static com.objects.marketbridge.order.domain.QOrder.order;
@@ -141,17 +145,21 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
     @Override
     public Order findByOrderIdFetchJoin(Long orderId) {
-        return queryFactory
-                .selectFrom(order)
-                .innerJoin(order.address, address)
-                .innerJoin(order.member, member)
-                .innerJoin(order.payment, payment).fetchJoin()
-                .innerJoin(order.orderDetails, orderDetail).fetchJoin()
+        Order result = queryFactory
+                .selectFrom(QOrder.order)
+                .innerJoin(QOrder.order.address, address)
+                .innerJoin(QOrder.order.member, member)
+                .innerJoin(QOrder.order.payment, payment).fetchJoin()
+                .innerJoin(QOrder.order.orderDetails, orderDetail).fetchJoin()
                 .innerJoin(orderDetail.product, product).fetchJoin()
                 .where(
                         eqOrderId(orderId)
                 )
                 .fetchOne();
+        if (result == null) {
+            throw CustomLogicException.createBadRequestError(RESOUCRE_NOT_FOUND, "해당 주문은 존재하지 않습니다", LocalDateTime.now());
+        }
+        return result;
     }
 
     private BooleanExpression eqOrderId(Long orderId) {

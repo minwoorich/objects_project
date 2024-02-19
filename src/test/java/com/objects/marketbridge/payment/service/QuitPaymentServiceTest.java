@@ -1,11 +1,13 @@
 package com.objects.marketbridge.payment.service;
 
+import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.coupon.domain.Coupon;
 import com.objects.marketbridge.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.member.domain.*;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
@@ -47,6 +49,7 @@ class QuitPaymentServiceTest {
     @Autowired QuitPaymentService quitPaymentService;
     @Autowired PaymentRepository paymentRepository;
     @Autowired CouponRepository couponRepository;
+    @Autowired DateTimeHolder dateTimeHolder;
 
     @BeforeEach
     void init() {
@@ -78,9 +81,42 @@ class QuitPaymentServiceTest {
         couponRepository.saveAll(List.of(coupon1, coupon2, coupon3, coupon4));
 
 
-        OrderDetail orderDetail1 = OrderDetail.create(null, null, product1, "orderNo1", memberCoupon1, 1000L, 1L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail2 = OrderDetail.create(null, null, product2, "orderNo1", memberCoupon2, 2000L, 1L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail3 = OrderDetail.create(null, null, product3, "orderNo1", memberCoupon3, 3000L, 1L, null, PAYMENT_COMPLETED.getCode());
+//        OrderDetail orderDetail1 = OrderDetail.create(null, null, product1, "orderNo1", memberCoupon1, 1000L, 1L, null, PAYMENT_COMPLETED.getCode());
+//        OrderDetail orderDetail2 = OrderDetail.create(null, null, product2, "orderNo1", memberCoupon2, 2000L, 1L, null, PAYMENT_COMPLETED.getCode());
+//        OrderDetail orderDetail3 = OrderDetail.create(null, null, product3, "orderNo1", memberCoupon3, 3000L, 1L, null, PAYMENT_COMPLETED.getCode());
+        OrderDetail orderDetail1 = OrderDetail.builder()
+                .tid(null)
+                .order(null)
+                .product(product1)
+                .orderNo("orderNo1")
+                .memberCoupon(memberCoupon1)
+                .price(1000L)
+                .quantity(1L)
+                .sellerId(null)
+                .statusCode(PAYMENT_COMPLETED.getCode())
+                .build();
+        OrderDetail orderDetail2 = OrderDetail.builder()
+                .tid(null)
+                .order(null)
+                .product(product2)
+                .orderNo("orderNo1")
+                .memberCoupon(memberCoupon2)
+                .price(2000L)
+                .quantity(1L)
+                .sellerId(null)
+                .statusCode(PAYMENT_COMPLETED.getCode())
+                .build();
+        OrderDetail orderDetail3 = OrderDetail.builder()
+                .tid(null)
+                .order(null)
+                .product(product3)
+                .orderNo("orderNo3")
+                .memberCoupon(memberCoupon3)
+                .price(3000L)
+                .quantity(1L)
+                .sellerId(null)
+                .statusCode(PAYMENT_COMPLETED.getCode())
+                .build();
 
         Order order1 = createOrder(member, address, "상품1 외 2건", "orderNo1", 6000L, 1500L, 1500L, "tid1", List.of(orderDetail1, orderDetail2, orderDetail3), null);
 
