@@ -27,10 +27,7 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private Long orderDetailId;
-
     @OneToMany(mappedBy = "review")
-//    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewImage> reviewImages = new ArrayList<>();
 
     // 별점
@@ -38,24 +35,28 @@ public class Review extends BaseEntity {
 
     private String content;
 
+    private String summary;
+
 //    //LIKE관련//
+
 //    private Long likes = 0L;
 
     @Builder
-    public Review(Member member, Product product, Long orderDetailId,
-                  List<ReviewImage> reviewImages, Integer rating, String content) {
+    public Review(Member member, Product product, List<ReviewImage> reviewImages,
+                  Integer rating, String content, String summary) {
         this.member = member;
         this.product = product;
-        this.orderDetailId = orderDetailId;
         this.reviewImages = reviewImages;
         this.rating = rating;
         this.content = content;
+        this.summary = summary;
     }
 
-    public void update(List<ReviewImage> reviewImages, Integer rating, String content) {
+    public void update(List<ReviewImage> reviewImages, Integer rating, String content, String summary) {
         this.reviewImages = reviewImages;
         this.rating = rating;
         this.content = content;
+        this.summary = summary;
     }
 
 //    //LIKE관련//

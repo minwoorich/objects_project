@@ -17,15 +17,14 @@ public class SurveyContent extends BaseEntity {
     @Column(name = "survey_content_id")
     private Long id;
 
-    // TODO
     @Column(name = "survey_category_id")
-    private Long reviewSurveyCategoryId;
+    private Long surveyCategoryId;
 
     private String content;
 
     @Builder
-    private SurveyContent(Long reviewSurveyCategoryId, String content) {
-        this.reviewSurveyCategoryId = reviewSurveyCategoryId;
+    private SurveyContent(Long surveyCategoryId, String content) {
+        this.surveyCategoryId = surveyCategoryId;
         this.content = content;
     }
 }
