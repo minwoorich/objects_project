@@ -547,7 +547,7 @@ public class MemberControllerTest {
                 .productId(1L)
                 .build();
 
-        // When
+        // When Then
         mockMvc.perform(post("/member/wishlist")
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .content(objectMapper.writeValueAsString(request))
@@ -576,6 +576,50 @@ public class MemberControllerTest {
 
 
     }
+
+    @Test
+    @DisplayName("Wishlist에 담겨있는 상품인지 아닌지 조회")
+    void checkWishlist() throws Exception{
+        //given
+        Boolean response = false;
+
+        WishlistRequest request = WishlistRequest.builder()
+                .productId(1L)
+                .build();
+        //when,then
+        given(memberService.checkWishlist(any(),any())).willReturn(response);
+
+        mockMvc.perform(get("/member/wishList-check")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("check-wishlist",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("productId").type(JsonFieldType.NUMBER)
+                                        .description("추가할 제품의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.BOOLEAN)
+                                        .description("응답 데이터(false 추가 가능)")
+                        )
+                ));
+
+
+
+
+     }
+
 
 
     @Test

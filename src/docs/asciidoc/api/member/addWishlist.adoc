@@ -1,4 +1,4 @@
-==== *등록된 위시리스트 조회*
+==== *위시리스트에 추가*
 
 .*HTTP Request*
 include::{snippets}/add-wishlist/http-request.adoc[]
