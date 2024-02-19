@@ -33,4 +33,8 @@ public class GetCartListService {
     private List<GetCartDto> convertEntityToDto(List<Cart> carts) {
         return carts.stream().map(GetCartDto::of).toList();
     }
+
+    public Long countAll(Long memberId) {
+        return cartQueryRepository.countByMemberId();
+    }
 }
