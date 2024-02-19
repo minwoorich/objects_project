@@ -17,6 +17,7 @@ public enum ErrorCode {
     BALANCE_INSUFFICIENT("잔액이 부족합니다"),
     INVALID_INPUT_VALUE("유효하지 않은 입력값"),
     METHOD_NOT_ALLOWED("지원하지않는 HTTP 메서드 호출"),
+    RESOUCRE_NOT_FOUND("리소스를 찾을 수 없습니다"),
     ORDERDETAIL_NOT_FOUND("주문 상세 정보를 찾을 수 없습니다."),
     ORDER_NOT_FOUND("주문 정보를 찾을 수 없습니다."),
     QUANTITY_EXCEEDED("수량이 초과 되었습니다."),
