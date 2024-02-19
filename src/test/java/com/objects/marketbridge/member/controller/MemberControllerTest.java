@@ -545,29 +545,22 @@ public class MemberControllerTest {
         // Given
         WishlistRequest request = WishlistRequest.builder()
                 .productId(1L)
-                .name("Product Name")
-                .price(1000L)
-                .isOwn(false)
                 .build();
 
         // When
-        mockMvc.perform(post("/wishlist")
+        mockMvc.perform(post("/member/wishlist")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"productId\":1,\"name\":\"Product Name\",\"price\":1000,\"isOwn\":false}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andDo(print())
                 .andDo(document("add-wishlist",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("productId").type(JsonFieldType.NUMBER)
-                                        .description("추가할 제품의 ID"),
-                                fieldWithPath("name").type(JsonFieldType.STRING)
-                                        .description("제품의 이름"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER)
-                                        .description("제품의 가격"),
-                                fieldWithPath("isOwn").type(JsonFieldType.BOOLEAN)
-                                        .description("로켓인가 오픈 마켓인가의 여부")
+                                        .description("추가할 제품의 ID")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -575,7 +568,9 @@ public class MemberControllerTest {
                                 fieldWithPath("status").type(JsonFieldType.STRING)
                                         .description("HTTP 응답"),
                                 fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("응답 메시지")
+                                        .description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL)
+                                        .description("응답 데이터")
                         )
                 ));
 

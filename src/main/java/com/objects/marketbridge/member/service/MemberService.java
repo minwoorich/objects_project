@@ -10,6 +10,7 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.member.service.port.WishRepository;
 import com.objects.marketbridge.order.service.port.AddressRepository;
 import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ import static com.objects.marketbridge.member.dto.WishlistResponse.of;
 @Slf4j
 @Service
 @Builder
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -41,6 +43,7 @@ public class MemberService {
     private final AddressRepository addressRepository;
     private final WishRepository wishRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ProductRepository productRepository;
 
     public CheckedResultDto isDuplicateEmail(String email){
         boolean isDuplicateEmail = memberRepository.existsByEmail(email);
@@ -86,9 +89,10 @@ public class MemberService {
         return wishResult == 1L;
     }
 
+    @Transactional
     public void addWish(Long memberId, WishlistRequest request){
         Member member = memberRepository.findById(memberId);
-        Product product = Product.create(request.getCategory(), request.getIsOwn(), request.getName(), request.getPrice(), request.getIsSubs(), request.getStock(), request.getThumbImg(), request.getDiscountRate(), request.getProductNo());
+        Product product = productRepository.findById(request.getProductId());
 
         Wishlist wishlist = Wishlist.create(product , member);
 

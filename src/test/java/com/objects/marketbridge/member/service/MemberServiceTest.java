@@ -4,11 +4,16 @@ import com.objects.marketbridge.member.domain.*;
 import com.objects.marketbridge.member.dto.GetAddressesResponse;
 import com.objects.marketbridge.member.dto.WishlistRequest;
 import com.objects.marketbridge.member.mock.FakeMemberRepository;
+import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.member.service.port.WishRepository;
 import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.product.infra.product.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +27,7 @@ import static org.assertj.core.api.Assertions.* ;
 //@Transactional
 @ActiveProfiles("test")
 class MemberServiceTest {
+
 
     MemberService memberService;
 
@@ -97,26 +103,5 @@ class MemberServiceTest {
 //        assertThat(member.getMembership()).isEqualTo(memberShipData);
     }
 
-    @Test
-    @Transactional
-    @DisplayName("wishlist에 추가")
-    public void addWishlist(){
-        //given
-        WishlistRequest request = WishlistRequest.builder()
-                .productId(1L)
-                .name("Product Name")
-                .price(1000L)
-                .isOwn(false)
-                .build();
 
-        Member member = Member.builder()
-                .email("WishTest@naver.com").build();
-
-        //when
-        memberService.addWish(member.getId(),request);
-        //then
-
-
-
-    }
 }

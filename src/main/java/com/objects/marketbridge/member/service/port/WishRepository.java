@@ -10,6 +10,10 @@ public interface WishRepository {
 
    Slice<Wishlist> findByMemberId(Pageable pageable, Long memberId);
 
+   List<Wishlist> findByMemberId(Long memberId);
+
+   Wishlist findbyId(Long wishlistId);
+
    Long countByProductIdAndMemberId(Long memberId, Long productId);
    Wishlist save(Wishlist wishlist);
 

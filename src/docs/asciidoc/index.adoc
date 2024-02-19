@@ -69,6 +69,10 @@ include::api/member/findWishlist.adoc[]
 {empty}
 {empty}
 
+include::api/member/addWishlist.adoc[]
+{empty}
+{empty}
+
 === *인증*
 include::api/member/signup.adoc[]
 {empty}
