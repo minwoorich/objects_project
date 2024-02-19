@@ -1,8 +1,6 @@
 package com.objects.marketbridge.payment.controller.dto;
 
 import com.objects.marketbridge.common.dto.KakaoPayOrderResponse;
-import com.objects.marketbridge.common.enums.CardCoType;
-import com.objects.marketbridge.common.enums.KakaoStatus;
 import com.objects.marketbridge.member.domain.Address;
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.member.domain.Member;
@@ -10,13 +8,12 @@ import com.objects.marketbridge.member.domain.MembershipType;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.domain.Order;
 import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.service.GetOrderService;
 import com.objects.marketbridge.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.payment.domain.*;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +25,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.objects.marketbridge.common.enums.CardCoType.*;
@@ -55,9 +51,9 @@ class CancelledPaymentHttpTest {
         member.addAddress(address);
         memberRepository.save(member);
 
-        Product product1 = Product.create(null, true, "상품1", 1000L, false, 100L, "썸네일1", 0L, "1번");
-        Product product2 = Product.create(null, true, "상품2", 2000L, false, 100L, "썸네일2", 0L, "2번");
-        Product product3 = Product.create(null, true, "상품3", 3000L, false, 100L, "썸네일3", 0L, "3번");
+        Product product1 = Product.create(true,  "상품1", 1000L, false, 100L, "썸네일1", 0L, "1번");
+        Product product2 = Product.create(true,  "상품2", 2000L, false, 100L, "썸네일2", 0L, "2번");
+        Product product3 = Product.create(true, "상품3", 3000L, false, 100L, "썸네일3", 0L, "3번");
         productRepository.saveAll(List.of(product1, product2, product3));
 
         OrderDetail orderDetail1 = OrderDetail.create("tid1", null, product1, "orderNo1", null, 1000L, 1L, null, PAYMENT_COMPLETED.getCode());
