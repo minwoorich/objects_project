@@ -3,18 +3,17 @@ package com.objects.marketbridge.review.service;
 import com.objects.marketbridge.image.domain.Image;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.domain.OrderDetail;
 import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.service.port.ProductRepository;
 import com.objects.marketbridge.image.infra.ImageRepository;
-import com.objects.marketbridge.review.domain.Review;
-import com.objects.marketbridge.review.domain.ReviewImage;
+import com.objects.marketbridge.review.domain.*;
 import com.objects.marketbridge.review.dto.*;
-import com.objects.marketbridge.review.infra.ReviewImageRepository;
-import com.objects.marketbridge.review.infra.ReviewRepository;
+import com.objects.marketbridge.review.infra.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +32,58 @@ public class ReviewService {
     private final OrderDetailQueryRepository orderDetailQueryRepository;
     private final ImageRepository imageRepository;
     private final ReviewImageRepository reviewImageRepository;
+    private final ReviewSurveyRepository reviewSurveyRepository;
+    private final ReviewSurveyCategoryRepository reviewSurveyCategoryRepository;
+    private final SurveyContentRepository surveyContentRepository;
 //    //LIKE관련//
 //    private final ReviewLikesRepository reviewLikesRepository;
+
+
+
+    //리뷰 서베이 선택창 조회
+    @Transactional
+    public List<ReviewSurveyQuestionAndOptionsDto> getReviewSurveyQuestionAndOptionsList(Long productId) {
+        //해당 상품에 대한 reviewSurveyCategory을 가져옴(선택창+입력창)
+        //해당 상품에 대한 SurveyContent를 가져옴(선택창)
+        //해당 상품에 대한 입력창에 입력할 SurveyContent는 프론트에서 처리
+
+        List<ReviewSurveyCategory> reviewSurveyCategoryList
+                = reviewSurveyCategoryRepository.findAllByProductId(productId);
+
+        ReviewSurveyQuestionAndOptionsDto reviewSurveyQuestionAndOptionsDto;
+
+        List<ReviewSurveyQuestionAndOptionsDto> reviewSurveyQuestionAndOptionsDtoList = new ArrayList<>();
+        //reviewSurveyQuestionsAndOptions을 담을 for문
+        for (ReviewSurveyCategory reviewSurveyCategory : reviewSurveyCategoryList) {
+            //리뷰작성자가 옵션 중에 선택하는 경우의 옵션들
+            if (surveyContentRepository.existsBySurveyCategoryId(reviewSurveyCategory.getId())) {
+                List<SurveyContent> surveyContentList
+                        = surveyContentRepository.findAllBySurveyCategoryId(reviewSurveyCategory.getId());
+                List<String> surveyContentContentListForDto = new ArrayList<>();
+
+                for (SurveyContent surveyContent : surveyContentList) {
+                    surveyContentContentListForDto.add(surveyContent.getContent());
+                }
+                reviewSurveyQuestionAndOptionsDto
+                        = ReviewSurveyQuestionAndOptionsDto.builder()
+                        .reviewSurveyQuestion(reviewSurveyCategory.getName())
+                        .reviewSurveyOptionList(surveyContentContentListForDto)
+                        .build();
+                reviewSurveyQuestionAndOptionsDtoList.add(reviewSurveyQuestionAndOptionsDto);
+                //리뷰작성자가 선택하지 않고 직접 입력하는 경우는 빈값(null)
+            } else {
+                reviewSurveyQuestionAndOptionsDto
+                        = ReviewSurveyQuestionAndOptionsDto.builder()
+                        .reviewSurveyQuestion(reviewSurveyCategory.getName())
+                        .reviewSurveyOptionList(null)
+                        .build();
+                reviewSurveyQuestionAndOptionsDtoList.add(reviewSurveyQuestionAndOptionsDto);
+            }
+        }
+        return reviewSurveyQuestionAndOptionsDtoList;
+    }
+
+
 
     //리뷰 등록
     @Transactional
@@ -44,18 +93,11 @@ public class ReviewService {
         Member member = memberRepository.findById(memberId);
 
         Product product = productRepository.findById(request.getProductId());
-        OrderDetail orderDetail = orderDetailQueryRepository.findById(request.getOrderDetailId());
         Integer rating = request.getRating();
+        List<ReviewSurveyDataDto> reviewSurveyDataDtoList = request.getReviewSurveyDataDtoList();
         String content = request.getContent();
         List<String> reviewImgUrls = request.getReviewImgUrls();
-
-        //  리뷰는 상품결제후 배송완료/또는수취확인 된 상태에서만 작성가능하게 한다.
-        // + 리뷰는 1건만 작성(orderDetail당? 상품당?)
-        //  백단에서도 검증이 필요하면 작성할것. TODO
-//        if (!orderDetail.getStatusCode().equals(StatusCodeType.DELIVERY_COMPLETED.toString())) {
-//            // 추후 customized exception 작성 필요.
-//            throw new RuntimeException("리뷰는 배송완료된 상태에서만 작성가능합니다.");
-//        } else {
+        String summary = request.getSummary();
 
         List<ReviewImage> reviewImages = new ArrayList<>();
 
@@ -63,10 +105,10 @@ public class ReviewService {
         Review review = Review.builder()
                 .member(member)
                 .product(product)
-                .orderDetailId(orderDetail.getId())
-                .reviewImages(reviewImages)
                 .rating(rating)
                 .content(content)
+                .reviewImages(reviewImages)
+                .summary(summary)
                 .build();
 
         for (int i = 0; i < reviewImgUrls.size(); i++) {
@@ -95,41 +137,50 @@ public class ReviewService {
 //                .build();
 //        reviewLikesRepository.save(reviewLikes);
 
+        //선택&입력된 리뷰 서베이들 등록
+        for(int i = 0; i< reviewSurveyDataDtoList.size(); i++){
+            String surveyCategory = reviewSurveyDataDtoList.get(i).getReviewSurveyCategoryData();
+            ReviewSurvey reviewSurvey = ReviewSurvey.builder()
+                    .review(review)
+                    .reviewSurveyCategory(reviewSurveyCategoryRepository.findByName(surveyCategory))
+                    .surveyCategory(surveyCategory)
+                    .content(reviewSurveyDataDtoList.get(i).getWrittenOrSelectedSurveyContentData())
+                    .build();
+            reviewSurveyRepository.save(reviewSurvey);
+        }
+
         reviewRepository.save(review);
 
             //리뷰id 반환
         return review.getId();
     }
-//    }
 
 
 
     //리뷰아이디로 리뷰상세 단건 조회
     @Transactional
-    public ReviewAllValuesDto getReview(Long reviewId, Long memberId){
+    public ReviewSingleReadDto getReview(Long reviewId, Long memberId){
         Review findReview = reviewRepository.findById(reviewId);
         List<ReviewImage> reviewImages = findReview.getReviewImages();
         List<String> reviewImgUrls = new ArrayList<>();
         for (ReviewImage reviewImage : reviewImages) {
             reviewImgUrls.add(reviewImage.getImage().getUrl());
         }
-        ReviewAllValuesDto reviewAllValuesDto
-                = ReviewAllValuesDto.builder()
+        ReviewSingleReadDto reviewSingleReadDto
+                = ReviewSingleReadDto.builder()
                 .reviewId(reviewId)
                 .memberId(memberId)
                 .productId(findReview.getProduct().getId())
-                .orderDetailId(findReview.getOrderDetailId())
                 .reviewImgUrls(reviewImgUrls)
                 .rating(findReview.getRating())
                 .content(findReview.getContent())
                 .build();
-        return reviewAllValuesDto;
+        return reviewSingleReadDto;
     }
 
 
 
-//    //LIKE관련//
-//    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 liked 많은순 내림차순 정렬)
+//    //LIKE관련//    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 liked 많은순 내림차순 정렬)
 //    @Transactional
 //    public Page<ReviewWholeInfoDto> getProductReviews(Long productId, Pageable pageable, String sortBy) {
 //        Page<Review> reviews;
@@ -144,17 +195,19 @@ public class ReviewService {
 //                                .productName(review.getProduct().getName())
 //                                .memberName(review.getMember().getName())
 //                                .rating(review.getRating())
+//                                .reviewSurveyList(reviewSurveyRepository.findAllByReviewId(review.getId()))
+//                                .content(review.getContent())
 //                                .createdAt(review.getCreatedAt())
-//                                .sellerName("MarketBridge")
 //                                .reviewImgUrls(review.getReviewImages().stream()
 //                                        .map(reviewImage -> reviewImage.getImage().getUrl()).collect(Collectors.toList()))
-//                                .content(review.getContent())
+//                                .sellerName("MarketBridge")
 ////                                //LIKE관련//
 ////                                .likes(review.getLikes()) // 변경된 부분: Review 엔티티의 likes 필드 사용.
 //                                .build())
 //                .collect(Collectors.toList());
 //        return new PageImpl<>(reviewWholeInfoDtoList, pageable, reviews.getTotalElements());
 //    }
+
 
 
 
@@ -215,6 +268,7 @@ public class ReviewService {
         List<String> updatedReviewImgUrls = request.getReviewImgUrls();
         Integer updatedRating = request.getRating();
         String updatedContent = request.getContent();
+        String updatedSummary = request.getSummary();
 
         //이미지 및 리뷰이미지 수정
         List<ReviewImage> findReviewImages = reviewImageRepository.findAllByReviewId(reviewId);
@@ -249,7 +303,7 @@ public class ReviewService {
             reviewImages.add(reviewImage);
         }
 
-        findReview.update(reviewImages, updatedRating, updatedContent);
+        findReview.update(reviewImages, updatedRating, updatedContent, updatedSummary);
         reviewRepository.save(findReview);
 
         ReviewIdDto reviewIdDto = ReviewIdDto.builder().reviewId(reviewId).build();
@@ -275,6 +329,8 @@ public class ReviewService {
         for (Long findImageId : findImageIds) {
             imageRepository.deleteById(findImageId);
         }
+
+        reviewSurveyRepository.deleteAllByReviewId(reviewId);
 
 //        //LIKE관련//
 //        reviewLikesRepository.deleteAllByReviewId(reviewId);

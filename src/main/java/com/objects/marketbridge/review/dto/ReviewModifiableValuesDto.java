@@ -12,13 +12,18 @@ import java.util.List;
 public class ReviewModifiableValuesDto {
 
     private Integer rating; //별점, 1~5
+    private List<ReviewSurveyDataDto> reviewSurveyDataDtoList = new ArrayList<>();
     private String content;
     private List<String> reviewImgUrls = new ArrayList<>();
+    private String summary;
 
     @Builder
-    public ReviewModifiableValuesDto(Integer rating, String content, List<String> reviewImgUrls) {
+    public ReviewModifiableValuesDto(Integer rating, List<ReviewSurveyDataDto> reviewSurveyDataDtoList,
+                                     String content, List<String> reviewImgUrls, String summary) {
         this.rating = rating;
+        this.reviewSurveyDataDtoList = reviewSurveyDataDtoList;
         this.content = content;
         this.reviewImgUrls = reviewImgUrls;
+        this.summary = summary;
     }
 }
