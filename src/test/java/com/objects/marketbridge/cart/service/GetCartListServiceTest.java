@@ -319,4 +319,17 @@ class GetCartListServiceTest {
                 .contains("[상품5]1000원 할인");
 
     }
+
+    @DisplayName("회원이 장바구니를 조회할 수 있다")
+    @Test
+    void countAll(){
+        //given
+        Long memberId = memberRepository.findByEmail("test@email.com").getId();
+
+        //when
+        Long countResult = getCartListService.countAll(memberId);
+
+        //then
+        assertThat(countResult).isEqualTo(6);
+    }
 }
