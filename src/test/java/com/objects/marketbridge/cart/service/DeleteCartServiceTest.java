@@ -64,8 +64,6 @@ class DeleteCartServiceTest {
 
         //then
         assertThat(cartQueryRepository.findAll()).hasSize(3);
-
-        cartQueryRepository.findById(selected.get(0));
     }
     @DisplayName("삭제한 장바구니를 조회할 경우 에러가 발생한다")
     @Test
