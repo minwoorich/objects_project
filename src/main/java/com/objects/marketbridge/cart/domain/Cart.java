@@ -1,5 +1,6 @@
 package com.objects.marketbridge.cart.domain;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.product.domain.Product;
@@ -9,6 +10,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDateTime;
+
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.INVALID_INPUT_VALUE;
 
 @Entity
 @Getter
@@ -50,5 +55,14 @@ public class Cart extends BaseEntity {
                 .isSubs(isSubs)
                 .quantity(quantity)
                 .build();
+    }
+
+    public Cart updateQuantity(Long quantity) {
+        if (quantity < 1 || quantity > 100) {
+            throw CustomLogicException.createBadRequestError(INVALID_INPUT_VALUE, "장바구니 수량은 0 이상 100 이하 입니다", LocalDateTime.now());
+        }
+        this.quantity = quantity;
+
+        return this;
     }
 }
