@@ -1,11 +1,10 @@
 package com.objects.marketbridge.member.service;
 
-import com.objects.marketbridge.member.domain.Address;
-import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.domain.MembershipType;
+import com.objects.marketbridge.member.domain.*;
 import com.objects.marketbridge.member.dto.GetAddressesResponse;
+import com.objects.marketbridge.member.dto.WishlistRequest;
 import com.objects.marketbridge.member.mock.FakeMemberRepository;
+import com.objects.marketbridge.product.domain.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -96,5 +95,28 @@ class MemberServiceTest {
 //        memberService.changeMemberShip(member.getId());
 //        //then
 //        assertThat(member.getMembership()).isEqualTo(memberShipData);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("wishlist에 추가")
+    public void addWishlist(){
+        //given
+        WishlistRequest request = WishlistRequest.builder()
+                .productId(1L)
+                .name("Product Name")
+                .price(1000L)
+                .isOwn(false)
+                .build();
+
+        Member member = Member.builder()
+                .email("WishTest@naver.com").build();
+
+        //when
+        memberService.addWish(member.getId(),request);
+        //then
+
+
+
     }
 }

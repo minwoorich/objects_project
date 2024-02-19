@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface WishRepository {
 
-  Slice<Wishlist> findByMemberId(Pageable pageable, Long memberId);
+   Slice<Wishlist> findByMemberId(Pageable pageable, Long memberId);
 
+   Long countByProductIdAndMemberId(Long memberId, Long productId);
    Wishlist save(Wishlist wishlist);
 
    void saveAll(List<Wishlist> wishlist);

@@ -10,6 +10,7 @@ import com.objects.marketbridge.product.service.port.OptionRepository;
 import com.objects.marketbridge.product.service.port.ProdOptionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -164,5 +165,40 @@ class WishRepositoryImplTest {
         Assertions.assertThat(wishlists.isFirst()).isTrue();
         Assertions.assertThat(wishlists.getNumberOfElements()).isEqualTo(2);
     }
+
+
+    @Test
+    @DisplayName("wishlist의 해당 product의 존재여부 확인")
+    void countByProductIdAndMemberId() throws Exception{
+        //given
+        Member member = Member.builder()
+                .email("test@naver.com").build();
+
+        memberRepository.save(member);
+
+        Product product1 = Product.builder()
+                .productNo("1")
+                .price(100L).build();
+
+        Product product2 = Product.builder()
+                .productNo("2")
+                .price(1000L).build();
+
+        productRepository.saveAll(List.of(product1,product2));
+
+        Wishlist wishlist1 = Wishlist.builder()
+                .member(member)
+                .product(product1).build();
+
+        wishRepository.saveAll(List.of(wishlist1));
+        //when
+        Long result1 = wishRepository.countByProductIdAndMemberId(member.getId(), product1.getId());
+        Long result2 = wishRepository.countByProductIdAndMemberId(member.getId(), product2.getId());
+
+
+        //then
+        Assertions.assertThat(result1).isEqualTo(1L);
+        Assertions.assertThat(result2).isEqualTo(0L);
+     }
 
 }

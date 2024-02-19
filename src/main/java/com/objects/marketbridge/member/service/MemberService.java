@@ -21,6 +21,7 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,25 +80,20 @@ public class MemberService {
         return new SliceImpl<>(responses,pageable,wishlists.hasNext());
     }
 
+    public Boolean checkWishlist(Long memberId,WishlistRequest request){
+        //true면 wishList에 이미 존재 false면 wishList 추가가능
+        Long wishResult = wishRepository.countByProductIdAndMemberId(memberId, request.getProductId());
+        return wishResult == 1L;
+    }
+
     public void addWish(Long memberId, WishlistRequest request){
         Member member = memberRepository.findById(memberId);
-        Product product = Product.builder()
-                .category(request.getCategory())
-                .isOwn(request.getIsOwn())
-                .name(request.getName())
-                .price(request.getPrice())
-                .isSubs(request.getIsSubs())
-                .stock(request.getStock())
-                .thumbImg(request.getThumbImg())
-                .discountRate(request.getDiscountRate())
-                .productNo(request.getProductNo())
-                .build();
+        Product product = Product.create(request.getCategory(), request.getIsOwn(), request.getName(), request.getPrice(), request.getIsSubs(), request.getStock(), request.getThumbImg(), request.getDiscountRate(), request.getProductNo());
 
-        Wishlist wishlist = Wishlist.builder()
-                .member(member)
-                .product(product).build();
+        Wishlist wishlist = Wishlist.create(product , member);
 
         wishRepository.save(wishlist);
+
     }
 
     @Transactional

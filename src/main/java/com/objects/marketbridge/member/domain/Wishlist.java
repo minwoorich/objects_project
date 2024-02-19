@@ -40,4 +40,10 @@ public class Wishlist extends BaseEntity{
                 .product(product).build();
     }
 
+    public static Wishlist create(Product product,Member member){
+        return Wishlist.builder()
+                .member(member)
+                .product(product).build();
+    }
+
 }

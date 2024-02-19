@@ -64,6 +64,11 @@ include::api/member/deleteAddress.adoc[]
 {empty}
 {empty}
 
+=== *위시리스트*
+include::api/member/findWishlist.adoc[]
+{empty}
+{empty}
+
 === *인증*
 include::api/member/signup.adoc[]
 {empty}
