@@ -93,7 +93,7 @@ public class CreateOrderService {
 
             // OrderDetail 엔티티 생성
             OrderDetail orderDetail =
-                    OrderDetail.create(tid, order, product, orderNo, memberCoupon, price, quantity, sellerId, ORDER_INIT.getCode());
+                    OrderDetail.create(tid, order, product, orderNo, memberCoupon, price, quantity, sellerId, ORDER_INIT.getCode(), dateTimeHolder);
 
             // orderDetails 에 추가
             orderDetails.add(orderDetail);

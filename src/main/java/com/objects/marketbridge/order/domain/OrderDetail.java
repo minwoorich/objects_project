@@ -1,6 +1,7 @@
 package com.objects.marketbridge.order.domain;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.coupon.domain.MemberCoupon;
@@ -86,19 +87,35 @@ public class OrderDetail extends BaseEntity {
         this.statusCode = statusCode;
     }
 
-    public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long price, Long quantity, Long sellerId, String statusCode) {
-
+    public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long price, Long quantity, Long sellerId, String statusCode, DateTimeHolder dateTimeHolder) {
+        if (memberCoupon != null) {
+            validMemberCoupon(memberCoupon, dateTimeHolder);
+        }
         return OrderDetail.builder()
                 .orderNo(orderNo)
                 .tid(tid)
                 .order(order)
                 .product(product)
                 .memberCoupon(memberCoupon)
-                .quantity(quantity)
                 .price(price)
+                .quantity(quantity)
                 .sellerId(sellerId)
                 .statusCode(statusCode)
                 .build();
+    }
+
+    private static void validMemberCoupon(MemberCoupon memberCoupon, DateTimeHolder dateTimeHolder) {
+        if (isCouponUsed(memberCoupon) || isCouponExpired(memberCoupon, dateTimeHolder)) {
+            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, dateTimeHolder.getTimeNow());
+        }
+    }
+
+    private static boolean isCouponExpired(MemberCoupon memberCoupon, DateTimeHolder dateTimeHolder) {
+        return memberCoupon.getEndDate().isBefore(dateTimeHolder.getTimeNow());
+    }
+
+    private static Boolean isCouponUsed(MemberCoupon memberCoupon) {
+        return memberCoupon.getIsUsed();
     }
 
     public static OrderDetail create(OrderDetail orderDetail, String statusCode) {
