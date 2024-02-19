@@ -38,7 +38,8 @@ public class Review extends BaseEntity {
 
     private String content;
 
-    private Long likes = 0L;
+//    //LIKE관련//
+//    private Long likes = 0L;
 
     @Builder
     public Review(Member member, Product product, Long orderDetailId,
@@ -57,11 +58,11 @@ public class Review extends BaseEntity {
         this.content = content;
     }
 
-    public void increaseLikes(){
-        this.likes++;
-    }
-
-    public void decreaseLikes(){
-        this.likes--;
-    }
+//    //LIKE관련//
+//    public void increaseLikes(){
+//        this.likes++;
+//    }
+//    public void decreaseLikes(){
+//        this.likes--;
+//    }
 }
