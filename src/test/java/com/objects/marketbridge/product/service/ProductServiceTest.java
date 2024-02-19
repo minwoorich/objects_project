@@ -1,10 +1,10 @@
 package com.objects.marketbridge.product.service;
 
-import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.category.domain.Category;
+import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.service.port.ProductRepository;
 import com.objects.marketbridge.product.dto.CreateProductDto;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +12,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-class CreateProductServiceTest {
+class ProductServiceTest {
+
     @Autowired
     ProductRepository productRepository;
     @Autowired
@@ -23,6 +28,8 @@ class CreateProductServiceTest {
 
     @Autowired
     ProductService productService;
+
+
 
     @Test
     void 상품_엔티티를_만들_수_있다(){
@@ -45,7 +52,6 @@ class CreateProductServiceTest {
                 .categoryId(category.getId())
                 .build();
         Product product = productService.createProduct(createProductDto);
-
         Assertions.assertThat(product.getCategory().getLevel()).isEqualTo(0L);
     }
 }

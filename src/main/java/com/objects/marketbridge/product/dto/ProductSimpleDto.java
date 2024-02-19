@@ -1,5 +1,6 @@
 package com.objects.marketbridge.product.dto;
 
+import com.objects.marketbridge.product.domain.Product;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,27 +10,37 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ProductSimpleDto {
     private Long productId;
+    private String prodNo;
     private String thumUrl;
     private String name;
     private Long discountRate;
     private Boolean isOwn;
-    private Boolean isStock;
     private Long price;
-    private String categoryLevel;
+    private Long stock;
 
     @Builder
-    @QueryProjection
-    public ProductSimpleDto(Long productId, String thumUrl, String name, Long discountRate, Boolean isOwn, Long price,String categoryLevel) {
+    private ProductSimpleDto(Long productId,String prodNo, String thumUrl, String name, Long discountRate, Boolean isOwn, Long price, Long stock) {
         this.productId = productId;
+        this.prodNo = prodNo;
         this.thumUrl = thumUrl;
         this.name = name;
         this.discountRate = discountRate;
         this.isOwn = isOwn;
         this.price = price;
-        this.categoryLevel = categoryLevel;
+        this.stock = stock;
     }
 
-    public void addStockInfo(Boolean isStock){
-        this.isStock = isStock;
+    public static ProductSimpleDto of(Product product){
+        return ProductSimpleDto.builder()
+                .productId(product.getId())
+                .prodNo(product.getProductNo())
+                .thumUrl(product.getThumbImg())
+                .name(product.getName())
+                .discountRate(product.getDiscountRate())
+                .isOwn(product.getIsOwn())
+                .price(product.getPrice())
+                .stock(product.getStock())
+                .build();
     }
+
 }

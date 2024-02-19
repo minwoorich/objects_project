@@ -11,8 +11,7 @@ import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.domain.MembershipType;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
-import org.assertj.core.api.Assertions;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,9 +37,9 @@ class AddToCartServiceTest {
     @BeforeEach
     void init() {
 
-        Product product1 = Product.create(null, true, "가방", 1000L, false, 100L, "thumbImg1", 0L, "productNo1");
-        Product outOfStockProduct = Product.create(null, true, "신발", 1000L, false, 1L, "thumbImg1", 0L, "outOfStockProductNo");
-        Product addedProduct = Product.create(null, true, "옷", 1000L, false, 100L, "thumbImg1", 0L, "addedProductNo");
+        Product product1 = Product.create( true, "가방", 1000L, false, 100L, "thumbImg1", 0L, "productNo1");
+        Product outOfStockProduct = Product.create( true, "신발", 1000L, false, 1L, "thumbImg1", 0L, "outOfStockProductNo");
+        Product addedProduct = Product.create( true, "옷", 1000L, false, 100L, "thumbImg1", 0L, "addedProductNo");
         productRepository.saveAll(List.of(product1, outOfStockProduct, addedProduct));
 
         Member member = Member.create(MembershipType.BASIC.getText(), "test@email.com", "1234", "홍길동", "01012341234", true, true);
