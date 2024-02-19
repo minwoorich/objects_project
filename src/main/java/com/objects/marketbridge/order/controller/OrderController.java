@@ -53,7 +53,7 @@ public class OrderController {
         // 0. orderNo 생성
         String orderNo = UUID.randomUUID().toString();
 
-        // 1. kakaoPaymentReadyService 호출
+        // 1. 카카오페이 결제 준비 요청
         KakaoPayReadyResponse kakaoReadyResponse = createOrderService.ready(request, orderNo, memberId);
         String tid = kakaoReadyResponse.getTid();
 
