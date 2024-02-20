@@ -1,4 +1,4 @@
-package com.objects.marketbridge.review.infra;
+package com.objects.marketbridge.review.service.port;
 
 import com.objects.marketbridge.review.domain.SurveyContent;
 

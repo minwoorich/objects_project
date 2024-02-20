@@ -48,8 +48,7 @@ import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -589,7 +588,7 @@ public class MemberControllerTest {
         //when,then
         given(memberService.checkWishlist(any(),any())).willReturn(response);
 
-        mockMvc.perform(get("/member/wishList-check")
+        mockMvc.perform(get("/member/wishlist-check")
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -615,10 +614,45 @@ public class MemberControllerTest {
                         )
                 ));
 
-
-
-
      }
+
+    @Test
+    @DisplayName("wishlist 삭제")
+    void deleteWishlist() throws Exception{
+        // Given
+        WishlistRequest request = WishlistRequest.builder()
+                .productId(1L)
+                .build();
+
+        // When Then
+        mockMvc.perform(delete("/member/wishlist")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("delete-wishlist",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("productId").type(JsonFieldType.NUMBER)
+                                        .description("삭제할 제품의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("HTTP 응답"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL)
+                                        .description("응답 데이터")
+                        )
+                ));
+
+
+    }
 
 
 

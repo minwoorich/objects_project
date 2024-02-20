@@ -17,27 +17,29 @@ public class ReviewSurvey extends BaseEntity {
     @Column(name = "review_survey_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_id")
-    private Review review;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "review_id")
+//    private Review review;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_survey_category_id")
-    private ReviewSurveyCategory reviewSurveyCategory;
+    private Long reviewId;
+
+    private Long reviewSurveyCategoryId;
 
     private String surveyCategory;
 
     private String content;
 
-    private String summary;
-
     @Builder
-    public ReviewSurvey(Review review, ReviewSurveyCategory reviewSurveyCategory,
-                        String surveyCategory, String content, String summary) {
-        this.review = review;
-        this.reviewSurveyCategory = reviewSurveyCategory;
+    public ReviewSurvey(Long id, Long reviewId, Long reviewSurveyCategoryId, String surveyCategory, String content) {
+        this.id = id;
+        this.reviewId = reviewId;
+        this.reviewSurveyCategoryId = reviewSurveyCategoryId;
         this.surveyCategory = surveyCategory;
         this.content = content;
-        this.summary = summary;
     }
+
+    public void update(String content) {
+        this.content = content;
+    }
+
 }

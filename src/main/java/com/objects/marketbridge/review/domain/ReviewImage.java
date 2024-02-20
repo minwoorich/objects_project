@@ -19,20 +19,28 @@ public class ReviewImage extends BaseEntity {
     @Column(name = "review_image_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_id")
-    private Review review;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "review_id")
+//    private Review review;
+//
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "image_id")
+//    private Image image;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "image_id")
-    private Image image;
+    private Long reviewId;
+
+    private Long imageId;
 
     private Long seqNo;
 
+    private String description;
+
     @Builder
-    private ReviewImage(Review review, Image image, Long seqNo) {
-        this.review = review;
-        this.image = image;
+    public ReviewImage(Long id, Long reviewId, Long imageId, Long seqNo, String description) {
+        this.id = id;
+        this.reviewId = reviewId;
+        this.imageId = imageId;
         this.seqNo = seqNo;
+        this.description = description;
     }
 }

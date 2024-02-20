@@ -2,6 +2,7 @@
 
 .*HTTP Request*
 include::{snippets}/patch-member-account-info/http-request.adoc[]
+include::{snippets}/patch-member-account-info/request-fields.adoc[]
 
 .*HTTP Response*
 include::{snippets}/patch-member-account-info/http-response.adoc[]

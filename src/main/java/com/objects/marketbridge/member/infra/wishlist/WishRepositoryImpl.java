@@ -39,6 +39,11 @@ public class WishRepositoryImpl implements WishRepository {
     }
 
     @Override
+    public void deleteWishlist(Long memberId, Long productId) {
+        wishiListJpaRepository.deleteByMemberIdAndProductId(memberId,productId);
+    }
+
+    @Override
     public Wishlist findbyId(Long wishlistId) {
         return wishiListJpaRepository.findById(wishlistId).orElseThrow(EntityNotFoundException::new);
     }
