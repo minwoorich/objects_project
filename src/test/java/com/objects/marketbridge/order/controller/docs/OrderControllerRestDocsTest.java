@@ -157,7 +157,7 @@ public class OrderControllerRestDocsTest {
                 .createdAt("createdAt")
                 .build();
 
-        given(kakaoPayService.ready(any(KakaoPayReadyRequest.class))).willReturn(response);
+        given(createOrderService.ready(any(CreateOrderHttp.Request.class),anyString(), anyLong())).willReturn(response);
         willDoNothing().given(createOrderService).create(any(CreateOrderDto.class));
 
         // when, then
@@ -219,7 +219,7 @@ public class OrderControllerRestDocsTest {
                                 fieldWithPath("data.iosAppScheme").type(JsonFieldType.STRING)
                                         .description("카카오페이 결제 화면으로 이동하는 iOS 앱 스킴"),
                                 fieldWithPath("data.createdAt").type(JsonFieldType.STRING)
-                                        .description("결제 준비 요청 시간")
+                                        .description("결제 준비 요청 시간 (주문생성시간X)")
                         )
                         ));
     }
@@ -390,7 +390,7 @@ public class OrderControllerRestDocsTest {
                 .andDo(document("order-detail-list",
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("orderId").description("주문 번호")
+                                parameterWithName("orderId").description("주문 아이디")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

@@ -18,7 +18,7 @@ import com.objects.marketbridge.payment.domain.Amount;
 import com.objects.marketbridge.payment.domain.CardInfo;
 import com.objects.marketbridge.payment.domain.Payment;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,27 +64,27 @@ class GetOrderServiceTest {
         member.addAddress(address);
         memberRepository.save(member);
 
-        Product product1 = Product.create(null, true, "상품1", 1000L, false, 100L, "썸네일1", 0L, "1번");
-        Product product2 = Product.create(null, true, "상품2", 2000L, false, 100L, "썸네일2", 0L, "2번");
-        Product product3 = Product.create(null, true, "상품3", 3000L, false, 100L, "썸네일3", 0L, "3번");
-        Product product4 = Product.create(null, true, "상품4", 4000L, false, 100L, "썸네일4", 0L, "4번");
+        Product product1 = Product.create(null, "상품1", 1000L, false, 100L, "썸네일1", 0L, "1번");
+        Product product2 = Product.create(null,  "상품2", 2000L, false, 100L, "썸네일2", 0L, "2번");
+        Product product3 = Product.create(null,  "상품3", 3000L, false, 100L, "썸네일3", 0L, "3번");
+        Product product4 = Product.create(null,  "상품4", 4000L, false, 100L, "썸네일4", 0L, "4번");
         productRepository.saveAll(List.of(product1, product2, product3, product4));
 
-        OrderDetail orderDetail1 = OrderDetail.create("tid1", null, product1, "orderNo1", null, 1000L, 1L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail2 = OrderDetail.create("tid1", null, product2, "orderNo1", null, 1000L, 1L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail3 = OrderDetail.create("tid1", null, product3, "orderNo1", null, 1000L, 1L, null, PAYMENT_COMPLETED.getCode());
+        OrderDetail orderDetail1 = OrderDetail.create("tid1", null, product1, "orderNo1", null, 1000L, 1L, null, PAYMENT_COMPLETED.getCode() ,null);
+        OrderDetail orderDetail2 = OrderDetail.create("tid1", null, product2, "orderNo1", null, 1000L, 1L, null, PAYMENT_COMPLETED.getCode() ,null);
+        OrderDetail orderDetail3 = OrderDetail.create("tid1", null, product3, "orderNo1", null, 1000L, 1L, null, PAYMENT_COMPLETED.getCode() ,null);
 
-        OrderDetail orderDetail4= OrderDetail.create("tid2", null, product1, "orderNo2", null, 1000L, 2L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail5 = OrderDetail.create("tid2", null, product2, "orderNo2", null, 1000L, 2L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail6 = OrderDetail.create("tid2", null, product4, "orderNo2", null, 1000L, 2L, null, PAYMENT_COMPLETED.getCode());
+        OrderDetail orderDetail4= OrderDetail.create("tid2", null, product1, "orderNo2", null, 1000L, 2L, null, PAYMENT_COMPLETED.getCode() ,null);
+        OrderDetail orderDetail5 = OrderDetail.create("tid2", null, product2, "orderNo2", null, 1000L, 2L, null, PAYMENT_COMPLETED.getCode() ,null);
+        OrderDetail orderDetail6 = OrderDetail.create("tid2", null, product4, "orderNo2", null, 1000L, 2L, null, PAYMENT_COMPLETED.getCode() ,null);
 
-        OrderDetail orderDetail7 = OrderDetail.create("tid3", null, product1, "orderNo3", null, 1000L, 3L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail8 = OrderDetail.create("tid3", null, product3, "orderNo3", null, 1000L, 3L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail9 = OrderDetail.create("tid3", null, product4, "orderNo3", null, 1000L, 3L, null, PAYMENT_COMPLETED.getCode());
+        OrderDetail orderDetail7 = OrderDetail.create("tid3", null, product1, "orderNo3", null, 1000L, 3L, null, PAYMENT_COMPLETED.getCode() ,null);
+        OrderDetail orderDetail8 = OrderDetail.create("tid3", null, product3, "orderNo3", null, 1000L, 3L, null, PAYMENT_COMPLETED.getCode() ,null);
+        OrderDetail orderDetail9 = OrderDetail.create("tid3", null, product4, "orderNo3", null, 1000L, 3L, null, PAYMENT_COMPLETED.getCode() ,null);
 
-        OrderDetail orderDetail10 = OrderDetail.create("tid4", null, product2, "orderNo4", null, 1000L, 4L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail11 = OrderDetail.create("tid4", null, product3, "orderNo4", null, 1000L, 4L, null, PAYMENT_COMPLETED.getCode());
-        OrderDetail orderDetail12 = OrderDetail.create("tid4", null, product4, "orderNo4", null, 1000L, 4L, null, PAYMENT_COMPLETED.getCode());
+        OrderDetail orderDetail10 = OrderDetail.create("tid4", null, product2, "orderNo4", null, 1000L, 4L, null, PAYMENT_COMPLETED.getCode() ,null);
+        OrderDetail orderDetail11 = OrderDetail.create("tid4", null, product3, "orderNo4", null, 1000L, 4L, null, PAYMENT_COMPLETED.getCode() ,null);
+        OrderDetail orderDetail12 = OrderDetail.create("tid4", null, product4, "orderNo4", null, 1000L, 4L, null, PAYMENT_COMPLETED.getCode() ,null);
 
         Payment payment1 = createPayment("orderNo1", "카드", "tid1", createCardInfo(CardCoType.KAKAOBANK.toString(), null, "0"), createAmount(3000L, 0L, 0L), LocalDateTime.of(2024,10,11,12,30,30));
         Payment payment2 = createPayment("orderNo2", "카드", "tid2", createCardInfo(CardCoType.KB.toString(), null, "0"), createAmount(3000L, 0L, 0L), LocalDateTime.of(2024,10,11,12,30,30));

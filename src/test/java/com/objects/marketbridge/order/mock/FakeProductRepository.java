@@ -1,7 +1,9 @@
 package com.objects.marketbridge.order.mock;
 
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -59,6 +61,11 @@ public class FakeProductRepository implements ProductRepository {
     @Override
     public void delete(Product product) {
 
+    }
+
+    @Override
+    public Page<Product> findAllByCategoryId(Pageable pageable, Long categoryId) {
+        return null;
     }
 
     @Override

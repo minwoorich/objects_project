@@ -3,7 +3,7 @@ package com.objects.marketbridge.product.service;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.category.domain.Category;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import com.objects.marketbridge.product.dto.UpdateProductDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +40,6 @@ public class UpdateProductServiceTest {
         categoryRepository.save(category);
 
         Product product = Product.builder()
-                .category(category)
                 .discountRate(30L)
                 .isOwn(false)
                 .isSubs(false)

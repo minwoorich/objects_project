@@ -12,6 +12,6 @@ public interface CartJpaRepository extends JpaRepository<Cart, Long> {
     @Query("select c from Cart c where c.product.id = :productId")
     Optional<Cart> findByProductId(@Param("productId") Long productId);
 
-    @Override
-    void deleteAllInBatch();
+    @Query("SELECT COUNT(c) FROM Cart c WHERE c.member.id = :memberId")
+    Long countByMemberId(@Param("memberId") Long memberId);
 }

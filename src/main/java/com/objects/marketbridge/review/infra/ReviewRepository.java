@@ -14,9 +14,11 @@ public interface ReviewRepository {
 
     void delete(Review review);
 
-    Page<Review> findAllByProductIdOrderByLikesDesc(Long productId, Pageable pageable);
+//    //LIKE관련//
+//    Page<Review> findAllByProductIdOrderByLikesDesc(Long productId, Pageable pageable);
 
-    Page<Review> findAllByMemberIdOrderByLikesDesc(Long memberId, Pageable pageable);
+//    //LIKE관련//
+//    Page<Review> findAllByMemberIdOrderByLikesDesc(Long memberId, Pageable pageable);
 
     Page<Review> findAllByProductId(Long productId, Pageable pageable);
 
