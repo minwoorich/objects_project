@@ -131,7 +131,6 @@ class CartControllerTest {
                 get("/carts")
                         .param("page", "0")
                         .param("size", "1")
-                        .param("sort", "createdAt,DESC")
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .accept(MediaType.APPLICATION_JSON);
 
@@ -143,8 +142,7 @@ class CartControllerTest {
                         preprocessResponse(prettyPrint()),
                         queryParameters(
                                 parameterWithName("page").description("페이지 번호"),
-                                parameterWithName("size").description("페이지 사이즈"),
-                                parameterWithName("sort").description("정렬기준, 정렬순서")
+                                parameterWithName("size").description("페이지 사이즈")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -181,7 +179,7 @@ class CartControllerTest {
                                 fieldWithPath("data.content[].deliveryFee").type(JsonFieldType.NUMBER)
                                         .description("배송비"),
                                 fieldWithPath("data.content[].deliveredDate").type(JsonFieldType.STRING)
-                                        .description("예상 도착 일자(yyyy.MM.dd)"),
+                                        .description("예상 도착 일자(yyyy-MM-dd)"),
                                 fieldWithPath("data.content[].optionNames[]").type(JsonFieldType.ARRAY)
                                         .description("선택한 옵션 리스트"),
 

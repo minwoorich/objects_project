@@ -16,7 +16,7 @@ public class GetOrderHttp {
     public static class Response {
 
         private String orderNo;
-        private String createdAt;// yyyy.MM.dd HH:mm:ss
+        private String createdAt;// yyyy-MM-dd HH:mm:ss
         private List<OrderDetailInfo> orderDetailInfos;
 
         @Builder

@@ -1,4 +1,4 @@
-==== *장바구니 담기*
+=== *장바구니 담기*
 
 .*반환*
 image:../image/cart/resp_cart_add.png[]
