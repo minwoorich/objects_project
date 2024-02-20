@@ -7,6 +7,7 @@
 
 .*HTTP Request*
 include::{snippets}/get-member-account-info/http-request.adoc[]
+include::{snippets}/get-member-account-info/query-parameters.adoc[]
 
 .*HTTP Response*
 include::{snippets}/get-member-account-info/http-response.adoc[]

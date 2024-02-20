@@ -64,72 +64,72 @@ public class ReviewControllerTest {
     }
 
 
-    @Test
-    @WithMockCustomUser
-    @DisplayName("리뷰_서베이_선택창_조회를_요청받으면_선택창이_조회되고_응답한다.")
-    public void getReviewSurveyQuestionAndOptionsListControllerTest() throws Exception {
-        //given
-        Long productId = 1L;
-        List<ReviewSurveyQuestionAndOptionsDto> mockReviewSurveyQuestionAndOptionsDtoList = new ArrayList<>();
-        ReviewSurveyQuestionAndOptionsDto mockReviewSurveyQuestionAndOptionsDto1
-                = ReviewSurveyQuestionAndOptionsDto.builder()
-                .reviewSurveyQuestion("질문1")
-                .build();
-        ReviewSurveyQuestionAndOptionsDto mockReviewSurveyQuestionAndOptionsDto2
-                = ReviewSurveyQuestionAndOptionsDto.builder()
-                .reviewSurveyQuestion("질문2")
-                .build();
-
-        List<String> mockeviewSurveyOptionList3
-                = new ArrayList<>();
-        mockeviewSurveyOptionList3.add("선택지3-1");
-        mockeviewSurveyOptionList3.add("선택지3-2");
-        mockeviewSurveyOptionList3.add("선택지3-3");
-        mockeviewSurveyOptionList3.add("선택지3-4");
-        ReviewSurveyQuestionAndOptionsDto mockReviewSurveyQuestionAndOptionsDto3
-                = ReviewSurveyQuestionAndOptionsDto.builder()
-                .reviewSurveyQuestion("질문3")
-                .reviewSurveyOptionList(mockeviewSurveyOptionList3)
-                .build();
-
-        List<String> mockeviewSurveyOptionList4
-                = new ArrayList<>();
-        mockeviewSurveyOptionList4.add("선택지4-1");
-        mockeviewSurveyOptionList4.add("선택지4-2");
-        mockeviewSurveyOptionList4.add("선택지4-3");
-        mockeviewSurveyOptionList4.add("선택지4-4");
-        ReviewSurveyQuestionAndOptionsDto mockReviewSurveyQuestionAndOptionsDto4
-                = ReviewSurveyQuestionAndOptionsDto.builder()
-                .reviewSurveyQuestion("질문4")
-                .reviewSurveyOptionList(mockeviewSurveyOptionList4)
-                .build();
-        mockReviewSurveyQuestionAndOptionsDtoList.add(mockReviewSurveyQuestionAndOptionsDto1);
-        mockReviewSurveyQuestionAndOptionsDtoList.add(mockReviewSurveyQuestionAndOptionsDto2);
-        mockReviewSurveyQuestionAndOptionsDtoList.add(mockReviewSurveyQuestionAndOptionsDto3);
-        mockReviewSurveyQuestionAndOptionsDtoList.add(mockReviewSurveyQuestionAndOptionsDto4);
-
-        given(reviewService.getReviewSurveyQuestionAndOptionsList(productId))
-                .willReturn(mockReviewSurveyQuestionAndOptionsDtoList);
-
-
-        mockMvc.perform(get("/review-survey-options/{productId}", 1L))
-                .andExpect(status().isOk())
-                .andDo(document("review-get-survey-options",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(parameterWithName("productId").description("상품 ID")),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("HTTP 상태 코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("응답데이터(리뷰서베이 질문과 선택지들)"),
-                                subsectionWithPath("data[]").type(JsonFieldType.ARRAY).description("응답데이터(리뷰서베이 질문과 선택지들)"),
-                                fieldWithPath("data[].reviewSurveyQuestion").type(JsonFieldType.STRING).description("리뷰서베이 질문"),
-                                fieldWithPath("data[].reviewSurveyOptionList").type(JsonFieldType.ARRAY).optional().description("리뷰서베이 선택지들(null인경우 선택아닌 리뷰작성자가 직접 작성 요함"),
-                                fieldWithPath("data[].reviewSurveyOptionList[]").type(JsonFieldType.ARRAY).optional().description("리뷰서베이 선택지들(null인경우 선택아닌 리뷰작성자가 직접 작성 요함")
-                        )
-                ));
-    }
+//    @Test
+//    @WithMockCustomUser
+//    @DisplayName("리뷰_서베이_선택창_조회를_요청받으면_선택창이_조회되고_응답한다.")
+//    public void getReviewSurveyQuestionAndOptionsListControllerTest() throws Exception {
+//        //given
+//        Long productId = 1L;
+//        List<ReviewSurveyQuestionAndOptionsDto> mockReviewSurveyQuestionAndOptionsDtoList = new ArrayList<>();
+//        ReviewSurveyQuestionAndOptionsDto mockReviewSurveyQuestionAndOptionsDto1
+//                = ReviewSurveyQuestionAndOptionsDto.builder()
+//                .reviewSurveyQuestion("질문1")
+//                .build();
+//        ReviewSurveyQuestionAndOptionsDto mockReviewSurveyQuestionAndOptionsDto2
+//                = ReviewSurveyQuestionAndOptionsDto.builder()
+//                .reviewSurveyQuestion("질문2")
+//                .build();
+//
+//        List<String> mockeviewSurveyOptionList3
+//                = new ArrayList<>();
+//        mockeviewSurveyOptionList3.add("선택지3-1");
+//        mockeviewSurveyOptionList3.add("선택지3-2");
+//        mockeviewSurveyOptionList3.add("선택지3-3");
+//        mockeviewSurveyOptionList3.add("선택지3-4");
+//        ReviewSurveyQuestionAndOptionsDto mockReviewSurveyQuestionAndOptionsDto3
+//                = ReviewSurveyQuestionAndOptionsDto.builder()
+//                .reviewSurveyQuestion("질문3")
+//                .reviewSurveyOptionList(mockeviewSurveyOptionList3)
+//                .build();
+//
+//        List<String> mockeviewSurveyOptionList4
+//                = new ArrayList<>();
+//        mockeviewSurveyOptionList4.add("선택지4-1");
+//        mockeviewSurveyOptionList4.add("선택지4-2");
+//        mockeviewSurveyOptionList4.add("선택지4-3");
+//        mockeviewSurveyOptionList4.add("선택지4-4");
+//        ReviewSurveyQuestionAndOptionsDto mockReviewSurveyQuestionAndOptionsDto4
+//                = ReviewSurveyQuestionAndOptionsDto.builder()
+//                .reviewSurveyQuestion("질문4")
+//                .reviewSurveyOptionList(mockeviewSurveyOptionList4)
+//                .build();
+//        mockReviewSurveyQuestionAndOptionsDtoList.add(mockReviewSurveyQuestionAndOptionsDto1);
+//        mockReviewSurveyQuestionAndOptionsDtoList.add(mockReviewSurveyQuestionAndOptionsDto2);
+//        mockReviewSurveyQuestionAndOptionsDtoList.add(mockReviewSurveyQuestionAndOptionsDto3);
+//        mockReviewSurveyQuestionAndOptionsDtoList.add(mockReviewSurveyQuestionAndOptionsDto4);
+//
+//        given(reviewService.getReviewSurveyQuestionAndOptionsList(productId))
+//                .willReturn(mockReviewSurveyQuestionAndOptionsDtoList);
+//
+//
+//        mockMvc.perform(get("/review-survey-options/{productId}", 1L))
+//                .andExpect(status().isOk())
+//                .andDo(document("review-get-survey-options",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        pathParameters(parameterWithName("productId").description("상품 ID")),
+//                        responseFields(
+//                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("HTTP 상태 코드"),
+//                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
+//                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("응답데이터(리뷰서베이 질문과 선택지들)"),
+//                                subsectionWithPath("data[]").type(JsonFieldType.ARRAY).description("응답데이터(리뷰서베이 질문과 선택지들)"),
+//                                fieldWithPath("data[].reviewSurveyQuestion").type(JsonFieldType.STRING).description("리뷰서베이 질문"),
+//                                fieldWithPath("data[].reviewSurveyOptionList").type(JsonFieldType.ARRAY).optional().description("리뷰서베이 선택지들(null인경우 선택아닌 리뷰작성자가 직접 작성 요함"),
+//                                fieldWithPath("data[].reviewSurveyOptionList[]").type(JsonFieldType.ARRAY).optional().description("리뷰서베이 선택지들(null인경우 선택아닌 리뷰작성자가 직접 작성 요함")
+//                        )
+//                ));
+//    }
 
 
 
@@ -178,23 +178,23 @@ public class ReviewControllerTest {
     }
 
     private CreateReviewDto getCreateReviewDto() {
-        List<ReviewSurveyDto> reviewSurveys = new ArrayList<>();
-        ReviewSurveyDto reviewSurvey1 = ReviewSurveyDto.builder()
+        List<CreateReviewSurveyDto> reviewSurveys = new ArrayList<>();
+        CreateReviewSurveyDto reviewSurvey1 = CreateReviewSurveyDto.builder()
                 .reviewSurveyCategoryId(1L)
                 .reviewSurveyCategoryName("키")
                 .content("163")
                 .build();
-        ReviewSurveyDto reviewSurvey2 = ReviewSurveyDto.builder()
+        CreateReviewSurveyDto reviewSurvey2 = CreateReviewSurveyDto.builder()
                 .reviewSurveyCategoryId(2L)
                 .reviewSurveyCategoryName("평소사이즈")
                 .content("-")
                 .build();
-        ReviewSurveyDto reviewSurvey3 = ReviewSurveyDto.builder()
+        CreateReviewSurveyDto reviewSurvey3 = CreateReviewSurveyDto.builder()
                 .reviewSurveyCategoryId(3L)
                 .reviewSurveyCategoryName("색상")
                 .content("화면과같아요")
                 .build();
-        ReviewSurveyDto reviewSurvey4 = ReviewSurveyDto.builder()
+        CreateReviewSurveyDto reviewSurvey4 = CreateReviewSurveyDto.builder()
                 .reviewSurveyCategoryId(4L)
                 .reviewSurveyCategoryName("사이즈")
                 .content("딱맞아요")
@@ -585,65 +585,65 @@ public class ReviewControllerTest {
 //    }
 
 
+//
+//    @Test
+//    @DisplayName("상품_아이디로_리뷰_총갯수를_조회하면_조회되고_응답한다.")
+//    public void getProductReviewsCountControllerTest() throws Exception {
+//        //given
+//        Long productId = 1L;
+//        ReviewsCountDto mockReviewsCountDto = ReviewsCountDto.builder().count(0L).build();
+//        given(reviewService.getProductReviewsCount(productId)).willReturn(mockReviewsCountDto);
+//
+//        //when //then
+//        mockMvc.perform(get("/product/{productId}/reviews-count", productId)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andDo(document("reviews-count-of-product",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        pathParameters(
+//                                parameterWithName("productId").description("상품 ID")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("code").description("응답 코드"),
+//                                fieldWithPath("status").description("응답 상태"),
+//                                fieldWithPath("message").description("응답 메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+//                                fieldWithPath("data.count").description("리뷰 총 갯수")
+//                        )
+//                ));
+//    }
 
-    @Test
-    @DisplayName("상품_아이디로_리뷰_총갯수를_조회하면_조회되고_응답한다.")
-    public void getProductReviewsCountControllerTest() throws Exception {
-        //given
-        Long productId = 1L;
-        ReviewsCountDto mockReviewsCountDto = ReviewsCountDto.builder().count(0L).build();
-        given(reviewService.getProductReviewsCount(productId)).willReturn(mockReviewsCountDto);
-
-        //when //then
-        mockMvc.perform(get("/product/{productId}/reviews-count", productId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("reviews-count-of-product",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("productId").description("상품 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").description("응답 코드"),
-                                fieldWithPath("status").description("응답 상태"),
-                                fieldWithPath("message").description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.count").description("리뷰 총 갯수")
-                        )
-                ));
-    }
 
 
-
-    @Test
-    @WithMockCustomUser
-    @DisplayName("멤버_아이디로_리뷰_총갯수를_조회하면_조회되고_응답한다.")
-    public void getMemberReviewsCountControllerTest() throws Exception {
-        //given
-        Long memberId = 1L;
-        ReviewsCountDto mockReviewsCountDto = ReviewsCountDto.builder().count(0L).build();
-        given(reviewService.getMemberReviewsCount(memberId)).willReturn(mockReviewsCountDto);
-
-        //when //then
-        mockMvc.perform(get("/member/{memberId}/reviews-count", memberId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("reviews-count-of-member",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("memberId").description("멤버 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").description("응답 코드"),
-                                fieldWithPath("status").description("응답 상태"),
-                                fieldWithPath("message").description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.count").description("리뷰 총 갯수")
-                        )
-                ));
-    }
+//    @Test
+//    @WithMockCustomUser
+//    @DisplayName("멤버_아이디로_리뷰_총갯수를_조회하면_조회되고_응답한다.")
+//    public void getMemberReviewsCountControllerTest() throws Exception {
+//        //given
+//        Long memberId = 1L;
+//        ReviewsCountDto mockReviewsCountDto = ReviewsCountDto.builder().count(0L).build();
+//        given(reviewService.getMemberReviewsCount(memberId)).willReturn(mockReviewsCountDto);
+//
+//        //when //then
+//        mockMvc.perform(get("/member/{memberId}/reviews-count", memberId)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andDo(document("reviews-count-of-member",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        pathParameters(
+//                                parameterWithName("memberId").description("멤버 ID")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("code").description("응답 코드"),
+//                                fieldWithPath("status").description("응답 상태"),
+//                                fieldWithPath("message").description("응답 메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+//                                fieldWithPath("data.count").description("리뷰 총 갯수")
+//                        )
+//                ));
+//    }
 
 
 

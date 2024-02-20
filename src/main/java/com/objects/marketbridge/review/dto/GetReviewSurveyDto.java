@@ -5,14 +5,15 @@ import lombok.*;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReviewSurveyDto {
-
+public class GetReviewSurveyDto {
+    private Long reviewSurveyId;
     private Long reviewSurveyCategoryId;
     private String reviewSurveyCategoryName;
     private String content;
 
     @Builder
-    public ReviewSurveyDto(Long reviewSurveyCategoryId, String reviewSurveyCategoryName, String content) {
+    public GetReviewSurveyDto(Long reviewSurveyId, Long reviewSurveyCategoryId, String reviewSurveyCategoryName, String content) {
+        this.reviewSurveyId = reviewSurveyId;
         this.reviewSurveyCategoryId = reviewSurveyCategoryId;
         this.reviewSurveyCategoryName = reviewSurveyCategoryName;
         this.content = content;

@@ -1,19 +1,18 @@
 package com.objects.marketbridge.review.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreateReviewDto {
 
     private Long productId;
     private Integer rating; //별점, 1~5
-    private List<ReviewSurveyDto> reviewSurveys = new ArrayList<>();
+    private List<CreateReviewSurveyDto> reviewSurveys = new ArrayList<>();
     private String content;
     private List<ReviewImageDto> reviewImgUrls = new ArrayList<>();
     private String summary;
@@ -21,7 +20,7 @@ public class CreateReviewDto {
     @Builder
     public CreateReviewDto(Long productId,
                            Integer rating,
-                           List<ReviewSurveyDto> reviewSurveys,
+                           List<CreateReviewSurveyDto> reviewSurveys,
                            String content,
                            List<ReviewImageDto> reviewImgUrls,
                            String summary) {
