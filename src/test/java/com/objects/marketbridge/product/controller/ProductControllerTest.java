@@ -2,15 +2,13 @@ package com.objects.marketbridge.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.category.domain.Category;
-import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
-import com.objects.marketbridge.order.mock.FakeProductRepository;
+import com.objects.marketbridge.product.mock.FakeProductRepository;
 import com.objects.marketbridge.product.controller.request.CreateProductRequestDto;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.dto.ProductSimpleDto;
 import com.objects.marketbridge.product.mock.FakeCategoryRepository;
 import com.objects.marketbridge.product.service.ProductService;
-import com.objects.marketbridge.product.service.port.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
 
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,47 +36,68 @@ class ProductControllerTest {
     @Autowired private MockMvc mockMvc;
     @MockBean private ProductService productService;
     @Autowired private ObjectMapper objectMapper;
+    @MockBean(name = "productRepository")
+    FakeProductRepository productRepository;
+    @MockBean(name = "categoryRepository")
+    FakeCategoryRepository categoryRepository;
 
-//    @Test
-//    @DisplayName("카테고리별 상품을 조회한다.")
-//    void getProductByCategory() throws Exception {
-//        FakeCategoryRepository categoryRepository = new FakeCategoryRepository();
-//        FakeProductRepository productRepository = new FakeProductRepository();
-//
-//        //given
-//        PageRequest pageRequest = PageRequest.of(0,5);
-//        Long categoryId = 1L;
-//
-//        categoryRepository.save(Category.builder()
-//                        .parentId(2L)
-//                        .name("TEST CATE")
-//                        .level(1L)
-//                        .build());
-//
-//
-//        Product product1 = Product.create(true,"TEST PRODUCT1",10000L,false,1000L,"MAIN_IMG.com",12L,"1234342-3423434");
-//        product1.setCategory(categoryRepository.findById(1L));
-//        Product product2 = Product.create(true,"TEST PRODUCT2",10030L,false,1001L,"MAIN_IMG111.com",14L,"12343213-3423434");
-//        product2.setCategory(categoryRepository.findById(1L));
-//
-//        productRepository.saveAll(List.of(product1,product2));
-//        System.out.println("categoryRepository.findById(1L) = " + categoryRepository.findById(1L));
-//
-//        List<ProductSimpleDto> contents = List.of(ProductSimpleDto.of(product1),ProductSimpleDto.of(product2));
-//
-//        given(productService.getProductByCategory(any(PageRequest.class),String.valueOf(anyLong())))
-//                .willReturn(new PageImpl<>(contents,pageRequest,2));
-//
-//        //when //then
-//        mockMvc.perform(get("/product")
-//                .param("size","60")
-//                .param("page","1")
-//                .param("categoryCode",String.valueOf(categoryId)
-//                )
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    @DisplayName("카테고리별 상품을 조회한다.")
+    void getProductByCategory() throws Exception {
+
+        //given
+        PageRequest pageRequest = PageRequest.of(0,5);
+
+        categoryRepository.save(Category.builder()
+                        .parentId(2L)
+                        .name("TEST CATE")
+                        .level(1L)
+                        .build());
+
+        Product product1 = Product.builder()
+                        .id(1L)
+                        .productNo("12343213-3423333")
+                        .isOwn(false)
+                        .price(10000L)
+                        .name("TEST PRODUCT1")
+                        .isSubs(true)
+                        .stock(1000L)
+                        .thumbImg("MAIN_IMG1.com")
+                        .discountRate(12L)
+                        .build();
+        product1.setCategory(categoryRepository.findById(1L));
+        productRepository.save(product1);
+
+        Product product2 = Product.builder()
+                .id(2L)
+                .isOwn(true)
+                .name("TEST PRODUCT2")
+                .stock(10030L)
+                .isSubs(false)
+                .price(1001L)
+                .thumbImg("MAIN_IMG111.com")
+                .discountRate(14L)
+                .productNo("12343213-3423434")
+                .build();
+
+        product2.setCategory(categoryRepository.findById(1L));
+        productRepository.save(product2);
+
+        List<ProductSimpleDto> contents = List.of(ProductSimpleDto.of(product1),ProductSimpleDto.of(product2));
+
+        given(productService.getProductByCategory(any(PageRequest.class),anyString()))
+                .willReturn(new PageImpl<>(contents,pageRequest,2));
+
+        //when //then
+        mockMvc.perform(get("/product")
+                .param("size","60")
+                .param("page","1")
+                .param("categoryCode","1"
+                )
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 
     @DisplayName("신규 상품을 등록한다.")
     @Test

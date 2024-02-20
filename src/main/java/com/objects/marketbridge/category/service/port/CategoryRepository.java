@@ -20,5 +20,4 @@ public interface CategoryRepository {
     List<Category> findAllByLevelAndParentId(Long level, Long parentId);
 
     List<Category> findAllByParentId(Long parentId);
-
 }

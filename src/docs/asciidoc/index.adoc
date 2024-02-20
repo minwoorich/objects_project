@@ -120,6 +120,12 @@ include::api/product/productcreate.adoc[]
 {empty}
 {empty}
 
+=== *상품 조회*
+include::api/product/productsearchbycategory.adoc[]
+{empty}
+{empty}
+
+
 === *리뷰*
 include::api/review/review-create.adoc[]
 {empty}
