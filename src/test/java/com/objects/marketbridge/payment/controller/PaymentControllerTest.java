@@ -251,7 +251,7 @@ class PaymentControllerTest {
         return CancelledPaymentHttp.Response.create(
                 CARD.toString(),
                 "가방 외 1건",
-                LocalDateTime.of(2024,1,1,0,0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                null,
                 QUIT_PAYMENT.toString(),
                 10000L,
                 500L,
