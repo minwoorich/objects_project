@@ -69,4 +69,56 @@ class MemberServiceTestWithSpringBoot {
         Assertions.assertThat(findWishlist.getMember().getEmail()).isEqualTo("WishTest@naver.com");
 
     }
+
+    @Test
+    @DisplayName("wishlist 삭제")
+    void deleteWishlist() throws Exception{
+        //given
+        Product product1= Product.builder()
+                .stock(1L)
+                .name("product1")
+                .thumbImg("image/static")
+                .price(1000L)
+                .isOwn(false)
+                .build();
+
+        Product product2= Product.builder()
+                .stock(2L)
+                .name("product2")
+                .thumbImg("image2/static")
+                .price(2000L)
+                .isOwn(false)
+                .build();
+
+        productRepository.save(product1);
+        productRepository.save(product2);
+
+        Member member = Member.builder()
+                .email("WishTest@naver.com").build();
+
+        memberRepository.save(member);
+
+        WishlistRequest request1 = WishlistRequest.builder()
+                .productId(product1.getId())
+                .build();
+
+        WishlistRequest request2 = WishlistRequest.builder()
+                .productId(product2.getId())
+                .build();
+
+        memberService.addWish(member.getId(),request1);
+        memberService.addWish(member.getId(),request2);
+        //when
+
+        memberService.deleteWishlist(member.getId(),request1);
+
+        Wishlist findWishlist = wishRepository.findByMemberId(member.getId()).get(0);
+
+        //then
+        Assertions.assertThat(findWishlist.getProduct().getId()).isEqualTo(request2.getProductId());
+        Assertions.assertThat(findWishlist.getProduct().getName()).isEqualTo("product2");
+        Assertions.assertThat(findWishlist.getMember().getEmail()).isEqualTo("WishTest@naver.com");
+
+
+    }
 }

@@ -11,4 +11,6 @@ public interface WishiListJpaRepository extends JpaRepository<Wishlist,Long> {
 
     @Query("SELECT w FROM Wishlist w WHERE w.member.id = :memberId")
     List<Wishlist> findByMemberId(@Param("memberId") Long memberId);
+
+    void deleteByMemberIdAndProductId(Long memberId, Long productId);
 }
