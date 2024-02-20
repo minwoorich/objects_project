@@ -16,5 +16,6 @@ public interface CartQueryRepository {
 
     List<Cart> findAll();
 
+    Long countByMemberId(Long memberId);
 
 }

@@ -17,7 +17,6 @@ public class ReviewSurveyCategory extends BaseEntity {
     @Column(name = "review_survey_category_id")
     private Long id;
 
-    // TODO
     private Long productId;
 
     private String name;

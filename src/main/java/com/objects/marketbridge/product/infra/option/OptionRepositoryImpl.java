@@ -32,6 +32,11 @@ public class OptionRepositoryImpl implements OptionRepository {
     }
 
     @Override
+    public Option findByNameAndOptionCategoryId(String name, Long optionCategoyId) {
+        return optionJpaRepository.findByNameAndOptionCategoryId(name,optionCategoyId).orElseGet(()-> Option.builder().name("EMPTY").build());
+    }
+
+    @Override
     public void deleteAllInBatch() {
         optionJpaRepository.deleteAllInBatch();
     }

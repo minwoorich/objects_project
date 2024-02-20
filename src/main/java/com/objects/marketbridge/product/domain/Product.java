@@ -66,8 +66,8 @@ public class Product extends BaseEntity {
     private String productNo;
 
     @Builder
-    private Product(Category category, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate,String productNo) {
-        this.category = category;
+    private Product(Long id, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate,String productNo) {
+        this.id = id;
         this.isOwn = isOwn; // 로켓 true , 오픈 마켓 false
         this.name = name;
         this.price = price;
@@ -78,9 +78,8 @@ public class Product extends BaseEntity {
         this.productNo = productNo;
     }
 
-    public static Product create(Category category, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate, String productNo){
+    public static Product create( Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate, String productNo){
         return Product.builder()
-                .category(category)
                 .isOwn(isOwn)
                 .name(name)
                 .price(price)
@@ -90,6 +89,10 @@ public class Product extends BaseEntity {
                 .discountRate(discountRate)
                 .productNo(productNo)
                 .build();
+    }
+
+    public void setCategory(Category category){
+        this.category = category;
     }
 
     public void addProductImages(ProductImage productImage){

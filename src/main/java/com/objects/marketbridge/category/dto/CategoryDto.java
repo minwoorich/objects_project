@@ -1,5 +1,6 @@
 package com.objects.marketbridge.category.dto;
 
+import com.objects.marketbridge.category.domain.Category;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,15 @@ public class CategoryDto {
         this.parentId = parentId;
         this.level = level;
         this.name = name;
-        this.childCategories = childCategories;
+    }
+
+    public static CategoryDto of(Category category){
+        return CategoryDto.builder()
+                .categoryId(category.getId())
+                .parentId(category.getParentId())
+                .level(category.getLevel())
+                .name(category.getName())
+                .build();
     }
 
     public void addChildCategories(CategoryDto categoryDto){

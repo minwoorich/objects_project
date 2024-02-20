@@ -1,18 +1,18 @@
 package com.objects.marketbridge.product.service;
 
 import com.objects.marketbridge.category.domain.Category;
+import com.objects.marketbridge.category.service.CategoryService;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.image.domain.Image;
 import com.objects.marketbridge.image.infra.ImageRepository;
 import com.objects.marketbridge.product.controller.request.CreateProductRequestDto;
 import com.objects.marketbridge.product.domain.*;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
-import com.objects.marketbridge.product.dto.CreateProductDto;
-import com.objects.marketbridge.product.dto.OptionDto;
-import com.objects.marketbridge.product.dto.ProdTagDto;
-import com.objects.marketbridge.product.dto.ProductImageDto;
+import com.objects.marketbridge.product.dto.*;
 import com.objects.marketbridge.product.service.port.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +22,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CreateProductService {
-
+public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
@@ -34,6 +33,20 @@ public class CreateProductService {
     private final TagCategoryRepository tagCategoryRepository;
     private final TagRepository tagRepository;
     private final ProdTagRepository prodTagRepository;
+    private final CategoryService categoryService;
+
+    // category 기준 상품 조회
+    @Transactional
+    public Page<ProductSimpleDto> getProductByCategory(Pageable pageable, String categoryId){
+        // 주어진 category 정보에 해당되는 상품 조회
+        Page<Product> productList = productRepository.findAllByCategoryId(pageable,categoryService.getCategoryById(Long.valueOf(categoryId)).getCategoryId());
+        // product -> productSimpleDto
+        List<ProductSimpleDto> productSimpleDtos = new ArrayList<>();
+        for (Product product: productList) {
+            productSimpleDtos.add(ProductSimpleDto.of(product));
+        }
+        return new PageImpl<>(productSimpleDtos, pageable, productList.getTotalElements());
+    }
 
     // 상품 생성
     @Transactional
@@ -59,7 +72,6 @@ public class CreateProductService {
     }
 
     public Product createProduct(CreateProductDto createProductDto){
-        Category category = categoryRepository.findById(createProductDto.getCategoryId());
         Boolean isOwn = createProductDto.getIsOwn();
         String name = createProductDto.getName();
         Long price = createProductDto.getPrice();
@@ -68,8 +80,10 @@ public class CreateProductService {
         String thumbImg = createProductDto.getThumbImg();
         Long discountRate = createProductDto.getDiscountRate();
         String productNo = createProductDto.getProductNo();
+        Product product = Product.create(isOwn,name,price,isSubs,stock,thumbImg,discountRate,productNo);
+        product.setCategory(categoryRepository.findById(createProductDto.getCategoryId()));
 
-        return Product.create(category,isOwn,name,price,isSubs,stock,thumbImg,discountRate,productNo);
+        return product;
     }
 
     public List<ProductImage> createProductImages(List<ProductImageDto> productImageDtoList, Product product){
@@ -78,13 +92,15 @@ public class CreateProductService {
         for (ProductImageDto productImageDto: productImageDtoList) {
             // 이미지 저장
             Image image = Image.builder()
-//                    .type(productImageDto.getType())
                     .url(productImageDto.getImgUrl())
                     .build();
             imageRepository.save(image);
 
             //ProductImage 엔티티 생성
-            ProductImage productImage = ProductImage.create( product, imageRepository.findById(image.getId()), productImageDto.getSeqNo());
+            ProductImage productImage = ProductImage.create( product,
+                    imageRepository.findById(image.getId()),
+                    productImageDto.getSeqNo(),
+                    productImageDto.getType());
             productImages.add(productImage);
 
             // 연관관계 추가
@@ -98,7 +114,7 @@ public class CreateProductService {
         // option category 조회
         for (int i = 0; i < optionDtos.size(); i++) {
             OptionCategory optionCategory = optionCategoryRepository.findByName(optionDtos.get(i).getOptionCategory());
-            Option option = optionRepository.findByName(optionDtos.get(i).getName());
+            Option option = optionRepository.findByNameAndOptionCategoryId(optionDtos.get(i).getName(),optionCategory.getId());
             Long optionId = option.getId();
             // 옵션 카테고리 없는 경우 만들어주기
             if (optionCategory.getName().equals("EMPTY")){
@@ -155,9 +171,9 @@ public class CreateProductService {
 
     private Long createOption(OptionDto optionDto,OptionCategory optionCategory){
         Option newOption = Option.builder()
-                        .optionCategory(optionCategory)
-                        .name(optionDto.getName())
-                        .build();
+                .optionCategory(optionCategory)
+                .name(optionDto.getName())
+                .build();
         optionRepository.save(newOption);
         // 연관관계 추가
         optionCategory.addOptions(newOption);
@@ -184,6 +200,4 @@ public class CreateProductService {
 
         return newTag.getId();
     }
-
-
 }

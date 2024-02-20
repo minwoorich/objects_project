@@ -11,6 +11,7 @@ public interface OptionRepository {
 
     Option findByName(String name);
 
+    Option findByNameAndOptionCategoryId(String name, Long optionCategoryId);
     void deleteAllInBatch();
 
     void saveAll(List<Option> options);

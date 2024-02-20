@@ -29,4 +29,9 @@ public class CartCommendRepositoryImpl implements CartCommendRepository {
     public void deleteAllInBatch() {
         cartJpaRepository.deleteAllInBatch();
     }
+
+    @Override
+    public void deleteAllByIdInBatch(List<Long> ids) {
+        cartJpaRepository.deleteAllByIdInBatch(ids);
+    }
 }

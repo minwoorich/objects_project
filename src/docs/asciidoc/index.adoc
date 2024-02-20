@@ -116,6 +116,7 @@ include::api/member/kakaoPaySubsSubscribtion.adoc[]
 {empty}
 
 == *상품*
+include::api/product/productcreate.adoc[]
 {empty}
 {empty}
 {empty}
@@ -188,3 +189,18 @@ include::api/cart/cartadd.adoc[]
 include::api/cart/cartlist.adoc[]
 {empty}
 {empty}
+
+include::api/cart/cartcount.adoc[]
+{empty}
+{empty}
+
+include::api/cart/cartdelete.adoc[]
+{empty}
+{empty}
+
+include::api/cart/cartupdate.adoc[]
+{empty}
+{empty}
+
+
+

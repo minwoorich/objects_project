@@ -13,7 +13,7 @@ import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.product.infra.product.ProductJpaRepository;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -123,11 +123,13 @@ class CreateOrderServiceTest {
         Coupon coupon1 = Coupon.builder()
                 .price(2000L)
                 .product(products.get(0))
+                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
                 .name("가방쿠폰").build();
 
         Coupon coupon2 = Coupon.builder()
                 .price(2000L)
                 .product(products.get(1))
+                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
                 .name("티비쿠폰").build();
 
         return List.of(coupon1, coupon2);
@@ -137,12 +139,12 @@ class CreateOrderServiceTest {
 
         MemberCoupon memberCoupon1 = MemberCoupon.builder()
                 .member(member)
-                .usedDate(LocalDateTime.now())
+                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
                 .isUsed(false).build();
 
         MemberCoupon memberCoupon2 = MemberCoupon.builder()
                 .member(member)
-                .usedDate(LocalDateTime.now())
+                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
                 .isUsed(false).build();
 
         return List.of(memberCoupon1, memberCoupon2);

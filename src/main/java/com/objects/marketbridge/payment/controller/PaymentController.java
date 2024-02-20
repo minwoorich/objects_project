@@ -34,6 +34,7 @@ public class PaymentController {
         String requestURI = httpRequest.getRequestURI();
         String[] uri = requestURI.split("/");
         String orderNo = uri[uri.length - 1];
+
         quitPaymentService.cancel(orderNo);
 
         return ApiErrorResponse.of(INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR, null, null);

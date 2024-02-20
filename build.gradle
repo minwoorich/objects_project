@@ -72,6 +72,9 @@ dependencies {
 	//LocalDateTime 처리 라이브러리
 //	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation 'org.json:json:20231013'
+
+	//hibernate 5
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
 }
 
 ext { // 전역 변수

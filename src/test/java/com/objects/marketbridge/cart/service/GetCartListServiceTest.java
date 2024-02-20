@@ -16,7 +16,7 @@ import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.product.domain.Option;
 import com.objects.marketbridge.product.domain.ProdOption;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.infra.product.ProductRepository;
+import com.objects.marketbridge.product.service.port.ProductRepository;
 import com.objects.marketbridge.product.service.port.OptionRepository;
 import com.objects.marketbridge.product.service.port.ProdOptionRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -318,5 +318,18 @@ class GetCartListServiceTest {
                 .extracting(c -> c.getName())
                 .contains("[상품5]1000원 할인");
 
+    }
+
+    @DisplayName("회원이 장바구니를 조회할 수 있다")
+    @Test
+    void countAll(){
+        //given
+        Long memberId = memberRepository.findByEmail("test@email.com").getId();
+
+        //when
+        Long countResult = getCartListService.countAll(memberId);
+
+        //then
+        assertThat(countResult).isEqualTo(6);
     }
 }

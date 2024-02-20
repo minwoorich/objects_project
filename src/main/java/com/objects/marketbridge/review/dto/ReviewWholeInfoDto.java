@@ -1,5 +1,6 @@
 package com.objects.marketbridge.review.dto;
 
+import com.objects.marketbridge.review.domain.ReviewSurvey;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,26 +21,26 @@ public class ReviewWholeInfoDto {
     private String memberName;
     //    private String memberThumbnail; //썸네일은 없는것으로...
     private Integer rating;
-    private LocalDateTime createdAt;
-    private String sellerName; //Seller관련은 MarketBridge 단일로. 개인판매자는 일단 고려하지 않게.
-    private List<String> reviewImgUrls = new ArrayList<>();
+    private List<ReviewSurvey> reviewSurveyList = new ArrayList<>();
     private String content;
-//    private String reviewSurveyContent; //일단 생략
-    private Long likes; //count된 like수.
+    private List<String> reviewImgUrls = new ArrayList<>();
+    private String sellerName; //Seller관련은 MarketBridge 단일로. 개인판매자는 일단 고려하지 않게.
+//    private Long likes; //count된 like수. //LIKE관련//
+    private LocalDateTime createdAt;
 
     @Builder
-    public ReviewWholeInfoDto(String productName, String memberName,
-                              Integer rating, LocalDateTime createdAt, String sellerName,
-                              List<String> reviewImgUrls, String content,
-                              Long likes) {
+
+    public ReviewWholeInfoDto(String productName, String memberName, Integer rating,
+                              List<ReviewSurvey> reviewSurveyList, String content,
+                              List<String> reviewImgUrls, String sellerName, Long likes, LocalDateTime createdAt) {
         this.productName = productName;
         this.memberName = memberName;
         this.rating = rating;
-        this.createdAt = createdAt;
-        this.sellerName = sellerName;
-        this.reviewImgUrls = reviewImgUrls;
+        this.reviewSurveyList = reviewSurveyList;
         this.content = content;
-//        this.reviewSurveyContent = reviewSurveyContent;
-        this.likes = likes;
+        this.reviewImgUrls = reviewImgUrls;
+        this.sellerName = sellerName;
+//        this.likes = likes; //LIKE관련//
+        this.createdAt = createdAt;
     }
 }
