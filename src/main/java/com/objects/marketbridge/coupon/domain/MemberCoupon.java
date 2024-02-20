@@ -76,4 +76,8 @@ public class MemberCoupon extends BaseEntity {
         this.isUsed = isUsed;
         this.usedDate = dateTimeHolder.getTimeNow();
     }
+
+    public Long getMinimumPrice() {
+        return coupon.getMinimumPrice();
+    }
 }

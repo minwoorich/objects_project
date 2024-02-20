@@ -18,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -157,6 +156,8 @@ class CartControllerTest {
                                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                                         .description("응답 데이터"),
 
+                                fieldWithPath("data.content[].cartId").type(JsonFieldType.NUMBER)
+                                        .description("장바구니 아이디"),
                                 fieldWithPath("data.content[].productId").type(JsonFieldType.NUMBER)
                                         .description("상품 아이디"),
                                 fieldWithPath("data.content[].productNo").type(JsonFieldType.STRING)
@@ -220,6 +221,7 @@ class CartControllerTest {
 
     private List<GetCartDto> createDto() {
         return List.of(GetCartDto.builder()
+                .cartId(1L)
                 .productId(1L)
                 .productNo("111111111-111111111")
                 .productName("티셔츠")
