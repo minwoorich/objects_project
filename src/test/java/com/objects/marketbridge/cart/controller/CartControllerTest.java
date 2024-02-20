@@ -157,6 +157,8 @@ class CartControllerTest {
                                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                                         .description("응답 데이터"),
 
+                                fieldWithPath("data.content[].cartId").type(JsonFieldType.NUMBER)
+                                        .description("장바구니 아이디"),
                                 fieldWithPath("data.content[].productId").type(JsonFieldType.NUMBER)
                                         .description("상품 아이디"),
                                 fieldWithPath("data.content[].productNo").type(JsonFieldType.STRING)
@@ -220,6 +222,7 @@ class CartControllerTest {
 
     private List<GetCartDto> createDto() {
         return List.of(GetCartDto.builder()
+                .cartId(1L)
                 .productId(1L)
                 .productNo("111111111-111111111")
                 .productName("티셔츠")
