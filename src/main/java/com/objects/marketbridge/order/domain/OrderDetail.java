@@ -101,6 +101,7 @@ public class OrderDetail extends BaseEntity {
                 .quantity(quantity)
                 .sellerId(sellerId)
                 .statusCode(statusCode)
+                .reducedQuantity(0L)
                 .build();
     }
 
