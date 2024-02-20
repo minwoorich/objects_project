@@ -125,7 +125,8 @@ class ProductControllerRestDocsTest {
                         .param("page","1")
                         .param("categoryCode","1"
                         )
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .header("Authorization", "bearer AccessToken")
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("product-search-by-category",

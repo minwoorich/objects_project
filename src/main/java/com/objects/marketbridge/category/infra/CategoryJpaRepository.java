@@ -21,4 +21,5 @@ public interface CategoryJpaRepository extends JpaRepository<Category, Long> {
 
     @Query(value = "SELECT c FROM Category c WHERE c.parentId=:parentId ")
     Optional<List<Category>> findAllByParentId(@Param("parentId") Long parentId);
+
 }

@@ -1,7 +1,7 @@
 package com.objects.marketbridge.product.service;
 
-import com.objects.marketbridge.category.domain.Category;
 import com.objects.marketbridge.category.service.CategoryService;
+import com.objects.marketbridge.category.service.port.CategoryCustomRepository;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
 import com.objects.marketbridge.image.domain.Image;
 import com.objects.marketbridge.image.infra.ImageRepository;
@@ -34,6 +34,28 @@ public class ProductService {
     private final TagRepository tagRepository;
     private final ProdTagRepository prodTagRepository;
     private final CategoryService categoryService;
+    private final ProductCustomRepository productCustomRepository;
+
+
+    // 상품 상세 정보 조회
+    @Transactional
+    public void getProductDetail(Long id) {
+        // 상품 테이블 정보 가져오기
+        Product product = productCustomRepository.findByIdwithCategory(id);
+        // 카테고리 정보 가져오기
+        String category = categoryService.getCategoryInfo(product.getCategory().getId());
+        // DTO 생성
+        ProductDetailDto productDetailDto
+                = new ProductDetailDto().create(product.getId(),product.getPrice(),product.getDiscountRate(),product.getName(),product.getThumbImg(),product.getIsOwn(),product.getIsSubs(),category);
+        // 상품 옵션 정보 가져오기
+
+        // 상품 태그 정보 가져오기
+
+        // 옵션만 다른 상품 가져오기 (상품 번호 일치)
+        // 리뷰 정보 가져오기
+        // 찜 리스트 정보 가져오기
+    }
+
 
     // category 기준 상품 조회
     @Transactional
@@ -200,4 +222,6 @@ public class ProductService {
 
         return newTag.getId();
     }
+
+
 }
