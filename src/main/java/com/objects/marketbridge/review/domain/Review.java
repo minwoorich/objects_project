@@ -18,17 +18,20 @@ public class Review extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long id;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_id")
+//    private Member member;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "product_id")
+//    private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    private Long memberId;
+    private Long productId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @OneToMany(mappedBy = "review")
-    private List<ReviewImage> reviewImages = new ArrayList<>();
+//    @OneToMany(mappedBy = "review")
+//    private List<ReviewImage> reviewImages = new ArrayList<>();
 
     // 별점
     private Integer rating; //1-5
@@ -37,27 +40,22 @@ public class Review extends BaseEntity {
 
     private String summary;
 
-//    //LIKE관련//
-
-//    private Long likes = 0L;
-
     @Builder
-    public Review(Member member, Product product, List<ReviewImage> reviewImages,
-                  Integer rating, String content, String summary) {
-        this.member = member;
-        this.product = product;
-        this.reviewImages = reviewImages;
-        this.rating = rating;
-        this.content = content;
-        this.summary = summary;
-    }
 
-    public void update(List<ReviewImage> reviewImages, Integer rating, String content, String summary) {
-        this.reviewImages = reviewImages;
+    public Review(Long id, Long memberId, Long productId, Integer rating, String content, String summary) {
+        this.id = id;
+        this.memberId = memberId;
+        this.productId = productId;
         this.rating = rating;
         this.content = content;
         this.summary = summary;
     }
+    //    public void update(List<ReviewImage> reviewImages, Integer rating, String content, String summary) {
+//        this.reviewImages = reviewImages;
+//        this.rating = rating;
+//        this.content = content;
+//        this.summary = summary;
+//    }
 
 //    //LIKE관련//
 //    public void increaseLikes(){

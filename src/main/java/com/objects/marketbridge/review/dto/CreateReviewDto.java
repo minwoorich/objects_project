@@ -14,21 +14,21 @@ public class CreateReviewDto {
     //private Long memberId; //@AuthMemberId로 대체
     private Long productId;
     private Integer rating; //별점, 1~5
-    private List<ReviewSurveyDataDto> reviewSurveyDataDtoList = new ArrayList<>();
+    private List<ReviewSurveyDto> reviewSurveys = new ArrayList<>();
     private String content;
-    private List<String> reviewImgUrls = new ArrayList<>();
+    private List<ReviewImageDto> reviewImgUrls = new ArrayList<>();
     private String summary;
 
     @Builder
     public CreateReviewDto(Long productId,
                            Integer rating,
-                           List<ReviewSurveyDataDto> reviewSurveyDataDtoList,
+                           List<ReviewSurveyDto> reviewSurveys,
                            String content,
-                           List<String> reviewImgUrls,
+                           List<ReviewImageDto> reviewImgUrls,
                            String summary) {
         this.productId = productId;
         this.rating = rating;
-        this.reviewSurveyDataDtoList = reviewSurveyDataDtoList;
+        this.reviewSurveys = reviewSurveys;
         this.content = content;
         this.reviewImgUrls = reviewImgUrls;
         this.summary = summary;

@@ -119,6 +119,9 @@ include::api/member/kakaoPaySubsSubscribtion.adoc[]
 include::api/product/productcreate.adoc[]
 {empty}
 {empty}
+
+=== *리뷰*
+include::api/review/review-create.adoc[]
 {empty}
 {empty}
 

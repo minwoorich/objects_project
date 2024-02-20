@@ -46,12 +46,12 @@ public class ReviewController {
 
 
     //리뷰아이디로 리뷰상세 단건 조회
-    @GetMapping("/review/{reviewId}")
-    public ApiResponse<ReviewSingleReadDto> getReview
-        (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
-        ReviewSingleReadDto response = reviewService.getReview(reviewId, memberId);
-        return ApiResponse.ok(response);
-    }
+//    @GetMapping("/review/{reviewId}")
+//    public ApiResponse<ReviewSingleReadDto> getReview
+//        (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
+//        ReviewSingleReadDto response = reviewService.getReview(reviewId, memberId);
+//        return ApiResponse.ok(response);
+//    }
 
 
 //    //LIKE관련//
@@ -109,24 +109,24 @@ public class ReviewController {
 
 
     //리뷰 수정
-    @PatchMapping("/review/{reviewId}")
-    public ApiResponse<ReviewIdDto> updateReview
-        (@Valid @RequestBody ReviewModifiableValuesDto request,
-         @PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
-        ReviewIdDto response = reviewService.updateReview(request, reviewId, memberId);
-        return ApiResponse.ok(response);
-    }
-
+//    @PatchMapping("/review/{reviewId}")
+//    public ApiResponse<ReviewIdDto> updateReview
+//        (@Valid @RequestBody ReviewModifiableValuesDto request,
+//         @PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
+//        ReviewIdDto response = reviewService.updateReview(request, reviewId, memberId);
+//        return ApiResponse.ok(response);
+//    }
+//
 
 
     //리뷰 삭제
-    @DeleteMapping("/review/{reviewId}")
-    public ApiResponse<ReviewIdDto> deleteReview
-        (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
-        reviewService.deleteReview(reviewId, memberId);
-        return ApiResponse.of(HttpStatus.OK);
-    }
-
+//    @DeleteMapping("/review/{reviewId}")
+//    public ApiResponse<ReviewIdDto> deleteReview
+//        (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
+//        reviewService.deleteReview(reviewId, memberId);
+//        return ApiResponse.of(HttpStatus.OK);
+//    }
+//
 
 
 //    //LIKE관련//
