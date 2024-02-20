@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.*;
 @Getter
 @NoArgsConstructor
 public class GetCartDto {
+    private Long cartId;
     private Long productId;
     private String productNo;
     private String productName;
@@ -32,7 +33,8 @@ public class GetCartDto {
     private List<CouponDto> availableCoupons;
 
     @Builder
-    private GetCartDto(Long productId, String productNo, String productName, Long productPrice, Long quantity, Long discountRate, String thumbImageUrl, Boolean isOwn, Boolean isSubs, Long stock, Long deliveryFee, String deliveredDate, List<String> optionNames, List<CouponDto> availableCoupons) {
+    private GetCartDto(Long cartId, Long productId, String productNo, String productName, Long productPrice, Long quantity, Long discountRate, String thumbImageUrl, Boolean isOwn, Boolean isSubs, Long stock, Long deliveryFee, String deliveredDate, List<String> optionNames, List<CouponDto> availableCoupons) {
+        this.cartId = cartId;
         this.productId = productId;
         this.productNo = productNo;
         this.productName = productName;
@@ -54,6 +56,7 @@ public class GetCartDto {
         List<Coupon> coupons = cart.getProduct().getAvailableCoupons();
 
         return GetCartDto.builder()
+                .cartId(cart.getId())
                 .productId(cart.getProduct().getId())
                 .productNo(cart.getProduct().getProductNo())
                 .productName(cart.getProduct().getName())
