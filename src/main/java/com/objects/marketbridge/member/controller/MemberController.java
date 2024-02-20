@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -61,12 +62,20 @@ public class MemberController {
     }
 
     //Wishlist 시작
-    @GetMapping("/wishList-check")
+    @GetMapping("/wishlist-check")
     public ApiResponse <Boolean> checkWishlistByMemberid(
             @AuthMemberId Long memberId,
             @RequestBody WishlistRequest request){
         Boolean isWishlist = memberService.checkWishlist(memberId, request);
         return ApiResponse.ok(isWishlist);
+    }
+
+    @DeleteMapping("/wishlist")
+    public ApiResponse<String> deleteWishlist (
+            @AuthMemberId Long memberId,
+            @RequestBody WishlistRequest request){
+        memberService.deleteWishlist(memberId,request);
+        return ApiResponse.of(HttpStatus.OK);
     }
 
     @GetMapping("/wishlist")

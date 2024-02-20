@@ -89,7 +89,7 @@ public class OrderDetail extends BaseEntity {
 
     public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long price, Long quantity, Long sellerId, String statusCode, DateTimeHolder dateTimeHolder) {
         if (memberCoupon != null) {
-            validMemberCoupon(memberCoupon, dateTimeHolder);
+            validMemberCoupon(memberCoupon, price, quantity, dateTimeHolder);
         }
         return OrderDetail.builder()
                 .orderNo(orderNo)
@@ -101,20 +101,46 @@ public class OrderDetail extends BaseEntity {
                 .quantity(quantity)
                 .sellerId(sellerId)
                 .statusCode(statusCode)
+                .reducedQuantity(0L)
                 .build();
     }
 
-    private static void validMemberCoupon(MemberCoupon memberCoupon, DateTimeHolder dateTimeHolder) {
-        if (isCouponUsed(memberCoupon) || isCouponExpired(memberCoupon, dateTimeHolder)) {
-            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, dateTimeHolder.getTimeNow());
+    private static void validMemberCoupon(MemberCoupon memberCoupon, Long price, Long quantity, DateTimeHolder dateTimeHolder) {
+
+        if (isCouponAlreadyUsed(memberCoupon)){
+            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, "이미 사용한 쿠폰 입니다", dateTimeHolder.getTimeNow());
         }
+
+        if (isOrderBelowMinimumPrice(memberCoupon, price, quantity)){
+            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, "최소 주문금액 조건을 맞춰야합니다", dateTimeHolder.getTimeNow());
+        }
+
+        if (isCouponExpired(memberCoupon, dateTimeHolder)){
+            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, "유효기간이 만료된 쿠폰입니다", dateTimeHolder.getTimeNow());
+        }
+    }
+
+    private static boolean isOrderBelowMinimumPrice(MemberCoupon memberCoupon, Long price, Long quantity) {
+        // 멤버 쿠폰에서 최소 주문 가격을 가져옴
+        Long minimumPrice = memberCoupon.getMinimumPrice();
+
+        // 총 주문 가격 계산
+        Long totalPrice = calculateTotalPrice(price, quantity);
+
+        // 총 주문 가격이 최소 주문 가격보다 크거나 같은지 확인하여 리턴
+        return totalPrice <= minimumPrice;
+    }
+
+    // 총 주문 가격 계산
+    private static Long calculateTotalPrice(Long price, Long quantity) {
+        return price * quantity;
     }
 
     private static boolean isCouponExpired(MemberCoupon memberCoupon, DateTimeHolder dateTimeHolder) {
         return memberCoupon.getEndDate().isBefore(dateTimeHolder.getTimeNow());
     }
 
-    private static Boolean isCouponUsed(MemberCoupon memberCoupon) {
+    private static Boolean isCouponAlreadyUsed(MemberCoupon memberCoupon) {
         return memberCoupon.getIsUsed();
     }
 

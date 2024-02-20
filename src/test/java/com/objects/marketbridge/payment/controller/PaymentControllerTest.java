@@ -153,7 +153,7 @@ class PaymentControllerTest {
                                 fieldWithPath("data.productInfos[].sellerName").type(JsonFieldType.STRING)
                                         .description("판매자 이름"),
                                 fieldWithPath("data.productInfos[].deliveredDate").type(JsonFieldType.STRING)
-                                        .description("배송 도착 일자 (yyyy.MM.dd)")
+                                        .description("배송 도착 일자 (yyyy-MM-dd)")
                         )));
     }
 
@@ -210,8 +210,8 @@ class PaymentControllerTest {
                                         .description("결제 수단"),
                                 fieldWithPath("data.orderName").type(JsonFieldType.STRING)
                                         .description("주문 이름"),
-                                fieldWithPath("data.canceledAt").type(JsonFieldType.STRING)
-                                        .description("결제 취소 일시 (yyyy-MM-dd HH:mm:ss)"),
+                                fieldWithPath("data.canceledAt").type(JsonFieldType.NULL)
+                                        .description("주문 취소 일시 (yyyy-MM-dd HH:mm:ss) (결제 취소인 경우엔 null)"),
                                 fieldWithPath("data.kakaoStatus").type(JsonFieldType.STRING)
                                         .description("카카오 결제 상태"),
                                 fieldWithPath("data.totalAmount").type(JsonFieldType.NUMBER)
@@ -251,7 +251,7 @@ class PaymentControllerTest {
         return CancelledPaymentHttp.Response.create(
                 CARD.toString(),
                 "가방 외 1건",
-                LocalDateTime.of(2024,1,1,0,0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                null,
                 QUIT_PAYMENT.toString(),
                 10000L,
                 500L,

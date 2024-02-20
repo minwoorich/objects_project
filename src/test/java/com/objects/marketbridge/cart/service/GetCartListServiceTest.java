@@ -19,6 +19,7 @@ import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.service.port.ProductRepository;
 import com.objects.marketbridge.product.service.port.OptionRepository;
 import com.objects.marketbridge.product.service.port.ProdOptionRepository;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,6 +54,7 @@ class GetCartListServiceTest {
     @Autowired ProdOptionRepository prodOptionRepository;
     @Autowired CouponRepository couponRepository;
     @Autowired MemberCouponRepository memberCouponRepository;
+    @Autowired EntityManager em;
 
     @BeforeEach
     void init() {
@@ -312,6 +314,7 @@ class GetCartListServiceTest {
         SliceResponse<GetCartDto> sliceResponse = getCartListService.get(pageRequest, member.getId());
 
         //then
+        log.info("productNo 첫번쨰 : {}", sliceResponse.getContent().get(0).getProductNo());
         assertThat(sliceResponse.getContent().get(0).getProductNo()).isEqualTo("productNo5");
         assertThat(sliceResponse.getContent().get(0).getAvailableCoupons()).hasSize(1);
         assertThat(sliceResponse.getContent().get(0).getAvailableCoupons())

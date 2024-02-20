@@ -18,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/review")
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -32,42 +33,54 @@ public class ReviewController {
         return ApiResponse.ok(response);
     }
 
-
-
-    //리뷰 등록
-    @PostMapping("/review")
+    @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<ReviewIdDto> createReview
         (@Valid @RequestBody CreateReviewDto request, @AuthMemberId Long memberId) {
-        Long reviewId = reviewService.createReview(request, memberId);
-        ReviewIdDto response = new ReviewIdDto(reviewId);
-        return ApiResponse.ok(response);
+        reviewService.createReview(request, memberId);
+        return ApiResponse.create();
     }
 
+    @PatchMapping("")
+    @UserAuthorize
+    public ApiResponse<Void> updateReview(@RequestBody UpdateReviewDto request) {
+        reviewService.updateReview(request);
+        return ApiResponse.ok(null);
+    }
+
+    @DeleteMapping("/{reviewId}")
+    @UserAuthorize
+    public ApiResponse<Void> deleteReview
+        (@PathVariable("reviewId") Long reviewId) {
+        reviewService.deleteReview(reviewId);
+        return ApiResponse.ok(null);
+    }
+
+    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 likes 많은순 내림차순 정렬)
+    //http://localhost:8080/product/1/reviews?page=0&sortBy=createdAt
+    //http://localhost:8080/product/1/reviews?page=0&sortBy=liked
+    @GetMapping("/product/{productId}")
+    public ApiResponse<Void> getReviews(
+            @PathVariable("productId") Long productId,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy) {
+
+//        Pageable pageRequest = PageRequest.of(page, 5, Sort.by(sortBy).descending());
+//        Page<ReviewWholeInfoDto> response = reviewService.getProductReviews(productId, pageRequest, sortBy);
+        return ApiResponse.ok(null);
+    }
 
 
     //리뷰아이디로 리뷰상세 단건 조회
-    @GetMapping("/review/{reviewId}")
-    public ApiResponse<ReviewSingleReadDto> getReview
-        (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
-        ReviewSingleReadDto response = reviewService.getReview(reviewId, memberId);
-        return ApiResponse.ok(response);
-    }
-
-
-//    //LIKE관련//
-//    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 likes 많은순 내림차순 정렬)
-//    //http://localhost:8080/product/1/reviews?page=0&sortBy=createdAt
-//    //http://localhost:8080/product/1/reviews?page=0&sortBy=liked
-//    @GetMapping("/product/{productId}/reviews")
-//    public ApiResponse<Page<ReviewWholeInfoDto>> getProductReviews(
-//            @PathVariable("productId") Long productId,
-//            @RequestParam(name = "page", defaultValue = "0") int page,
-//            @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy) {
-//
-//        Pageable pageRequest = PageRequest.of(page, 5, Sort.by(sortBy).descending());
-//        Page<ReviewWholeInfoDto> response = reviewService.getProductReviews(productId, pageRequest, sortBy);
+//    @GetMapping("/review/{reviewId}")
+//    public ApiResponse<ReviewSingleReadDto> getReview
+//        (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
+//        ReviewSingleReadDto response = reviewService.getReview(reviewId, memberId);
 //        return ApiResponse.ok(response);
 //    }
+
+
+//TODO: 리뷰리스트 조회, 리뷰조회, 상품별 리뷰 갯수, 리뷰 좋아요, mypage에 작성할 리뷰, 작성한 리뷰 리스트
 
 
 //    //LIKE관련//
@@ -108,24 +121,9 @@ public class ReviewController {
 
 
 
-    //리뷰 수정
-    @PatchMapping("/review/{reviewId}")
-    public ApiResponse<ReviewIdDto> updateReview
-        (@Valid @RequestBody ReviewModifiableValuesDto request,
-         @PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
-        ReviewIdDto response = reviewService.updateReview(request, reviewId, memberId);
-        return ApiResponse.ok(response);
-    }
 
 
 
-    //리뷰 삭제
-    @DeleteMapping("/review/{reviewId}")
-    public ApiResponse<ReviewIdDto> deleteReview
-        (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
-        reviewService.deleteReview(reviewId, memberId);
-        return ApiResponse.of(HttpStatus.OK);
-    }
 
 
 

@@ -33,7 +33,7 @@ public class GetOrderDetailHttp {
         public static Response of(GetOrderDto getOrderDto) {
             return Response.builder()
                     .orderNo(getOrderDto.getOrderNo())
-                    .createdAt(getOrderDto.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")))
+                    .createdAt(getOrderDto.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .orderDetailInfos(getOrderDto.getOrderDetails().stream().map(OrderDetailInfo::of).collect(Collectors.toList()))
                     .addressValue(getOrderDto.getAddress())
                     .paymentInfo(PaymentInfo.of(getOrderDto))
