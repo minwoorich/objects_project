@@ -15,20 +15,20 @@ public class ReviewSingleReadDto {
     private Long memberId;
     private Long productId;
     private Integer rating; //별점, 1~5
-    private List<ReviewSurveyDataDto> reviewSurveyDataDtoList = new ArrayList<>();
+    private List<ReviewSurveyDto> reviewSurveyDtoList = new ArrayList<>();
     private String content;
     private List<String> reviewImgUrls = new ArrayList<>();
 
     @Builder
 
     public ReviewSingleReadDto(Long reviewId, Long memberId, Long productId, Integer rating,
-                               List<ReviewSurveyDataDto> reviewSurveyDataDtoList,
+                               List<ReviewSurveyDto> reviewSurveyDtoList,
                                String content, List<String> reviewImgUrls) {
         this.reviewId = reviewId;
         this.memberId = memberId;
         this.productId = productId;
         this.rating = rating;
-        this.reviewSurveyDataDtoList = reviewSurveyDataDtoList;
+        this.reviewSurveyDtoList = reviewSurveyDtoList;
         this.content = content;
         this.reviewImgUrls = reviewImgUrls;
     }
