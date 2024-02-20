@@ -107,15 +107,15 @@ public class OrderDetail extends BaseEntity {
     private static void validMemberCoupon(MemberCoupon memberCoupon, Long price, Long quantity, DateTimeHolder dateTimeHolder) {
 
         if (isCouponAlreadyUsed(memberCoupon)){
-            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, dateTimeHolder.getTimeNow());
+            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, "이미 사용한 쿠폰 입니다", dateTimeHolder.getTimeNow());
         }
 
         if (isOrderBelowMinimumPrice(memberCoupon, price, quantity)){
-            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, dateTimeHolder.getTimeNow());
+            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, "최소 주문금액 조건을 맞춰야합니다", dateTimeHolder.getTimeNow());
         }
 
         if (isCouponExpired(memberCoupon, dateTimeHolder)){
-            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, dateTimeHolder.getTimeNow());
+            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, "유효기간이 만료된 쿠폰입니다", dateTimeHolder.getTimeNow());
         }
     }
 
