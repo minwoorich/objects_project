@@ -20,10 +20,6 @@ public class ReviewSurvey extends BaseEntity {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "review_id")
 //    private Review review;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "review_survey_category_id")
-//    private ReviewSurveyCategory reviewSurveyCategory;
 
     private Long reviewId;
 
@@ -41,4 +37,9 @@ public class ReviewSurvey extends BaseEntity {
         this.surveyCategory = surveyCategory;
         this.content = content;
     }
+
+    public void update(String content) {
+        this.content = content;
+    }
+
 }

@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateReviewDto {
 
-    //private Long memberId; //@AuthMemberId로 대체
     private Long productId;
     private Integer rating; //별점, 1~5
     private List<ReviewSurveyDto> reviewSurveys = new ArrayList<>();

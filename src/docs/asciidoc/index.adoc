@@ -125,6 +125,14 @@ include::api/review/review-create.adoc[]
 {empty}
 {empty}
 
+include::api/review/review-update.adoc[]
+{empty}
+{empty}
+
+include::api/review/review-delete.adoc[]
+{empty}
+{empty}
+
 == *주문*
 === *주문서/결제*
 include::api/order/ordercheckout.adoc[]

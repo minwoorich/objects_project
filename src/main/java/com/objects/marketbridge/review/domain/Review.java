@@ -18,16 +18,9 @@ public class Review extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long id;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "product_id")
-//    private Product product;
 
     private Long memberId;
+
     private Long productId;
 
 //    @OneToMany(mappedBy = "review")
@@ -50,12 +43,11 @@ public class Review extends BaseEntity {
         this.content = content;
         this.summary = summary;
     }
-    //    public void update(List<ReviewImage> reviewImages, Integer rating, String content, String summary) {
-//        this.reviewImages = reviewImages;
-//        this.rating = rating;
-//        this.content = content;
-//        this.summary = summary;
-//    }
+    public void update(Integer rating, String content, String summary) {
+        this.rating = rating;
+        this.content = content;
+        this.summary = summary;
+    }
 
 //    //LIKE관련//
 //    public void increaseLikes(){

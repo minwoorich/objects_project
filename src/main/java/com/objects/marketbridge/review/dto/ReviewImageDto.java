@@ -9,10 +9,12 @@ public class ReviewImageDto {
 
     private Long seqNo;
     private String imgUrl;
+    private String description;
 
     @Builder
-    public ReviewImageDto(Long seqNo, String imgUrl) {
+    public ReviewImageDto(Long seqNo, String imgUrl, String description) {
         this.seqNo = seqNo;
         this.imgUrl = imgUrl;
+        this.description = description;
     }
 }

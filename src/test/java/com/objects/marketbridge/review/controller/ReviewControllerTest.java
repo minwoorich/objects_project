@@ -31,6 +31,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -139,8 +140,7 @@ public class ReviewControllerTest {
         //given
         // 리뷰 생성에 필요한 요청 데이터
         CreateReviewDto request = getCreateReviewDto();
-        Long reviewId = 1L;
-        given(reviewService.createReview(any(CreateReviewDto.class), anyLong())).willReturn(reviewId);
+        willDoNothing().given(reviewService).createReview(any(CreateReviewDto.class), anyLong());
 
         //when //then
         // API 요청 및 응답 문서화
@@ -149,14 +149,13 @@ public class ReviewControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonContent)
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")) // 액세스 토큰
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andDo(document("review-create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("productId").description("상품 ID"),
                                 fieldWithPath("rating").description("별점"),
-                                fieldWithPath("reviewImgUrls[].imgUrl").description("이미지 url"),
                                 fieldWithPath("summary").description("한줄요약"),
                                 fieldWithPath("content").description("리뷰내용"),
                                 fieldWithPath("reviewSurveys").description("리뷰 서베이 데이터 리스트(카테고리, 선택 또는 입력된 내용 의 데이터 리스트)")
@@ -165,14 +164,15 @@ public class ReviewControllerTest {
                                 fieldWithPath("reviewSurveys[].reviewSurveyCategoryName").description("리뷰 서베이 카테고리 이름"),
                                 fieldWithPath("reviewSurveys[].content").description("선택하거나 입력한 내용"),
                                 fieldWithPath("reviewImgUrls").description("리뷰 이미지 URL 목록").type(JsonFieldType.ARRAY).optional(),
-                                fieldWithPath("reviewImgUrls[].seqNo").description("이미지 순번")
+                                fieldWithPath("reviewImgUrls[].seqNo").description("이미지 순번"),
+                                fieldWithPath("reviewImgUrls[].imgUrl").description("이미지 주소"),
+                                fieldWithPath("reviewImgUrls[].description").description("이미지 설명")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("응답 코드"),
                                 fieldWithPath("status").description("응답 상태"),
                                 fieldWithPath("message").description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.reviewId").description("생성된 리뷰의 ID")
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답 데이터")
                         )
                 ));
     }
@@ -204,14 +204,7 @@ public class ReviewControllerTest {
         reviewSurveys.add(reviewSurvey3);
         reviewSurveys.add(reviewSurvey4);
 
-        List<ReviewImageDto> reviewImgUrls = new ArrayList<>();
-        ReviewImageDto image1 = ReviewImageDto.builder().seqNo(1L).imgUrl("001.jpg").build();
-        ReviewImageDto image2 = ReviewImageDto.builder().seqNo(2L).imgUrl("002.jpg").build();
-        ReviewImageDto image3 = ReviewImageDto.builder().seqNo(3L).imgUrl("003.jpg").build();
-
-        reviewImgUrls.add(image1);
-        reviewImgUrls.add(image2);
-        reviewImgUrls.add(image3);
+        List<ReviewImageDto> reviewImgUrls = getReviewImageDtos();
 
         return CreateReviewDto.builder()
                 .productId(1L)
@@ -223,6 +216,123 @@ public class ReviewControllerTest {
                 .build();
     }
 
+    private List<ReviewImageDto> getReviewImageDtos() {
+        List<ReviewImageDto> reviewImgUrls = new ArrayList<>();
+        ReviewImageDto image1 = ReviewImageDto.builder().seqNo(1L).imgUrl("001.jpg").description("캡션1").build();
+        ReviewImageDto image2 = ReviewImageDto.builder().seqNo(2L).imgUrl("002.jpg").description("캡션1").build();
+        ReviewImageDto image3 = ReviewImageDto.builder().seqNo(3L).imgUrl("003.jpg").description("캡션1").build();
+
+        reviewImgUrls.add(image1);
+        reviewImgUrls.add(image2);
+        reviewImgUrls.add(image3);
+        return reviewImgUrls;
+    }
+
+    @Test
+    @WithMockCustomUser
+    @DisplayName("리뷰 수정")
+    public void updateReview() throws Exception {
+        //given
+        UpdateReviewDto updateReviewDto = getUpdateReviewDto();
+        // 리뷰 수정 서비스 메서드의 반환값을 목 객체로 설정
+        willDoNothing().given(reviewService).updateReview(any(UpdateReviewDto.class));
+
+        //when //then
+        mockMvc.perform(patch("/review") // PATCH 요청으로 수정
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(updateReviewDto))) // 요청 바디에 수정 정보를 포함
+
+                .andExpect(status().isOk())
+                .andDo(document("review-update",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("reviewId").description("수정 요청한 리뷰아이디"),
+                                fieldWithPath("rating").description("수정한 별점"),
+                                fieldWithPath("summary").description("수정한 한줄요약"),
+                                fieldWithPath("content").description("수정한 리뷰내용"),
+                                fieldWithPath("updateReviewSurveys").description("리뷰 서베이 데이터 리스트(카테고리, 선택 또는 입력된 내용 의 데이터 리스트)")
+                                        .type(JsonFieldType.ARRAY).optional(), // 필드가 선택적인 경우 optional()을 사용
+                                fieldWithPath("updateReviewSurveys[].reviewSurveyId").description("리뷰 서베이 아이디(리뷰 조회때 아이디 제공)"),
+                                fieldWithPath("updateReviewSurveys[].content").description("선택을 변경하거나 입력을 수정한 내용"),
+                                fieldWithPath("reviewImgUrls").description("리뷰 이미지 URL 목록 - 이 목록에 없는 이미지는 데이터베이스에서 삭제됨.").type(JsonFieldType.ARRAY).optional(),
+                                fieldWithPath("reviewImgUrls[].seqNo").description("이미지 순번"),
+                                fieldWithPath("reviewImgUrls[].imgUrl").description("이미지 주소"),
+                                fieldWithPath("reviewImgUrls[].description").description("이미지 설명")
+                        ),
+                        responseFields( // 응답에 대한 문서화
+                                fieldWithPath("code").description("응답 코드"),
+                                fieldWithPath("status").description("응답 상태"),
+                                fieldWithPath("message").description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답 데이터")
+                        )
+                ));
+    }
+
+    private UpdateReviewDto getUpdateReviewDto() {
+        List<UpdateReviewSurveyDto> updateReviewSurveys = new ArrayList<>();
+        UpdateReviewSurveyDto reviewSurvey1 = UpdateReviewSurveyDto.builder()
+                .reviewSurveyId(1L)
+                .content("163")
+                .build();
+        UpdateReviewSurveyDto reviewSurvey2 = UpdateReviewSurveyDto.builder()
+                .reviewSurveyId(2L)
+                .content("-")
+                .build();
+        UpdateReviewSurveyDto reviewSurvey3 = UpdateReviewSurveyDto.builder()
+                .reviewSurveyId(3L)
+                .content("화면과같아요")
+                .build();
+        UpdateReviewSurveyDto reviewSurvey4 = UpdateReviewSurveyDto.builder()
+                .reviewSurveyId(4L)
+                .content("딱맞아요")
+                .build();
+        updateReviewSurveys.add(reviewSurvey1);
+        updateReviewSurveys.add(reviewSurvey2);
+        updateReviewSurveys.add(reviewSurvey3);
+        updateReviewSurveys.add(reviewSurvey4);
+
+        List<ReviewImageDto> reviewImgUrls = getReviewImageDtos();
+
+        return UpdateReviewDto.builder()
+                .reviewId(1L)
+                .rating(5)
+                .updateReviewSurveys(updateReviewSurveys)
+                .content("수정한 리뷰내용")
+                .reviewImgUrls(reviewImgUrls)
+                .summary("수정한 한줄요약")
+                .build();
+
+    }
+
+    @Test
+    @WithMockCustomUser
+    @DisplayName("리뷰 삭제")
+    public void deleteReview() throws Exception {
+        //given
+        Long reviewId = 1L;
+
+        willDoNothing().given(reviewService).deleteReview(reviewId);
+        //when //then
+        mockMvc.perform(delete("/review/{reviewId}", reviewId)
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("review-delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("reviewId").description("삭제할 리뷰의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 코드"),
+                                fieldWithPath("status").description("응답 상태"),
+                                fieldWithPath("message").description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답 데이터")
+                        )
+                ));
+    }
 
 //    @Test
 //    @WithMockCustomUser
@@ -537,110 +647,11 @@ public class ReviewControllerTest {
 
 
 
-//    @Test
-//    @WithMockCustomUser
-//    @DisplayName("리뷰를_수정하면_수정되고_응답한다.")
-//    public void updateReviewControllerTest() throws Exception {
-//        //given
-//        // 리뷰 수정에 필요한 요청 데이터
-//        Long reviewId = 1L;
-//
-//        List<ReviewSurveyDto> updatedReviewSurveyDtoList = new ArrayList<>();
-//        ReviewSurveyDto updatedReviewSurveyDto1 = ReviewSurveyDto.builder()
-//                .reviewSurveyCategoryData("리뷰서베이카테고리1(질문1)")
-//                .writtenOrSelectedSurveyContentData("수정된 작성한 내용1")
-//                .build();
-//        ReviewSurveyDto updatedReviewSurveyDto2 = ReviewSurveyDto.builder()
-//                .reviewSurveyCategoryData("리뷰서베이카테고리2(질문2)")
-//                .writtenOrSelectedSurveyContentData("수정된 작성한 내용2")
-//                .build();
-//        ReviewSurveyDto updatedReviewSurveyDto3 = ReviewSurveyDto.builder()
-//                .reviewSurveyCategoryData("리뷰서베이카테고리2(질문3)")
-//                .writtenOrSelectedSurveyContentData("수정된 선택한 내용3")
-//                .build();
-//        ReviewSurveyDto updatedReviewSurveyDto4 = ReviewSurveyDto.builder()
-//                .reviewSurveyCategoryData("리뷰서베이카테고리4(질문4)")
-//                .writtenOrSelectedSurveyContentData("수정된 선택한 내용4")
-//                .build();
-//        updatedReviewSurveyDtoList.add(updatedReviewSurveyDto1);
-//        updatedReviewSurveyDtoList.add(updatedReviewSurveyDto2);
-//        updatedReviewSurveyDtoList.add(updatedReviewSurveyDto3);
-//        updatedReviewSurveyDtoList.add(updatedReviewSurveyDto4);
-//
-//        List<String> reviewImgUrls = new ArrayList<>();
-//        reviewImgUrls.add("image0003.jpg");
-//        reviewImgUrls.add("image0004.jpg");
-//        reviewImgUrls.add("image0005.jpg");
-//        ReviewModifiableValuesDto request = ReviewModifiableValuesDto.builder()
-//                .rating(4)
-//                .reviewSurveyDataDtoList(updatedReviewSurveyDtoList)
-//                .content("수정된리뷰내용")
-//                .reviewImgUrls(reviewImgUrls)
-//                .summary("한줄요약")
-//                .build();
-//        // 리뷰 수정 서비스 메서드의 반환값을 목 객체로 설정
-//        ReviewIdDto updatedReviewIdDto = ReviewIdDto.builder().reviewId(reviewId).build();
-//        given(reviewService.updateReview(any(ReviewModifiableValuesDto.class), eq(reviewId), anyLong()))
-//                .willReturn(updatedReviewIdDto);
-//
-//        //when //then
-//        mockMvc.perform(patch("/review/{reviewId}", reviewId) // PATCH 요청으로 수정
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(request))) // 요청 바디에 수정 정보를 포함
-//                .andExpect(status().isOk())
-//                .andDo(document("review-update",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        pathParameters(
-//                                parameterWithName("reviewId").description("리뷰 ID")
-//                        ),
-//                        requestFields( // 요청 바디에 대한 문서화
-//                                fieldWithPath("rating").description("수정할 별점"),
-//                                fieldWithPath("reviewSurveyDataDtoList").description("수정할 리뷰 서베이 데이터 리스트(카테고리, 선택 또는 입력된 내용 의 데이터 리스트)")
-//                                        .type(JsonFieldType.ARRAY).optional(), // 필드가 선택적인 경우 optional()을 사용
-//                                fieldWithPath("reviewSurveyDataDtoList[].reviewSurveyCategoryData").description("수정할 리뷰 서베이 카테고리 데이터"),
-//                                fieldWithPath("reviewSurveyDataDtoList[].writtenOrSelectedSurveyContentData").description("수정할 입력 또는 선택된 내용 데이터"),
-//                                fieldWithPath("content").description("수정할 리뷰내용"),
-//                                fieldWithPath("reviewImgUrls").description("수정할 리뷰 이미지 URL 리스트"),
-//                                fieldWithPath("summary").description("수정할 한줄요약")
-//                        ),
-//                        responseFields( // 응답에 대한 문서화
-//                                fieldWithPath("code").description("응답 코드"),
-//                                fieldWithPath("status").description("응답 상태"),
-//                                fieldWithPath("message").description("응답 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-//                                fieldWithPath("data.reviewId").description("수정된 리뷰의 ID")
-//                        )
-//                ));
-//    }
 
 
 
-//    @Test
-//    @WithMockCustomUser
-//    @DisplayName("리뷰를_삭제하면_삭제되고_응답한다.")
-//    public void deleteReviewControllerTest() throws Exception {
-//        //given
-//        Long reviewId = 1L;
-//
-//        //when //then
-//        mockMvc.perform(delete("/review/{reviewId}", reviewId)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andDo(document("review-delete",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        pathParameters(
-//                                parameterWithName("reviewId").description("삭제할 리뷰의 ID")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("code").description("응답 코드"),
-//                                fieldWithPath("status").description("응답 상태"),
-//                                fieldWithPath("message").description("응답 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.VARIES).description("응답 데이터")
-//                        )
-//                ));
-//    }
+
+
 
 
 //    //LIKE관련//
