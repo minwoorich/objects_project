@@ -89,7 +89,7 @@ public class OrderDetail extends BaseEntity {
 
     public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long price, Long quantity, Long sellerId, String statusCode, DateTimeHolder dateTimeHolder) {
         if (memberCoupon != null) {
-            validMemberCoupon(memberCoupon, dateTimeHolder);
+            validMemberCoupon(memberCoupon, price, quantity, dateTimeHolder);
         }
         return OrderDetail.builder()
                 .orderNo(orderNo)
@@ -104,17 +104,42 @@ public class OrderDetail extends BaseEntity {
                 .build();
     }
 
-    private static void validMemberCoupon(MemberCoupon memberCoupon, DateTimeHolder dateTimeHolder) {
-        if (isCouponUsed(memberCoupon) || isCouponExpired(memberCoupon, dateTimeHolder)) {
+    private static void validMemberCoupon(MemberCoupon memberCoupon, Long price, Long quantity, DateTimeHolder dateTimeHolder) {
+
+        if (isCouponAlreadyUsed(memberCoupon)){
             throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, dateTimeHolder.getTimeNow());
         }
+
+        if (isOrderBelowMinimumPrice(memberCoupon, price, quantity)){
+            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, dateTimeHolder.getTimeNow());
+        }
+
+        if (isCouponExpired(memberCoupon, dateTimeHolder)){
+            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, dateTimeHolder.getTimeNow());
+        }
+    }
+
+    private static boolean isOrderBelowMinimumPrice(MemberCoupon memberCoupon, Long price, Long quantity) {
+        // 멤버 쿠폰에서 최소 주문 가격을 가져옴
+        Long minimumPrice = memberCoupon.getMinimumPrice();
+
+        // 총 주문 가격 계산
+        Long totalPrice = calculateTotalPrice(price, quantity);
+
+        // 총 주문 가격이 최소 주문 가격보다 크거나 같은지 확인하여 리턴
+        return totalPrice <= minimumPrice;
+    }
+
+    // 총 주문 가격 계산
+    private static Long calculateTotalPrice(Long price, Long quantity) {
+        return price * quantity;
     }
 
     private static boolean isCouponExpired(MemberCoupon memberCoupon, DateTimeHolder dateTimeHolder) {
         return memberCoupon.getEndDate().isBefore(dateTimeHolder.getTimeNow());
     }
 
-    private static Boolean isCouponUsed(MemberCoupon memberCoupon) {
+    private static Boolean isCouponAlreadyUsed(MemberCoupon memberCoupon) {
         return memberCoupon.getIsUsed();
     }
 
