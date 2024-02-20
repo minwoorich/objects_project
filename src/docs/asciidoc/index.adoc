@@ -65,6 +65,10 @@ include::api/member/deleteAddress.adoc[]
 {empty}
 
 === *위시리스트*
+include::api/member/checkWishlist.adoc[]
+{empty}
+{empty}
+
 include::api/member/findWishlist.adoc[]
 {empty}
 {empty}
@@ -73,7 +77,7 @@ include::api/member/addWishlist.adoc[]
 {empty}
 {empty}
 
-include::api/member/checkWishlist.adoc[]
+include::api/member/deleteWishlist.adoc[]
 {empty}
 {empty}
 

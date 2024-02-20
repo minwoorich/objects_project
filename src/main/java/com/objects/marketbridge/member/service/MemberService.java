@@ -101,6 +101,11 @@ public class MemberService {
     }
 
     @Transactional
+    public void deleteWishlist(Long memberId,WishlistRequest request) {
+        wishRepository.deleteWishlist(memberId,request.getProductId());
+    }
+
+    @Transactional
     public void save(Member member) {
         memberRepository.save(member);
     }
@@ -157,4 +162,6 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(updatePassword.password());
         member.updatePassword(encodedPassword);
     }
+
+
 }
