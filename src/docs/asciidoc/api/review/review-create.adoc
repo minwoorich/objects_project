@@ -1,0 +1,9 @@
+==== *리뷰 생성*
+
+.*HTTP Request*
+include::{snippets}/review-create/http-request.adoc[]
+include::{snippets}/review-create/request-fields.adoc[]
+
+.*HTTP Response*
+include::{snippets}/review-create/http-response.adoc[]
+include::{snippets}/review-create/response-fields.adoc[]

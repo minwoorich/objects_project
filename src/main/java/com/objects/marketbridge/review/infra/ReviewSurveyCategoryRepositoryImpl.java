@@ -1,6 +1,7 @@
 package com.objects.marketbridge.review.infra;
 
 import com.objects.marketbridge.review.domain.ReviewSurveyCategory;
+import com.objects.marketbridge.review.service.port.ReviewSurveyCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class ReviewSurveyCategoryRepositoryImpl implements ReviewSurveyCategoryRepository{
+public class ReviewSurveyCategoryRepositoryImpl implements ReviewSurveyCategoryRepository {
 
     private final ReviewSurveyCategoryJpaRepository reviewSurveyCategoryJpaRepository;
 

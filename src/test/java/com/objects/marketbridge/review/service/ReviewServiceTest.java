@@ -12,7 +12,7 @@
 //import com.objects.marketbridge.review.dto.ReviewAllValuesDto;
 //import com.objects.marketbridge.review.dto.ReviewIdDto;
 //import com.objects.marketbridge.review.dto.ReviewModifiableValuesDto;
-//import com.objects.marketbridge.review.infra.ReviewRepository;
+//import com.objects.marketbridge.review.service.port.ReviewRepository;
 //import org.assertj.core.api.Assertions;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;

@@ -1,6 +1,7 @@
 package com.objects.marketbridge.review.infra;
 
 import com.objects.marketbridge.review.domain.SurveyContent;
+import com.objects.marketbridge.review.service.port.SurveyContentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
