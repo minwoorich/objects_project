@@ -115,6 +115,9 @@ include::api/member/kakaoPaySubsSubscribtion.adoc[]
 include::api/product/productcreate.adoc[]
 {empty}
 {empty}
+
+=== *상품 조회*
+include::api/product/productsearchbycategory.adoc[]
 {empty}
 {empty}
 
