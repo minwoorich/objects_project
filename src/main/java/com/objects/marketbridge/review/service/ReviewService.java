@@ -19,16 +19,12 @@ import java.util.Objects;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-
-
     private final ImageRepository imageRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final ReviewSurveyRepository reviewSurveyRepository;
     private final ReviewSurveyCategoryRepository reviewSurveyCategoryRepository;
     private final SurveyContentRepository surveyContentRepository;
     private final ReviewLikeRepository reviewLikeRepository;
-
-
 
     //리뷰 서베이 선택창 조회
     @Transactional
@@ -171,33 +167,9 @@ public class ReviewService {
         reviewRepository.deleteById(reviewId);
     }
 
-
-    //리뷰아이디로 리뷰상세 단건 조회
+    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 liked 많은순 내림차순 정렬)
 //    @Transactional
-//    public ReviewSingleReadDto getReview(Long reviewId, Long memberId){
-//        Review findReview = reviewRepository.findById(reviewId);
-//        List<ReviewImage> reviewImages = findReview.getReviewImages();
-//        List<String> reviewImgUrls = new ArrayList<>();
-//        for (ReviewImage reviewImage : reviewImages) {
-//            reviewImgUrls.add(reviewImage.getImage().getUrl());
-//        }
-//        ReviewSingleReadDto reviewSingleReadDto
-//                = ReviewSingleReadDto.builder()
-//                .reviewId(reviewId)
-//                .memberId(memberId)
-//                .productId(findReview.getProduct().getId())
-//                .reviewImgUrls(reviewImgUrls)
-//                .rating(findReview.getRating())
-//                .content(findReview.getContent())
-//                .build();
-//        return reviewSingleReadDto;
-//    }
-
-
-
-//    //LIKE관련//    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 liked 많은순 내림차순 정렬)
-//    @Transactional
-//    public Page<ReviewWholeInfoDto> getProductReviews(Long productId, Pageable pageable, String sortBy) {
+//    public void getReviews(Long productId) {
 //        Page<Review> reviews;
 //        if (sortBy.equals("likes")) {
 //            reviews = reviewRepository.findAllByProductIdOrderByLikesDesc(productId, pageable);
@@ -222,6 +194,32 @@ public class ReviewService {
 //                .collect(Collectors.toList());
 //        return new PageImpl<>(reviewWholeInfoDtoList, pageable, reviews.getTotalElements());
 //    }
+
+
+    //리뷰아이디로 리뷰상세 단건 조회
+//    @Transactional
+//    public ReviewSingleReadDto getReview(Long reviewId, Long memberId){
+//        Review findReview = reviewRepository.findById(reviewId);
+//        List<ReviewImage> reviewImages = findReview.getReviewImages();
+//        List<String> reviewImgUrls = new ArrayList<>();
+//        for (ReviewImage reviewImage : reviewImages) {
+//            reviewImgUrls.add(reviewImage.getImage().getUrl());
+//        }
+//        ReviewSingleReadDto reviewSingleReadDto
+//                = ReviewSingleReadDto.builder()
+//                .reviewId(reviewId)
+//                .memberId(memberId)
+//                .productId(findReview.getProduct().getId())
+//                .reviewImgUrls(reviewImgUrls)
+//                .rating(findReview.getRating())
+//                .content(findReview.getContent())
+//                .build();
+//        return reviewSingleReadDto;
+//    }
+
+
+
+
 
 
 

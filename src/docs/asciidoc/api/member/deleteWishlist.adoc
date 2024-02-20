@@ -2,6 +2,7 @@
 
 .*HTTP Request*
 include::{snippets}/delete-wishlist/http-request.adoc[]
+include::{snippets}/delete-wishlist/request-fields.adoc[]
 
 .*HTTP Response*
 include::{snippets}/delete-wishlist/http-response.adoc[]

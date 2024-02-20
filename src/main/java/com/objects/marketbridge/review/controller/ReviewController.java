@@ -56,6 +56,20 @@ public class ReviewController {
         return ApiResponse.ok(null);
     }
 
+    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 likes 많은순 내림차순 정렬)
+    //http://localhost:8080/product/1/reviews?page=0&sortBy=createdAt
+    //http://localhost:8080/product/1/reviews?page=0&sortBy=liked
+    @GetMapping("/product/{productId}")
+    public ApiResponse<Void> getReviews(
+            @PathVariable("productId") Long productId,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy) {
+
+//        Pageable pageRequest = PageRequest.of(page, 5, Sort.by(sortBy).descending());
+//        Page<ReviewWholeInfoDto> response = reviewService.getProductReviews(productId, pageRequest, sortBy);
+        return ApiResponse.ok(null);
+    }
+
 
     //리뷰아이디로 리뷰상세 단건 조회
 //    @GetMapping("/review/{reviewId}")
@@ -66,20 +80,7 @@ public class ReviewController {
 //    }
 
 
-//    //LIKE관련//
-//    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 likes 많은순 내림차순 정렬)
-//    //http://localhost:8080/product/1/reviews?page=0&sortBy=createdAt
-//    //http://localhost:8080/product/1/reviews?page=0&sortBy=liked
-//    @GetMapping("/product/{productId}/reviews")
-//    public ApiResponse<Page<ReviewWholeInfoDto>> getProductReviews(
-//            @PathVariable("productId") Long productId,
-//            @RequestParam(name = "page", defaultValue = "0") int page,
-//            @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy) {
-//
-//        Pageable pageRequest = PageRequest.of(page, 5, Sort.by(sortBy).descending());
-//        Page<ReviewWholeInfoDto> response = reviewService.getProductReviews(productId, pageRequest, sortBy);
-//        return ApiResponse.ok(response);
-//    }
+//TODO: 리뷰리스트 조회, 리뷰조회, 상품별 리뷰 갯수, 리뷰 좋아요, mypage에 작성할 리뷰, 작성한 리뷰 리스트
 
 
 //    //LIKE관련//
