@@ -18,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/review")
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -32,17 +33,28 @@ public class ReviewController {
         return ApiResponse.ok(response);
     }
 
-
-
-    //리뷰 등록
-    @PostMapping("/review")
+    @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<ReviewIdDto> createReview
         (@Valid @RequestBody CreateReviewDto request, @AuthMemberId Long memberId) {
-        Long reviewId = reviewService.createReview(request, memberId);
-        ReviewIdDto response = new ReviewIdDto(reviewId);
-        return ApiResponse.ok(response);
+        reviewService.createReview(request, memberId);
+        return ApiResponse.create();
     }
 
+    @PatchMapping("")
+    @UserAuthorize
+    public ApiResponse<Void> updateReview(@RequestBody UpdateReviewDto request) {
+        reviewService.updateReview(request);
+        return ApiResponse.ok(null);
+    }
+
+    @DeleteMapping("/{reviewId}")
+    @UserAuthorize
+    public ApiResponse<Void> deleteReview
+        (@PathVariable("reviewId") Long reviewId) {
+        reviewService.deleteReview(reviewId);
+        return ApiResponse.ok(null);
+    }
 
 
     //리뷰아이디로 리뷰상세 단건 조회
@@ -108,25 +120,10 @@ public class ReviewController {
 
 
 
-    //리뷰 수정
-//    @PatchMapping("/review/{reviewId}")
-//    public ApiResponse<ReviewIdDto> updateReview
-//        (@Valid @RequestBody ReviewModifiableValuesDto request,
-//         @PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
-//        ReviewIdDto response = reviewService.updateReview(request, reviewId, memberId);
-//        return ApiResponse.ok(response);
-//    }
-//
 
 
-    //리뷰 삭제
-//    @DeleteMapping("/review/{reviewId}")
-//    public ApiResponse<ReviewIdDto> deleteReview
-//        (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
-//        reviewService.deleteReview(reviewId, memberId);
-//        return ApiResponse.of(HttpStatus.OK);
-//    }
-//
+
+
 
 
 //    //LIKE관련//

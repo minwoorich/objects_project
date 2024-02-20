@@ -28,15 +28,19 @@ public class ReviewImage extends BaseEntity {
 //    private Image image;
 
     private Long reviewId;
+
     private Long imageId;
 
     private Long seqNo;
 
+    private String description;
+
     @Builder
-    public ReviewImage(Long id, Long reviewId, Long imageId, Long seqNo) {
+    public ReviewImage(Long id, Long reviewId, Long imageId, Long seqNo, String description) {
         this.id = id;
         this.reviewId = reviewId;
         this.imageId = imageId;
         this.seqNo = seqNo;
+        this.description = description;
     }
 }
