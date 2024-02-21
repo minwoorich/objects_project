@@ -1,14 +1,18 @@
 package com.objects.marketbridge.review.service.port;
 
+import com.objects.marketbridge.review.domain.ReviewLike;
 import org.springframework.data.repository.query.Param;
 
 public interface ReviewLikeRepository {
+    Boolean existsByReviewIdAndMemberId(Long reviewId, Long memberId);
+
+    void save(ReviewLike reviewLike);
+
+    void deleteByReviewIdAndMemberId(Long reviewId, Long memberId);
 
 //    void deleteByReviewId(@Param("reviewId") Long reviewId);
-
 //    ReviewLike findByReviewIdAndMemberId(Long reviewId, Long memberId);
 //
-//    void save(ReviewLike reviewLike);
 //
 //    Page<ReviewLike> findAllByReview_Product_Id(Long productId, Pageable pageable);
 //

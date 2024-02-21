@@ -3,6 +3,7 @@ package com.objects.marketbridge.review.service;
 import com.objects.marketbridge.image.domain.Image;
 import com.objects.marketbridge.image.infra.ImageRepository;
 import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.review.domain.*;
 import com.objects.marketbridge.review.dto.*;
@@ -30,6 +31,7 @@ public class ReviewService {
     private final ReviewSurveyCategoryRepository reviewSurveyCategoryRepository;
     private final SurveyContentRepository surveyContentRepository;
     private final ReviewLikeRepository reviewLikeRepository;
+    private final MemberRepository memberRepository;
 
     //리뷰 서베이 선택창 조회
     @Transactional
@@ -218,6 +220,27 @@ public class ReviewService {
     public ReviewsCountDto getMemberReviewsCount(Long memberId) {
         Long count = reviewRepository.countByMemberId(memberId);
         return ReviewsCountDto.builder().count(count).build();
+    }
+
+
+    //review_like upsert(없으면 create, 있으면 delete)
+    @Transactional
+    public void upsertReviewLike(Long reviewId, Long memberId){
+
+//        Review review = Review.builder().id(reviewId).build();
+//        Member member = Member.builder().id(memberId).build();
+        Review review = reviewRepository.findById(reviewId);
+        Member member = memberRepository.findById(memberId);
+
+        if(reviewLikeRepository.existsByReviewIdAndMemberId(reviewId, memberId)){
+            reviewLikeRepository.deleteByReviewIdAndMemberId(reviewId, memberId);
+        } else {
+            ReviewLike reviewLike = ReviewLike.builder()
+                    .review(review)
+                    .member(member)
+                    .build();
+            reviewLikeRepository.save(reviewLike);
+        }
     }
 
 

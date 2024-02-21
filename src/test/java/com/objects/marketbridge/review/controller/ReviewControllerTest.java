@@ -3,12 +3,16 @@ package com.objects.marketbridge.review.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
+import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.review.domain.Review;
+import com.objects.marketbridge.review.domain.ReviewLike;
 import com.objects.marketbridge.review.dto.*;
 import com.objects.marketbridge.review.service.ReviewService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -32,6 +36,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -649,50 +654,37 @@ public class ReviewControllerTest {
 
 
 
+    @Test
+    @WithMockCustomUser
+    @DisplayName("리뷰라이크 업서트")
+    public void upsertReviewLike() throws Exception {
+        //given
+        Long reviewId = 1L;
+//        Long memberId = 123L;
 
-
-
-
-
-//    //LIKE관련//
-//    @Test
-//    @WithMockCustomUser
-//    @DisplayName("리뷰에_좋아요_상태를_변경하면_좋아요_상태가_변경_되고_응답한다.")
-//    public void addOrChangeReviewLikeControllerTest() throws Exception {
-//    //given
-//        ReviewLikeDto mockResponse = ReviewLikeDto.builder()
-//                .reviewId(1L)
-//                .memberId(123L)
-//                .liked(true)
-//                .build();
-//        given(reviewService.addOrChangeReviewLike(anyLong(), anyLong())).willReturn(mockResponse);
-//
-//    //when
-//        mockMvc.perform(post("/review/1/like")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{\"reviewId\":1,\"memberId\":123,\"liked\":true}")
-//                        .header("Authorization", "bearer AccessToken")) // 액세스 토큰
-//                //then
-//                .andExpect(status().isOk())
-//                .andDo(document("review-add-or-change-review-like",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestFields(
-//                                fieldWithPath("reviewId").description("리뷰 ID"),
-//                                fieldWithPath("memberId").description("회원 ID"),
-//                                fieldWithPath("liked").description("좋아요 상태")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("code").description("응답 코드"),
-//                                fieldWithPath("status").description("응답 상태"),
-//                                fieldWithPath("message").description("응답 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-//                                fieldWithPath("data.reviewId").description("리뷰 ID"),
-//                                fieldWithPath("data.memberId").description("멤버 ID"),
-//                                fieldWithPath("data.liked").description("좋아요 상태")
-//                        )
-//                ));
-//    }
+        // upsertReviewLike 메서드가 void를 반환하므로 willDoNothing을 사용하여 설정
+        willDoNothing().given(reviewService).upsertReviewLike(anyLong(), anyLong());
+        //when
+        mockMvc.perform(post("/review/{reviewId}/like", reviewId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "bearer AccessToken")) // 액세스 토큰
+                //then
+                .andExpect(status().isOk())
+                .andDo(document("review-upsert-review-like",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("reviewId").description("리뷰 ID")
+//                                , parameterWithName("memberId").description("멤버 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 코드"),
+                                fieldWithPath("status").description("응답 상태"),
+                                fieldWithPath("message").description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답 데이터")
+                        )
+                ));
+    }
 
 
 //    //LIKE관련//
