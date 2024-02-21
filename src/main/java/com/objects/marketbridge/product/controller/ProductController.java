@@ -1,10 +1,6 @@
 package com.objects.marketbridge.product.controller;
 
 import com.objects.marketbridge.product.controller.request.CreateProductRequestDto;
-import com.objects.marketbridge.product.controller.request.UpdateProductRequestDto;
-import com.objects.marketbridge.product.controller.response.ReadProductResponseDto;
-import com.objects.marketbridge.product.controller.response.UpdateProductResponseDto;
-import com.objects.marketbridge.product.domain.Product;
 import com.objects.marketbridge.product.dto.ProductSimpleDto;
 import com.objects.marketbridge.product.service.*;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
@@ -16,9 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,21 +42,20 @@ public class ProductController {
 //
 //
     //상품 카테고리별 조회
+    @UserAuthorize
     @GetMapping()
     public ApiResponse<Page<ProductSimpleDto>> getProductByCategory(@PageableDefault(page = 1, size = 60, sort = "createdAt", direction = Sort.Direction.DESC)  Pageable pageable
             , @RequestParam("categoryCode") String categoryId){
         Page<ProductSimpleDto> productPage = productService.getProductByCategory(pageable,categoryId);
         return ApiResponse.ok(productPage);
     }
-//
-//
-////    @UserAuthorize
-////    @GetMapping("/{id}")
-////    public ApiResponse<ReadProductResponseDto> readProduct
-////    (@PathVariable("id") Long id){
-////        ReadProductResponseDto readProductResponseDto = getProductService.read(id);
-////        return ApiResponse.ok(readProductResponseDto);
-////    }
+
+
+    @UserAuthorize
+    @GetMapping("/{id}")
+    public void getProductDetail (@PathVariable("id") Long id){
+        productService.getProductDetail(id);
+    }
 //
 //
 //    //상품수정

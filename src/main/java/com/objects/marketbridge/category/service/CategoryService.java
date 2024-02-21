@@ -2,6 +2,7 @@ package com.objects.marketbridge.category.service;
 
 import com.objects.marketbridge.category.domain.Category;
 import com.objects.marketbridge.category.dto.CategoryDto;
+import com.objects.marketbridge.category.service.port.CategoryCustomRepository;
 import com.objects.marketbridge.category.service.port.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryCustomRepository categoryCustomRepository;
 
 
     //전체(라지,미디엄,스몰). 라지가 해당 미디엄 전부를, 미디엄이 해당 스몰 전부를 포함하는 형태로 JSON형식.
@@ -34,6 +36,11 @@ public class CategoryService {
     public List<CategoryDto> get3DepthCategories(Long parentId) {
         List<Category> categories = categoryRepository.findAllByLevelAndParentId(3L, parentId);
         return convertToDtoList(categories);
+    }
+
+    // 요청 카테고리의 부모 카테고리 정보 반환
+    public String getCategoryInfo(Long categoryId){
+        return categoryCustomRepository.findByChildId(categoryId);
     }
 
     public List<CategoryDto> getLowerCategories(Long categoryId) {
@@ -61,6 +68,7 @@ public class CategoryService {
         return categoryDtoList;
     }
 
+    // 하위 카테고리 정보 다 가져오는 메서드
     public CategoryDto getCategoryById(Long categoryId){
         return CategoryDto.of(categoryRepository.findById(categoryId));
     }
