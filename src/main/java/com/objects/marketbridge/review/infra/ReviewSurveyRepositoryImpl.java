@@ -28,8 +28,8 @@ public class ReviewSurveyRepositoryImpl implements ReviewSurveyRepository {
         return reviewSurveyJpaRepository.findAllByReviewId(reviewId);
     }
 
-    @Override
-    public void deleteByReviewId(Long reviewId) {
-        reviewSurveyJpaRepository.deleteByReviewId(reviewId);
-    }
+//    @Override
+//    public void deleteByReviewId(Long reviewId) {
+//        reviewSurveyJpaRepository.deleteByReviewId(reviewId);
+//    }
 }

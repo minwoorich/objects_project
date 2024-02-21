@@ -10,10 +10,10 @@ public class ReviewLikeRepositoryImpl implements ReviewLikeRepository {
 
     private final ReviewLikeJpaRepository reviewLikeJpaRepository;
 
-    @Override
-    public void deleteByReviewId(Long reviewId) {
-        reviewLikeJpaRepository.deleteByReviewId(reviewId);
-    }
+//    @Override
+//    public void deleteByReviewId(Long reviewId) {
+//        reviewLikeJpaRepository.deleteByReviewId(reviewId);
+//    }
 
 //    @Override
 //    public ReviewLikes findByReviewIdAndMemberId(Long reviewId, Long memberId) {

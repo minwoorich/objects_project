@@ -50,8 +50,7 @@ public class ReviewController {
 
     @DeleteMapping("/{reviewId}")
     @UserAuthorize
-    public ApiResponse<Void> deleteReview
-        (@PathVariable("reviewId") Long reviewId) {
+    public ApiResponse<Void> deleteReview(@PathVariable("reviewId") Long reviewId) {
         reviewService.deleteReview(reviewId);
         return ApiResponse.ok(null);
     }
