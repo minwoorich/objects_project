@@ -1,6 +1,5 @@
 package com.objects.marketbridge.product.dto;
 
-import com.objects.marketbridge.review.dto.ReviewWholeInfoDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
