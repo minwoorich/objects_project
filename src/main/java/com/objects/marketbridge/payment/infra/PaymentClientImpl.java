@@ -7,11 +7,13 @@ import com.objects.marketbridge.payment.service.dto.PaymentDto;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
 import com.objects.marketbridge.payment.service.port.PaymentClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import static com.objects.marketbridge.common.config.KakaoPayConfig.ONE_TIME_CID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PaymentClientImpl implements PaymentClient {
 

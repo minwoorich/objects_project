@@ -3,6 +3,7 @@ package com.objects.marketbridge.order.controller;
 
 import com.objects.marketbridge.common.interceptor.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
+import com.objects.marketbridge.common.security.annotation.UserAuthorize;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
 import com.objects.marketbridge.member.service.port.MemberRepository;
 import com.objects.marketbridge.order.controller.dto.*;
@@ -23,6 +24,7 @@ public class OrderCancelController {
     private final DateTimeHolder dateTimeHolder;
 
     @PostMapping("/cancel-flow/thank-you")
+    @UserAuthorize
     public ApiResponse<ConfirmCancelHttp.Response> confirmCancel(
             @RequestBody @Valid ConfirmCancelHttp.Request request
     ) {
