@@ -31,7 +31,7 @@ public class ProductDetailDto {
     // 옵션만 다른 상품 가져오기 (상품 번호 일치)
     private List<ProductSimpleDto> productSimpleDtos = new ArrayList<>();
     // 리뷰 정보 가져오기
-    private List<ReviewWholeInfoDto> reviewWholeInfoDtos = new ArrayList<>();
+//    private List<ReviewWholeInfoDto> reviewWholeInfoDtos = new ArrayList<>();
     // 카테고리 정보 가져오기
     private String categoryInfo;
     // 셀러 정보 가져오기 - TODO
@@ -39,7 +39,9 @@ public class ProductDetailDto {
 
 
     @Builder
-    private ProductDetailDto(Long productId, Long price, Long discoutRate, String name, String thumUrl, Boolean isOwn, Boolean isSubs, List<ProdTagDto> tagInfos, List<OptionDto> optionInfos, List<ProductImageDto> imageDtos, List<ProductSimpleDto> productSimpleDtos, List<ReviewWholeInfoDto> reviewWholeInfoDtos, String categoryInfo) {
+    private ProductDetailDto(Long productId, Long price, Long discoutRate, String name, String thumUrl, Boolean isOwn, Boolean isSubs, List<ProdTagDto> tagInfos, List<OptionDto> optionInfos, List<ProductImageDto> imageDtos, List<ProductSimpleDto> productSimpleDtos,
+//                             List<ReviewWholeInfoDto> reviewWholeInfoDtos,
+                             String categoryInfo) {
         this.productId = productId;
         this.price = price;
         this.discoutRate = discoutRate;
@@ -51,7 +53,7 @@ public class ProductDetailDto {
         this.optionInfos = optionInfos;
         this.imageDtos = imageDtos;
         this.productSimpleDtos = productSimpleDtos;
-        this.reviewWholeInfoDtos = reviewWholeInfoDtos;
+//        this.reviewWholeInfoDtos = reviewWholeInfoDtos;
         this.categoryInfo = categoryInfo;
     }
 
@@ -84,8 +86,8 @@ public class ProductDetailDto {
         this.productSimpleDtos.add(productSimpleDto);
     }
 
-    public void addReviewWholeInfoDto(ReviewWholeInfoDto reviewWholeInfoDto){
-        this.reviewWholeInfoDtos.add(reviewWholeInfoDto);
-    }
+//    public void addReviewWholeInfoDto(ReviewWholeInfoDto reviewWholeInfoDto){
+//        this.reviewWholeInfoDtos.add(reviewWholeInfoDto);
+//    }
 
 }
