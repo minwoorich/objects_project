@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface ReviewLikeJpaRepository extends JpaRepository<ReviewLike, Long> {
 
-    @Modifying
-    @Query("DELETE FROM ReviewLike rl WHERE rl.reviewId = :reviewId")
-    void deleteByReviewId(@Param("reviewId") Long reviewId);
+//    @Modifying
+//    @Query("DELETE FROM ReviewLike rl WHERE rl.reviewId = :reviewId")
+//    void deleteByReviewId(@Param("reviewId") Long reviewId);
 
 //    ReviewLike findByReviewIdAndMemberId(Long reviewId, Long memberId);
 //

@@ -163,10 +163,10 @@ public class ReviewControllerTest {
                                 fieldWithPath("reviewSurveys[].reviewSurveyCategoryId").description("리뷰 서베이 카테고리 아이디"),
                                 fieldWithPath("reviewSurveys[].reviewSurveyCategoryName").description("리뷰 서베이 카테고리 이름"),
                                 fieldWithPath("reviewSurveys[].content").description("선택하거나 입력한 내용"),
-                                fieldWithPath("reviewImgUrls").description("리뷰 이미지 URL 목록").type(JsonFieldType.ARRAY).optional(),
-                                fieldWithPath("reviewImgUrls[].seqNo").description("이미지 순번"),
-                                fieldWithPath("reviewImgUrls[].imgUrl").description("이미지 주소"),
-                                fieldWithPath("reviewImgUrls[].description").description("이미지 설명")
+                                fieldWithPath("reviewImages").description("리뷰 이미지 URL 목록").type(JsonFieldType.ARRAY).optional(),
+                                fieldWithPath("reviewImages[].seqNo").description("이미지 순번"),
+                                fieldWithPath("reviewImages[].imgUrl").description("이미지 주소"),
+                                fieldWithPath("reviewImages[].description").description("이미지 설명")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("응답 코드"),
@@ -211,7 +211,7 @@ public class ReviewControllerTest {
                 .rating(5)
                 .reviewSurveys(reviewSurveys)
                 .content("리뷰내용")
-                .reviewImgUrls(reviewImgUrls)
+                .reviewImages(reviewImgUrls)
                 .summary("한줄요약")
                 .build();
     }
@@ -256,10 +256,10 @@ public class ReviewControllerTest {
                                         .type(JsonFieldType.ARRAY).optional(), // 필드가 선택적인 경우 optional()을 사용
                                 fieldWithPath("updateReviewSurveys[].reviewSurveyId").description("리뷰 서베이 아이디(리뷰 조회때 아이디 제공)"),
                                 fieldWithPath("updateReviewSurveys[].content").description("선택을 변경하거나 입력을 수정한 내용"),
-                                fieldWithPath("reviewImgUrls").description("리뷰 이미지 URL 목록 - 이 목록에 없는 이미지는 데이터베이스에서 삭제됨.").type(JsonFieldType.ARRAY).optional(),
-                                fieldWithPath("reviewImgUrls[].seqNo").description("이미지 순번"),
-                                fieldWithPath("reviewImgUrls[].imgUrl").description("이미지 주소"),
-                                fieldWithPath("reviewImgUrls[].description").description("이미지 설명")
+                                fieldWithPath("reviewImages").description("리뷰 이미지 URL 목록 - 이 목록에 없는 이미지는 데이터베이스에서 삭제됨.").type(JsonFieldType.ARRAY).optional(),
+                                fieldWithPath("reviewImages[].seqNo").description("이미지 순번"),
+                                fieldWithPath("reviewImages[].imgUrl").description("이미지 주소"),
+                                fieldWithPath("reviewImages[].description").description("이미지 설명")
                         ),
                         responseFields( // 응답에 대한 문서화
                                 fieldWithPath("code").description("응답 코드"),
@@ -300,7 +300,7 @@ public class ReviewControllerTest {
                 .rating(5)
                 .updateReviewSurveys(updateReviewSurveys)
                 .content("수정한 리뷰내용")
-                .reviewImgUrls(reviewImgUrls)
+                .reviewImages(reviewImgUrls)
                 .summary("수정한 한줄요약")
                 .build();
 

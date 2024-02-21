@@ -1,11 +1,10 @@
 package com.objects.marketbridge.image.domain;
 
 import com.objects.marketbridge.member.domain.BaseEntity;
+import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.review.domain.ReviewImage;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -19,8 +18,16 @@ public class Image extends BaseEntity {
 
     private String url;
 
+    @OneToOne(mappedBy = "image")
+    private ReviewImage reviewImage;
+
     @Builder
     private Image(String url) {
         this.url = url;
+    }
+
+    public void setReviewImage(ReviewImage reviewImage) {
+        this.reviewImage = reviewImage;
+        reviewImage.connectImage(this);
     }
 }

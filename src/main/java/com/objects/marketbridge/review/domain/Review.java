@@ -19,12 +19,19 @@ public class Review extends BaseEntity {
     @Column(name = "review_id")
     private Long id;
 
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-//    @OneToMany(mappedBy = "review")
-//    private List<ReviewImage> reviewImages = new ArrayList<>();
+    @OneToMany(mappedBy = "review", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<ReviewImage> reviewImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "review", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<ReviewSurvey> reviewSurveys = new ArrayList<>();
 
     // 별점
     private Integer rating; //1-5
@@ -34,26 +41,28 @@ public class Review extends BaseEntity {
     private String summary;
 
     @Builder
-
-    public Review(Long id, Long memberId, Long productId, Integer rating, String content, String summary) {
+    public Review(Long id, Member member, Product product, Integer rating, String content, String summary) {
         this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+        this.member = member;
+        this.product = product;
         this.rating = rating;
         this.content = content;
         this.summary = summary;
     }
+
     public void update(Integer rating, String content, String summary) {
         this.rating = rating;
         this.content = content;
         this.summary = summary;
     }
 
-//    //LIKE관련//
-//    public void increaseLikes(){
-//        this.likes++;
-//    }
-//    public void decreaseLikes(){
-//        this.likes--;
-//    }
+    public void addReviewImages(ReviewImage reviewImage) {
+        reviewImages.add(reviewImage);
+        reviewImage.setReview(this);
+    }
+
+    public void addReviewSurveys(ReviewSurvey reviewSurvey) {
+        reviewSurveys.add(reviewSurvey);
+        reviewSurvey.setReview(this);
+    }
 }

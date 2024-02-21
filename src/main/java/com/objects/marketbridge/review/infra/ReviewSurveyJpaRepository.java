@@ -16,7 +16,7 @@ public interface ReviewSurveyJpaRepository extends JpaRepository<ReviewSurvey, L
 
     List<ReviewSurvey> findAllByReviewId(Long reviewId);
 
-    @Modifying
-    @Query("DELETE FROM ReviewSurvey rs WHERE rs.reviewId = :reviewId")
-    void deleteByReviewId(@Param("reviewId") Long reviewId);
+//    @Modifying
+//    @Query("DELETE FROM ReviewSurvey rs WHERE rs.reviewId = :reviewId")
+//    void deleteByReviewId(@Param("reviewId") Long reviewId);
 }
