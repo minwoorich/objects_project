@@ -2,9 +2,12 @@ package com.objects.marketbridge.order.domain;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.coupon.domain.Coupon;
 import com.objects.marketbridge.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.product.domain.Product;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,8 +15,7 @@ import java.time.LocalDateTime;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
 import static com.objects.marketbridge.order.domain.StatusCodeType.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 class OrderDetailTest {
@@ -440,6 +442,40 @@ class OrderDetailTest {
         assertThat(result).isEqualTo(10000L);
     }
 
+    @DisplayName("이미 사용한 쿠폰 혹은 유효기간이 만료된 쿠폰은 사용할 수 없다")
+    @Test
+    void create_exception_1(){
+        //given
+        Member member = Member.builder().email("test@email.com").build();
+        Coupon coupon1 = Coupon.builder().name("1000원 할인").minimumPrice(5000L).endDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0)).build();
+        Coupon coupon2 = Coupon.builder().name("1000원 할인").minimumPrice(5000L).endDate(LocalDateTime.of(9999, 1, 1, 0, 0, 0)).build();
+        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(false).endDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0)).build();
+        MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).coupon(coupon2).isUsed(true).endDate(LocalDateTime.of(9999, 1, 1, 0, 0, 0)).build();
+        DateTimeHolder dateTimeHolder = new TestDateTimeHolder(LocalDateTime.of(3024, 1, 1, 0, 0, 0), null, null, null);
+
+        Throwable thrown1 = catchThrowable(() -> OrderDetail.create(null, null, null, null, memberCoupon1, 10000L, 1L, null, null, dateTimeHolder));
+        Throwable thrown2 = catchThrowable(() -> OrderDetail.create(null, null, null, null, memberCoupon2, 10000L, 1L, null, null, dateTimeHolder));
+
+        //then
+        Assertions.assertThat(thrown1).isInstanceOf(CustomLogicException.class);
+        Assertions.assertThat(thrown2).isInstanceOf(CustomLogicException.class);
+    }
+
+    @DisplayName("최소주문금액을 넘지 못하면 쿠폰을 사용 할 수 없다")
+    @Test
+    void create_exception_2(){
+        //given
+        Member member = Member.builder().email("test@email.com").build();
+        Coupon coupon1 = Coupon.builder().name("1000원 할인").minimumPrice(15000L).endDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0)).build();
+        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(false).endDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0)).build();
+        DateTimeHolder dateTimeHolder = new TestDateTimeHolder(LocalDateTime.of(3024, 1, 1, 0, 0, 0), null, null, null);
+
+        Throwable thrown1 = catchThrowable(() -> OrderDetail.create(null, null, null, null, memberCoupon1, 14000L, 1L, null, null, dateTimeHolder));
+
+        //then
+        Assertions.assertThat(thrown1).isInstanceOf(CustomLogicException.class);
+    }
+
     private static OrderDetail createOrderDetail(long quantity, long price) {
         return OrderDetail.builder()
                 .quantity(quantity)
@@ -447,27 +483,4 @@ class OrderDetailTest {
                 .reducedQuantity(0L)
                 .build();
     }
-
-    private OrderDetail createOrderDetail(String statusCode, Product product, Long quantity, long price) {
-        return OrderDetail
-                .builder()
-                .product(product)
-                .statusCode(statusCode)
-                .quantity(quantity)
-                .price(price)
-                .build();
-    }
-
-    private OrderDetail createOrderDetail(String statusCode, String reason, long quantity) {
-        return OrderDetail
-                .builder()
-                .product(Product.builder()
-                        .stock(10L)
-                        .build())
-                .statusCode(statusCode)
-                .quantity(quantity)
-                .build();
-    }
-
-
 }

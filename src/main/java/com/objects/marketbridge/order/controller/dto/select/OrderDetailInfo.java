@@ -16,7 +16,7 @@ public class OrderDetailInfo{
     private Long quantity;
     private Long price;
     private String statusCode;
-    private String deliveredDate; //yyyy.MM.dd
+    private String deliveredDate; //yyyy-MM-dd HH:mm:ss
     private String productThumbImageUrl;
     private String productName;
     private List<String> optionNames;
@@ -46,7 +46,7 @@ public class OrderDetailInfo{
                 .quantity(getOrderDetailDto.getQuantity())
                 .price(getOrderDetailDto.getPrice())
                 .statusCode(getOrderDetailDto.getStatusCode())
-                .deliveredDate("2024.01.01") //yyyy.MM.dd
+                .deliveredDate("2024-01-01 12:00:00") //yyyy-MM-dd HH:mm:ss
                 .productThumbImageUrl(getOrderDetailDto.getProduct().getThumbImg())
                 .productName(getOrderDetailDto.getProduct().getName())
                 .optionNames(getOrderDetailDto.getProduct().getOptionNames())

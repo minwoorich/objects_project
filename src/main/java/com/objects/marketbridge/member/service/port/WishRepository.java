@@ -18,4 +18,6 @@ public interface WishRepository {
    Wishlist save(Wishlist wishlist);
 
    void saveAll(List<Wishlist> wishlist);
+
+   void deleteWishlist(Long memberId,Long productId);
 }

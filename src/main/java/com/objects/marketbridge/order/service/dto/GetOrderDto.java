@@ -2,6 +2,7 @@ package com.objects.marketbridge.order.service.dto;
 
 import com.objects.marketbridge.member.domain.AddressValue;
 import com.objects.marketbridge.order.domain.Order;
+import com.objects.marketbridge.payment.domain.CardInfo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +44,8 @@ public class GetOrderDto {
     }
 
     public static GetOrderDto of(Order order) {
+        CardInfo cardInfo = order.getPayment().getCardInfo();
+
         return GetOrderDto.builder()
                 .memberId(order.getMember().getId())
                 .address(order.getAddress().getAddressValue())
@@ -53,7 +56,7 @@ public class GetOrderDto {
                 .realPrice(order.getRealPrice())
                 .createdAt(order.getCreatedAt())
                 .paymentMethod(order.getPayment().getPaymentMethod())
-                .cardIssuerName(order.getPayment().getCardInfo().getCardIssuerName())
+                .cardIssuerName(cardInfo != null ? cardInfo.getCardIssuerName() : null)
                 .orderDetails(order.getOrderDetails().stream().map(GetOrderDetailDto::of).collect(Collectors.toList()))
                 .build();
     }

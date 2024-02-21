@@ -1,6 +1,7 @@
 package com.objects.marketbridge.review.infra;
 
 import com.objects.marketbridge.review.domain.Review;
+import com.objects.marketbridge.review.service.port.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -65,5 +66,10 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public Page<Review> findAllByIdIn(List<Long> likedOrderedReviewIds, Pageable pageable) {
         return reviewJpaRepository.findAllByIdIn(likedOrderedReviewIds, pageable);
+    }
+
+    @Override
+    public void deleteById(Long reviewId) {
+        reviewJpaRepository.deleteById(reviewId);
     }
 }

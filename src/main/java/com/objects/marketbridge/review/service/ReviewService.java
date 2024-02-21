@@ -1,44 +1,37 @@
 package com.objects.marketbridge.review.service;
 
 import com.objects.marketbridge.image.domain.Image;
+import com.objects.marketbridge.image.infra.ImageRepository;
 import com.objects.marketbridge.member.domain.Member;
 import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.service.port.ProductRepository;
-import com.objects.marketbridge.image.infra.ImageRepository;
 import com.objects.marketbridge.review.domain.*;
 import com.objects.marketbridge.review.dto.*;
-import com.objects.marketbridge.review.infra.*;
+import com.objects.marketbridge.review.service.port.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final MemberRepository memberRepository;
-    private final ProductRepository productRepository;
-    private final OrderDetailQueryRepository orderDetailQueryRepository;
     private final ImageRepository imageRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final ReviewSurveyRepository reviewSurveyRepository;
     private final ReviewSurveyCategoryRepository reviewSurveyCategoryRepository;
     private final SurveyContentRepository surveyContentRepository;
-//    //LIKE관련//
-//    private final ReviewLikesRepository reviewLikesRepository;
-
-
+    private final ReviewLikeRepository reviewLikeRepository;
+    private final MemberRepository memberRepository;
 
     //리뷰 서베이 선택창 조회
     @Transactional
@@ -84,22 +77,17 @@ public class ReviewService {
     }
 
 
-
     //리뷰 등록
     @Transactional
-    public Long createReview(CreateReviewDto request, Long memberId) {
+    public void createReview(CreateReviewDto request, Long memberId) {
 
         //로그인한 유저여야 하므로, memberId는 파라미터로 받아 사용.
-        Member member = memberRepository.findById(memberId);
-
-        Product product = productRepository.findById(request.getProductId());
         Integer rating = request.getRating();
-        List<ReviewSurveyDataDto> reviewSurveyDataDtoList = request.getReviewSurveyDataDtoList();
         String content = request.getContent();
-        List<String> reviewImgUrls = request.getReviewImgUrls();
         String summary = request.getSummary();
 
-        List<ReviewImage> reviewImages = new ArrayList<>();
+        Member member = Member.builder().id(memberId).build();
+        Product product = Product.builder().id(request.getProductId()).build();
 
         //이미지 저장 및 리뷰이미지 저장
         Review review = Review.builder()
@@ -107,82 +95,41 @@ public class ReviewService {
                 .product(product)
                 .rating(rating)
                 .content(content)
-                .reviewImages(reviewImages)
                 .summary(summary)
                 .build();
 
-        for (int i = 0; i < reviewImgUrls.size(); i++) {
-            String reviewImgUrl = reviewImgUrls.get(i);
-            Image image = Image.builder()
-//                    .type(ImageType.REVIEW_IMG.toString())
-                    .url(reviewImgUrl)
-                    .build();
-            ReviewImage reviewImage = ReviewImage.builder()
-                    .review(review)
-                    .image(image)
-                    .seqNo(Long.valueOf(i))
-                    .build();
-
-            imageRepository.save(image);
-            reviewImageRepository.save(reviewImage);
-            reviewImages.add(reviewImage);
-        }
-
-        //바로 밑 부분은 없어도 됨. //리뷰 좋아요 누를시 review-likes가 생성되게 바꿈.
-//        ReviewLikes reviewLikes = ReviewLikes.builder()
-//                .review(review)
-//                .member(member)
-//                //.product(product)
-//                .liked(false)
-//                .build();
-//        reviewLikesRepository.save(reviewLikes);
+        createReviewImages(request.getReviewImages(), review);
 
         //선택&입력된 리뷰 서베이들 등록
-        for(int i = 0; i< reviewSurveyDataDtoList.size(); i++){
-            String surveyCategory = reviewSurveyDataDtoList.get(i).getReviewSurveyCategoryData();
-            ReviewSurvey reviewSurvey = ReviewSurvey.builder()
-                    .review(review)
-                    .reviewSurveyCategory(reviewSurveyCategoryRepository.findByName(surveyCategory))
-                    .surveyCategory(surveyCategory)
-                    .content(reviewSurveyDataDtoList.get(i).getWrittenOrSelectedSurveyContentData())
-                    .build();
-            reviewSurveyRepository.save(reviewSurvey);
-        }
+        createReviewSurveys(request, review);
 
         reviewRepository.save(review);
-
-            //리뷰id 반환
-        return review.getId();
     }
 
 
-
-    //리뷰아이디로 리뷰상세 단건 조회
     @Transactional
-    public ReviewSingleReadDto getReview(Long reviewId, Long memberId){
-        Review findReview = reviewRepository.findById(reviewId);
-        List<ReviewImage> reviewImages = findReview.getReviewImages();
-        List<String> reviewImgUrls = new ArrayList<>();
-        for (ReviewImage reviewImage : reviewImages) {
-            reviewImgUrls.add(reviewImage.getImage().getUrl());
-        }
-        ReviewSingleReadDto reviewSingleReadDto
-                = ReviewSingleReadDto.builder()
-                .reviewId(reviewId)
-                .memberId(memberId)
-                .productId(findReview.getProduct().getId())
-                .reviewImgUrls(reviewImgUrls)
-                .rating(findReview.getRating())
-                .content(findReview.getContent())
-                .build();
-        return reviewSingleReadDto;
+    public void updateReview(UpdateReviewDto request) {
+
+        Long reviewId = request.getReviewId();
+
+        Review review = reviewRepository.findById(reviewId);
+
+        deleteReviewImages(review);
+
+        updateReviewSurveys(request, review);
+        createReviewImages(request.getReviewImages(), review);
+
+        review.update(request.getRating(), request.getContent(), request.getSummary());
     }
 
 
+    @Transactional
+    public void deleteReview(Long reviewId){
+        reviewRepository.deleteById(reviewId);
+    }
 
-//    //LIKE관련//    //상품별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 liked 많은순 내림차순 정렬)
 //    @Transactional
-//    public Page<ReviewWholeInfoDto> getProductReviews(Long productId, Pageable pageable, String sortBy) {
+//    public void getReviews(Long productId) {
 //        Page<Review> reviews;
 //        if (sortBy.equals("likes")) {
 //            reviews = reviewRepository.findAllByProductIdOrderByLikesDesc(productId, pageable);
@@ -209,6 +156,26 @@ public class ReviewService {
 //    }
 
 
+    //리뷰아이디로 리뷰상세 단건 조회
+//    @Transactional
+//    public ReviewSingleReadDto getReview(Long reviewId, Long memberId){
+//        Review findReview = reviewRepository.findById(reviewId);
+//        List<ReviewImage> reviewImages = findReview.getReviewImages();
+//        List<String> reviewImgUrls = new ArrayList<>();
+//        for (ReviewImage reviewImage : reviewImages) {
+//            reviewImgUrls.add(reviewImage.getImage().getUrl());
+//        }
+//        ReviewSingleReadDto reviewSingleReadDto
+//                = ReviewSingleReadDto.builder()
+//                .reviewId(reviewId)
+//                .memberId(memberId)
+//                .productId(findReview.getProduct().getId())
+//                .reviewImgUrls(reviewImgUrls)
+//                .rating(findReview.getRating())
+//                .content(findReview.getContent())
+//                .build();
+//        return reviewSingleReadDto;
+//    }
 
 
 //    //LIKE관련//
@@ -240,14 +207,12 @@ public class ReviewService {
 //    }
 
 
-
     //상품별 리뷰 총갯수 조회
     @Transactional
     public ReviewsCountDto getProductReviewsCount(Long productId) {
         Long count = reviewRepository.countByProductId(productId);
         return ReviewsCountDto.builder().count(count).build();
     }
-
 
 
     //회원별 리뷰 총갯수 조회
@@ -258,86 +223,25 @@ public class ReviewService {
     }
 
 
-
-    //리뷰 수정
+    //review_like upsert(없으면 create, 있으면 delete)
     @Transactional
-    public ReviewIdDto updateReview (ReviewModifiableValuesDto request, Long reviewId, Long memberId){
+    public void upsertReviewLike(Long reviewId, Long memberId){
 
-        //리뷰 수정 부분
-        Review findReview = reviewRepository.findById(reviewId);
-        List<String> updatedReviewImgUrls = request.getReviewImgUrls();
-        Integer updatedRating = request.getRating();
-        String updatedContent = request.getContent();
-        String updatedSummary = request.getSummary();
+//        Review review = Review.builder().id(reviewId).build();
+//        Member member = Member.builder().id(memberId).build();
+        Review review = reviewRepository.findById(reviewId);
+        Member member = memberRepository.findById(memberId);
 
-        //이미지 및 리뷰이미지 수정
-        List<ReviewImage> findReviewImages = reviewImageRepository.findAllByReviewId(reviewId);
-        for (ReviewImage findReviewImage : findReviewImages) {
-            reviewImageRepository.delete(findReviewImage);
-        }
-
-        List<Long> findImageIds
-                = findReviewImages.stream()
-                .map(reviewImage -> reviewImage.getImage().getId())
-                .collect(Collectors.toList());
-        for (Long findImageId : findImageIds) {
-            imageRepository.deleteById(findImageId);
-        }
-
-        List<ReviewImage> reviewImages = new ArrayList<>();
-
-        for (int i = 0; i < updatedReviewImgUrls.size(); i++) {
-            String reviewImgUrl = updatedReviewImgUrls.get(i);
-            Image image = Image.builder()
-//                    .type(ImageType.REVIEW_IMG.toString())
-                    .url(reviewImgUrl)
+        if(reviewLikeRepository.existsByReviewIdAndMemberId(reviewId, memberId)){
+            reviewLikeRepository.deleteByReviewIdAndMemberId(reviewId, memberId);
+        } else {
+            ReviewLike reviewLike = ReviewLike.builder()
+                    .review(review)
+                    .member(member)
                     .build();
-            ReviewImage reviewImage = ReviewImage.builder()
-                    .review(findReview)
-                    .image(image)
-                    .seqNo(Long.valueOf(i))
-                    .build();
-
-            imageRepository.save(image);
-            reviewImageRepository.save(reviewImage);
-            reviewImages.add(reviewImage);
+            reviewLikeRepository.save(reviewLike);
         }
-
-        findReview.update(reviewImages, updatedRating, updatedContent, updatedSummary);
-        reviewRepository.save(findReview);
-
-        ReviewIdDto reviewIdDto = ReviewIdDto.builder().reviewId(reviewId).build();
-        return reviewIdDto;
     }
-
-
-
-    //리뷰 삭제
-    @Transactional
-    public void deleteReview(Long reviewId, Long memberId){
-        Review findReview = reviewRepository.findById(reviewId);
-
-        List<ReviewImage> findReviewImages = reviewImageRepository.findAllByReviewId(reviewId);
-        for (ReviewImage findReviewImage : findReviewImages) {
-            reviewImageRepository.delete(findReviewImage);
-        }
-
-        List<Long> findImageIds
-                = findReviewImages.stream()
-                .map(reviewImage -> reviewImage.getImage().getId())
-                .collect(Collectors.toList());
-        for (Long findImageId : findImageIds) {
-            imageRepository.deleteById(findImageId);
-        }
-
-        reviewSurveyRepository.deleteAllByReviewId(reviewId);
-
-//        //LIKE관련//
-//        reviewLikesRepository.deleteAllByReviewId(reviewId);
-
-        reviewRepository.delete(findReview);
-    }
-
 
 
 //    //LIKE관련//
@@ -397,8 +301,7 @@ public class ReviewService {
 //    }
 
 
-
-//    //LIKE관련//
+    //    //LIKE관련//
 //    //리뷰 좋아요 총갯수 조회
 //    @Transactional
 //    public ReviewLikesCountDto countReviewLikes(Long reviewId) {
@@ -408,4 +311,53 @@ public class ReviewService {
 //                = ReviewLikesCountDto.builder().reviewId(reviewId).count(count).build();
 //        return reviewLikesCountDto;
 //    }
+    private void createReviewSurveys(CreateReviewDto request, Review review) {
+        request.getReviewSurveys().forEach(obj -> {
+            ReviewSurvey reviewSurvey = ReviewSurvey.builder()
+                    .review(review)
+                    .reviewSurveyCategoryId(obj.getReviewSurveyCategoryId())
+                    .surveyCategory(obj.getReviewSurveyCategoryName())
+                    .content(obj.getContent())
+                    .build();
+
+            review.addReviewSurveys(reviewSurvey);
+        });
+    }
+
+    private void createReviewImages(List<ReviewImageDto> request, Review review) {
+        request.forEach(obj -> {
+            Image image = Image.builder()
+                    .url(obj.getImgUrl())
+                    .build();
+            imageRepository.save(image);
+
+            ReviewImage reviewImage = ReviewImage.builder()
+                    .review(review)
+                    .image(image)
+                    .seqNo(obj.getSeqNo())
+                    .description(obj.getDescription())
+                    .build();
+            image.setReviewImage(reviewImage);
+            review.addReviewImages(reviewImage);
+        });
+    }
+
+    private void updateReviewSurveys(UpdateReviewDto request, Review review) {
+        review.getReviewSurveys().forEach(reviewSurvey -> {
+            UpdateReviewSurveyDto updateReviewSurveyDto =
+                    request.getUpdateReviewSurveys().stream()
+                            .filter(obj -> Objects.equals(obj.getReviewSurveyId(), reviewSurvey.getId()))
+                            .findFirst()
+                            .orElse(new UpdateReviewSurveyDto(reviewSurvey.getId(), reviewSurvey.getContent()));
+            reviewSurvey.update(updateReviewSurveyDto.getContent());
+        });
+
+    }
+
+    private void deleteReviewImages(Review review) {
+        List<ReviewImage> reviewImages = review.getReviewImages();
+        reviewImageRepository.deleteAllByIdInBatch(reviewImages.stream().map(ReviewImage::getId).toList());
+        imageRepository.deleteAllByIdInBatch(reviewImages.stream().map(obj -> obj.getImage().getId()).toList());
+    }
+
 }

@@ -1,4 +1,4 @@
-==== *장바구니 수량 수정*
+=== *장바구니 수량 수정*
 
 .*HTTP Request*
 include::{snippets}/cart-update/http-request.adoc[]

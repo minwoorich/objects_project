@@ -1,4 +1,4 @@
-package com.objects.marketbridge.review.infra;
+package com.objects.marketbridge.review.service.port;
 
 import com.objects.marketbridge.review.domain.Review;
 import org.springframework.data.domain.Page;
@@ -13,6 +13,8 @@ public interface ReviewRepository {
     Review findById(Long id);
 
     void delete(Review review);
+
+    void deleteById(Long reviewId);
 
 //    //LIKE관련//
 //    Page<Review> findAllByProductIdOrderByLikesDesc(Long productId, Pageable pageable);

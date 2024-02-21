@@ -1,6 +1,7 @@
 package com.objects.marketbridge.review.infra;
 
 import com.objects.marketbridge.review.domain.ReviewSurvey;
+import com.objects.marketbridge.review.service.port.ReviewSurveyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class ReviewSurveyRepositoryImpl implements ReviewSurveyRepository{
+public class ReviewSurveyRepositoryImpl implements ReviewSurveyRepository {
 
     private final ReviewSurveyJpaRepository reviewSurveyJpaRepository;
 
@@ -26,4 +27,9 @@ public class ReviewSurveyRepositoryImpl implements ReviewSurveyRepository{
     public List<ReviewSurvey> findAllByReviewId(Long reviewId) {
         return reviewSurveyJpaRepository.findAllByReviewId(reviewId);
     }
+
+//    @Override
+//    public void deleteByReviewId(Long reviewId) {
+//        reviewSurveyJpaRepository.deleteByReviewId(reviewId);
+//    }
 }

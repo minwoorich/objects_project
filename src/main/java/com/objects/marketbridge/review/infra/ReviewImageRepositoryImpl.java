@@ -1,9 +1,12 @@
 package com.objects.marketbridge.review.infra;
 
+import com.objects.marketbridge.review.domain.Review;
 import com.objects.marketbridge.review.domain.ReviewImage;
+import com.objects.marketbridge.review.service.port.ReviewImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -30,5 +33,10 @@ public class ReviewImageRepositoryImpl implements ReviewImageRepository {
     @Override
     public void saveAll(List<ReviewImage> reviewImages) {
         reviewImageJpaRepository.saveAll(reviewImages);
+    }
+
+    @Override
+    public void deleteAllByIdInBatch(List<Long> ids) {
+        reviewImageJpaRepository.deleteAllByIdInBatch(ids);
     }
 }

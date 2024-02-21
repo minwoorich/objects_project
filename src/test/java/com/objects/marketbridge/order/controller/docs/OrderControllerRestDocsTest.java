@@ -157,7 +157,7 @@ public class OrderControllerRestDocsTest {
                 .createdAt("createdAt")
                 .build();
 
-        given(kakaoPayService.ready(any(KakaoPayReadyRequest.class))).willReturn(response);
+        given(createOrderService.ready(any(CreateOrderHttp.Request.class),anyString(), anyLong())).willReturn(response);
         willDoNothing().given(createOrderService).create(any(CreateOrderDto.class));
 
         // when, then
@@ -181,17 +181,15 @@ public class OrderControllerRestDocsTest {
                                         .description("배송지 ID"),
                                 fieldWithPath("orderName").type(JsonFieldType.STRING)
                                         .description("주문 이름"),
-                                fieldWithPath("orderName").type(JsonFieldType.STRING)
-                                        .description("주문 이름"),
                                 fieldWithPath("productValues").type(JsonFieldType.ARRAY)
                                         .description("주문 상품 정보"),
 
                                 fieldWithPath("productValues[].productId").type(JsonFieldType.NUMBER)
                                         .description("상품 아이디"),
                                 fieldWithPath("productValues[].couponId").type(JsonFieldType.NUMBER)
-                                        .description("사용한 쿠폰 아이디"),
+                                        .description("사용한 쿠폰 아이디").optional(),
                                 fieldWithPath("productValues[].sellerId").type(JsonFieldType.NUMBER)
-                                        .description("판매자 아이디"),
+                                        .description("판매자 아이디").optional(),
                                 fieldWithPath("productValues[].quantity").type(JsonFieldType.NUMBER)
                                         .description("주문 상품 수량"),
                                 fieldWithPath("productValues[].deliveredDate").type(JsonFieldType.STRING)
@@ -219,7 +217,7 @@ public class OrderControllerRestDocsTest {
                                 fieldWithPath("data.iosAppScheme").type(JsonFieldType.STRING)
                                         .description("카카오페이 결제 화면으로 이동하는 iOS 앱 스킴"),
                                 fieldWithPath("data.createdAt").type(JsonFieldType.STRING)
-                                        .description("결제 준비 요청 시간")
+                                        .description("결제 준비 요청 시간 (주문생성시간X)")
                         )
                         ));
     }
@@ -358,7 +356,7 @@ public class OrderControllerRestDocsTest {
     private GetOrderHttp.Response createResponse(OrderDetailInfo orderDetailInfo) {
         return GetOrderHttp.Response.builder()
                 .orderNo("orderNo")
-                .createdAt("2023.12.31 12:00:00")
+                .createdAt("2023-12-31 12:00:00")
                 .orderDetailInfos(List.of(orderDetailInfo))
                 .build();
     }
@@ -371,7 +369,7 @@ public class OrderControllerRestDocsTest {
         //given
         GetOrderDetailHttp.Response response = GetOrderDetailHttp.Response.builder()
                 .orderNo("orderNo")
-                .createdAt("2024.01.01 12:00:00")
+                .createdAt("2024-01-01 12:00:00")
                 .orderDetailInfos(List.of(createOrderDetailInfo()))
                 .addressValue(createAddressValue())
                 .paymentInfo(createPaymentInfo())
@@ -404,7 +402,7 @@ public class OrderControllerRestDocsTest {
 
 
                                 fieldWithPath("data.createdAt").type(JsonFieldType.STRING)
-                                        .description("주문 일자 (yyyy.MM.dd)"),
+                                        .description("주문 일자 (yyyy-MM-dd HH:mm:ss)"),
                                 fieldWithPath("data.orderNo").type(JsonFieldType.STRING)
                                         .description("주문 번호"),
 
@@ -423,7 +421,7 @@ public class OrderControllerRestDocsTest {
                                 fieldWithPath("data.orderDetailInfos[].statusCode").type(JsonFieldType.STRING)
                                         .description("주문 상태"),
                                 fieldWithPath("data.orderDetailInfos[].deliveredDate").type(JsonFieldType.STRING)
-                                        .description("배송 도착 일자 (yyyy.MM.dd)"),
+                                        .description("배송 도착 일자 (yyyy-MM-dd)"),
                                 fieldWithPath("data.orderDetailInfos[].productThumbImageUrl").type(JsonFieldType.STRING)
                                         .description("상품 썸네일 URL"),
                                 fieldWithPath("data.orderDetailInfos[].productName").type(JsonFieldType.STRING)
@@ -495,7 +493,7 @@ public class OrderControllerRestDocsTest {
                 .quantity(1L)
                 .price(10000L)
                 .statusCode(StatusCodeType.PAYMENT_COMPLETED.getCode())
-                .deliveredDate("2024.01.01")
+                .deliveredDate("2024.01.01 HH:mm:ss")
                 .productThumbImageUrl("thumbImageUrl")
                 .productName("티셔츠")
                 .optionNames(List.of("빨강", "XL"))

@@ -3,10 +3,7 @@ package com.objects.marketbridge.review.domain;
 import com.objects.marketbridge.member.domain.BaseEntity;
 import com.objects.marketbridge.image.domain.Image;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 @Entity
@@ -19,20 +16,29 @@ public class ReviewImage extends BaseEntity {
     @Column(name = "review_image_id")
     private Long id;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
     private Review review;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "image_id")
     private Image image;
 
     private Long seqNo;
 
+    private String description;
+
     @Builder
-    private ReviewImage(Review review, Image image, Long seqNo) {
+    public ReviewImage(Long id, Review review, Image image, Long seqNo, String description) {
+        this.id = id;
         this.review = review;
         this.image = image;
         this.seqNo = seqNo;
+        this.description = description;
+    }
+
+    public void connectImage(Image image) {
+        this.image=image;
     }
 }

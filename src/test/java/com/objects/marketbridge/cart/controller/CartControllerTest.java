@@ -18,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -132,7 +131,6 @@ class CartControllerTest {
                 get("/carts")
                         .param("page", "0")
                         .param("size", "1")
-                        .param("sort", "createdAt,DESC")
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .accept(MediaType.APPLICATION_JSON);
 
@@ -144,8 +142,7 @@ class CartControllerTest {
                         preprocessResponse(prettyPrint()),
                         queryParameters(
                                 parameterWithName("page").description("페이지 번호"),
-                                parameterWithName("size").description("페이지 사이즈"),
-                                parameterWithName("sort").description("정렬기준, 정렬순서")
+                                parameterWithName("size").description("페이지 사이즈")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -157,6 +154,8 @@ class CartControllerTest {
                                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                                         .description("응답 데이터"),
 
+                                fieldWithPath("data.content[].cartId").type(JsonFieldType.NUMBER)
+                                        .description("장바구니 아이디"),
                                 fieldWithPath("data.content[].productId").type(JsonFieldType.NUMBER)
                                         .description("상품 아이디"),
                                 fieldWithPath("data.content[].productNo").type(JsonFieldType.STRING)
@@ -180,7 +179,7 @@ class CartControllerTest {
                                 fieldWithPath("data.content[].deliveryFee").type(JsonFieldType.NUMBER)
                                         .description("배송비"),
                                 fieldWithPath("data.content[].deliveredDate").type(JsonFieldType.STRING)
-                                        .description("예상 도착 일자(yyyy.MM.dd)"),
+                                        .description("예상 도착 일자(yyyy-MM-dd)"),
                                 fieldWithPath("data.content[].optionNames[]").type(JsonFieldType.ARRAY)
                                         .description("선택한 옵션 리스트"),
 
@@ -220,6 +219,7 @@ class CartControllerTest {
 
     private List<GetCartDto> createDto() {
         return List.of(GetCartDto.builder()
+                .cartId(1L)
                 .productId(1L)
                 .productNo("111111111-111111111")
                 .productName("티셔츠")

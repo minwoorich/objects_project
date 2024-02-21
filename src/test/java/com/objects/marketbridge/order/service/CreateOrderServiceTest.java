@@ -28,8 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -48,7 +47,6 @@ class CreateOrderServiceTest {
     @Autowired OrderDetailCommendRepository orderDetailCommendRepository;
     @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired MemberCouponRepository memberCouponRepository;
-    @Autowired EntityManager em;
 
     @BeforeEach
     void init(){
@@ -123,11 +121,15 @@ class CreateOrderServiceTest {
         Coupon coupon1 = Coupon.builder()
                 .price(2000L)
                 .product(products.get(0))
+                .minimumPrice(1L)
+                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
                 .name("가방쿠폰").build();
 
         Coupon coupon2 = Coupon.builder()
                 .price(2000L)
                 .product(products.get(1))
+                .minimumPrice(1L)
+                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
                 .name("티비쿠폰").build();
 
         return List.of(coupon1, coupon2);
@@ -137,12 +139,12 @@ class CreateOrderServiceTest {
 
         MemberCoupon memberCoupon1 = MemberCoupon.builder()
                 .member(member)
-                .usedDate(LocalDateTime.now())
+                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
                 .isUsed(false).build();
 
         MemberCoupon memberCoupon2 = MemberCoupon.builder()
                 .member(member)
-                .usedDate(LocalDateTime.now())
+                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
                 .isUsed(false).build();
 
         return List.of(memberCoupon1, memberCoupon2);
@@ -319,7 +321,7 @@ class CreateOrderServiceTest {
         assertThat(products.get(2).getStock()).isEqualTo(stocks.get(2)-quantities.get(2));
     }
 
-    @DisplayName("주문량이 재고가 많을 경우 예외를 발생시켜야한다")
+    @DisplayName("주문량이 재고보다 많을 경우 예외를 발생시켜야한다")
     @Test
     void productStockDecrease_error(){
 
@@ -329,11 +331,11 @@ class CreateOrderServiceTest {
         Long maxQuantity = 100L;
         CreateOrderDto createOrderDto = createDto(member, address, maxQuantity);
 
-        //when, them
-        assertThatThrownBy(() ->
-                createOrderService.create(createOrderDto))
-                .isInstanceOf(CustomLogicException.class);
+        // when
+        Throwable thrown = catchThrowable(() -> createOrderService.create(createOrderDto));
 
+        // then
+        assertThat(thrown).isInstanceOf(CustomLogicException.class);
     }
 
     private CreateOrderDto createDto(Member member, Address address, Long lastQuantity) {

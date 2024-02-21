@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class ImageRepositoryImpl implements ImageRepository {
@@ -28,5 +31,10 @@ public class ImageRepositoryImpl implements ImageRepository {
 
     public void deleteById(Long id) {
         imageJpaRepository.delete(findById(id));
+    }
+
+    @Override
+    public void deleteAllByIdInBatch(List<Long> ids) {
+        imageJpaRepository.deleteAllByIdInBatch(ids);
     }
 }

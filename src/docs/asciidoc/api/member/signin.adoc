@@ -4,6 +4,7 @@ image:../image/signin.png[]
 
 .*HTTP Request*
 include::{snippets}/auth-sign-in/http-request.adoc[]
+include::{snippets}/auth-sign-in/request-fields.adoc[]
 
 .*HTTP Response*
 include::{snippets}/auth-sign-in/http-response.adoc[]
