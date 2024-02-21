@@ -1,5 +1,6 @@
 package com.objects.marketbridge.common.infra;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.config.KakaoPayConfig;
 import com.objects.marketbridge.common.dto.*;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
@@ -76,21 +77,22 @@ public class KakaoPayService {
     }
 
     // 취소
-    public KaKaoCancelResponse cancel(String tid, Integer cancelAmount) {
+    public KaKaoPayCancelResponse cancel(String tid, Integer cancelAmount) {
 
-        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
-        requestMap.add("cid", ONE_TIME_CID);
-        requestMap.add("tid", tid);
-        requestMap.add("cancel_amount", String.valueOf(cancelAmount));
-        requestMap.add("cancel_tax_free_amount", "0");
+        KakaoPayCancelRequest request = KakaoPayCancelRequest.builder()
+                .cid(ONE_TIME_CID)
+                .tid(tid)
+                .cancelAmount(cancelAmount)
+                .cancelTaxFreeAmount(0)
+                .build();
 
         RestClient restClient = setup();
 
         return restClient.post()
                 .uri(CANCEL_END_POINT)
-                .body(requestMap)
+                .body(request)
                 .retrieve()
-                .body(KaKaoCancelResponse.class);
+                .body(KaKaoPayCancelResponse.class);
     }
 
     // 정기구독 비활성화
