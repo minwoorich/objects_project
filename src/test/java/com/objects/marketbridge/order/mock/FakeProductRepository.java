@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;

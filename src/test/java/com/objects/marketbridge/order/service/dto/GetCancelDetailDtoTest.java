@@ -1,22 +1,23 @@
 package com.objects.marketbridge.order.service.dto;
 
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.coupon.domain.Coupon;
-import com.objects.marketbridge.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.order.domain.MemberShipPrice;
-import com.objects.marketbridge.order.domain.OrderCancelReturn;
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.domain.StatusCodeType;
+import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.order.domain.MemberShipPrice;
+import com.objects.marketbridge.domains.order.domain.OrderCancelReturn;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.order.domain.StatusCodeType;
+import com.objects.marketbridge.domains.order.service.dto.GetCancelDetailDto;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
-import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.domains.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 
-import static com.objects.marketbridge.member.domain.MembershipType.BASIC;
-import static com.objects.marketbridge.member.domain.MembershipType.WOW;
+import static com.objects.marketbridge.domains.member.domain.MembershipType.BASIC;
+import static com.objects.marketbridge.domains.member.domain.MembershipType.WOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GetCancelDetailDtoTest {

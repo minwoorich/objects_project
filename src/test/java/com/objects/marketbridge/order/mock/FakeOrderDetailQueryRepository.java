@@ -1,8 +1,8 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
-import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailQueryRepository;
+import com.objects.marketbridge.domains.product.domain.Product;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;

@@ -1,17 +1,18 @@
 package com.objects.marketbridge.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.objects.marketbridge.common.config.KakaoPayConfig;
-import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
-import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
-import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
+import com.objects.marketbridge.common.kakao.KakaoPayConfig;
+import com.objects.marketbridge.common.kakao.dto.KakaoPayApproveResponse;
+import com.objects.marketbridge.common.kakao.dto.KakaoPayReadyRequest;
+import com.objects.marketbridge.common.kakao.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
-import com.objects.marketbridge.member.controller.request.CreateSubsRequest;
-import com.objects.marketbridge.member.dto.CreateSubsDto;
-import com.objects.marketbridge.member.service.MemberShipService;
-import com.objects.marketbridge.payment.domain.Amount;
-import com.objects.marketbridge.payment.domain.CardInfo;
+import com.objects.marketbridge.domains.member.controller.MemberShipController;
+import com.objects.marketbridge.domains.member.controller.request.CreateSubsRequest;
+import com.objects.marketbridge.domains.member.dto.CreateSubsDto;
+import com.objects.marketbridge.domains.member.service.MemberShipService;
+import com.objects.marketbridge.domains.payment.domain.Amount;
+import com.objects.marketbridge.domains.payment.domain.CardInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

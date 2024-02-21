@@ -1,12 +1,13 @@
 package com.objects.marketbridge.payment.controller;
 
-import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
-import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.payment.controller.dto.CancelledPaymentHttp;
-import com.objects.marketbridge.payment.controller.dto.CompleteOrderHttp;
-import com.objects.marketbridge.payment.service.CreatePaymentService;
-import com.objects.marketbridge.payment.service.QuitPaymentService;
-import com.objects.marketbridge.payment.service.dto.ProductInfoDto;
+import com.objects.marketbridge.common.kakao.dto.KakaoPayApproveResponse;
+import com.objects.marketbridge.domains.member.domain.AddressValue;
+import com.objects.marketbridge.domains.payment.controller.PaymentController;
+import com.objects.marketbridge.domains.payment.controller.dto.CancelledPaymentHttp;
+import com.objects.marketbridge.domains.payment.controller.dto.CompleteOrderHttp;
+import com.objects.marketbridge.domains.payment.service.CreatePaymentService;
+import com.objects.marketbridge.domains.payment.service.QuitPaymentService;
+import com.objects.marketbridge.domains.payment.service.dto.ProductInfoDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,13 +26,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.objects.marketbridge.common.enums.CardCoType.KAKAOBANK;
-import static com.objects.marketbridge.common.enums.KakaoStatus.QUIT_PAYMENT;
-import static com.objects.marketbridge.payment.domain.PaymentType.CARD;
+import static com.objects.marketbridge.common.kakao.enums.CardCoType.KAKAOBANK;
+import static com.objects.marketbridge.common.kakao.enums.KakaoStatus.QUIT_PAYMENT;
+import static com.objects.marketbridge.domains.payment.domain.PaymentType.CARD;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;

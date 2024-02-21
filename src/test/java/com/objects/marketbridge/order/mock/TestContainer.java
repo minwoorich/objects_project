@@ -1,17 +1,17 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.controller.OrderCancelController;
-import com.objects.marketbridge.order.controller.OrderCancelReturnController;
-import com.objects.marketbridge.order.controller.OrderReturnController;
-import com.objects.marketbridge.order.service.OrderCancelService;
-import com.objects.marketbridge.order.service.OrderReturnService;
-import com.objects.marketbridge.order.service.port.*;
-import com.objects.marketbridge.payment.service.port.PaymentClient;
-import com.objects.marketbridge.coupon.service.port.CouponRepository;
-import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.order.controller.OrderCancelController;
+import com.objects.marketbridge.domains.order.controller.OrderCancelReturnController;
+import com.objects.marketbridge.domains.order.controller.OrderReturnController;
+import com.objects.marketbridge.domains.order.service.OrderCancelService;
+import com.objects.marketbridge.domains.order.service.OrderReturnService;
+import com.objects.marketbridge.domains.order.service.port.*;
+import com.objects.marketbridge.domains.payment.service.port.PaymentClient;
+import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.Builder;
 
 public class TestContainer {

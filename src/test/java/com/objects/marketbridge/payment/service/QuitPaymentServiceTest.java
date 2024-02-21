@@ -1,22 +1,25 @@
 package com.objects.marketbridge.payment.service;
 
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.coupon.domain.Coupon;
-import com.objects.marketbridge.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.member.domain.*;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.mock.TestDateTimeHolder;
-import com.objects.marketbridge.order.service.port.OrderCommendRepository;
-import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
-import com.objects.marketbridge.order.service.port.OrderDtoRepository;
-import com.objects.marketbridge.order.service.port.OrderQueryRepository;
-import com.objects.marketbridge.payment.domain.Payment;
-import com.objects.marketbridge.payment.service.port.PaymentRepository;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.coupon.service.port.CouponRepository;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.member.domain.Address;
+import com.objects.marketbridge.domains.member.domain.AddressValue;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.domain.MembershipType;
+import com.objects.marketbridge.domains.payment.service.QuitPaymentService;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.order.domain.Order;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailQueryRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderDtoRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.domains.payment.domain.Payment;
+import com.objects.marketbridge.domains.payment.service.port.PaymentRepository;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.PAYMENT_COMPLETED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -46,7 +49,8 @@ class QuitPaymentServiceTest {
     @Autowired OrderDetailQueryRepository orderDetailQueryRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired ProductRepository productRepository;
-    @Autowired QuitPaymentService quitPaymentService;
+    @Autowired
+    QuitPaymentService quitPaymentService;
     @Autowired PaymentRepository paymentRepository;
     @Autowired CouponRepository couponRepository;
     @Autowired DateTimeHolder dateTimeHolder;

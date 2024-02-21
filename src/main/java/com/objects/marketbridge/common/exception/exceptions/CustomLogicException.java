@@ -1,6 +1,6 @@
 package com.objects.marketbridge.common.exception.exceptions;
 
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.common.utils.DateTimeHolder;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

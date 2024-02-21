@@ -1,10 +1,10 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.dto.MemberEmail;
-import com.objects.marketbridge.member.dto.GetMemberInfo;
-import com.objects.marketbridge.member.dto.MemberId;
-import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.dto.MemberEmail;
+import com.objects.marketbridge.domains.member.dto.GetMemberInfo;
+import com.objects.marketbridge.domains.member.dto.MemberId;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.test.util.ReflectionTestUtils;
 

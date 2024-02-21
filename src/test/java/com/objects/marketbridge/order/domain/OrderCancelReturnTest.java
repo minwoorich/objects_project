@@ -1,10 +1,13 @@
 package com.objects.marketbridge.order.domain;
 
+import com.objects.marketbridge.domains.order.domain.CancelReturnStatusCode;
+import com.objects.marketbridge.domains.order.domain.OrderCancelReturn;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.DELIVERY_COMPLETED;
-import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_PARTIAL_RETURN;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.DELIVERY_COMPLETED;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.ORDER_PARTIAL_RETURN;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class OrderCancelReturnTest {

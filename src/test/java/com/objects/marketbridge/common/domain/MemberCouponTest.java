@@ -1,7 +1,7 @@
 package com.objects.marketbridge.common.domain;
 
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

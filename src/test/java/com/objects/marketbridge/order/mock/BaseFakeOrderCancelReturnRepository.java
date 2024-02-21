@@ -1,6 +1,6 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.order.domain.OrderCancelReturn;
+import com.objects.marketbridge.domains.order.domain.OrderCancelReturn;
 import lombok.Getter;
 
 import java.util.ArrayList;
