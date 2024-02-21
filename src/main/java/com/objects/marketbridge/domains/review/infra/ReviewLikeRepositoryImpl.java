@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domains.review.infra;
 
+import com.objects.marketbridge.domains.review.domain.ReviewLike;
 import com.objects.marketbridge.domains.review.service.port.ReviewLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -10,19 +11,31 @@ public class ReviewLikeRepositoryImpl implements ReviewLikeRepository {
 
     private final ReviewLikeJpaRepository reviewLikeJpaRepository;
 
+    @Override
+    public Boolean existsByReviewIdAndMemberId(Long reviewId, Long memberId) {
+        return reviewLikeJpaRepository.existsByReviewIdAndMemberId(reviewId, memberId);
+    }
+
+    @Override
+    public void save(ReviewLike reviewLike) {
+        reviewLikeJpaRepository.save(reviewLike);
+    }
+
+    @Override
+    public void deleteByReviewIdAndMemberId(Long reviewId, Long memberId) {
+        reviewLikeJpaRepository.deleteByReviewIdAndMemberId(reviewId, memberId);
+    }
+
+
 //    @Override
 //    public void deleteByReviewId(Long reviewId) {
 //        reviewLikeJpaRepository.deleteByReviewId(reviewId);
-//    }
 
+//    }
 //    @Override
 //    public ReviewLikes findByReviewIdAndMemberId(Long reviewId, Long memberId) {
 //        return reviewLikesJpaRepository.findByReviewIdAndMemberId(reviewId, memberId);
-//    }
-//
-//    @Override
-//    public void save(ReviewLikes reviewLikes) {
-//        reviewLikesJpaRepository.save(reviewLikes);
+
 //    }
 //
 //    @Override

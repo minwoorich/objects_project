@@ -4,6 +4,9 @@ import com.objects.marketbridge.domains.review.domain.ReviewLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReviewLikeJpaRepository extends JpaRepository<ReviewLike, Long> {
+    Boolean existsByReviewIdAndMemberId(Long reviewId, Long memberId);
+
+    void deleteByReviewIdAndMemberId(Long reviewId, Long memberId);
 
 //    @Modifying
 //    @Query("DELETE FROM ReviewLike rl WHERE rl.reviewId = :reviewId")
