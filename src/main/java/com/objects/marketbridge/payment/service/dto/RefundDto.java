@@ -1,6 +1,6 @@
 package com.objects.marketbridge.payment.service.dto;
 
-import com.objects.marketbridge.common.dto.KaKaoCancelResponse;
+import com.objects.marketbridge.common.dto.KaKaoPayCancelResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,11 +22,11 @@ public class RefundDto {
         this.refundProcessedAt = refundProcessedAt;
     }
 
-    public static RefundDto of(KaKaoCancelResponse kaKaoCancelResponse) {
+    public static RefundDto of(KaKaoPayCancelResponse kaKaoPayCancelResponse) {
         return RefundDto.builder()
-                .refundMethod(kaKaoCancelResponse.getPayment_method_type())
-                .refundMethod(kaKaoCancelResponse.getCanceled_at())
-                .totalRefundAmount((long) kaKaoCancelResponse.getCanceled_amount().getTotal())
+                .refundMethod(kaKaoPayCancelResponse.getPayment_method_type())
+                .refundMethod(kaKaoPayCancelResponse.getCanceled_at())
+                .totalRefundAmount((long) kaKaoPayCancelResponse.getCanceled_amount().getTotal())
                 .build();
     }
 }
