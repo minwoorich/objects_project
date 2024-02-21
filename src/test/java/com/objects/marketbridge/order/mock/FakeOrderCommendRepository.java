@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.domains.order.domain.Order;
+import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;

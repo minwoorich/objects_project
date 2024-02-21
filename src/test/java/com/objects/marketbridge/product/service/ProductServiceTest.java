@@ -1,10 +1,11 @@
 package com.objects.marketbridge.product.service;
 
-import com.objects.marketbridge.category.domain.Category;
-import com.objects.marketbridge.category.service.port.CategoryRepository;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.dto.CreateProductDto;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.category.domain.Category;
+import com.objects.marketbridge.domains.category.service.port.CategoryRepository;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.dto.CreateProductDto;
+import com.objects.marketbridge.domains.product.service.ProductService;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional

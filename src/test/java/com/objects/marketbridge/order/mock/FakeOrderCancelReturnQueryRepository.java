@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.order.domain.OrderCancelReturn;
-import com.objects.marketbridge.order.service.port.OrderCancelReturnQueryRepository;
+import com.objects.marketbridge.domains.order.domain.OrderCancelReturn;
+import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnQueryRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 public class FakeOrderCancelReturnQueryRepository extends BaseFakeOrderCancelReturnRepository implements OrderCancelReturnQueryRepository {

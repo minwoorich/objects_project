@@ -1,20 +1,21 @@
 package com.objects.marketbridge.payment.service;
 
-import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.member.domain.Address;
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.service.port.OrderCommendRepository;
-import com.objects.marketbridge.order.service.port.OrderQueryRepository;
-import com.objects.marketbridge.payment.domain.Amount;
-import com.objects.marketbridge.payment.domain.CardInfo;
-import com.objects.marketbridge.payment.domain.Payment;
-import com.objects.marketbridge.payment.service.port.PaymentRepository;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.member.domain.AddressValue;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.payment.service.CreatePaymentService;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.common.kakao.dto.KakaoPayApproveResponse;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.member.domain.Address;
+import com.objects.marketbridge.domains.order.domain.Order;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.domains.payment.domain.Amount;
+import com.objects.marketbridge.domains.payment.domain.CardInfo;
+import com.objects.marketbridge.domains.payment.domain.Payment;
+import com.objects.marketbridge.domains.payment.service.port.PaymentRepository;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,8 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_INIT;
-import static com.objects.marketbridge.order.domain.StatusCodeType.PAYMENT_COMPLETED;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.ORDER_INIT;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.PAYMENT_COMPLETED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -42,7 +43,8 @@ class CreatePaymentServiceTest {
     @Autowired ProductRepository productRepository;
     @Autowired OrderCommendRepository orderCommendRepository;
     @Autowired OrderQueryRepository orderQueryRepository;
-    @Autowired CreatePaymentService createPaymentService;
+    @Autowired
+    CreatePaymentService createPaymentService;
 
 
     @BeforeEach

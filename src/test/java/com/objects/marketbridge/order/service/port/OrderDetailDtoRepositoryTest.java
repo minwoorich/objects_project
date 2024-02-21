@@ -1,13 +1,15 @@
 package com.objects.marketbridge.order.service.port;
 
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.coupon.service.port.CouponRepository;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.order.domain.Order;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.order.infra.dtio.GetCancelReturnListDtio;
+import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailDtoRepository;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.*;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")

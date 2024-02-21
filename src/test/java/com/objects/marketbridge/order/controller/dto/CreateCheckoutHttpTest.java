@@ -1,7 +1,8 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.member.domain.Address;
+import com.objects.marketbridge.domains.member.domain.AddressValue;
+import com.objects.marketbridge.domains.member.domain.Address;
+import com.objects.marketbridge.domains.order.controller.dto.CreateCheckoutHttp;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

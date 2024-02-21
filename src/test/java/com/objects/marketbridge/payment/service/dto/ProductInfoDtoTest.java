@@ -1,7 +1,8 @@
 package com.objects.marketbridge.payment.service.dto;
 
 
-import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.domains.payment.service.dto.ProductInfoDto;
+import com.objects.marketbridge.domains.product.domain.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

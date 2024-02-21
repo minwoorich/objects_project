@@ -1,13 +1,14 @@
 package com.objects.marketbridge.cart.service.dto;
 
 
-import com.objects.marketbridge.cart.domain.Cart;
-import com.objects.marketbridge.coupon.domain.Coupon;
-import com.objects.marketbridge.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.product.domain.Option;
-import com.objects.marketbridge.product.domain.ProdOption;
-import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.domains.cart.domain.Cart;
+import com.objects.marketbridge.domains.cart.service.dto.GetCartDto;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.product.domain.Option;
+import com.objects.marketbridge.domains.product.domain.ProdOption;
+import com.objects.marketbridge.domains.product.domain.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

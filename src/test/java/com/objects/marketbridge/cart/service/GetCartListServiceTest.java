@@ -1,24 +1,25 @@
 package com.objects.marketbridge.cart.service;
 
 
-import com.objects.marketbridge.cart.domain.Cart;
-import com.objects.marketbridge.cart.service.dto.GetCartDto;
-import com.objects.marketbridge.cart.service.port.CartCommendRepository;
-import com.objects.marketbridge.cart.service.port.CartDtoRepository;
-import com.objects.marketbridge.cart.service.port.CartQueryRepository;
-import com.objects.marketbridge.common.interceptor.SliceResponse;
-import com.objects.marketbridge.coupon.domain.Coupon;
-import com.objects.marketbridge.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.coupon.service.port.CouponRepository;
-import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.product.domain.Option;
-import com.objects.marketbridge.product.domain.ProdOption;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.service.port.ProductRepository;
-import com.objects.marketbridge.product.service.port.OptionRepository;
-import com.objects.marketbridge.product.service.port.ProdOptionRepository;
+import com.objects.marketbridge.domains.cart.domain.Cart;
+import com.objects.marketbridge.domains.cart.service.GetCartListService;
+import com.objects.marketbridge.domains.cart.service.dto.GetCartDto;
+import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartDtoRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
+import com.objects.marketbridge.common.responseobj.SliceResponse;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.product.domain.Option;
+import com.objects.marketbridge.domains.product.domain.ProdOption;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.product.service.port.OptionRepository;
+import com.objects.marketbridge.domains.product.service.port.ProdOptionRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -49,7 +50,8 @@ class GetCartListServiceTest {
     @Autowired CartCommendRepository cartCommendRepository;
     @Autowired ProductRepository productRepository;
     @Autowired MemberRepository memberRepository;
-    @Autowired GetCartListService getCartListService;
+    @Autowired
+    GetCartListService getCartListService;
     @Autowired OptionRepository optionRepository;
     @Autowired ProdOptionRepository prodOptionRepository;
     @Autowired CouponRepository couponRepository;

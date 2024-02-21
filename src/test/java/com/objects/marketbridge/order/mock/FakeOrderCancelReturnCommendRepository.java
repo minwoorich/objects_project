@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.order.domain.OrderCancelReturn;
-import com.objects.marketbridge.order.service.port.OrderCancelReturnCommendRepository;
+import com.objects.marketbridge.domains.order.domain.OrderCancelReturn;
+import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnCommendRepository;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Objects;

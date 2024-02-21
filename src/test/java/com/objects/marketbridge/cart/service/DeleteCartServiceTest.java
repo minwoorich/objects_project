@@ -1,10 +1,11 @@
 package com.objects.marketbridge.cart.service;
 
-import com.objects.marketbridge.cart.domain.Cart;
-import com.objects.marketbridge.cart.service.port.CartCommendRepository;
-import com.objects.marketbridge.cart.service.port.CartQueryRepository;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.cart.domain.Cart;
+import com.objects.marketbridge.domains.cart.service.DeleteCartService;
+import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -27,7 +28,8 @@ import static org.assertj.core.api.Assertions.*;
 @Slf4j
 class DeleteCartServiceTest {
 
-    @Autowired DeleteCartService deleteCartService ;
+    @Autowired
+    DeleteCartService deleteCartService ;
     @Autowired
     ProductRepository productRepository;
     @Autowired CartQueryRepository cartQueryRepository;
