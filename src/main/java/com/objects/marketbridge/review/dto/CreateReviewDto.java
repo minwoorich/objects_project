@@ -14,7 +14,7 @@ public class CreateReviewDto {
     private Integer rating; //별점, 1~5
     private List<CreateReviewSurveyDto> reviewSurveys = new ArrayList<>();
     private String content;
-    private List<ReviewImageDto> reviewImgUrls = new ArrayList<>();
+    private List<ReviewImageDto> reviewImages = new ArrayList<>();
     private String summary;
 
     @Builder
@@ -22,13 +22,13 @@ public class CreateReviewDto {
                            Integer rating,
                            List<CreateReviewSurveyDto> reviewSurveys,
                            String content,
-                           List<ReviewImageDto> reviewImgUrls,
+                           List<ReviewImageDto> reviewImages,
                            String summary) {
         this.productId = productId;
         this.rating = rating;
         this.reviewSurveys = reviewSurveys;
         this.content = content;
-        this.reviewImgUrls = reviewImgUrls;
+        this.reviewImages = reviewImages;
         this.summary = summary;
     }
 }
