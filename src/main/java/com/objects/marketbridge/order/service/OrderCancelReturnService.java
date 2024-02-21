@@ -12,10 +12,12 @@ import com.objects.marketbridge.order.service.port.OrderDetailQueryRepository;
 import com.objects.marketbridge.payment.service.dto.RefundDto;
 import com.objects.marketbridge.payment.service.port.PaymentClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public abstract class OrderCancelReturnService {
 
@@ -41,7 +43,7 @@ public abstract class OrderCancelReturnService {
     }
 
     private String getTid(OrderDetail orderDetail) {
-        return orderDetail.getOrder().getTid();
+        return orderDetail.getTid();
     }
 
     @FunctionalInterface

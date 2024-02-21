@@ -1,6 +1,5 @@
 package com.objects.marketbridge.common.infra;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.config.KakaoPayConfig;
 import com.objects.marketbridge.common.dto.*;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
@@ -9,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
@@ -78,7 +75,6 @@ public class KakaoPayService {
 
     // 취소
     public KaKaoPayCancelResponse cancel(String tid, Integer cancelAmount) {
-
         KakaoPayCancelRequest request = KakaoPayCancelRequest.builder()
                 .cid(ONE_TIME_CID)
                 .tid(tid)
