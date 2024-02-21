@@ -11,6 +11,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ReviewLikeJpaRepository extends JpaRepository<ReviewLike, Long> {
+    Boolean existsByReviewIdAndMemberId(Long reviewId, Long memberId);
+
+    void deleteByReviewIdAndMemberId(Long reviewId, Long memberId);
 
 //    @Modifying
 //    @Query("DELETE FROM ReviewLike rl WHERE rl.reviewId = :reviewId")

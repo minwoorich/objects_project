@@ -121,19 +121,19 @@ public class ReviewController {
 
 
 
+    //review_like upsert(없으면 create, 있으면 delete)
+    @PostMapping("/{reviewId}/like")
+    public ApiResponse<Void> upsertReviewLike
+        (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
+        reviewService.upsertReviewLike(reviewId, memberId);
+        return ApiResponse.ok(null);
+    }
 
-
-
-
-
-//    //LIKE관련//
-//    //리뷰 좋아요 등록 또는 변경(True화/False화)
-//    @PostMapping("/review/{reviewId}/like")
-//    public ApiResponse<ReviewLikeDto> addOrChangeReviewLike(
-//            @PathVariable("reviewId") Long reviewId,
-//            @AuthMemberId Long memberId) {
-//        ReviewLikeDto response = reviewService.addOrChangeReviewLike(reviewId, memberId);
-//        return ApiResponse.ok(response);
+//    @DeleteMapping("/{reviewId}")
+//    @UserAuthorize
+//    public ApiResponse<Void> deleteReview(@PathVariable("reviewId") Long reviewId) {
+//        reviewService.deleteReview(reviewId);
+//        return ApiResponse.ok(null);
 //    }
 
 
