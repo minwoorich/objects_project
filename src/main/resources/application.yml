@@ -43,6 +43,20 @@ spring:
 logging:
   level:
     org.hibernate.sql: debug
+  file:
+    path: src/main/resources/logs
+    name: app-local
+  logback:
+    rollingpolicy:
+      max-history: 7
+      max-file-size: 10MB
+      total-size-cap: 1GB
+      file-name-pattern: app-local-%d{yyyy-MM-dd}.log
+      clean-history-on-start: true
+
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){faint} %clr([traceId=%X{traceId}]){magenta} %clr(%-5level) %clr(%logger{36}.%M){cyan} %clr(-){faint} %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [traceId=%X{traceId}] %-5level %logger{36}.%M - %msg%n"
 
 payment:
   kakao:

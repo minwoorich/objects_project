@@ -3,7 +3,6 @@ package com.objects.marketbridge.common.config;
 import com.objects.marketbridge.common.security.filter.ExceptionHandlerFilter;
 import com.objects.marketbridge.common.security.filter.JwtAuthenticationFilter;
 import com.objects.marketbridge.common.security.service.JwtTokenProvider;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
 

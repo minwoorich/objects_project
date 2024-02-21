@@ -24,14 +24,14 @@ import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @RestControllerAdvice
-public class ExControllerAdvice  {
+public class ExControllerAdvice {
 
     // 비즈니스 로직 예외
     @ExceptionHandler(value = CustomLogicException.class)
     @ResponseStatus(BAD_REQUEST)
-    public ApiErrorResponse<ErrorResult> customExHandler(CustomLogicException e, HttpServletRequest httpRequest) {
-
-        myPrintStackTrace(e.getMessage(), e.getStackTrace());
+    public ApiErrorResponse<ErrorResult> customExHandler(CustomLogicException e, HttpServletRequest httpRequest)  {
+        log.warn("{}", e.getMessage());
+        log.warn("{}", e.getStackTrace()[0]);
         ErrorResult errorResult = ErrorResult.builder()
                 .errorCode(e.getErrorCode())
                 .timestamp(e.getTimestamp().toString())
@@ -46,7 +46,9 @@ public class ExControllerAdvice  {
     @ResponseStatus(BAD_REQUEST)
     public ApiErrorResponse<ErrorResult> handleMethodArgumentNotValidExHandler(MethodArgumentNotValidException e, HttpServletRequest httpRequest) {
 
-        myPrintStackTrace(e.getMessage(), e.getStackTrace());
+        log.warn("{}", e.getMessage());
+        log.warn("{}", e.getStackTrace()[0]);
+
         BindingResult bindingResult = e.getBindingResult();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         String errorMessage = fieldErrors.isEmpty() ? INVALID_INPUT_VALUE.getMessage() : fieldErrors.get(0).getDefaultMessage();
@@ -64,7 +66,8 @@ public class ExControllerAdvice  {
     @ResponseStatus(BAD_REQUEST)
     public ApiErrorResponse<ErrorResult> handleBindExHandler(BindException e, HttpServletRequest httpRequest) {
 
-        myPrintStackTrace(e.getMessage(), e.getStackTrace());
+        log.warn("{}", e.getMessage());
+        log.warn("{}", e.getStackTrace()[0]);
 
         BindingResult bindingResult = e.getBindingResult();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -84,7 +87,9 @@ public class ExControllerAdvice  {
     @ResponseStatus(BAD_REQUEST)
     protected ApiErrorResponse<ErrorResult> handleHttpRequestMethodNotSupportedExHandler(HttpRequestMethodNotSupportedException e, HttpServletRequest httpRequest) {
 
-        myPrintStackTrace(e.getMessage(), e.getStackTrace());
+        log.warn("{}", e.getMessage());
+        log.warn("{}", e.getStackTrace()[0]);
+
         ErrorResult errorResult = ErrorResult.builder()
                 .errorCode(ErrorCode.METHOD_NOT_ALLOWED)
                 .timestamp(LocalDateTime.now().toString())
@@ -98,7 +103,9 @@ public class ExControllerAdvice  {
     @ResponseStatus(BAD_REQUEST)
     protected ApiErrorResponse<ErrorResult> handleMethodArgumentTypeMismatchExHandler(MethodArgumentTypeMismatchException e, HttpServletRequest httpRequest) {
 
-        myPrintStackTrace(e.getMessage(), e.getStackTrace());
+        log.warn("{}", e.getMessage());
+        log.warn("{}", e.getStackTrace()[0]);
+
         ErrorResult errorResult = ErrorResult.builder()
                 .errorCode(INVALID_INPUT_VALUE)
                 .timestamp(LocalDateTime.now().toString())
@@ -113,7 +120,9 @@ public class ExControllerAdvice  {
     @ResponseStatus(NOT_FOUND)
     protected ApiErrorResponse<ErrorResult> handleNoResourceFoundExHandler(NoResourceFoundException e, HttpServletRequest httpRequest) {
 
-        myPrintStackTrace(e.getMessage(), e.getStackTrace());
+        log.warn("{}", e.getMessage());
+        log.warn("{}", e.getStackTrace()[0]);
+
         ErrorResult errorResult = ErrorResult.builder()
                 .errorCode(INVALID_INPUT_VALUE)
                 .timestamp(LocalDateTime.now().toString())
@@ -126,9 +135,11 @@ public class ExControllerAdvice  {
     // HTTP 요청 파라미터가 누락 혹은 이상있는경우.  ex) /orders?keyword=2 -> /orders?keywo=2
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(NOT_FOUND)
-    protected ApiErrorResponse<ErrorResult> handleMissingServletRequestParameterExHandler(MissingServletRequestParameterException e, HttpServletRequest httpRequest) {
+    protected ApiErrorResponse<ErrorResult> handleMissingServletRequestParameterExHandler(MissingServletRequestParameterException e, HttpServletRequest httpRequest)  {
 
-        myPrintStackTrace(e.getMessage(), e.getStackTrace());
+        log.warn("{}", e.getMessage());
+        log.warn("{}", e.getStackTrace()[0]);
+
         ErrorResult errorResult = ErrorResult.builder()
                 .errorCode(INVALID_INPUT_VALUE)
                 .timestamp(LocalDateTime.now().toString())
@@ -143,16 +154,9 @@ public class ExControllerAdvice  {
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ApiErrorResponse<String> serverExHandler(Exception e) {
 
-        log.error("[ExceptionHandler] {}", e.getClass());
-        myPrintStackTrace(e.getMessage(), e.getStackTrace());
-
+        log.warn("{}", e.getClass());
+        log.warn("{}", e.getMessage());
+        log.warn("{}", e.getStackTrace()[0]);
         return ApiErrorResponse.of(INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR, null, null);
-    }
-
-    private static void myPrintStackTrace(String e, StackTraceElement[] elements) {
-        log.error("[ExceptionHandler] {} ", e);
-        for (StackTraceElement element : elements) {
-            log.error("[ExceptionHandler] {} ", element);
-        }
     }
 }

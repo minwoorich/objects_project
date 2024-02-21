@@ -1,6 +1,8 @@
 package com.objects.marketbridge.common.exception.advice;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.objects.marketbridge.common.interceptor.ApiResponse;
+import com.objects.marketbridge.common.utils.JsonUtils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

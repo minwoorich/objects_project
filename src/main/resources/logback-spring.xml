@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <!--로그 설정-->
+    <springProfile name="local, dev">
+        <property resource="application.yml" />
+    </springProfile>
+
+    <!-- log 변수 값 설정 -->
+    <springProperty name="LOG_PATH" source= "logging.file.path" />
+    <springProperty name="LOG_FILE_NAME" source= "logging.file.name" />
+    <springProperty name="LOG_MAX_HISTORY" source= "logging.logback.rollingpolicy.history" />
+    <springProperty name="LOG_MAX_FILE_SIZE" source= "logging.logback.rollingpolicy.max-file-size" />
+    <springProperty name="LOG_TOTAL_SIZE_CAP" source= "logging.logback.rollingpolicy.total-size-cap" />
+    <springProperty name="CONSOLE_LOG_PATTERN" source= "logging.pattern.console" />
+    <springProperty name="FILE_LOG_PATTERN" source= "logging.pattern.file" />
+
+    <!-- 색-->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+
+    <!-- 콘솔(CONSOLE) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+        </layout>
+    </appender>
+
+    <!-- 모든 레벨 파일(FILE) -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--     log 기록할 파일 위치 설정 -->
+        <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+        <!--     log 기록 타입 인코딩 -->
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${LOG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- ERROR 레벨 파일(FILE) -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--ERROR 레벨만 필터링-->
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+
+        <!--     log 기록할 파일 위치 설정 -->
+        <file>${LOG_PATH}/error.log</file>
+        <!--     log 기록 타입 인코딩 -->
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_PATH}/error.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${LOG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <springProfile name="local">
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="dev">
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
+</configuration>
