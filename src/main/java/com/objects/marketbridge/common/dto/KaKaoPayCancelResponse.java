@@ -4,7 +4,7 @@ import com.objects.marketbridge.payment.domain.Amount;
 import lombok.Getter;
 
 @Getter
-public class KaKaoCancelResponse {
+public class KaKaoPayCancelResponse {
     private String aid; // 요청 고유 번호
     private String tid; // 결제 고유 번호
     private String cid; // 가맹점 코드
