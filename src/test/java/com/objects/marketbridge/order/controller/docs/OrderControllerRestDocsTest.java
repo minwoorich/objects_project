@@ -493,7 +493,7 @@ public class OrderControllerRestDocsTest {
                 .quantity(1L)
                 .price(10000L)
                 .statusCode(StatusCodeType.PAYMENT_COMPLETED.getCode())
-                .deliveredDate("2024.01.01")
+                .deliveredDate("2024.01.01 HH:mm:ss")
                 .productThumbImageUrl("thumbImageUrl")
                 .productName("티셔츠")
                 .optionNames(List.of("빨강", "XL"))
