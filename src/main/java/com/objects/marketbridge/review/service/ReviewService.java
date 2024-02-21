@@ -227,10 +227,8 @@ public class ReviewService {
     @Transactional
     public void upsertReviewLike(Long reviewId, Long memberId){
 
-//        Review review = Review.builder().id(reviewId).build();
-//        Member member = Member.builder().id(memberId).build();
-        Review review = reviewRepository.findById(reviewId);
-        Member member = memberRepository.findById(memberId);
+        Review review = Review.builder().id(reviewId).build();
+        Member member = Member.builder().id(memberId).build();
 
         if(reviewLikeRepository.existsByReviewIdAndMemberId(reviewId, memberId)){
             reviewLikeRepository.deleteByReviewIdAndMemberId(reviewId, memberId);
