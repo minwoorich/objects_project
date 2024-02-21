@@ -2,10 +2,7 @@ package com.objects.marketbridge.review.domain;
 
 import com.objects.marketbridge.member.domain.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -17,11 +14,10 @@ public class ReviewSurvey extends BaseEntity {
     @Column(name = "review_survey_id")
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "review_id")
-//    private Review review;
-
-    private Long reviewId;
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id")
+    private Review review;
 
     private Long reviewSurveyCategoryId;
 
@@ -30,13 +26,18 @@ public class ReviewSurvey extends BaseEntity {
     private String content;
 
     @Builder
-    public ReviewSurvey(Long id, Long reviewId, Long reviewSurveyCategoryId, String surveyCategory, String content) {
+    public ReviewSurvey(Long id, Review review, Long reviewSurveyCategoryId, String surveyCategory, String content) {
         this.id = id;
-        this.reviewId = reviewId;
+        this.review = review;
         this.reviewSurveyCategoryId = reviewSurveyCategoryId;
         this.surveyCategory = surveyCategory;
         this.content = content;
     }
+
+
+
+
+
 
     public void update(String content) {
         this.content = content;

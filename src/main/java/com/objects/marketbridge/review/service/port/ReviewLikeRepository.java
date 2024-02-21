@@ -4,7 +4,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ReviewLikeRepository {
 
-    void deleteByReviewId(@Param("reviewId") Long reviewId);
+//    void deleteByReviewId(@Param("reviewId") Long reviewId);
 
 //    ReviewLike findByReviewIdAndMemberId(Long reviewId, Long memberId);
 //
