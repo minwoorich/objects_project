@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domains.review.service.port;
 
-import com.objects.marketbridge.review.domain.ReviewLike;
-import org.springframework.data.repository.query.Param;
+
+import com.objects.marketbridge.domains.review.domain.ReviewLike;
 
 public interface ReviewLikeRepository {
     Boolean existsByReviewIdAndMemberId(Long reviewId, Long memberId);
