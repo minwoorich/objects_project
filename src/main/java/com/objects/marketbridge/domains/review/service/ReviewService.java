@@ -2,13 +2,11 @@ package com.objects.marketbridge.domains.review.service;
 
 import com.objects.marketbridge.domains.image.domain.Image;
 import com.objects.marketbridge.domains.image.infra.ImageRepository;
-import com.objects.marketbridge.domains.review.domain.*;
-import com.objects.marketbridge.domains.review.dto.*;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.review.domain.*;
+import com.objects.marketbridge.domains.review.dto.*;
 import com.objects.marketbridge.domains.review.service.port.*;
-import com.objects.marketbridge.review.dto.*;
-import com.objects.marketbridge.review.service.port.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

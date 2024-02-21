@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domains.category.infra;
 
-import com.objects.marketbridge.category.domain.QCategory;
+import com.objects.marketbridge.domains.category.domain.QCategory;
 import com.objects.marketbridge.domains.category.service.port.CategoryCustomRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;

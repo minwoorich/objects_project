@@ -4,7 +4,6 @@ import com.objects.marketbridge.common.responseobj.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.domains.member.dto.*;
 import com.objects.marketbridge.domains.member.service.MemberService;
-import com.objects.marketbridge.member.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

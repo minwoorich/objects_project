@@ -5,8 +5,6 @@ import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.common.security.annotation.UserAuthorize;
 import com.objects.marketbridge.domains.review.dto.*;
 import com.objects.marketbridge.domains.review.service.ReviewService;
-import com.objects.marketbridge.review.dto.*;
-import com.objects.marketbridge.review.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,8 +1,8 @@
 package com.objects.marketbridge.domains.member.infra;
 
 import com.objects.marketbridge.domains.member.domain.Member;
-import com.objects.marketbridge.member.domain.QAddress;
-import com.objects.marketbridge.member.domain.QMember;
+import com.objects.marketbridge.domains.member.domain.QAddress;
+import com.objects.marketbridge.domains.member.domain.QMember;
 import com.objects.marketbridge.domains.member.service.port.MemberCustomRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityNotFoundException;

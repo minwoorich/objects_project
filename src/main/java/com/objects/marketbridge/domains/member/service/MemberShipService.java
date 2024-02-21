@@ -1,6 +1,5 @@
     package com.objects.marketbridge.domains.member.service;
 
-    import com.objects.marketbridge.common.dto.*;
     import com.objects.marketbridge.common.kakao.KakaoPayService;
     import com.objects.marketbridge.common.kakao.dto.*;
     import com.objects.marketbridge.domains.member.domain.Member;

@@ -1,10 +1,11 @@
 package com.objects.marketbridge.domains.order.infra.orderdetail;
 
+import com.objects.marketbridge.domains.order.domain.QOrder;
 import com.objects.marketbridge.domains.order.domain.StatusCodeType;
 import com.objects.marketbridge.domains.order.infra.dtio.GetCancelReturnListDtio;
+import com.objects.marketbridge.domains.order.infra.dtio.QGetCancelReturnListDtio_OrderDetailInfo;
+import com.objects.marketbridge.domains.order.infra.dtio.QGetCancelReturnListDtio_Response;
 import com.objects.marketbridge.domains.order.infra.order.OrderJpaRepository;
-import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_OrderDetailInfo;
-import com.objects.marketbridge.order.infra.dtio.QGetCancelReturnListDtio_Response;
 import com.objects.marketbridge.domains.order.service.port.OrderDetailDtoRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -19,8 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.objects.marketbridge.order.domain.QOrder.order;
-import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
+import static com.objects.marketbridge.domains.order.domain.QOrder.*;
+import static com.objects.marketbridge.domains.order.domain.QOrderDetail.orderDetail;
+
 
 @Slf4j
 @Repository

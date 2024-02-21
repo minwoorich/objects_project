@@ -2,9 +2,10 @@ package com.objects.marketbridge.domains.order.infra.order;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.utils.MyQueryDslUtil;
+import com.objects.marketbridge.domains.member.domain.QMember;
 import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.controller.dto.select.GetOrderHttp;
-import com.objects.marketbridge.order.domain.QOrder;
+import com.objects.marketbridge.domains.order.domain.QOrder;
 import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -24,12 +25,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.RESOUCRE_NOT_FOUND;
-import static com.objects.marketbridge.member.domain.QAddress.address;
-import static com.objects.marketbridge.member.domain.QMember.member;
-import static com.objects.marketbridge.order.domain.QOrder.order;
-import static com.objects.marketbridge.order.domain.QOrderDetail.orderDetail;
-import static com.objects.marketbridge.payment.domain.QPayment.payment;
-import static com.objects.marketbridge.product.domain.QProduct.product;
+import static com.objects.marketbridge.domains.member.domain.QAddress.address;
+import static com.objects.marketbridge.domains.member.domain.QMember.*;
+import static com.objects.marketbridge.domains.order.domain.QOrder.order;
+import static com.objects.marketbridge.domains.order.domain.QOrderDetail.orderDetail;
+import static com.objects.marketbridge.domains.payment.domain.QPayment.payment;
+import static com.objects.marketbridge.domains.product.domain.QProduct.product;
 import static com.querydsl.core.types.ExpressionUtils.count;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.springframework.util.StringUtils.hasText;
@@ -146,11 +147,11 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
     @Override
     public Order findByOrderIdFetchJoin(Long orderId) {
         Order result = queryFactory
-                .selectFrom(QOrder.order)
-                .innerJoin(QOrder.order.address, address)
-                .innerJoin(QOrder.order.member, member)
-                .innerJoin(QOrder.order.payment, payment).fetchJoin()
-                .innerJoin(QOrder.order.orderDetails, orderDetail).fetchJoin()
+                .selectFrom(order)
+                .innerJoin(order.address, address)
+                .innerJoin(order.member, member)
+                .innerJoin(order.payment, payment).fetchJoin()
+                .innerJoin(order.orderDetails, orderDetail).fetchJoin()
                 .innerJoin(orderDetail.product, product).fetchJoin()
                 .where(
                         eqOrderId(orderId)

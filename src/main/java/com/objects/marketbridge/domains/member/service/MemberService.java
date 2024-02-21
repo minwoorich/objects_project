@@ -5,7 +5,6 @@ import com.objects.marketbridge.domains.member.domain.Address;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.domain.Wishlist;
 import com.objects.marketbridge.domains.member.dto.*;
-import com.objects.marketbridge.member.dto.*;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import com.objects.marketbridge.domains.member.service.port.WishRepository;
 import com.objects.marketbridge.domains.order.service.port.AddressRepository;

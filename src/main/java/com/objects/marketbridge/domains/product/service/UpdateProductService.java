@@ -53,7 +53,7 @@ public class UpdateProductService {
         return updateProductResponseDto;
     }
 
-    protected Product updateProduct(Product product, UpdateProductDto updateProductDto){
+    public Product updateProduct(Product product, UpdateProductDto updateProductDto){
         Category category = categoryRepository.findById(updateProductDto.getCategoryId());
         Boolean isOwn = updateProductDto.getIsOwn();
         String name = updateProductDto.getName();

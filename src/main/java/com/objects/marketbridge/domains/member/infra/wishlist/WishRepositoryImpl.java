@@ -13,9 +13,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.objects.marketbridge.member.domain.QMember.member;
-import static com.objects.marketbridge.member.domain.QWishlist.wishlist;
-import static com.objects.marketbridge.product.domain.QProduct.product;
+import static com.objects.marketbridge.domains.member.domain.QMember.member;
+import static com.objects.marketbridge.domains.member.domain.QWishlist.wishlist;
+import static com.objects.marketbridge.domains.product.domain.QProduct.product;
+
 
 @Repository
 public class WishRepositoryImpl implements WishRepository {

@@ -8,8 +8,6 @@ import com.objects.marketbridge.domains.product.controller.request.CreateProduct
 import com.objects.marketbridge.domains.product.domain.*;
 import com.objects.marketbridge.domains.product.dto.*;
 import com.objects.marketbridge.domains.product.service.port.*;
-import com.objects.marketbridge.product.dto.*;
-import com.objects.marketbridge.product.service.port.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

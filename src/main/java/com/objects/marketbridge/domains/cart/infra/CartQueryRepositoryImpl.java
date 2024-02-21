@@ -17,9 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.objects.marketbridge.cart.domain.QCart.cart;
-import static com.objects.marketbridge.member.domain.QMember.member;
-import static com.objects.marketbridge.product.domain.QProduct.product;
+import static com.objects.marketbridge.domains.cart.domain.QCart.cart;
+import static com.objects.marketbridge.domains.member.domain.QMember.member;
+import static com.objects.marketbridge.domains.product.domain.QProduct.product;
+
 
 @Repository
 @Slf4j

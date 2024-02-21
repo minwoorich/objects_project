@@ -1,9 +1,9 @@
 package com.objects.marketbridge.domains.product.infra.product;
 
-import com.objects.marketbridge.category.domain.QCategory;
+import com.objects.marketbridge.domains.category.domain.QCategory;
 import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.domain.QProduct;
 import com.objects.marketbridge.domains.product.service.port.ProductCustomRepository;
-import com.objects.marketbridge.product.domain.QProduct;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

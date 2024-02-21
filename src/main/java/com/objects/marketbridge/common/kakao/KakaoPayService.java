@@ -1,6 +1,5 @@
 package com.objects.marketbridge.common.kakao;
 
-import com.objects.marketbridge.common.dto.*;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.kakao.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +11,8 @@ import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 
-import static com.objects.marketbridge.common.kakao.KakaoPayConfig.*;
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.EXTERNAL_API_FAILURE;
+import static com.objects.marketbridge.common.kakao.KakaoPayConfig.*;
 import static com.objects.marketbridge.common.security.constants.SecurityConst.AUTHORIZATION;
 import static io.jsonwebtoken.Header.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.ACCEPT;
