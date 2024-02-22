@@ -39,6 +39,11 @@ public class FakeProdOptionRepository implements ProdOptionRepository, ProdOptio
     }
 
     @Override
+    public void deleteAllInBatch() {
+
+    }
+
+    @Override
     public List<OptionDto> findAllByProductId(Long productId) {
         List<OptionDto> result = new ArrayList<>();
 
