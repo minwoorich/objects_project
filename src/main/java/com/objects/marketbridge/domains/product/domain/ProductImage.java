@@ -32,7 +32,8 @@ public class ProductImage extends BaseEntity {
     private Long seqNo;
 
     @Builder
-    private ProductImage(Product product, Image image, Long seqNo,String imgType) {
+    private ProductImage(Long id,Product product, Image image, Long seqNo,String imgType) {
+        this.id = id;
         this.product = product;
         this.image = image;
         this.seqNo = seqNo;
