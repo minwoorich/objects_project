@@ -308,6 +308,7 @@ create table review_image
     review_id       bigint      null,
     image_id        bigint      null,
     seq_no          bigint      null,
+    description     varchar(255) null,
     created_at      datetime(6) null,
     updated_at      datetime(6) null,
     deleted_at      datetime(6) null
@@ -331,7 +332,7 @@ create table review_survey
     review_survey_id          bigint auto_increment
         primary key,
     review_id                 bigint      null,
-    review_survey_category_id bigint      null,
+    survey_category_id bigint      null,
     survey_content_id         bigint      null,
     created_at                datetime(6) null,
     updated_at                datetime(6) null,
@@ -339,9 +340,9 @@ create table review_survey
 )
 ;
 
-create table review_survey_category
+create table survey_category
 (
-    review_survey_category_id bigint auto_increment
+    survey_category_id bigint auto_increment
         primary key,
     product_id                bigint       null,
     name                      varchar(255) null,
