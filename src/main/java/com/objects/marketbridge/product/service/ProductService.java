@@ -35,6 +35,8 @@ public class ProductService {
     private final ProdTagRepository prodTagRepository;
     private final CategoryService categoryService;
     private final ProductCustomRepository productCustomRepository;
+    private final ProdOptionCustomRepository prodOptionCustomRepository;
+    private final ProdTagCustomRepository prodTagCustomRepository;
 
 
     // 상품 상세 정보 조회
@@ -46,14 +48,27 @@ public class ProductService {
         String category = categoryService.getCategoryInfo(product.getCategory().getId());
         // DTO 생성
         ProductDetailDto productDetailDto
-                = new ProductDetailDto().create(product.getId(),product.getPrice(),product.getDiscountRate(),product.getName(),product.getThumbImg(),product.getIsOwn(),product.getIsSubs(),category);
-        // 상품 옵션 정보 가져오기
+                = ProductDetailDto.builder()
+                .productId(product.getId())
+                .price(product.getPrice())
+                .discoutRate(product.getDiscountRate())
+                .name(product.getName())
+                .thumUrl(product.getThumbImg())
+                .isOwn(product.getIsOwn())
+                .isSubs(product.getIsSubs())
+                .categoryInfo(category)
+                .build();
 
+        // 상품 옵션 정보 가져오기
+        List<OptionDto> optionInfo = prodOptionCustomRepository.findAllByProductId(id);
+        productDetailDto.addAllOptionInfo(optionInfo);
         // 상품 태그 정보 가져오기
+        List<ProdTagDto> tagInfo = prodTagCustomRepository.findAllByProductId(id);
+        productDetailDto.addAllTagInfo(tagInfo);
+        // 상품 이미지 정보 가져오기
 
         // 옵션만 다른 상품 가져오기 (상품 번호 일치)
-        // 리뷰 정보 가져오기
-        // 찜 리스트 정보 가져오기
+
     }
 
 
