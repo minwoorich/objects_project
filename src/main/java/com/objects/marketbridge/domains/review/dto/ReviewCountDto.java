@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ReviewsCountDto {
+public class ReviewCountDto {
 
     private Long count;
 
     @Builder
-    public ReviewsCountDto(Long count) {
+    public ReviewCountDto(Long count) {
         this.count = count;
     }
 }

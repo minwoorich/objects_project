@@ -6,16 +6,12 @@ import lombok.*;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GetReviewSurveyDto {
-    private Long reviewSurveyId;
-    private Long reviewSurveyCategoryId;
-    private String reviewSurveyCategoryName;
+    private String surveyCategoryName;
     private String content;
 
     @Builder
-    public GetReviewSurveyDto(Long reviewSurveyId, Long reviewSurveyCategoryId, String reviewSurveyCategoryName, String content) {
-        this.reviewSurveyId = reviewSurveyId;
-        this.reviewSurveyCategoryId = reviewSurveyCategoryId;
-        this.reviewSurveyCategoryName = reviewSurveyCategoryName;
+    public GetReviewSurveyDto(String surveyCategoryName, String content) {
+        this.surveyCategoryName = surveyCategoryName;
         this.content = content;
     }
 }
