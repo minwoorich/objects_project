@@ -25,6 +25,11 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     }
 
     @Override
+    public void deleteAllInBatch() {
+        memberCouponJpaRepository.deleteAllInBatch();
+    }
+
+    @Override
     public MemberCoupon save(MemberCoupon memberCoupon) {
         return memberCouponJpaRepository.save(memberCoupon);
     }
