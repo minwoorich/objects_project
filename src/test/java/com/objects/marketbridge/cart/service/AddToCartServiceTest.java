@@ -1,17 +1,18 @@
 package com.objects.marketbridge.cart.service;
 
 
-import com.objects.marketbridge.cart.domain.Cart;
-import com.objects.marketbridge.cart.service.dto.CreateCartDto;
-import com.objects.marketbridge.cart.service.port.CartCommendRepository;
-import com.objects.marketbridge.cart.service.port.CartQueryRepository;
+import com.objects.marketbridge.domains.cart.domain.Cart;
+import com.objects.marketbridge.domains.cart.service.AddToCartService;
+import com.objects.marketbridge.domains.cart.service.dto.CreateCartDto;
+import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.domain.MembershipType;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.domain.MembershipType;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +34,8 @@ class AddToCartServiceTest {
     @Autowired CartQueryRepository cartQueryRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired ProductRepository productRepository;
-    @Autowired AddToCartService addToCartService;
+    @Autowired
+    AddToCartService addToCartService;
     @BeforeEach
     void init() {
 

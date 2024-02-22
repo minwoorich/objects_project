@@ -1,24 +1,25 @@
 package com.objects.marketbridge.cart.service;
 
 
-import com.objects.marketbridge.cart.domain.Cart;
-import com.objects.marketbridge.cart.service.dto.GetCartDto;
-import com.objects.marketbridge.cart.service.port.CartCommendRepository;
-import com.objects.marketbridge.cart.service.port.CartDtoRepository;
-import com.objects.marketbridge.cart.service.port.CartQueryRepository;
-import com.objects.marketbridge.common.interceptor.SliceResponse;
-import com.objects.marketbridge.coupon.domain.Coupon;
-import com.objects.marketbridge.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.coupon.service.port.CouponRepository;
-import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.product.domain.Option;
-import com.objects.marketbridge.product.domain.ProdOption;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.service.port.ProductRepository;
-import com.objects.marketbridge.product.service.port.OptionRepository;
-import com.objects.marketbridge.product.service.port.ProdOptionRepository;
+import com.objects.marketbridge.domains.cart.domain.Cart;
+import com.objects.marketbridge.domains.cart.service.GetCartListService;
+import com.objects.marketbridge.domains.cart.service.dto.GetCartDto;
+import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartDtoRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
+import com.objects.marketbridge.common.responseobj.SliceResponse;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.product.domain.Option;
+import com.objects.marketbridge.domains.product.domain.ProdOption;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.product.service.port.OptionRepository;
+import com.objects.marketbridge.domains.product.service.port.ProdOptionRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -40,8 +41,8 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Transactional
 @Slf4j
+@Transactional
 class GetCartListServiceTest {
 
     @Autowired CartQueryRepository cartQueryRepository;
@@ -74,7 +75,7 @@ class GetCartListServiceTest {
         MemberCoupon memberCoupon4_2 = MemberCoupon.builder().member(member).isUsed(false).build();
 
         MemberCoupon memberCoupon5_1 = MemberCoupon.builder().member(member).isUsed(false).build();
-        MemberCoupon memberCoupon5_2 = MemberCoupon.builder().member(member).isUsed(true).build();
+        MemberCoupon memberCoupon5_2 = MemberCoupon.builder().member(member).isUsed(true).build(); // 사용한 쿠폰 -> 5_2 쿠폰
 
         Coupon coupon1_1 = Coupon.builder().name("[상품1]1000원 할인").price(1000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
         Coupon coupon1_2 = Coupon.builder().name("[상품1]5000원 할인").price(5000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
@@ -112,21 +113,36 @@ class GetCartListServiceTest {
 
         Option option1 = Option.builder().name("옵션1").build();
         Option option2 = Option.builder().name("옵션2").build();
+
+
+
+        ProdOption prodOption1_1 = ProdOption.builder().build();
+        ProdOption prodOption1_2 = ProdOption.builder().build();
+        ProdOption prodOption2_1 = ProdOption.builder().build();
+        ProdOption prodOption2_2 = ProdOption.builder().build();
+        ProdOption prodOption3_1 = ProdOption.builder().build();
+        ProdOption prodOption3_2 = ProdOption.builder().build();
+        ProdOption prodOption4_1 = ProdOption.builder().build();
+        ProdOption prodOption4_2 = ProdOption.builder().build();
+        ProdOption prodOption5_1 = ProdOption.builder().build();
+        ProdOption prodOption5_2 = ProdOption.builder().build();
+        ProdOption prodOption6_1 = ProdOption.builder().build();
+        ProdOption prodOption6_2 = ProdOption.builder().build();
+
+        option1.addProdOptions(prodOption1_1);
+        option1.addProdOptions(prodOption2_1);
+        option1.addProdOptions(prodOption3_1);
+        option1.addProdOptions(prodOption4_1);
+        option1.addProdOptions(prodOption5_1);
+        option1.addProdOptions(prodOption6_1);
+        option2.addProdOptions(prodOption1_2);
+        option2.addProdOptions(prodOption2_2);
+        option2.addProdOptions(prodOption3_2);
+        option2.addProdOptions(prodOption4_2);
+        option2.addProdOptions(prodOption5_2);
+        option2.addProdOptions(prodOption6_2);
+
         optionRepository.saveAll(List.of(option1, option2));
-
-
-        ProdOption prodOption1_1 = ProdOption.builder().option(option1).build();
-        ProdOption prodOption1_2 = ProdOption.builder().option(option2).build();
-        ProdOption prodOption2_1 = ProdOption.builder().option(option1).build();
-        ProdOption prodOption2_2 = ProdOption.builder().option(option2).build();
-        ProdOption prodOption3_1 = ProdOption.builder().option(option1).build();
-        ProdOption prodOption3_2 = ProdOption.builder().option(option2).build();
-        ProdOption prodOption4_1 = ProdOption.builder().option(option1).build();
-        ProdOption prodOption4_2 = ProdOption.builder().option(option2).build();
-        ProdOption prodOption5_1 = ProdOption.builder().option(option1).build();
-        ProdOption prodOption5_2 = ProdOption.builder().option(option2).build();
-        ProdOption prodOption6_1 = ProdOption.builder().option(option1).build();
-        ProdOption prodOption6_2 = ProdOption.builder().option(option2).build();
 
         Product product1 = Product.builder().stock(5L).productNo("productNo1").build();
         Product product2 = Product.builder().stock(5L).productNo("productNo2").build();
@@ -162,8 +178,8 @@ class GetCartListServiceTest {
 
         product6.addProdOptions(prodOption6_1);
         product6.addProdOptions(prodOption6_2);
-        product5.addCoupons(coupon6_1);
-        product5.addCoupons(coupon6_2);
+        product6.addCoupons(coupon6_1);
+        product6.addCoupons(coupon6_2);
 
         productRepository.save(product1);
         productRepository.save(product2);
@@ -179,12 +195,14 @@ class GetCartListServiceTest {
         Cart cart5 = Cart.create(member, product5, false, 1L);
         Cart cart6 = Cart.create(member, product6, false, 1L);
 
-        cartCommendRepository.save(cart1);
-        cartCommendRepository.save(cart2);
-        cartCommendRepository.save(cart3);
-        cartCommendRepository.save(cart4);
-        cartCommendRepository.save(cart5);
-        cartCommendRepository.save(cart6);
+
+        cartCommendRepository.saveAndFlush(cart1);
+        cartCommendRepository.saveAndFlush(cart2);
+        cartCommendRepository.saveAndFlush(cart3);
+        cartCommendRepository.saveAndFlush(cart4);
+        cartCommendRepository.saveAndFlush(cart5);
+        cartCommendRepository.saveAndFlush(cart6);
+
     }
 
     @AfterEach
@@ -192,6 +210,7 @@ class GetCartListServiceTest {
         cartCommendRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
+        prodOptionRepository.deleteAllInBatch();
         optionRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
         couponRepository.deleteAllInBatch();
@@ -249,6 +268,7 @@ class GetCartListServiceTest {
                 });
     }
 
+    //TODO 해결해야할 TEST By 정민우님
     @DisplayName("회원이 쿠폰을 가지고 있는경우 쿠폰 정보도 같이 조회된다")
     @Test
     void get_withCoupon1(){
@@ -299,30 +319,29 @@ class GetCartListServiceTest {
                 .isInstanceOf(NullPointerException.class);
 
     }
+    
+@DisplayName("사용하지 않은 쿠폰만 조회가 되어야한다")
+@Test
+void get_withCoupon3(){
+    //given
+    Member member = memberRepository.findByEmail("test@email.com");
+    int pageNumber = 0;
+    int pageSize = 2;
+    Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+    Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
 
-    @DisplayName("사용하지 않은 쿠폰만 조회가 되어야한다")
-    @Test
-    void get_withCoupon3(){
-        //given
-        Member member = memberRepository.findByEmail("test@email.com");
-        int pageNumber = 1;
-        int pageSize = 1;
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
+    //when
+    SliceResponse<GetCartDto> sliceResponse = getCartListService.get(pageRequest, member.getId());
 
-        //when
-        SliceResponse<GetCartDto> sliceResponse = getCartListService.get(pageRequest, member.getId());
+    //then
+    assertThat(sliceResponse.getContent().get(0).getProductNo()).isEqualTo("productNo6");
+    assertThat(sliceResponse.getContent().get(1).getProductNo()).isEqualTo("productNo5");
+    assertThat(sliceResponse.getContent().get(1).getAvailableCoupons()).hasSize(1);
+    assertThat(sliceResponse.getContent().get(1).getAvailableCoupons())
+            .extracting(c -> c.getName())
+            .contains("[상품5]1000원 할인");
 
-        //then
-        log.info("productNo 첫번쨰 : {}", sliceResponse.getContent().get(0).getProductNo());
-        assertThat(sliceResponse.getContent().get(0).getProductNo()).isEqualTo("productNo5");
-        assertThat(sliceResponse.getContent().get(0).getAvailableCoupons()).hasSize(1);
-        assertThat(sliceResponse.getContent().get(0).getAvailableCoupons())
-                .extracting(c -> c.getName())
-                .contains("[상품5]1000원 할인");
-
-    }
-
+}
     @DisplayName("회원이 장바구니를 조회할 수 있다")
     @Test
     void countAll(){

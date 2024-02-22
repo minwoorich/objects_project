@@ -1,8 +1,8 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.order.controller.dto.select.GetOrderHttp;
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.domains.order.controller.dto.select.GetOrderHttp;
+import com.objects.marketbridge.domains.order.domain.Order;
+import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

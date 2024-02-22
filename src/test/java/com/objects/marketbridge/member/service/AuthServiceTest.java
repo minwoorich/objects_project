@@ -1,9 +1,11 @@
 package com.objects.marketbridge.member.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.domain.MembershipType;
-import com.objects.marketbridge.member.dto.SignUpDto;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.domain.MembershipType;
+import com.objects.marketbridge.domains.member.dto.SignUpDto;
+import com.objects.marketbridge.domains.member.service.AuthService;
+import com.objects.marketbridge.domains.member.service.MemberService;
 import com.objects.marketbridge.member.mock.FakeAuthRepository;
 
 import com.objects.marketbridge.member.mock.FakeMemberRepository;

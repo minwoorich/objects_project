@@ -1,12 +1,13 @@
 package com.objects.marketbridge.member.service;
 
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.domain.Wishlist;
-import com.objects.marketbridge.member.dto.WishlistRequest;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.member.service.port.WishRepository;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.domain.Wishlist;
+import com.objects.marketbridge.domains.member.dto.WishlistRequest;
+import com.objects.marketbridge.domains.member.service.MemberService;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.member.service.port.WishRepository;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -16,9 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 @SpringBootTest
 @Transactional

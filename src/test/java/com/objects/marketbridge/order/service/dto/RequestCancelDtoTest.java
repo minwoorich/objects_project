@@ -1,17 +1,18 @@
 package com.objects.marketbridge.order.service.dto;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.coupon.domain.Coupon;
-import com.objects.marketbridge.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.member.domain.MembershipType;
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.member.domain.MembershipType;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.order.service.dto.RequestCancelDto;
+import com.objects.marketbridge.domains.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.QUANTITY_EXCEEDED;
-import static com.objects.marketbridge.order.domain.MemberShipPrice.BASIC;
-import static com.objects.marketbridge.order.domain.MemberShipPrice.WOW;
+import static com.objects.marketbridge.domains.order.domain.MemberShipPrice.BASIC;
+import static com.objects.marketbridge.domains.order.domain.MemberShipPrice.WOW;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;

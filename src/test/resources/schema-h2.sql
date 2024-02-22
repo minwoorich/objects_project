@@ -292,8 +292,8 @@ create table review
         primary key,
     member_id       bigint      null,
     product_id      bigint      null,
-    order_detail_id bigint      null,
     rating          bigint      null,
+    summary         text        null,
     content         text        null,
     created_at      datetime(6) null,
     updated_at      datetime(6) null,
@@ -314,9 +314,9 @@ create table review_image
 )
 ;
 
-create table review_likes
+create table review_like
 (
-    review_likes_id bigint auto_increment
+    review_like_id bigint auto_increment
         primary key,
     review_id       bigint      null,
     member_id       bigint      null,

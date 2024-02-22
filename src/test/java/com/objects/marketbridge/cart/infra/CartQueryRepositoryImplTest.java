@@ -1,13 +1,13 @@
 package com.objects.marketbridge.cart.infra;
 
-import com.objects.marketbridge.cart.domain.Cart;
-import com.objects.marketbridge.cart.service.port.CartCommendRepository;
-import com.objects.marketbridge.cart.service.port.CartDtoRepository;
-import com.objects.marketbridge.cart.service.port.CartQueryRepository;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.cart.domain.Cart;
+import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartDtoRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

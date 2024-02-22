@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
 
 import java.util.List;
 
@@ -9,6 +9,10 @@ public class FakeMemberCouponRepository implements MemberCouponRepository {
     @Override
     public MemberCoupon findById(Long id) {
         return null;
+    }
+
+    @Override
+    public void deleteAllInBatch() {
     }
 
     @Override

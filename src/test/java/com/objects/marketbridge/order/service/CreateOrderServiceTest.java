@@ -1,20 +1,23 @@
 package com.objects.marketbridge.order.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.member.domain.Address;
-import com.objects.marketbridge.coupon.domain.Coupon;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.order.domain.*;
-import com.objects.marketbridge.order.service.dto.CreateOrderDto;
-import com.objects.marketbridge.order.service.port.*;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.coupon.service.port.CouponRepository;
-import com.objects.marketbridge.coupon.service.port.MemberCouponRepository;
-import com.objects.marketbridge.product.infra.product.ProductJpaRepository;
-import com.objects.marketbridge.product.service.port.ProductRepository;
-import jakarta.persistence.EntityManager;
+import com.objects.marketbridge.domains.member.domain.Address;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.order.domain.Order;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.order.domain.ProductValue;
+import com.objects.marketbridge.domains.order.domain.StatusCodeType;
+import com.objects.marketbridge.domains.order.service.CreateOrderService;
+import com.objects.marketbridge.domains.order.service.port.*;
+import com.objects.marketbridge.domains.order.service.dto.CreateOrderDto;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
+import com.objects.marketbridge.domains.product.infra.product.ProductJpaRepository;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,16 +39,22 @@ import static org.assertj.core.api.Assertions.*;
 @Slf4j
 class CreateOrderServiceTest {
 
-    @Autowired CreateOrderService createOrderService;
+    @Autowired
+    CreateOrderService createOrderService;
     @Autowired ProductRepository productRepository;
     @Autowired ProductJpaRepository productJpaRepository;
     @Autowired CouponRepository couponRepository;
     @Autowired MemberRepository memberRepository;
-    @Autowired AddressRepository addressRepository;
-    @Autowired OrderDetailQueryRepository orderDetailQueryRepository;
-    @Autowired OrderCommendRepository orderCommendRepository;
-    @Autowired OrderDetailCommendRepository orderDetailCommendRepository;
-    @Autowired OrderQueryRepository orderQueryRepository;
+    @Autowired
+    AddressRepository addressRepository;
+    @Autowired
+    OrderDetailQueryRepository orderDetailQueryRepository;
+    @Autowired
+    OrderCommendRepository orderCommendRepository;
+    @Autowired
+    OrderDetailCommendRepository orderDetailCommendRepository;
+    @Autowired
+    OrderQueryRepository orderQueryRepository;
     @Autowired MemberCouponRepository memberCouponRepository;
 
     @BeforeEach

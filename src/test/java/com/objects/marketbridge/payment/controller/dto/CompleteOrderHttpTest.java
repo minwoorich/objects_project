@@ -1,12 +1,13 @@
 package com.objects.marketbridge.payment.controller.dto;
 
-import com.objects.marketbridge.member.domain.AddressValue;
-import com.objects.marketbridge.member.domain.Address;
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.payment.domain.Amount;
-import com.objects.marketbridge.payment.domain.CardInfo;
-import com.objects.marketbridge.payment.domain.Payment;
-import com.objects.marketbridge.payment.service.dto.ProductInfoDto;
+import com.objects.marketbridge.domains.member.domain.AddressValue;
+import com.objects.marketbridge.domains.member.domain.Address;
+import com.objects.marketbridge.domains.order.domain.Order;
+import com.objects.marketbridge.domains.payment.controller.dto.CompleteOrderHttp;
+import com.objects.marketbridge.domains.payment.domain.Amount;
+import com.objects.marketbridge.domains.payment.domain.CardInfo;
+import com.objects.marketbridge.domains.payment.domain.Payment;
+import com.objects.marketbridge.domains.payment.service.dto.ProductInfoDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

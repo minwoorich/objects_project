@@ -1,12 +1,13 @@
 package com.objects.marketbridge.order.domain;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
-import com.objects.marketbridge.coupon.domain.Coupon;
-import com.objects.marketbridge.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.member.domain.Member;
+import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
-import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.domains.product.domain.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
-import static com.objects.marketbridge.order.domain.StatusCodeType.*;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 

@@ -4,6 +4,7 @@ import com.objects.marketbridge.common.security.dto.ErrRes;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +33,10 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
                   SecurityException |
                   MalformedJwtException |
                   UnsupportedJwtException |
+                  SignatureException |
                   IllegalStateException e) {
+            log.warn("{} ", e.getMessage());
+            log.warn("{} ", e.getStackTrace()[0]);
 
             setErrRes(request, response, e.getMessage());
         }

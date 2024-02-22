@@ -1,13 +1,13 @@
 package com.objects.marketbridge.member.infra.wishlist;
 
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.domain.Wishlist;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.member.service.port.WishRepository;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.service.port.OptionRepository;
-import com.objects.marketbridge.product.service.port.ProdOptionRepository;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.domain.Wishlist;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.member.service.port.WishRepository;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.service.port.OptionRepository;
+import com.objects.marketbridge.domains.product.service.port.ProdOptionRepository;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -150,7 +150,12 @@ class WishRepositoryImplTest {
                 .member(member)
                 .product(product5).build();
 
-        wishRepository.saveAll(List.of(wishlist1,wishlist2,wishlist3,wishlist4,wishlist5));
+        wishRepository.saveAndFlush(wishlist1);
+        wishRepository.saveAndFlush(wishlist2);
+        wishRepository.saveAndFlush(wishlist3);
+        wishRepository.saveAndFlush(wishlist4);
+        wishRepository.saveAndFlush(wishlist5);
+
         //when
         Slice<Wishlist> wishlists = wishRepository.findByMemberId(pageRequest,member.getId());
 

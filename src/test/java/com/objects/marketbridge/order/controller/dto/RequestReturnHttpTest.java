@@ -1,6 +1,7 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.order.service.dto.RequestReturnDto;
+import com.objects.marketbridge.domains.order.controller.dto.RequestReturnHttp;
+import com.objects.marketbridge.domains.order.service.dto.RequestReturnDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

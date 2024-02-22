@@ -1,13 +1,13 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.service.port.OrderDetailCommendRepository;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailCommendRepository;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.Objects;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_PARTIAL_CANCEL;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.ORDER_PARTIAL_CANCEL;
 
 public class FakeOrderDetailCommendRepository extends BaseFakeOrderDetailRepository implements OrderDetailCommendRepository {
 
