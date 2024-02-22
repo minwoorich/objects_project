@@ -1,8 +1,8 @@
 package com.objects.marketbridge.member.mock;
 
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.dto.AuthMember;
-import com.objects.marketbridge.member.service.port.AuthRepository;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.dto.AuthMember;
+import com.objects.marketbridge.domains.member.service.port.AuthRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 

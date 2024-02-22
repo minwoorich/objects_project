@@ -1,8 +1,8 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.order.infra.dtio.GetCancelReturnListDtio;
-import com.objects.marketbridge.order.service.port.OrderDetailDtoRepository;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.order.infra.dtio.GetCancelReturnListDtio;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailDtoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -10,8 +10,8 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.ORDER_CANCEL;
-import static com.objects.marketbridge.order.domain.StatusCodeType.RETURN_COMPLETED;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.ORDER_CANCEL;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.RETURN_COMPLETED;
 
 public class FakeOrderDetailDtoRepository extends BaseFakeOrderDetailRepository implements OrderDetailDtoRepository {
 

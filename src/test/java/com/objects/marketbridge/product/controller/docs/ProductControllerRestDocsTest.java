@@ -1,14 +1,14 @@
 package com.objects.marketbridge.product.controller.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.objects.marketbridge.category.domain.Category;
-import com.objects.marketbridge.product.controller.ProductController;
-import com.objects.marketbridge.product.controller.request.CreateProductRequestDto;
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.product.dto.ProductSimpleDto;
+import com.objects.marketbridge.domains.category.domain.Category;
+import com.objects.marketbridge.domains.product.controller.ProductController;
+import com.objects.marketbridge.domains.product.controller.request.CreateProductRequestDto;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.dto.ProductSimpleDto;
 import com.objects.marketbridge.product.mock.FakeCategoryRepository;
 import com.objects.marketbridge.product.mock.FakeProductRepository;
-import com.objects.marketbridge.product.service.ProductService;
+import com.objects.marketbridge.domains.product.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;

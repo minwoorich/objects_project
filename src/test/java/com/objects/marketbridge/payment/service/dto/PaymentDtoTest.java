@@ -1,7 +1,8 @@
 package com.objects.marketbridge.payment.service.dto;
 
-import com.objects.marketbridge.common.dto.KakaoPayApproveResponse;
-import com.objects.marketbridge.payment.domain.Amount;
+import com.objects.marketbridge.common.kakao.dto.KakaoPayApproveResponse;
+import com.objects.marketbridge.domains.payment.domain.Amount;
+import com.objects.marketbridge.domains.payment.service.dto.PaymentDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,9 +1,10 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.common.dto.KakaoPayReadyRequest;
-import com.objects.marketbridge.common.dto.KakaoPayReadyResponse;
-import com.objects.marketbridge.order.domain.ProductValue;
-import com.objects.marketbridge.order.service.dto.CreateOrderDto;
+import com.objects.marketbridge.common.kakao.dto.KakaoPayReadyRequest;
+import com.objects.marketbridge.common.kakao.dto.KakaoPayReadyResponse;
+import com.objects.marketbridge.domains.order.controller.dto.CreateOrderHttp;
+import com.objects.marketbridge.domains.order.domain.ProductValue;
+import com.objects.marketbridge.domains.order.service.dto.CreateOrderDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

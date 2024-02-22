@@ -1,9 +1,9 @@
 package com.objects.marketbridge.cart.infra;
 
-import com.objects.marketbridge.cart.domain.Cart;
-import com.objects.marketbridge.cart.service.port.CartCommendRepository;
-import com.objects.marketbridge.cart.service.port.CartQueryRepository;
-import com.objects.marketbridge.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.cart.domain.Cart;
+import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;

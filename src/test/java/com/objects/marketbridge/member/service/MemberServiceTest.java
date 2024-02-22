@@ -1,23 +1,15 @@
 package com.objects.marketbridge.member.service;
 
-import com.objects.marketbridge.member.domain.*;
-import com.objects.marketbridge.member.dto.GetAddressesResponse;
-import com.objects.marketbridge.member.dto.WishlistRequest;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.domain.MembershipType;
+import com.objects.marketbridge.domains.member.service.MemberService;
 import com.objects.marketbridge.member.mock.FakeMemberRepository;
-import com.objects.marketbridge.member.service.port.MemberRepository;
-import com.objects.marketbridge.member.service.port.WishRepository;
-import com.objects.marketbridge.product.domain.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.* ;
 

@@ -1,8 +1,8 @@
 package com.objects.marketbridge.common.domain;
 
-import com.objects.marketbridge.coupon.domain.Coupon;
-import com.objects.marketbridge.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.product.domain.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

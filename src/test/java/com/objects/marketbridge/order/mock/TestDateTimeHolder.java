@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.member.domain.BaseEntity;
-import com.objects.marketbridge.common.service.port.DateTimeHolder;
+import com.objects.marketbridge.domains.member.domain.BaseEntity;
+import com.objects.marketbridge.common.utils.DateTimeHolder;
 import lombok.Builder;
 
 import java.time.LocalDateTime;

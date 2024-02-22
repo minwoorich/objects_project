@@ -1,8 +1,7 @@
 package com.objects.marketbridge.product.mock;
 
-import com.objects.marketbridge.category.domain.Category;
-import com.objects.marketbridge.category.service.port.CategoryRepository;
-import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.domains.category.domain.Category;
+import com.objects.marketbridge.domains.category.service.port.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;

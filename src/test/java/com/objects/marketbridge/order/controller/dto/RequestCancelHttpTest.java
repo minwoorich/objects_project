@@ -1,10 +1,9 @@
 package com.objects.marketbridge.order.controller.dto;
 
-import com.objects.marketbridge.order.service.dto.RequestCancelDto;
+import com.objects.marketbridge.domains.order.controller.dto.RequestCancelHttp;
+import com.objects.marketbridge.domains.order.service.dto.RequestCancelDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

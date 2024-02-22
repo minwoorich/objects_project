@@ -1,16 +1,16 @@
 package com.objects.marketbridge.order.controller;
 
-import com.objects.marketbridge.common.interceptor.ApiResponse;
-import com.objects.marketbridge.member.domain.Member;
-import com.objects.marketbridge.member.domain.MembershipType;
-import com.objects.marketbridge.order.controller.dto.*;
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
+import com.objects.marketbridge.common.responseobj.ApiResponse;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.domain.MembershipType;
+import com.objects.marketbridge.domains.order.controller.dto.GetCancelReturnListHttp;
+import com.objects.marketbridge.domains.order.domain.Order;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
 import com.objects.marketbridge.order.mock.BaseFakeOrderDetailRepository;
 import com.objects.marketbridge.order.mock.BaseFakeOrderRepository;
 import com.objects.marketbridge.order.mock.TestContainer;
 import com.objects.marketbridge.order.mock.TestDateTimeHolder;
-import com.objects.marketbridge.product.domain.Product;
+import com.objects.marketbridge.domains.product.domain.Product;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.*;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.http.HttpStatus.*;

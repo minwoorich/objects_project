@@ -1,7 +1,7 @@
 package com.objects.marketbridge.order.mock;
 
-import com.objects.marketbridge.coupon.domain.Coupon;
-import com.objects.marketbridge.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 
 import java.util.List;
 

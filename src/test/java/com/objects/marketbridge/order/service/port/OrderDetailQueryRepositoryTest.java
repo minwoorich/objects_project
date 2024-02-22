@@ -1,9 +1,13 @@
 package com.objects.marketbridge.order.service.port;
 
-import com.objects.marketbridge.product.domain.Product;
-import com.objects.marketbridge.order.domain.Order;
-import com.objects.marketbridge.order.domain.OrderDetail;
-import com.objects.marketbridge.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailQueryRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.order.domain.Order;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.objects.marketbridge.order.domain.StatusCodeType.*;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
