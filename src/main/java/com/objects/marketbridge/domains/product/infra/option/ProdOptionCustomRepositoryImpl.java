@@ -1,10 +1,10 @@
-package com.objects.marketbridge.product.infra.option;
+package com.objects.marketbridge.domains.product.infra.option;
 
-import com.objects.marketbridge.product.domain.QOption;
-import com.objects.marketbridge.product.domain.QOptionCategory;
-import com.objects.marketbridge.product.domain.QProdOption;
-import com.objects.marketbridge.product.dto.OptionDto;
-import com.objects.marketbridge.product.service.port.ProdOptionCustomRepository;
+import com.objects.marketbridge.domains.product.domain.QOption;
+import com.objects.marketbridge.domains.product.domain.QOptionCategory;
+import com.objects.marketbridge.domains.product.domain.QProdOption;
+import com.objects.marketbridge.domains.product.dto.OptionDto;
+import com.objects.marketbridge.domains.product.service.port.ProdOptionCustomRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

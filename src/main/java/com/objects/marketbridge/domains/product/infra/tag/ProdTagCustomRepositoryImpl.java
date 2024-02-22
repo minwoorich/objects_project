@@ -1,10 +1,10 @@
-package com.objects.marketbridge.product.infra.tag;
+package com.objects.marketbridge.domains.product.infra.tag;
 
-import com.objects.marketbridge.product.domain.QProdTag;
-import com.objects.marketbridge.product.domain.QTag;
-import com.objects.marketbridge.product.domain.QTagCategory;
-import com.objects.marketbridge.product.dto.ProdTagDto;
-import com.objects.marketbridge.product.service.port.ProdTagCustomRepository;
+import com.objects.marketbridge.domains.product.domain.QProdTag;
+import com.objects.marketbridge.domains.product.domain.QTag;
+import com.objects.marketbridge.domains.product.domain.QTagCategory;
+import com.objects.marketbridge.domains.product.dto.ProdTagDto;
+import com.objects.marketbridge.domains.product.service.port.ProdTagCustomRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

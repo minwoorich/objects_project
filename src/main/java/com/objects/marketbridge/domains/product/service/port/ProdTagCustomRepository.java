@@ -1,6 +1,7 @@
-package com.objects.marketbridge.product.service.port;
+package com.objects.marketbridge.domains.product.service.port;
 
-import com.objects.marketbridge.product.dto.ProdTagDto;
+
+import com.objects.marketbridge.domains.product.dto.ProdTagDto;
 
 import java.util.List;
 
