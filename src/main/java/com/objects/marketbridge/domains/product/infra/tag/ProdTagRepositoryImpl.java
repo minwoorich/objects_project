@@ -13,6 +13,11 @@ public class ProdTagRepositoryImpl implements ProdTagRepository {
     private final ProdTagJpaRepository prodTagJpaRepository;
 
     @Override
+    public void save(ProdTag prodTag) {
+        prodTagJpaRepository.save(prodTag);
+    }
+
+    @Override
     public void saveAll(List<ProdTag> prodTags) {
         prodTagJpaRepository.saveAll(prodTags);
     }
