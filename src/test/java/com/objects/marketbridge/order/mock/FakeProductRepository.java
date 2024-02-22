@@ -21,6 +21,11 @@ public class FakeProductRepository implements ProductRepository {
     }
 
     @Override
+    public Product saveAndFlush(Product product) {
+        return null;
+    }
+
+    @Override
     public List<Product> findAllById(List<Long> ids) {
         return null;
     }

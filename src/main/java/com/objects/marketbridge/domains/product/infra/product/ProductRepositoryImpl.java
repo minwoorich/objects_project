@@ -57,6 +57,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public Product saveAndFlush(Product product) {
+        return productJpaRepository.saveAndFlush(product);
+    }
+
+    @Override
     public void saveAll(List<Product> products) {
         productJpaRepository.saveAll(products);
     }

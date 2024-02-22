@@ -41,6 +41,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     protected void doFilterWrapped(RequestWrapper request, ContentCachingResponseWrapper response, FilterChain filterChain) throws ServletException, IOException {
         try {
             logRequest(request);
+            logClientIp(request);
             filterChain.doFilter(request, response);
         } finally {
             logResponse(response);
@@ -48,12 +49,12 @@ public class LoggingFilter extends OncePerRequestFilter {
         }
     }
 
+    private static void logClientIp(RequestWrapper request) {
+        ClientIpUtils.getClientIps(request).forEach((headerType, ip) -> log.info("{} : {}", headerType, ip));
+    }
     private static void logRequest(RequestWrapper request) throws IOException {
         String queryString = request.getQueryString();
 
-        ClientIpUtils.getClientIps(request)
-                .forEach((headerType, ip) ->
-                        log.info("{} : {}", headerType, ip));
         log.info("Request : {} uri=[{}] content-type=[{}]", request.getMethod(), queryString == null ? request.getRequestURI() : request.getRequestURI() + queryString, request.getContentType());
 
         logPayload("Request", request.getContentType(), request.getInputStream());
