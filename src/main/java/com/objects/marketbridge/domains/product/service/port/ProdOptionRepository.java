@@ -9,4 +9,6 @@ public interface ProdOptionRepository {
     void save(ProdOption prodOption);
 
     void saveAll(List<ProdOption> prodOptions);
+
+    void deleteAllInBatch();
 }

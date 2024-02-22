@@ -5,6 +5,9 @@
     <springProfile name="local, dev">
         <property resource="application.yml" />
     </springProfile>
+    <springProfile name="test">
+        <property resource="application.yml" />
+    </springProfile>
     <timestamp key ="today" datePattern="yyyy-MM-dd"/>
 
     <!-- log 변수 값 설정 -->
@@ -142,6 +145,12 @@
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
             <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="test">
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 </configuration>

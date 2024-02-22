@@ -18,6 +18,8 @@ public interface ProductRepository {
     void deleteAllInBatch();
     Product save(Product product);
 
+    Product saveAndFlush(Product product);
+
     List<Product> findAll();
 
     void saveAll(List<Product> products);

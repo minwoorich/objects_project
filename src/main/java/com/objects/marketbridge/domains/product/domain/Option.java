@@ -25,7 +25,7 @@ public class Option extends BaseEntity {
     @JoinColumn(name = "option_category_id")
     private OptionCategory optionCategory;
 
-    @OneToMany(mappedBy = "option")
+    @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProdOption> prodOptions = new ArrayList<>();
 
     private String name;
@@ -41,7 +41,9 @@ public class Option extends BaseEntity {
     }
 
     public void addProdOptions(ProdOption prodOption){
-        prodOptions.add(prodOption);
+        if (!prodOptions.contains(prodOption)) {
+            prodOptions.add(prodOption);
+        }
         prodOption.setOption(this);
     }
 }

@@ -21,11 +21,11 @@ import static com.objects.marketbridge.domains.product.domain.QProduct.product;
 @Repository
 public class WishRepositoryImpl implements WishRepository {
 
-    private final WishiListJpaRepository wishiListJpaRepository;
+    private final WishListJpaRepository wishListJpaRepository;
     private final JPAQueryFactory queryFactory;
 
-    public WishRepositoryImpl(WishiListJpaRepository wishiListJpaRepository, EntityManager em) {
-        this.wishiListJpaRepository = wishiListJpaRepository;
+    public WishRepositoryImpl(WishListJpaRepository wishListJpaRepository, EntityManager em) {
+        this.wishListJpaRepository = wishListJpaRepository;
         this.queryFactory = new JPAQueryFactory(em);
     }
 
@@ -41,17 +41,17 @@ public class WishRepositoryImpl implements WishRepository {
 
     @Override
     public void deleteWishlist(Long memberId, Long productId) {
-        wishiListJpaRepository.deleteByMemberIdAndProductId(memberId,productId);
+        wishListJpaRepository.deleteByMemberIdAndProductId(memberId,productId);
     }
 
     @Override
     public Wishlist findbyId(Long wishlistId) {
-        return wishiListJpaRepository.findById(wishlistId).orElseThrow(EntityNotFoundException::new);
+        return wishListJpaRepository.findById(wishlistId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
     public List<Wishlist> findByMemberId(Long memberId) {
-        return wishiListJpaRepository.findByMemberId(memberId);
+        return wishListJpaRepository.findByMemberId(memberId);
     }
 
     @Override
@@ -77,12 +77,16 @@ public class WishRepositoryImpl implements WishRepository {
 
     @Override
     public void saveAll(List<Wishlist> wishlist) {
-        wishiListJpaRepository.saveAll(wishlist);
+        wishListJpaRepository.saveAll(wishlist);
     }
 
     @Override
     public Wishlist save(Wishlist wishlist) {
-        return wishiListJpaRepository.save(wishlist);
+        return wishListJpaRepository.save(wishlist);
     }
 
+    @Override
+    public Wishlist saveAndFlush(Wishlist wishlist) {
+        return wishListJpaRepository.saveAndFlush(wishlist);
+    }
 }

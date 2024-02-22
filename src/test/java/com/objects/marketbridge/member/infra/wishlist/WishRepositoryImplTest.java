@@ -150,7 +150,12 @@ class WishRepositoryImplTest {
                 .member(member)
                 .product(product5).build();
 
-        wishRepository.saveAll(List.of(wishlist1,wishlist2,wishlist3,wishlist4,wishlist5));
+        wishRepository.saveAndFlush(wishlist1);
+        wishRepository.saveAndFlush(wishlist2);
+        wishRepository.saveAndFlush(wishlist3);
+        wishRepository.saveAndFlush(wishlist4);
+        wishRepository.saveAndFlush(wishlist5);
+
         //when
         Slice<Wishlist> wishlists = wishRepository.findByMemberId(pageRequest,member.getId());
 
