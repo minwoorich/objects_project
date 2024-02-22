@@ -13,12 +13,6 @@ public interface ReviewJpaRepository extends JpaRepository<Review, Long> {
 
     Page<Review> findAllByMemberId(Long memberId, Pageable pageable);
 
-//    //LIKE관련//
-//    Page<Review> findAllByProductIdOrderByLikesDesc(Long productId, Pageable pageable);
-//
-//    //LIKE관련//
-//    Page<Review> findAllByMemberIdOrderByLikesDesc(Long memberId, Pageable pageable);
-
     Long countByProductId(Long productId);
 
     Long countByMemberId(Long memberId);

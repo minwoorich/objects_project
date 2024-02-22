@@ -7,14 +7,14 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreateReviewSurveyDto {
 
-    private Long reviewSurveyCategoryId;
-    private String reviewSurveyCategoryName;
+    private Long surveyCategoryId;
+    private String surveyCategoryName;
     private String content;
 
     @Builder
-    public CreateReviewSurveyDto(Long reviewSurveyCategoryId, String reviewSurveyCategoryName, String content) {
-        this.reviewSurveyCategoryId = reviewSurveyCategoryId;
-        this.reviewSurveyCategoryName = reviewSurveyCategoryName;
+    public CreateReviewSurveyDto(Long surveyCategoryId, String surveyCategoryName, String content) {
+        this.surveyCategoryId = surveyCategoryId;
+        this.surveyCategoryName = surveyCategoryName;
         this.content = content;
     }
 }

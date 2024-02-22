@@ -2,10 +2,7 @@
 <configuration scan="true" scanPeriod="30 seconds">
 
     <!--로그 설정-->
-    <springProfile name="local, dev">
-        <property resource="application.yml" />
-    </springProfile>
-    <springProfile name="test">
+    <springProfile name="local, dev, test">
         <property resource="application.yml" />
     </springProfile>
     <timestamp key ="today" datePattern="yyyy-MM-dd"/>
@@ -33,7 +30,7 @@
     <!-- 모든 레벨 파일(FILE) -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--     log 기록할 파일 위치 설정 -->
-        <file>${LOG_PATH}/${today}/${LOG_FILE_NAME}.log</file>
+        <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
         <!--     log 기록 타입 인코딩 -->
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>

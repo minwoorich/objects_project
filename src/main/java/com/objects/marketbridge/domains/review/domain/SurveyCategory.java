@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReviewSurveyCategory extends BaseEntity {
+public class SurveyCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_survey_category_id")
+    @Column(name = "survey_category_id")
     private Long id;
 
     private Long productId;
@@ -22,7 +22,7 @@ public class ReviewSurveyCategory extends BaseEntity {
     private String name;
 
     @Builder
-    private ReviewSurveyCategory(Long productId, String name) {
+    private SurveyCategory(Long productId, String name) {
         this.productId = productId;
         this.name = name;
     }
