@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.2.1'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id "org.asciidoctor.jvm.convert" version '3.3.2'
+	id "com.gorylenko.gradle-git-properties" version "2.4.1" //git info
 }
 
 group = 'com.objects'
@@ -75,6 +76,8 @@ dependencies {
 
 	//hibernate 5
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator' // actuator 추가
 }
 
 ext { // 전역 변수
@@ -119,7 +122,6 @@ bootJar {
 	dependsOn asciidoctor
 }
 
-
 def querydslDir = "src/main/generated"
 
 tasks.withType(JavaCompile).configureEach {
@@ -135,3 +137,8 @@ clean.doLast {
 //tasks.withType(JavaCompile) {
 //	options.compilerArgs << "-parameters"
 //}
+
+// 액츄에이터 빌드 정보 추가
+springBoot {
+	buildInfo()
+}
