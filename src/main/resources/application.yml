@@ -58,6 +58,29 @@ logging:
     console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){faint} %clr([traceId=%X{traceId}]){magenta} %clr(%-5level) %clr(%logger{36}.%M){cyan} %clr(-){faint} %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [traceId=%X{traceId}] %-5level %logger{36}.%M - %msg%n"
 
+management:
+  info:
+    java:
+      enabled: true
+    os:
+      enabled: true
+    env:
+      enabled: true
+  server:
+    port: 8080
+#    port: 9292
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+#      show-details: always
+      show-components: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
 payment:
   kakao:
     secret_key_dev : "DEVEC2152904951CB5CF3C5BEEBB3C84B6AD6F26"
@@ -67,6 +90,11 @@ host: "http://localhost:8080"
 jwt:
   # CLI 명령어 - openssl rand -base64 64 로 생성된 값
   secret: fMRb9kle/ImDQ7wB8+XPnuVH15M6xp60jKS7/mF7dNMFEvt9kNe4WioJfsHT6J6F4bynR8rqAR2Z8zYboQSG+A==
+
+info:
+  app:
+    name: hello-actuator
+    company: objects
 
 ---
 
@@ -156,3 +184,12 @@ decorator:
   datasource:
     p6spy:
       enable-logging: false
+
+management:
+  endpoint:
+    health:
+      show-components: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
