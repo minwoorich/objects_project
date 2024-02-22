@@ -4,12 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.domains.category.domain.Category;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
 import com.objects.marketbridge.domains.product.controller.ProductController;
-import com.objects.marketbridge.product.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.controller.request.CreateProductRequestDto;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.dto.ProductSimpleDto;
-import com.objects.marketbridge.product.mock.FakeCategoryRepository;
 import com.objects.marketbridge.domains.product.service.ProductService;
+import com.objects.marketbridge.domains.image.domain.Image;
+import com.objects.marketbridge.domains.product.domain.*;
+import com.objects.marketbridge.domains.product.dto.ProductDetailDto;
+import com.objects.marketbridge.order.mock.FakeProductRepository;
+import com.objects.marketbridge.product.mock.FakeCategoryRepository;
+import com.objects.marketbridge.product.mock.FakeProdOptionRepository;
+import com.objects.marketbridge.product.mock.FakeProdTagRepository;
+import com.objects.marketbridge.product.mock.FakeProductImageRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +42,214 @@ class ProductControllerTest {
     @Autowired private MockMvc mockMvc;
     @MockBean private ProductService productService;
     @Autowired private ObjectMapper objectMapper;
-    @MockBean(name = "productRepository")
-    FakeProductRepository productRepository;
-    @MockBean(name = "categoryRepository")
-    FakeCategoryRepository categoryRepository;
+    FakeProductRepository productRepository = new FakeProductRepository();
+    FakeCategoryRepository categoryRepository = new FakeCategoryRepository();
+    FakeProdOptionRepository prodOptionRepository = new FakeProdOptionRepository();
+    FakeProductImageRepository productImageRepository = new FakeProductImageRepository();
+    FakeProdTagRepository prodTagRepository = new FakeProdTagRepository();
+
+    @Test
+    @DisplayName("상품 상세 정보를 조회한다.")
+    void getProductDetailByProductId() throws Exception {
+        //given
+        categoryRepository.save(Category.builder()
+                .parentId(1L)
+                .name("TEST CATE1")
+                .level(1L)
+                .build());
+
+        categoryRepository.save(Category.builder()
+                .parentId(1L)
+                .name("TEST CATE2")
+                .level(2L)
+                .build());
+
+
+        Product product1 = Product.builder()
+                .productNo("12343213 - 3423333")
+                .isOwn(false)
+                .price(10000L)
+                .name("TEST PRODUCT1")
+                .isSubs(true)
+                .stock(1000L)
+                .thumbImg("MAIN_IMG1.com")
+                .discountRate(12L)
+                .build();
+        product1.setCategory(categoryRepository.findById(2L));
+        Product product2 = Product.builder()
+                .productNo("12343213 - 4343434")
+                .isOwn(false)
+                .price(10000L)
+                .name("TEST PRODUCT2222")
+                .isSubs(true)
+                .stock(1000L)
+                .thumbImg("MAIN_IMG1.com")
+                .discountRate(12L)
+                .build();
+        product2.setCategory(categoryRepository.findById(2L));
+        productRepository.saveAll(List.of(product1,product2));
+
+        // 옵션정보 넣기
+        addOptionInfo(product1,product2);
+        // 이미지 정보 넣기
+        addImageInfo(product1,product2);
+        // 태그정보 넣기
+        addTagInfo(product1,product2);
+
+        ProductDetailDto productDetailDto = ProductDetailDto.builder()
+                        .categoryInfo("TEST CATE1>TEST CATE2")
+                        .productId(1L)
+                        .isOwn(false)
+                        .price(10000L)
+                        .name("TEST PRODUCT1")
+                        .isSubs(true)
+                        .thumbUrl("MAIN_IMG1.com")
+                        .discountRate(12L)
+                        .build();
+        productDetailDto.addAllOptionInfo(prodOptionRepository.findAllByProductId(product1.getId()));
+        productDetailDto.addAllImageDto(productImageRepository.findAllByProductIdWithImage(product1.getId()));
+        productDetailDto.addAllTagInfo(prodTagRepository.findAllByProductId(product1.getId()));
+        List<ProductDetailDto.ProductOptionDto> optionProductInfo = productDetailDto.addAllProductOptionDto(productRepository.findAllByProductNoLikeAndProductId(product1.getProductNo().split(" - ")[0],product1.getId()));
+
+        optionProductInfo.forEach(item -> {
+            item.addAllOptionInfo(prodOptionRepository.findAllByProductId(item.getProductId()));
+        });
+
+        given(productService.getProductDetail(anyLong()))
+                .willReturn(productDetailDto);
+        //when //then
+        mockMvc.perform(get("/product/{id}",1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    void addTagInfo(Product product1,Product product2){
+        // 태그 카테고리
+        TagCategory releaseY = TagCategory.builder()
+                .name("출시 연도")
+                .build();
+        TagCategory releaseS = TagCategory.builder()
+                .name("출시 계절")
+                .build();
+        // 태그
+        Tag tagY1 = Tag.builder()
+                .tagCategory(releaseY)
+                .name("2022년")
+                .build();
+        Tag tagY2 = Tag.builder()
+                .tagCategory(releaseY)
+                .name("2023년")
+                .build();
+        Tag tagS1 = Tag.builder()
+                .tagCategory(releaseS)
+                .name("가을")
+                .build();
+        Tag tagS2 = Tag.builder()
+                .tagCategory(releaseS)
+                .name("봄")
+                .build();
+        // 상품에 태그 설정
+        ProdTag prodTag1 = ProdTag.builder()
+                .tag(tagS1)
+                .product(product1)
+                .build();
+        ProdTag prodTag2 = ProdTag.builder()
+                .tag(tagY1)
+                .product(product1)
+                .build();
+        ProdTag prodTag3 = ProdTag.builder()
+                .tag(tagS2)
+                .product(product2)
+                .build();
+        ProdTag prodTag4 = ProdTag.builder()
+                .tag(tagY2)
+                .product(product2)
+                .build();
+
+        prodTagRepository.saveAll(List.of(prodTag1,prodTag2,prodTag3,prodTag4));
+    }
+
+    void addImageInfo(Product product1, Product product2){
+        // Image 생성
+        Image image = Image.builder()
+                .url("testtesttest.com")
+                .build();
+
+        ProductImage productImage1 = ProductImage.builder()
+                .image(image)
+                .product(product1)
+                .imgType("PRODUCT")
+                .seqNo(1L)
+                .build();
+
+        ProductImage productImage2 = ProductImage.builder()
+                .image(image)
+                .product(product2)
+                .imgType("PRODUCT")
+                .seqNo(1L)
+                .build();
+
+        ProductImage detailImage1 = ProductImage.builder()
+                .image(image)
+                .product(product1)
+                .imgType("DETAIL")
+                .seqNo(1L)
+                .build();
+
+        ProductImage detailImage2 = ProductImage.builder()
+                .image(image)
+                .product(product2)
+                .imgType("DETAIL")
+                .seqNo(1L)
+                .build();
+        productImageRepository.saveAll(List.of(productImage1,productImage2,detailImage1,detailImage2));
+    }
+
+    void addOptionInfo(Product product1,Product product2){
+        // 옵션 카테고리
+        OptionCategory color = OptionCategory.builder()
+                .name("색상")
+                .build();
+        OptionCategory size = OptionCategory.builder()
+                .name("사이즈")
+                .build();
+        // 옵션
+        Option optionS1 = Option.builder()
+                .name("M")
+                .build();
+        optionS1.setOptionCategory(size);
+        Option optionC1 = Option.builder()
+                .name("네이비")
+                .build();
+        optionC1.setOptionCategory(color);
+        Option optionC2 = Option.builder()
+                .name("블랙")
+                .build();
+        optionC2.setOptionCategory(color);
+        Option optionS2 = Option.builder()
+                .name("L")
+                .build();
+        optionS2.setOptionCategory(size);
+        // 상품에 옵션 설정
+        ProdOption prodOption = ProdOption.builder()
+                .option(optionC1)
+                .product(product1)
+                .build();
+        ProdOption prodOption2 = ProdOption.builder()
+                .option(optionS1)
+                .product(product1)
+                .build();
+        ProdOption prodOption3 = ProdOption.builder()
+                .option(optionC2)
+                .product(product2)
+                .build();
+        ProdOption prodOption4 = ProdOption.builder()
+                .option(optionS2)
+                .product(product2)
+                .build();
+        prodOptionRepository.saveAll(List.of(prodOption,prodOption2,prodOption3,prodOption4));
+    }
 
     @Test
     @DisplayName("카테고리별 상품을 조회한다.")
