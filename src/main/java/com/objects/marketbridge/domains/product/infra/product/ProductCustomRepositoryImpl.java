@@ -8,6 +8,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class ProductCustomRepositoryImpl implements ProductCustomRepository {
@@ -31,5 +34,23 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         }
 
         return findProduct;
+    }
+
+    @Override
+    public List<Product> findAllByProductNoLikeAndProductId(String productNo, Long productId) {
+        QProduct product = new QProduct("product");
+
+        List<Product> result = queryFactory
+                .selectFrom(product)
+                .where(
+                        product.productNo.like(productNo+"%"),
+                        product.id.ne(productId)
+                ).fetch();
+
+        if (result == null){
+            return new ArrayList<>();
+        }
+
+        return result;
     }
 }
