@@ -12,6 +12,10 @@ public class FakeMemberCouponRepository implements MemberCouponRepository {
     }
 
     @Override
+    public void deleteAllInBatch() {
+    }
+
+    @Override
     public MemberCoupon findByMemberIdAndCouponId(Long MemberId, Long CouponId) {
         return null;
     }
