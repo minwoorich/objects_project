@@ -35,8 +35,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
                   UnsupportedJwtException |
                   SignatureException |
                   IllegalStateException e) {
-            log.warn("[ExceptionHandler] {} ", e.getMessage());
-            log.warn("[ExceptionHandler] {} ", e.getStackTrace()[0]);
+            log.warn("{} ", e.getMessage());
+            log.warn("{} ", e.getStackTrace()[0]);
 
             setErrRes(request, response, e.getMessage());
         }

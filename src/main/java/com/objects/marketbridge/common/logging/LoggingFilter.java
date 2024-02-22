@@ -1,6 +1,7 @@
 package com.objects.marketbridge.common.logging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.objects.marketbridge.common.utils.ClientIpUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,11 +19,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class LoggingFilter extends OncePerRequestFilter {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     protected static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
+
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -38,6 +41,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     protected void doFilterWrapped(RequestWrapper request, ContentCachingResponseWrapper response, FilterChain filterChain) throws ServletException, IOException {
         try {
             logRequest(request);
+            logClientIp(request);
             filterChain.doFilter(request, response);
         } finally {
             logResponse(response);
@@ -45,9 +49,14 @@ public class LoggingFilter extends OncePerRequestFilter {
         }
     }
 
+    private static void logClientIp(RequestWrapper request) {
+        ClientIpUtils.getClientIps(request).forEach((headerType, ip) -> log.info("{} : {}", headerType, ip));
+    }
     private static void logRequest(RequestWrapper request) throws IOException {
         String queryString = request.getQueryString();
+
         log.info("Request : {} uri=[{}] content-type=[{}]", request.getMethod(), queryString == null ? request.getRequestURI() : request.getRequestURI() + queryString, request.getContentType());
+
         logPayload("Request", request.getContentType(), request.getInputStream());
     }
 

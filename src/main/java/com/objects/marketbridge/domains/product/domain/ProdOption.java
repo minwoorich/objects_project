@@ -25,7 +25,8 @@ public class ProdOption extends BaseEntity {
     private Option option;
 
     @Builder
-    private ProdOption(Product product, Option option) {
+    private ProdOption(Long id,Product product, Option option) {
+        this.id = id;
         this.product = product;
         this.option = option;
     }

@@ -125,6 +125,10 @@ include::api/product/productsearchbycategory.adoc[]
 {empty}
 {empty}
 
+include::api/product/productgetdetailinfo.adoc[]
+{empty}
+{empty}
+
 
 === *리뷰*
 include::api/review/review-create.adoc[]

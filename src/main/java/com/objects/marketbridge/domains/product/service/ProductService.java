@@ -34,25 +34,49 @@ public class ProductService {
     private final ProdTagRepository prodTagRepository;
     private final CategoryService categoryService;
     private final ProductCustomRepository productCustomRepository;
+    private final ProdOptionCustomRepository prodOptionCustomRepository;
+    private final ProdTagCustomRepository prodTagCustomRepository;
+    private final ProductImageCustomRepository productImageCustomRepository;
 
 
     // 상품 상세 정보 조회
     @Transactional
-    public void getProductDetail(Long id) {
+    public ProductDetailDto getProductDetail(Long id) {
         // 상품 테이블 정보 가져오기
         Product product = productCustomRepository.findByIdwithCategory(id);
+        Long productId = product.getId();
         // 카테고리 정보 가져오기
         String category = categoryService.getCategoryInfo(product.getCategory().getId());
         // DTO 생성
         ProductDetailDto productDetailDto
-                = new ProductDetailDto().create(product.getId(),product.getPrice(),product.getDiscountRate(),product.getName(),product.getThumbImg(),product.getIsOwn(),product.getIsSubs(),category);
+                = ProductDetailDto.builder()
+                .productId(product.getId())
+                .price(product.getPrice())
+                .discountRate(product.getDiscountRate())
+                .name(product.getName())
+                .thumbUrl(product.getThumbImg())
+                .isOwn(product.getIsOwn())
+                .isSubs(product.getIsSubs())
+                .categoryInfo(category)
+                .build();
+
         // 상품 옵션 정보 가져오기
-
+        List<OptionDto> optionInfo = prodOptionCustomRepository.findAllByProductId(productId);
+        productDetailDto.addAllOptionInfo(optionInfo);
         // 상품 태그 정보 가져오기
-
+        List<ProdTagDto> tagInfo = prodTagCustomRepository.findAllByProductId(productId);
+        productDetailDto.addAllTagInfo(tagInfo);
+        // 상품 이미지 정보 가져오기
+        productDetailDto.addAllImageDto(productImageCustomRepository.findAllByProductIdWithImage(productId));
         // 옵션만 다른 상품 가져오기 (상품 번호 일치)
-        // 리뷰 정보 가져오기
-        // 찜 리스트 정보 가져오기
+        List<Product> optionProduct = productCustomRepository.findAllByProductNoLikeAndProductId(product.getProductNo().split(" - ")[0],productId);
+        List<ProductDetailDto.ProductOptionDto> optionProductInfo = productDetailDto.addAllProductOptionDto(optionProduct);
+        // 옵션만 다른 상품에 옵션값 집어넣기
+        optionProductInfo.forEach(item -> {
+            item.addAllOptionInfo(prodOptionCustomRepository.findAllByProductId(item.getProductId()));
+        });
+
+        return productDetailDto;
     }
 
 
