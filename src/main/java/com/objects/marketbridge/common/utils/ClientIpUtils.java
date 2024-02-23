@@ -20,7 +20,7 @@ public class ClientIpUtils {
                 ipMap.put(headerType, "");
             }
         }
-        ipMap.put("Real Remote(Client)", request.getRemoteAddr());
+        ipMap.put("Remote-IP", request.getRemoteAddr());
         return ipMap;
     }
 }
