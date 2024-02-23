@@ -32,8 +32,6 @@ public class OrderController {
     private final CreateOrderService createOrderService;
     private final CreateCheckoutService createCheckoutService;
     private final GetOrderService getOrderService;
-    private final KakaoPayService kakaoPayService;
-    private final KakaoPayConfig kakaoPayConfig;
 
     @GetMapping("/orders/checkout")
     public ApiResponse<CreateCheckoutHttp.Response> createCheckout(
