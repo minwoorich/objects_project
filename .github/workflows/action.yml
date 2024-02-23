@@ -23,11 +23,11 @@ jobs:
           cd ./src/main/resources
           cat << EOF >> ./application.yml
           
+          ${{secrets.SSL_CONFIG}}
+          
           host: "http://${{ secrets.SSH_HOST }}:8080"
           
           ${{secrets.JWT_SECRET}}
-          
-          ${{secrets.SSL_CONFIG}}
           EOF
 
         shell: bash
