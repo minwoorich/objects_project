@@ -1,7 +1,6 @@
 package com.objects.marketbridge.common.security.filter;
 
 import com.objects.marketbridge.common.security.dto.ErrRes;
-import com.objects.marketbridge.common.utils.LoggerUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
