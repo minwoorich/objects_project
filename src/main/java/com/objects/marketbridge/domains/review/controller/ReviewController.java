@@ -102,7 +102,7 @@ public class ReviewController {
     //멤버의 리뷰 리스트 조회(createdAt: 최신순 내림차순 정렬 / likes: 좋아요 많은순 내림차순 정렬
     //http://localhost:8080/review/reviews/member/1?page=0&sortBy=createdAt
     //http://localhost:8080/review/reviews/member/1?reviews?page=0&sortBy=likes
-    @GetMapping("/reviews/member/{memberId}")
+    @GetMapping("/reviews/member/{memberId}") // /review/written
     @UserAuthorize
     public ApiResponse<Page<GetReviewDto>> getReviewsOfMember(
             @PathVariable("memberId") Long memberId,
@@ -135,12 +135,12 @@ public class ReviewController {
 
     //TODO: 리뷰리스트 조회, 리뷰조회, 상품별 리뷰 갯수, 리뷰 좋아요, mypage에 작성할 리뷰, 작성한 리뷰 리스트
 
-    //회원의 리뷰 작성하지 않은 주문상세 리스트 조회
+    //회원의 리뷰 작성하지 않은 주문상세/상품 리스트 조회
 
 
 
 
-    //회원의 리뷰 작성한 주문상세 리스트 조회
+    //회원의 리뷰 작성한 주문상세/상품 리스트 조회 (작성한 리뷰 리스트로 대체?)
 
 
 

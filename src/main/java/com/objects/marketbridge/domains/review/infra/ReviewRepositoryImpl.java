@@ -137,7 +137,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
                 "WHERE r.product_id = :productId";
 
         Query countQuery = em.createNativeQuery(countSql);
-        countQuery.setParameter("memberId", productId);
+        countQuery.setParameter("productId", productId);
 
         long total = ((Number) countQuery.getSingleResult()).longValue();
 
