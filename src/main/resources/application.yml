@@ -184,7 +184,7 @@ logging:
   level:
     org.hibernate.sql: debug
   file:
-    path: /home/ubuntu/logs
+    path: /app/logs
     name: app-dev
   logback:
     rollingpolicy:
