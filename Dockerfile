@@ -2,7 +2,6 @@ FROM amazoncorretto:17-alpine-jdk
 LABEL maintainer="jeongin <jeonginflow@gmail.com>"
 
 WORKDIR /app
-WORKDIR /app/logs
 
 COPY ./build/libs/*.jar ./
 COPY ./src/main/resources/static ./static
