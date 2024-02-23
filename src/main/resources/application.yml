@@ -184,7 +184,7 @@ spring:
 
 logging:
   level:
-    org.hibernate.sql: debug
+    org.hibernate.sql: info
   file:
     path:
       all: /app/logs/all
