@@ -209,8 +209,8 @@ public class ExControllerAdvice {
         StringBuilder sb = new StringBuilder();
 
         ErrorResult errorResult = ErrorResult.builder()
-                .code(NOT_FOUND.value())
-                .status(NOT_FOUND)
+                .code(INTERNAL_SERVER_ERROR.value())
+                .status(INTERNAL_SERVER_ERROR)
                 .path(String.valueOf(sb.append(httpRequest.getMethod()).append(httpRequest.getRequestURI())))
                 .errorCode(NO_ERROR_CODE)
                 .message(e.getMessage())
