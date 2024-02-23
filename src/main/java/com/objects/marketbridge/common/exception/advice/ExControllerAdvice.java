@@ -26,8 +26,8 @@ import static org.springframework.http.HttpStatus.*;
 @RestControllerAdvice
 public class ExControllerAdvice {
 
+    // String 타입 변수에 들어갈 값이 없을땐 null 대신 "none" 으로 초기화 시켜줌
     private final static String NONE = "none";
-
 
     // 비즈니스 로직 예외
     @ExceptionHandler(value = CustomLogicException.class)
@@ -47,6 +47,7 @@ public class ExControllerAdvice {
                 .exceptionName(e.getClass().getName())
                 .build();
 
+        // 로그 찍기
         ErrorLoggerUtils.warnLog(errorResult);
 
         return errorResult.toResponse();
@@ -70,6 +71,7 @@ public class ExControllerAdvice {
                 .exceptionName(e.getClass().getName())
                 .build();
 
+        // 로그 찍기
         ErrorLoggerUtils.warnLog(errorResult);
 
         return errorResult.toResponse();
@@ -93,6 +95,7 @@ public class ExControllerAdvice {
                 .exceptionName(e.getClass().getName())
                 .build();
 
+        // 로그 찍기
         ErrorLoggerUtils.warnLog(errorResult);
 
         return errorResult.toResponse();
@@ -117,6 +120,7 @@ public class ExControllerAdvice {
                 .exceptionName(e.getClass().getName())
                 .build();
 
+        // 로그 찍기
         ErrorLoggerUtils.warnLog(errorResult);
 
         return errorResult.toResponse();
@@ -141,6 +145,7 @@ public class ExControllerAdvice {
                 .exceptionName(e.getClass().getName())
                 .build();
 
+        // 로그 찍기
         ErrorLoggerUtils.warnLog(errorResult);
 
         return errorResult.toResponse();
@@ -165,6 +170,7 @@ public class ExControllerAdvice {
                 .exceptionName(e.getClass().getName())
                 .build();
 
+        // 로그 찍기
         ErrorLoggerUtils.warnLog(errorResult);
 
         return errorResult.toResponse();
@@ -189,6 +195,7 @@ public class ExControllerAdvice {
                 .exceptionName(e.getClass().getName())
                 .build();
 
+        // 로그 찍기
         ErrorLoggerUtils.warnLog(errorResult);
 
         return errorResult.toResponse();
@@ -202,8 +209,8 @@ public class ExControllerAdvice {
         StringBuilder sb = new StringBuilder();
 
         ErrorResult errorResult = ErrorResult.builder()
-                .code(NOT_FOUND.value())
-                .status(NOT_FOUND)
+                .code(INTERNAL_SERVER_ERROR.value())
+                .status(INTERNAL_SERVER_ERROR)
                 .path(String.valueOf(sb.append(httpRequest.getMethod()).append(httpRequest.getRequestURI())))
                 .errorCode(NO_ERROR_CODE)
                 .message(e.getMessage())
@@ -213,6 +220,7 @@ public class ExControllerAdvice {
                 .exceptionName(e.getClass().getName())
                 .build();
 
+        // 로그 찍기
         ErrorLoggerUtils.errorLog(errorResult);
 
         return errorResult.toResponse();

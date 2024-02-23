@@ -9,6 +9,8 @@ public interface MemberCouponRepository {
 
     MemberCoupon findByMemberIdAndCouponId(Long memberId, Long couponId);
 
+    MemberCoupon findByMemberIdAndCouponIdAndProductId(Long memberId, Long couponId, Long productId);
+
     MemberCoupon save(MemberCoupon memberCoupon);
 
     List<MemberCoupon> saveAll(List<MemberCoupon> memberCoupons);
