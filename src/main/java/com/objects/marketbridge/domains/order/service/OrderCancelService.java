@@ -14,6 +14,8 @@ import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnComm
 import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnQueryRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderDetailQueryRepository;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import lombok.Builder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.NON
 
 
 @Service
+@Timed("order")
 @Transactional(readOnly = true)
 public class OrderCancelService extends OrderCancelReturnService {
 
@@ -32,6 +35,7 @@ public class OrderCancelService extends OrderCancelReturnService {
         super(paymentClient, dateTimeHolder, orderDetailQueryRepository, orderDetailCommendRepository, orderCancelReturnQueryRepository, orderCancelReturnCommendRepository);
     }
 
+    @Counted("order")
     @Transactional
     public ConfirmCancelDto.Response confirmCancel(ConfirmCancelDto.Request request, DateTimeHolder dateTimeHolder) {
         return confirmProcess(

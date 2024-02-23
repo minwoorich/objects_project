@@ -19,17 +19,17 @@ public class ReviewSurvey extends BaseEntity {
     @JoinColumn(name = "review_id")
     private Review review;
 
-    private Long reviewSurveyCategoryId;
+    private Long surveyCategoryId;
 
     private String surveyCategory;
 
     private String content;
 
     @Builder
-    public ReviewSurvey(Long id, Review review, Long reviewSurveyCategoryId, String surveyCategory, String content) {
+    public ReviewSurvey(Long id, Review review, Long surveyCategoryId, String surveyCategory, String content) {
         this.id = id;
         this.review = review;
-        this.reviewSurveyCategoryId = reviewSurveyCategoryId;
+        this.surveyCategoryId = surveyCategoryId;
         this.surveyCategory = surveyCategory;
         this.content = content;
     }

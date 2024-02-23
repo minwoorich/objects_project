@@ -8,5 +8,7 @@ public interface SurveyContentRepository {
 
     List<SurveyContent> findAllBySurveyCategoryId(Long surveyCategoryId);
 
-    Boolean existsBySurveyCategoryId(Long reviewSurveyCategoryid);
+    Boolean existsBySurveyCategoryId(Long surveyCategoryId);
+
+    List<SurveyContent> findAllBySurveyCategoryIdIn(List<Long> surveyCategoryIds);
 }
