@@ -39,18 +39,6 @@ public class ReviewRepositoryImpl implements ReviewRepository {
         reviewJpaRepository.delete(review);
     }
 
-//    //LIKE관련//
-//    @Override
-//    public Page<Review> findAllByProductIdOrderByLikesDesc(Long productId, Pageable pageable) {
-//        return reviewJpaRepository.findAllByProductIdOrderByLikesDesc(productId, pageable);
-//    }
-//
-//    //LIKE관련//
-//    @Override
-//    public Page<Review> findAllByMemberIdOrderByLikesDesc(Long memberId, Pageable pageable) {
-//        return reviewJpaRepository.findAllByMemberIdOrderByLikesDesc(memberId, pageable);
-//    }
-
     @Override
     public Page<Review> findAllByProductId(Long productId, Pageable pageable) {
         return reviewJpaRepository.findAllByProductId(productId, pageable);
@@ -95,18 +83,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
         List<Review> resultList = query.getResultList();
 
-        // 전체 개수를 가져오기 위한 쿼리
-        String countSql = "SELECT COUNT(*) " +
-                "FROM review r " +
-                "LEFT JOIN review_like rl ON r.review_id = rl.review_id " +
-                "WHERE r.member_id = :memberId";
-
-        Query countQuery = em.createNativeQuery(countSql);
-        countQuery.setParameter("memberId", memberId);
-
-        long total = ((Number) countQuery.getSingleResult()).longValue();
-
-        return new PageImpl<>(resultList, pageable, total);
+        return new PageImpl<>(resultList, pageable, resultList.size());
     }
 
     @Override
@@ -130,18 +107,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
         List<Review> resultList = query.getResultList();
 
-        // 전체 개수를 가져오기 위한 쿼리
-        String countSql = "SELECT COUNT(*) " +
-                "FROM review r " +
-                "LEFT JOIN review_like rl ON r.review_id = rl.review_id " +
-                "WHERE r.product_id = :productId";
-
-        Query countQuery = em.createNativeQuery(countSql);
-        countQuery.setParameter("productId", productId);
-
-        long total = ((Number) countQuery.getSingleResult()).longValue();
-
-        return new PageImpl<>(resultList, pageable, total);
+        return new PageImpl<>(resultList, pageable, resultList.size());
     }
 
     @Override

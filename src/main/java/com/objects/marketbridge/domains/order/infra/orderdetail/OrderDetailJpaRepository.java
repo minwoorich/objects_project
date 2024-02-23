@@ -2,6 +2,8 @@ package com.objects.marketbridge.domains.order.infra.orderdetail;
 
 import com.objects.marketbridge.domains.order.domain.OrderDetail;
 import com.objects.marketbridge.domains.product.domain.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,4 +27,9 @@ public interface OrderDetailJpaRepository extends JpaRepository<OrderDetail, Lon
 
     List<OrderDetail> findByOrderNoAndIdIn(String orderNo, List<Long> orderDetailIds);
 
+    @Query(value = "SELECT o.member_id, od.* " +
+            "FROM order_detail od " +
+            "INNER JOIN orders o ON od.order_id = o.order_id " +
+            "WHERE o.member_id = :memberId", nativeQuery = true)
+    Page<OrderDetail> findAllByMemberId(Long memberId, Pageable pageable);
 }
