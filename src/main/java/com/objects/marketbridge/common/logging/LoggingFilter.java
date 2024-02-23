@@ -17,25 +17,24 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class LoggingFilter extends OncePerRequestFilter {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     protected static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
-
+    private static final List<String> whiteList = List.of("/actuator/prometheus");
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        MDC.put("traceId", UUID.randomUUID().toString());
-        if (isAsyncDispatch(request)) {
-            filterChain.doFilter(request, response);
-        } else {
-            doFilterWrapped(new RequestWrapper(request), new ResponseWrapper(response), filterChain);
+        if (!whiteList.contains(request.getRequestURI())) {
+            MDC.put("traceId", UUID.randomUUID().toString());
+            if (isAsyncDispatch(request)) {
+                filterChain.doFilter(request, response);
+            } else {
+                doFilterWrapped(new RequestWrapper(request), new ResponseWrapper(response), filterChain);
+            }
+            MDC.clear();
         }
-        MDC.clear();
     }
 
     protected void doFilterWrapped(RequestWrapper request, ContentCachingResponseWrapper response, FilterChain filterChain) throws ServletException, IOException {
