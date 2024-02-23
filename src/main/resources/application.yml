@@ -58,6 +58,7 @@ logging:
     console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){faint} %clr([traceId=%X{traceId}]){magenta} %clr(%-5level) %clr(%logger{36}.%M){cyan} %clr(-){faint} %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [traceId=%X{traceId}] %-5level %logger{36}.%M - %msg%n"
 
+# 액츄에이터 정보
 management:
   info:
     java:
@@ -75,6 +76,7 @@ management:
     health:
 #      show-details: always
       show-components: always
+# 엔드포인트 노출
   endpoints:
     web:
       exposure:
@@ -95,6 +97,12 @@ info:
   app:
     name: hello-actuator
     company: objects
+
+# 톰캣 정보 추가
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
 
 ---
 
@@ -207,3 +215,8 @@ management:
     web:
       exposure:
         include: "*"
+
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
