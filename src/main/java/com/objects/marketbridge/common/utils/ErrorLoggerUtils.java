@@ -33,6 +33,6 @@ public class ErrorLoggerUtils {
 
         StringBuilder sb = new StringBuilder();
         String msg = String.format("%-20s", str);
-        return String.valueOf(sb.append(msg).append(" : ").append("{}"));
+        return String.valueOf(sb.append(msg).append(" ").append("{}"));
     }
 }

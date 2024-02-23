@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.util.*;
 
 public class LoggingFilter extends OncePerRequestFilter {
+    private static final String REQUEST_PREFIX = "[REQUEST]";
+    private static final String RESP_PREFIX = "[RESPONSE]";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     protected static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
     private static final List<String> whiteList = List.of("/actuator/prometheus");
@@ -41,7 +43,6 @@ public class LoggingFilter extends OncePerRequestFilter {
     protected void doFilterWrapped(RequestWrapper request, ContentCachingResponseWrapper response, FilterChain filterChain) throws ServletException, IOException {
         try {
             logRequest(request);
-            logClientIp(request);
             filterChain.doFilter(request, response);
         } finally {
             logResponse(response);
@@ -49,23 +50,30 @@ public class LoggingFilter extends OncePerRequestFilter {
         }
     }
 
-    private static void logClientIp(RequestWrapper request) {
-        ClientIpUtils.getClientIps(request).forEach((headerType, ip) -> {
-            if (StringUtils.hasText(ip)) {
-                log.info("[{}] : {}", headerType, ip);
-            }
-        });
+//    private static void logClientIp(RequestWrapper request) {
+//        ClientIpUtils.getClientIps(request).forEach((headerType, ip) -> {
+//            if (StringUtils.hasText(ip)) {
+//                log.info("Request : {}={}", headerType, ip);
+//            }
+//        });
+//    }
+
+    private static void logClientIp(String prefix, Map<String, String> clientIps) {
+        clientIps.entrySet().stream()
+                .filter(entry -> StringUtils.hasText(entry.getValue()))
+                .forEach(entry -> log.info("{} {}={}",prefix, entry.getKey(), entry.getValue()));
     }
+
     private static void logRequest(RequestWrapper request) throws IOException {
         String queryString = request.getQueryString();
 
-        log.info("Request : {} uri=[{}] content-type=[{}]", request.getMethod(), queryString == null ? request.getRequestURI() : request.getRequestURI() + queryString, request.getContentType());
-
-        logPayload("Request", request.getContentType(), request.getInputStream());
+        log.info("{} {} uri=[{}] content-type=[{}]", REQUEST_PREFIX, request.getMethod(), queryString == null ? request.getRequestURI() : request.getRequestURI() + queryString, request.getContentType());
+        logClientIp(REQUEST_PREFIX, ClientIpUtils.getClientIps(request));
+        logPayload(REQUEST_PREFIX, request.getContentType(), request.getInputStream());
     }
 
     private static void logResponse(ContentCachingResponseWrapper response) throws IOException {
-        logPayload("Response", response.getContentType(), response.getContentInputStream());
+        logPayload(RESP_PREFIX, response.getContentType(), response.getContentInputStream());
     }
 
     private static void logPayload(String prefix, String contentType, InputStream inputStream) throws IOException {
@@ -77,7 +85,7 @@ public class LoggingFilter extends OncePerRequestFilter {
                 try {
                     Object jsonObject = objectMapper.readValue(contentString, Object.class);
                     String prettyPayload = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
-                    log.info("{} Payload: {}", prefix, prettyPayload);
+                    log.info("{} Payload={}", prefix, prettyPayload);
                 } catch (IOException e) {
                     // JSON 변환 중 에러 발생 시 예외 처리
                     log.warn("Error occurred while formatting payload: {}", e.getMessage());
