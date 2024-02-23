@@ -44,8 +44,11 @@ logging:
   level:
     org.hibernate.sql: debug
   file:
-    path: src/main/resources/logs
-    name: app-local
+    path:
+      all: src/main/resources/logs/all
+      info: src/main/resources/logs/info
+      warn: src/main/resources/logs/warn
+      error: src/main/resources/logs/error
   logback:
     rollingpolicy:
       max-history: 7 #7개 쌓이면 삭제
@@ -184,8 +187,11 @@ logging:
   level:
     org.hibernate.sql: debug
   file:
-    path: /app/logs
-    name: app-dev
+    path:
+      all: /app/logs/all
+      info: /app/logs/info
+      warn: /app/logs/warn
+      error: /app/logs/error
   logback:
     rollingpolicy:
       max-history: 7 #7개 쌓이면 삭제
