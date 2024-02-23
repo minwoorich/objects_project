@@ -26,6 +26,8 @@ jobs:
           host: "http://${{ secrets.SSH_HOST }}:8080"
           
           ${{secrets.JWT_SECRET}}
+          
+          ${{secrets.SSL_CONFIG}}
           EOF
 
         shell: bash
