@@ -22,4 +22,9 @@ public class ProdOptionRepositoryImpl implements ProdOptionRepository {
     public void saveAll(List<ProdOption> prodOptions) {
         prodOptionJpaRepository.saveAll(prodOptions);
     }
+
+    @Override
+    public void deleteAllInBatch() {
+        prodOptionJpaRepository.deleteAllInBatch();
+    }
 }

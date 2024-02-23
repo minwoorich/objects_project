@@ -143,6 +143,17 @@ spring:
 logging:
   level:
     org.hibernate.sql: debug
+  logback:
+    rollingpolicy:
+      max-history: 7 #7개 쌓이면 삭제
+      max-file-size: 10MB #파일 한개당 최대 사이즈
+      total-size-cap: 1GB #모든 로그 파일 사이즈
+      clean-history-on-start: true #서버 껐다 킬때마다 이전 로그 파일 삭제
+
+  #   [타임스탬프][쓰레드명][UUID][로깅레벨][로그출력한곳][메시지]
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){faint} %clr([traceId=%X{traceId}]){magenta} %clr(%-5level) %clr(%logger{36}.%M){cyan} %clr(-){faint} %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [traceId=%X{traceId}] %-5level %logger{36}.%M - %msg%n"
 
 payment:
   kakao:
@@ -161,17 +172,31 @@ spring:
       on-profile: dev
 
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
         default_batch_fetch_size: 100
 
 logging:
   level:
     org.hibernate.sql: debug
+  file:
+    path: /home/ubuntu/logs
+    name: app-dev
+  logback:
+    rollingpolicy:
+      max-history: 7 #7개 쌓이면 삭제
+      max-file-size: 10MB #파일 한개당 최대 사이즈
+      total-size-cap: 1GB #모든 로그 파일 사이즈
+      clean-history-on-start: true #서버 껐다 킬때마다 이전 로그 파일 삭제
+
+  #   [타임스탬프][쓰레드명][UUID][로깅레벨][로그출력한곳][메시지]
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){faint} %clr([traceId=%X{traceId}]){magenta} %clr(%-5level) %clr(%logger{36}.%M){cyan} %clr(-){faint} %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [traceId=%X{traceId}] %-5level %logger{36}.%M - %msg%n"
 
 payment:
   kakao:

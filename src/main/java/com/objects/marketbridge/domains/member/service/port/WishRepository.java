@@ -17,6 +17,8 @@ public interface WishRepository {
    Long countByProductIdAndMemberId(Long memberId, Long productId);
    Wishlist save(Wishlist wishlist);
 
+   Wishlist saveAndFlush(Wishlist wishlist);
+
    void saveAll(List<Wishlist> wishlist);
 
    void deleteWishlist(Long memberId,Long productId);

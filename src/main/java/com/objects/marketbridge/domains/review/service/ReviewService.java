@@ -10,12 +10,17 @@ import com.objects.marketbridge.domains.review.dto.*;
 import com.objects.marketbridge.domains.review.service.port.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,53 +32,173 @@ public class ReviewService {
     private final ImageRepository imageRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final ReviewSurveyRepository reviewSurveyRepository;
-    private final ReviewSurveyCategoryRepository reviewSurveyCategoryRepository;
+    private final SurveyCategoryRepository surveyCategoryRepository;
     private final SurveyContentRepository surveyContentRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final MemberRepository memberRepository;
 
-    //리뷰 서베이 선택창 조회
+
+
+
+    //리뷰서베이 선택창 조회
+
+    //1차(리팩토링전)
+//    @Transactional
+//    public List<ReviewSurveyCategoryContentsDto> getReviewSurveyCategoryContentsList (Long productId) {
+//        //해당 상품에 대한 SurveyCategory들을 가져옴(선택창+입력창인 경우 모두)
+//        //해당 상품에 대한 SurveyContents들을 가져옴(선택창일 경우만)
+//        //해당 상품에 대한 입력창에 입력할 SurveyContent는 프론트에서 처리해서 리뷰등록을 해야되게.
+//
+//        //서베이카테고리들
+//        List<SurveyCategory> surveyCategories
+//                = surveyCategoryRepository.findAllByProductId(productId);
+//
+//        ReviewSurveyCategoryContentsDto reviewSurveyCategoryContentsDto;
+//
+//        List<ReviewSurveyCategoryContentsDto> reviewSurveyCategoryContentsDtos = new ArrayList<>();
+//
+//        for (SurveyCategory surveyCategory : surveyCategories) {
+//
+//            if (surveyContentRepository.existsBySurveyCategoryId(surveyCategory.getId())) {
+//                List<SurveyContent> surveyContents
+//                        = surveyContentRepository.findAllBySurveyCategoryId(surveyCategory.getId());
+//                List<String> surveyContentsForDto = new ArrayList<>();
+//
+//                for (SurveyContent surveyContent : surveyContents) {
+//                    surveyContentsForDto.add(surveyContent.getContent());
+//                }
+//                reviewSurveyCategoryContentsDto
+//                        = ReviewSurveyCategoryContentsDto.builder()
+//                        .category(surveyCategory.getName())
+//                        .contents(surveyContentsForDto)
+//                        .build();
+//                reviewSurveyCategoryContentsDtos.add(reviewSurveyCategoryContentsDto);
+//
+//            } else {
+//                reviewSurveyCategoryContentsDto
+//                        = ReviewSurveyCategoryContentsDto.builder()
+//                        .category(surveyCategory.getName())
+//                        .contents(null)
+//                        .build();
+//                reviewSurveyCategoryContentsDtos.add(reviewSurveyCategoryContentsDto);
+//            }
+//        }
+//        return reviewSurveyCategoryContentsDtos;
+//    }
+
+    //2차 리팩토링
+//    @Transactional
+//    public List<ReviewSurveyCategoryContentsDto> getReviewSurveyCategoryContentsList (Long productId) {
+//        //해당 상품에 대한 SurveyCategory들을 가져옴(선택창+입력창인 경우 모두)
+//        //해당 상품에 대한 SurveyContents들을 가져옴(선택창일 경우만)
+//        //해당 상품에 대한 입력창에 입력할 SurveyContent는 프론트에서 처리해서 리뷰등록을 해야되게.
+//
+//        //서베이카테고리들
+//        List<SurveyCategory> surveyCategories
+//                = surveyCategoryRepository.findAllByProductId(productId);
+//
+//        //response용 dtos
+//        List<ReviewSurveyCategoryContentsDto> reviewSurveyCategoryContentsDtos
+//                = surveyCategories.stream()
+//                .map(surveyCategory -> {
+//                    List<String> contentsValues = null;
+//
+//                    if (surveyContentRepository.existsBySurveyCategoryId(surveyCategory.getId())) {
+//                        contentsValues = new ArrayList<>();
+//
+//                        List<SurveyContent> surveyContents
+//                                = surveyContentRepository.findAllBySurveyCategoryId(surveyCategory.getId());
+//                        for (SurveyContent surveyContent : surveyContents) {
+//                            contentsValues.add(surveyContent.getContent());
+//                        }
+//                    }
+//
+//                    return ReviewSurveyCategoryContentsDto.builder()
+//                            .category(surveyCategory.getName())
+//                            .contents(contentsValues)
+//                            .build();
+//                }).collect(Collectors.toList());
+//
+//        return reviewSurveyCategoryContentsDtos;
+//    }
+
+    //3차 리팩토링
+//    @Transactional
+//    public List<ReviewSurveyCategoryContentsDto> getReviewSurveyCategoryContentsList (Long productId) {
+//        //해당 상품에 대한 SurveyCategory들을 가져옴(선택창+입력창인 경우 모두)
+//        //해당 상품에 대한 SurveyContents들을 가져옴(선택창일 경우만)
+//        //해당 상품에 대한 입력창에 입력할 SurveyContent는 프론트에서 처리해서 리뷰등록을 해야되게.
+//
+//        //서베이카테고리들
+//        List<SurveyCategory> surveyCategories
+//                = surveyCategoryRepository.findAllByProductId(productId);
+//
+//        //response용 dtos
+//        List<ReviewSurveyCategoryContentsDto> reviewSurveyCategoryContentsDtos
+//                = surveyCategories.stream()
+//                .map(surveyCategory -> {
+//                    List<String> contentsValues = null;
+//
+//                    if (surveyContentRepository.existsBySurveyCategoryId(surveyCategory.getId())) {
+//                        List<SurveyContent> surveyContents
+//                                = surveyContentRepository.findAllBySurveyCategoryId(surveyCategory.getId());
+//
+//                        contentsValues = surveyContents.stream()
+//                                .map(SurveyContent::getContent)
+//                                .collect(Collectors.toList());
+//                    }
+//
+//                    return ReviewSurveyCategoryContentsDto.builder()
+//                            .category(surveyCategory.getName())
+//                            .contents(contentsValues)
+//                            .build();
+//                }).collect(Collectors.toList());
+//
+//        return reviewSurveyCategoryContentsDtos;
+//    }
+
+    //4차 리팩토링
     @Transactional
-    public List<ReviewSurveyQuestionAndOptionsDto> getReviewSurveyQuestionAndOptionsList(Long productId) {
-        //해당 상품에 대한 reviewSurveyCategory을 가져옴(선택창+입력창)
-        //해당 상품에 대한 SurveyContent를 가져옴(선택창)
-        //해당 상품에 대한 입력창에 입력할 SurveyContent는 프론트에서 처리
+    public List<ReviewSurveyCategoryContentsDto> getReviewSurveyCategoryContentsList(Long productId) {
+        //해당 상품에 대한 SurveyCategory들을 가져옴(선택창+입력창인 경우 모두)
+        List<SurveyCategory> surveyCategories = surveyCategoryRepository.findAllByProductId(productId);
 
-        List<ReviewSurveyCategory> reviewSurveyCategoryList
-                = reviewSurveyCategoryRepository.findAllByProductId(productId);
+        // SurveyCategoryIds 추출
+        List<Long> surveyCategoryIds = surveyCategories.stream()
+                .map(SurveyCategory::getId)
+                .collect(Collectors.toList());
 
-        ReviewSurveyQuestionAndOptionsDto reviewSurveyQuestionAndOptionsDto;
+        // 해당 SurveyCategoryIds에 해당하는 SurveyContents를 한 번에 가져옴
+        List<SurveyContent> surveyContents = surveyContentRepository.findAllBySurveyCategoryIdIn(surveyCategoryIds);
 
-        List<ReviewSurveyQuestionAndOptionsDto> reviewSurveyQuestionAndOptionsDtoList = new ArrayList<>();
-        //reviewSurveyQuestionsAndOptions을 담을 for문
-        for (ReviewSurveyCategory reviewSurveyCategory : reviewSurveyCategoryList) {
-            //리뷰작성자가 옵션 중에 선택하는 경우의 옵션들
-            if (surveyContentRepository.existsBySurveyCategoryId(reviewSurveyCategory.getId())) {
-                List<SurveyContent> surveyContentList
-                        = surveyContentRepository.findAllBySurveyCategoryId(reviewSurveyCategory.getId());
-                List<String> surveyContentContentListForDto = new ArrayList<>();
+        // Map을 사용하여 SurveyCategory와 SurveyContent를 그룹화
+        Map<Long, List<SurveyContent>> surveyContentMap
+                = surveyContents.stream()
+                .collect(Collectors.groupingBy(SurveyContent::getSurveyCategoryId));
 
-                for (SurveyContent surveyContent : surveyContentList) {
-                    surveyContentContentListForDto.add(surveyContent.getContent());
-                }
-                reviewSurveyQuestionAndOptionsDto
-                        = ReviewSurveyQuestionAndOptionsDto.builder()
-                        .reviewSurveyQuestion(reviewSurveyCategory.getName())
-                        .reviewSurveyOptionList(surveyContentContentListForDto)
-                        .build();
-                reviewSurveyQuestionAndOptionsDtoList.add(reviewSurveyQuestionAndOptionsDto);
-                //리뷰작성자가 선택하지 않고 직접 입력하는 경우는 빈값(null)
-            } else {
-                reviewSurveyQuestionAndOptionsDto
-                        = ReviewSurveyQuestionAndOptionsDto.builder()
-                        .reviewSurveyQuestion(reviewSurveyCategory.getName())
-                        .reviewSurveyOptionList(null)
-                        .build();
-                reviewSurveyQuestionAndOptionsDtoList.add(reviewSurveyQuestionAndOptionsDto);
-            }
-        }
-        return reviewSurveyQuestionAndOptionsDtoList;
+        // response용 dtos 생성
+        List<ReviewSurveyCategoryContentsDto> reviewSurveyCategoryContentsDtos = surveyCategories.stream()
+                .map(surveyCategory -> {
+                    List<String> contentsValues = null;
+
+                    // SurveyCategory에 해당하는 SurveyContents가 존재하면 contentsValues 설정
+                    if (surveyContentMap.containsKey(surveyCategory.getId())) {
+                        List<SurveyContent> contents = surveyContentMap.get(surveyCategory.getId());
+                        contentsValues = contents.stream()
+                                .map(SurveyContent::getContent)
+                                .collect(Collectors.toList());
+                    }
+
+                    return ReviewSurveyCategoryContentsDto.builder()
+                            .category(surveyCategory.getName())
+                            .contents(contentsValues)
+                            .build();
+                }).collect(Collectors.toList());
+
+        return reviewSurveyCategoryContentsDtos;
     }
+
+
 
 
     //리뷰 등록
@@ -99,13 +224,16 @@ public class ReviewService {
 
         createReviewImages(request.getReviewImages(), review);
 
-        //선택&입력된 리뷰 서베이들 등록
+        //선택&입력된 리뷰서베이들 등록
         createReviewSurveys(request, review);
 
         reviewRepository.save(review);
     }
 
 
+
+
+    //리뷰 수정
     @Transactional
     public void updateReview(UpdateReviewDto request) {
 
@@ -122,104 +250,20 @@ public class ReviewService {
     }
 
 
+
+
+    //리뷰 삭제
     @Transactional
     public void deleteReview(Long reviewId){
+//        List<ReviewLike> reviewLikes = reviewLikeRepository.findAllByReviewId(reviewId);
+//        List<Long> reviewLikeIds
+//                = reviewLikes.stream().map(ReviewLike::getId).collect(Collectors.toList());
+//        reviewLikeRepository.deleteAllByIdIn(reviewLikeIds);
+        reviewLikeRepository.deleteAllByReviewId(reviewId);
         reviewRepository.deleteById(reviewId);
     }
 
-//    @Transactional
-//    public void getReviews(Long productId) {
-//        Page<Review> reviews;
-//        if (sortBy.equals("likes")) {
-//            reviews = reviewRepository.findAllByProductIdOrderByLikesDesc(productId, pageable);
-//        } else {
-//            reviews = reviewRepository.findAllByProductId(productId, pageable);
-//        }
-//
-//        List<ReviewWholeInfoDto> reviewWholeInfoDtoList = reviews.getContent().stream().map(
-//                        review -> ReviewWholeInfoDto.builder()
-//                                .productName(review.getProduct().getName())
-//                                .memberName(review.getMember().getName())
-//                                .rating(review.getRating())
-//                                .reviewSurveyList(reviewSurveyRepository.findAllByReviewId(review.getId()))
-//                                .content(review.getContent())
-//                                .createdAt(review.getCreatedAt())
-//                                .reviewImgUrls(review.getReviewImages().stream()
-//                                        .map(reviewImage -> reviewImage.getImage().getUrl()).collect(Collectors.toList()))
-//                                .sellerName("MarketBridge")
-////                                //LIKE관련//
-////                                .likes(review.getLikes()) // 변경된 부분: Review 엔티티의 likes 필드 사용.
-//                                .build())
-//                .collect(Collectors.toList());
-//        return new PageImpl<>(reviewWholeInfoDtoList, pageable, reviews.getTotalElements());
-//    }
 
-
-    //리뷰아이디로 리뷰상세 단건 조회
-//    @Transactional
-//    public ReviewSingleReadDto getReview(Long reviewId, Long memberId){
-//        Review findReview = reviewRepository.findById(reviewId);
-//        List<ReviewImage> reviewImages = findReview.getReviewImages();
-//        List<String> reviewImgUrls = new ArrayList<>();
-//        for (ReviewImage reviewImage : reviewImages) {
-//            reviewImgUrls.add(reviewImage.getImage().getUrl());
-//        }
-//        ReviewSingleReadDto reviewSingleReadDto
-//                = ReviewSingleReadDto.builder()
-//                .reviewId(reviewId)
-//                .memberId(memberId)
-//                .productId(findReview.getProduct().getId())
-//                .reviewImgUrls(reviewImgUrls)
-//                .rating(findReview.getRating())
-//                .content(findReview.getContent())
-//                .build();
-//        return reviewSingleReadDto;
-//    }
-
-
-//    //LIKE관련//
-//        //회원별 리뷰 리스트 조회(createdAt 최신순 내림차순 정렬 또는 liked 많은순 내림차순 정렬)
-//    @Transactional
-//    public Page<ReviewWholeInfoDto> getMemberReviews(Long memberId, Pageable pageable, String sortBy) {
-//        Page<Review> reviews;
-//        if (sortBy.equals("likes")) {
-//            reviews = reviewRepository.findAllByMemberIdOrderByLikesDesc(memberId, pageable);
-//        } else {
-//            reviews = reviewRepository.findAllByMemberId(memberId, pageable);
-//        }
-//
-//        List<ReviewWholeInfoDto> reviewWholeInfoDtoList = reviews.getContent().stream().map(
-//                        review -> ReviewWholeInfoDto.builder()
-//                                .productName(review.getProduct().getName())
-//                                .memberName(review.getMember().getName())
-//                                .rating(review.getRating())
-//                                .createdAt(review.getCreatedAt())
-//                                .sellerName("MarketBridge")
-//                                .reviewImgUrls(review.getReviewImages().stream()
-//                                        .map(reviewImage -> reviewImage.getImage().getUrl()).collect(Collectors.toList()))
-//                                .content(review.getContent())
-////                                //LIKE관련//
-////                                .likes(reviewLikesRepository.countByReviewIdAndLikedIsTrue(review.getId()))
-//                                .build())
-//                .collect(Collectors.toList());
-//        return new PageImpl<>(reviewWholeInfoDtoList, pageable, reviews.getTotalElements());
-//    }
-
-
-    //상품별 리뷰 총갯수 조회
-    @Transactional
-    public ReviewsCountDto getProductReviewsCount(Long productId) {
-        Long count = reviewRepository.countByProductId(productId);
-        return ReviewsCountDto.builder().count(count).build();
-    }
-
-
-    //회원별 리뷰 총갯수 조회
-    @Transactional
-    public ReviewsCountDto getMemberReviewsCount(Long memberId) {
-        Long count = reviewRepository.countByMemberId(memberId);
-        return ReviewsCountDto.builder().count(count).build();
-    }
 
 
     //review_like upsert(없으면 create, 있으면 delete)
@@ -241,79 +285,126 @@ public class ReviewService {
     }
 
 
-//    //LIKE관련//
-//    //리뷰 좋아요 등록 또는 변경(True화/False화)
-//    @Transactional
-//    public ReviewLikeDto addOrChangeReviewLike(Long reviewId, Long memberId) {
-//        if (reviewLikesRepository.existsByReviewIdAndMemberId(reviewId, memberId)) {
-//            // 이미 좋아요가 있는 경우에는 좋아요 상태 변경 로직을 수행
-//            return changeReviewLike(reviewId, memberId);
-//        } else {
-//            // 좋아요가 없는 경우에는 새로운 좋아요 추가
-//            return addReviewLike(reviewId, memberId);
-//        }
-//    }
-//    @Transactional
-//    public ReviewLikeDto addReviewLike(Long reviewId, Long memberId) {
-//        // 좋아요 추가 로직 추가
-//
-//        Review findReview = reviewRepository.findById(reviewId);
-//        ReviewLikes reviewLikes = ReviewLikes.builder()
-//                .review(findReview)
-//                .member(memberRepository.findById(memberId))
-////                .product(findReview.getProduct())
-//                .liked(true) // 처음에는 좋아요 상태를 true로 설정(등록자체가 좋아요를 누른것이므로)
-//                .build();
-//
-//        findReview.increaseLikes();
-//        reviewLikesRepository.save(reviewLikes);
-//
-//        return ReviewLikeDto.builder()
-//                .reviewId(reviewId)
-//                .memberId(memberId)
-//                .liked(true)
-//                .build();
-//    }
-//    @Transactional
-//    public ReviewLikeDto changeReviewLike(Long reviewId, Long memberId) {
-//        ReviewLikes findReviewLikes = reviewLikesRepository.findByReviewIdAndMemberId(reviewId, memberId);
-//
-//        System.out.println("findReviewLikes.getLiked() == " + findReviewLikes.getLiked());
-//        Boolean changedLiked = findReviewLikes.changeLiked();
-//        System.out.println("changedLiked == " + changedLiked);
-//
-//        Review findReview = reviewRepository.findById(reviewId);
-//        if(changedLiked == true){
-//            findReview.increaseLikes();
-//        } else {
-//            findReview.decreaseLikes();
-//        }
-//
-//        reviewLikesRepository.save(findReviewLikes);
-//        System.out.println("after Change:findLiked == " + findReviewLikes.getLiked());
-//        reviewRepository.save(findReview);
-//
-//        ReviewLikeDto reviewLikeDto = ReviewLikeDto.builder().reviewId(reviewId).memberId(memberId).liked(changedLiked).build();
-//        return reviewLikeDto;
-//    }
 
 
-    //    //LIKE관련//
-//    //리뷰 좋아요 총갯수 조회
-//    @Transactional
-//    public ReviewLikesCountDto countReviewLikes(Long reviewId) {
-//        Review findReview = reviewRepository.findById(reviewId);
-//        Long count = reviewLikesRepository.countByReviewIdAndLikedIsTrue(reviewId);
-//        ReviewLikesCountDto reviewLikesCountDto
-//                = ReviewLikesCountDto.builder().reviewId(reviewId).count(count).build();
-//        return reviewLikesCountDto;
-//    }
+    //review_like 총갯수 조회
+    @Transactional
+    public ReviewLikeCountDto countReviewLike(Long reviewId) {
+        Long count = reviewLikeRepository.countByReviewId(reviewId);
+        ReviewLikeCountDto reviewLikeCountDto
+                = ReviewLikeCountDto.builder().count(count).build();
+        return reviewLikeCountDto;
+    }
+
+
+
+
+    //상품별 리뷰 총갯수 조회
+    @Transactional
+    public ReviewCountDto getProductReviewCount(Long productId) {
+        Long count = reviewRepository.countByProductId(productId);
+        return ReviewCountDto.builder().count(count).build();
+    }
+
+
+
+
+    //회원별 리뷰 총갯수 조회
+    @Transactional
+    public ReviewCountDto getMemberReviewCount(Long memberId) {
+        Long count = reviewRepository.countByMemberId(memberId);
+        return ReviewCountDto.builder().count(count).build();
+    }
+
+
+
+
+    //리뷰아이디로 리뷰 단건 조회
+    @Transactional
+    public GetReviewDto getReview(Long reviewId){
+//        Review review = Review.builder().id(reviewId).build(); //멤버가 없어서 NullPointerException남.
+        Review review = reviewRepository.findById(reviewId);
+
+        List<ReviewImage> reviewImages = review.getReviewImages();
+        List<ReviewImageDto> reviewImageDtos
+                = reviewImages.stream()
+                .map(reviewImage -> ReviewImageDto.builder()
+                        .seqNo(reviewImage.getSeqNo())
+                        .imgUrl(reviewImage.getImage().getUrl())
+                        .description(reviewImage.getDescription())
+                        .build())
+                .collect(Collectors.toList());
+
+        List<ReviewSurvey> reviewSurveys = review.getReviewSurveys();
+        List<GetReviewSurveyDto> getReviewSurveyDtos
+                = reviewSurveys.stream()
+                .map(reviewSurvey -> GetReviewSurveyDto.builder()
+                        .surveyCategoryName(reviewSurvey.getSurveyCategory())
+                        .content(reviewSurvey.getContent())
+                        .build())
+                .collect(Collectors.toList());
+
+        GetReviewDto getReviewDto
+                = GetReviewDto.builder()
+                .memberName(review.getMember().getName())
+                .productName(review.getProduct().getName())
+                .summary(review.getSummary())
+                .rating(review.getRating())
+                .reviewImageDtos(reviewImageDtos)
+                .content(review.getContent())
+                .getReviewSurveyDtos(getReviewSurveyDtos)
+                .build();
+        return getReviewDto;
+    }
+
+
+
+
+    //멤버의 리뷰 리스트 조회(createdAt: 최신순 내림차순 정렬 / likes: 좋아요많은순 내림차순 정렬)
+    @Transactional
+    public Page<GetReviewDto> getReviewsOfMember(Long memberId, Pageable pageable, String sortBy) {
+        Page<Review> reviews;
+        if (sortBy.equals("likes")) {
+            reviews = reviewRepository.findAllByMemberIdOrderByLikesDesc(memberId, pageable);
+        } else {
+            reviews = reviewRepository.findAllByMemberId(memberId, pageable);
+        }
+
+        List<GetReviewDto> getReviewDtos = reviews.stream()
+                .map(review -> getReview(review.getId()))
+                .collect(Collectors.toList());
+        return new PageImpl<>(getReviewDtos, pageable, reviews.getTotalElements());
+    }
+
+
+
+
+    //상품의 리뷰 리스트 조회(createdAt: 최신순 내림차순 정렬 / likes: 좋아요많은순 내림차순 정렬)
+    @Transactional
+    public Page<GetReviewDto> getReviewsOfProduct(Long productId, Pageable pageable, String sortBy) {
+        Page<Review> reviews;
+        if (sortBy.equals("likes")) {
+            reviews = reviewRepository.findAllByProductIdOrderByLikesDesc(productId, pageable);
+        } else {
+            reviews = reviewRepository.findAllByProductId(productId, pageable);
+        }
+
+        List<GetReviewDto> getReviewDtos = reviews.stream()
+                .map(review -> getReview(review.getId()))
+                .collect(Collectors.toList());
+        return new PageImpl<>(getReviewDtos, pageable, reviews.getTotalElements());
+    }
+
+
+
+
+    //=====내부 이용 메서드=====
     private void createReviewSurveys(CreateReviewDto request, Review review) {
         request.getReviewSurveys().forEach(obj -> {
             ReviewSurvey reviewSurvey = ReviewSurvey.builder()
                     .review(review)
-                    .reviewSurveyCategoryId(obj.getReviewSurveyCategoryId())
-                    .surveyCategory(obj.getReviewSurveyCategoryName())
+                    .surveyCategoryId(obj.getSurveyCategoryId())
+                    .surveyCategory(obj.getSurveyCategoryName())
                     .content(obj.getContent())
                     .build();
 
@@ -356,5 +447,4 @@ public class ReviewService {
         reviewImageRepository.deleteAllByIdInBatch(reviewImages.stream().map(ReviewImage::getId).toList());
         imageRepository.deleteAllByIdInBatch(reviewImages.stream().map(obj -> obj.getImage().getId()).toList());
     }
-
 }

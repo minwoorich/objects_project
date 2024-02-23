@@ -6,6 +6,7 @@ import com.objects.marketbridge.domains.product.domain.ProdOption;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -14,6 +15,7 @@ import static java.util.stream.Collectors.*;
 
 @Getter
 @NoArgsConstructor
+@Slf4j
 public class GetCartDto {
     private Long cartId;
     private Long productId;

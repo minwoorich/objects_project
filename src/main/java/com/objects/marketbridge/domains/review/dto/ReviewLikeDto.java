@@ -1,4 +1,4 @@
-package com.objects.marketbridge.review.dto;
+package com.objects.marketbridge.domains.review.dto;
 
 import lombok.Builder;
 import lombok.Getter;

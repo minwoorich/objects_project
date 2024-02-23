@@ -3,6 +3,7 @@ package com.objects.marketbridge.domains.product.controller;
 import com.objects.marketbridge.common.responseobj.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.UserAuthorize;
 import com.objects.marketbridge.domains.product.controller.request.CreateProductRequestDto;
+import com.objects.marketbridge.domains.product.dto.ProductDetailDto;
 import com.objects.marketbridge.domains.product.dto.ProductSimpleDto;
 import com.objects.marketbridge.domains.product.service.ProductService;
 import jakarta.validation.Valid;
@@ -20,8 +21,6 @@ public class ProductController {
 
 ////    private final BulkUploadProductService bulkUploadProductService;
     private final ProductService productService;
-//    private final UpdateProductService updateProductService;
-//    private final DeleteProductService deleteProductService;
 //
 //
 //    //상품들 Excel파일로 대량등록
@@ -50,31 +49,12 @@ public class ProductController {
         return ApiResponse.ok(productPage);
     }
 
-
+    // 상품 상세 정보 조회
     @UserAuthorize
     @GetMapping("/{id}")
-    public void getProductDetail (@PathVariable("id") Long id){
-        productService.getProductDetail(id);
+    public ApiResponse<ProductDetailDto> getProductDetail (@PathVariable("id") Long id){
+        ProductDetailDto result = productService.getProductDetail(id);
+        return ApiResponse.ok(result);
     }
-//
-//
-//    //상품수정
-//    @UserAuthorize
-//    @PatchMapping("/{id}")
-//    public ApiResponse<UpdateProductResponseDto> updateProduct
-//    (@PathVariable("id") Long id, @RequestBody @Valid UpdateProductRequestDto updateProductRequestDto) {
-//        UpdateProductResponseDto updateProductResponseDto
-//                = updateProductService.update(updateProductRequestDto);
-//        return ApiResponse.ok(updateProductResponseDto);
-//    }
-//
-//
-//    //상품삭제
-//    @UserAuthorize
-//    @DeleteMapping("/{id}")
-//    public ApiResponse<String> deleteProduct
-//    (@PathVariable("id") Long id) {
-//        deleteProductService.delete(id);
-//        return ApiResponse.ok("success");
-//    }
+
 }

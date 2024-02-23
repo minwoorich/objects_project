@@ -19,7 +19,12 @@ public class SurveyContentRepositoryImpl implements SurveyContentRepository {
     }
 
     @Override
-    public Boolean existsBySurveyCategoryId(Long reviewSurveyCategoryid) {
-        return surveyContentJpaRepository.existsBySurveyCategoryId(reviewSurveyCategoryid);
+    public Boolean existsBySurveyCategoryId(Long surveyCategoryId) {
+        return surveyContentJpaRepository.existsBySurveyCategoryId(surveyCategoryId);
+    }
+
+    @Override
+    public List<SurveyContent> findAllBySurveyCategoryIdIn(List<Long> surveyCategoryIds) {
+        return surveyContentJpaRepository.findAllBySurveyCategoryIdIn(surveyCategoryIds);
     }
 }

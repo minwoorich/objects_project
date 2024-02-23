@@ -31,4 +31,8 @@ public interface ReviewRepository {
     Long countByMemberId(Long memberId);
 
     Page<Review> findAllByIdIn(List<Long> likedOrderedReviewIds, Pageable pageable);
+
+    Page<Review> findAllByMemberIdOrderByLikesDesc(Long memberId, Pageable pageable);
+
+    Page<Review> findAllByProductIdOrderByLikesDesc(Long productId, Pageable pageable);
 }
