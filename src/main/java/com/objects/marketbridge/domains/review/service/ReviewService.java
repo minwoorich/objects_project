@@ -299,7 +299,7 @@ public class ReviewService {
 
 
 
-    //상품별 리뷰 총갯수 조회
+    //상품의 리뷰 총갯수 조회
     @Transactional
     public ReviewCountDto getProductReviewCount(Long productId) {
         Long count = reviewRepository.countByProductId(productId);
@@ -309,7 +309,7 @@ public class ReviewService {
 
 
 
-    //회원별 리뷰 총갯수 조회
+    //멤버의 리뷰 총갯수 조회
     @Transactional
     public ReviewCountDto getMemberReviewCount(Long memberId) {
         Long count = reviewRepository.countByMemberId(memberId);
