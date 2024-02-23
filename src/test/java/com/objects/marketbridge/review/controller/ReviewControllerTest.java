@@ -28,7 +28,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -139,6 +141,7 @@ public class ReviewControllerTest {
 
 
 
+
     @Test
     @WithMockCustomUser
     @DisplayName("리뷰 생성")
@@ -234,6 +237,9 @@ public class ReviewControllerTest {
         return reviewImgUrls;
     }
 
+
+
+
     @Test
     @WithMockCustomUser
     @DisplayName("리뷰 수정")
@@ -276,6 +282,9 @@ public class ReviewControllerTest {
                 ));
     }
 
+
+
+
     private UpdateReviewDto getUpdateReviewDto() {
         List<UpdateReviewSurveyDto> updateReviewSurveys = new ArrayList<>();
         UpdateReviewSurveyDto reviewSurvey1 = UpdateReviewSurveyDto.builder()
@@ -312,6 +321,9 @@ public class ReviewControllerTest {
 
     }
 
+
+
+
     @Test
     @WithMockCustomUser
     @DisplayName("리뷰 삭제")
@@ -339,6 +351,9 @@ public class ReviewControllerTest {
                         )
                 ));
     }
+
+
+
 
     @Test
     @WithMockCustomUser
@@ -372,9 +387,12 @@ public class ReviewControllerTest {
                 ));
     }
 
+
+
+
     @Test
     @WithMockCustomUser
-    @DisplayName("리뷰 좋아요 총갯수 카운트")
+    @DisplayName("리뷰의 좋아요 총갯수 카운트")
     public void countReviewLike() throws Exception {
         // given
         Long reviewId = 1L;
@@ -390,7 +408,7 @@ public class ReviewControllerTest {
                 .andExpect(status().isOk())
 //                .andExpect(jsonPath("$.data.reviewId").value(reviewId))
 //                .andExpect(jsonPath("$.data.count").value(10L))
-                .andDo(document("review-count-like",
+                .andDo(document("review-count-review-like",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -406,33 +424,8 @@ public class ReviewControllerTest {
                 ));
     }
 
-    @Test
-    @DisplayName("상품의 리뷰 총갯수 조회")
-    public void getProductReviewCount() throws Exception {
-        //given
-        Long productId = 1L;
-        ReviewCountDto reviewCountDto = ReviewCountDto.builder().count(productId).build();
-        given(reviewService.getProductReviewCount(productId)).willReturn(reviewCountDto);
 
-        //when //then
-        mockMvc.perform(get("/review/count/product/{productId}", productId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("review-count-of-product",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("productId").description("상품 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").description("응답 코드"),
-                                fieldWithPath("status").description("응답 상태"),
-                                fieldWithPath("message").description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.count").description("리뷰 총 갯수")
-                        )
-                ));
-    }
+
 
     @Test
     @WithMockCustomUser
@@ -462,6 +455,40 @@ public class ReviewControllerTest {
                         )
                 ));
     }
+
+
+
+
+    @Test
+    @DisplayName("상품의 리뷰 총갯수 조회")
+    public void getProductReviewCount() throws Exception {
+        //given
+        Long productId = 1L;
+        ReviewCountDto reviewCountDto = ReviewCountDto.builder().count(productId).build();
+        given(reviewService.getProductReviewCount(productId)).willReturn(reviewCountDto);
+
+        //when //then
+        mockMvc.perform(get("/review/count/product/{productId}", productId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("review-count-of-product",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("productId").description("상품 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 코드"),
+                                fieldWithPath("status").description("응답 상태"),
+                                fieldWithPath("message").description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                fieldWithPath("data.count").description("리뷰 총 갯수")
+                        )
+                ));
+    }
+
+
+
 
     @Test
     @WithMockCustomUser
@@ -558,85 +585,53 @@ public class ReviewControllerTest {
                 ));
     }
 
+
+
+
     @Test
     @WithMockCustomUser
-    @DisplayName("멤버의 리뷰 총갯수 조회")
-    public void getReviewsOfMember() throws Exception {
+    @DisplayName("멤버의 모든 리뷰미작성 주문상세 조회")
+    public void getReviewable() throws Exception {
         // given
         Long memberId = 1L;
-        List<ReviewImageDto> reviewImageDtos = new ArrayList<>();
-        ReviewImageDto reviewImageDto1 = ReviewImageDto.builder()
-                .seqNo(1L)
-                .imgUrl("001.jpg")
-                .description("캡션1")
-                .build();
-        ReviewImageDto reviewImageDto2 = ReviewImageDto.builder()
-                .seqNo(2L)
-                .imgUrl("002.jpg")
-                .description("캡션2")
-                .build();
-        ReviewImageDto reviewImageDto3 = ReviewImageDto.builder()
-                .seqNo(3L)
-                .imgUrl("003.jpg")
-                .description("캡션3")
-                .build();
-        reviewImageDtos.add(reviewImageDto1);
-        reviewImageDtos.add(reviewImageDto2);
-        reviewImageDtos.add(reviewImageDto3);
 
-        List<GetReviewSurveyDto> getReviewSurveyDtos = new ArrayList<>();
-        GetReviewSurveyDto reviewSurveyDto1 = GetReviewSurveyDto.builder()
-                .surveyCategoryName("서베이카테고리1(질문1)")
-                .content("작성한 내용1")
+        ReviewableDto reviewableDto = ReviewableDto.builder()
+                .productThumbnailUrl("001.jpg")
+                .productName("상품명1")
+                .deliveredDate(LocalDateTime.of(2024, 1, 11, 13, 15, 30,123456700))
                 .build();
-        GetReviewSurveyDto reviewSurveyDto2 = GetReviewSurveyDto.builder()
-                .surveyCategoryName("서베이카테고리2(질문2)")
-                .content("작성한 내용2")
+        ReviewableDto reviewableDto2 = ReviewableDto.builder()
+                .productThumbnailUrl("002.jpg")
+                .productName("상품명2")
+                .deliveredDate(LocalDateTime.of(2024, 1, 12, 13, 15, 30,123456700))
                 .build();
-        GetReviewSurveyDto reviewSurveyDto3 = GetReviewSurveyDto.builder()
-                .surveyCategoryName("서베이카테고리2(질문3)")
-                .content("선택한 내용3")
-                .build();
-        GetReviewSurveyDto reviewSurveyDto4 = GetReviewSurveyDto.builder()
-                .surveyCategoryName("서베이카테고리4(질문4)")
-                .content("선택한 내용4")
-                .build();
-        getReviewSurveyDtos.add(reviewSurveyDto1);
-        getReviewSurveyDtos.add(reviewSurveyDto2);
-        getReviewSurveyDtos.add(reviewSurveyDto3);
-        getReviewSurveyDtos.add(reviewSurveyDto4);
-
-        GetReviewDto getReviewDto = GetReviewDto.builder()
-                .memberName("멤버명")
-                .rating(5)
-                .productName("상품명")
-                .summary("한줄요약")
-                .reviewImageDtos(reviewImageDtos)
-                .content("리뷰내용")
-                .getReviewSurveyDtos(getReviewSurveyDtos)
+        ReviewableDto reviewableDto3 = ReviewableDto.builder()
+                .productThumbnailUrl("003.jpg")
+                .productName("상품명3")
+                .deliveredDate(LocalDateTime.of(2024, 1, 13, 13, 15, 30,123456700))
                 .build();
 
-        // page 및 sortBy 설정
-        // 정렬 선택: createdAt 또는 likes
-        int page = 1;
-        int springPage = page-1;
-        String sortBy = "createdAt";
-        Pageable pageable = PageRequest.of(springPage, 5, Sort.by(sortBy).descending());
+        // page 설정
+        int page = 0;
+        Pageable pageable = PageRequest.of(page, 5);
 
         // 실제 서비스 메서드 호출 결과를 설정
-        Page<GetReviewDto> reviewDtoPage
-                = new PageImpl<>(Collections.singletonList(getReviewDto), pageable, 1);
-        given(reviewService.getReviewsOfMember(memberId, pageable, sortBy)).willReturn(reviewDtoPage);
+//        Page<ReviewableDto> reviewableDtoPage
+//                = new PageImpl<>(Collections.singletonList(reviewableDto), pageable, 1);
+//        given(reviewService.getReviewable(memberId, pageable)).willReturn(reviewableDtoPage);
+        //3개의 Dto일때
+        List<ReviewableDto> reviewableDtos = Arrays.asList(reviewableDto, reviewableDto2, reviewableDto3);
+        Page<ReviewableDto> reviewableDtoPage
+                = new PageImpl<>(reviewableDtos, pageable, reviewableDtos.size());
+        given(reviewService.getReviewable(memberId, pageable)).willReturn(reviewableDtoPage);
 
         // when // then
-        mockMvc.perform(get("/review/reviews/member/{memberId}", memberId)
-                        .param("memberId", String.valueOf(memberId))
+        mockMvc.perform(get("/review/unwritten/member/{memberId}", memberId)
                         .param("page", String.valueOf(page))
-                        .param("sortBy", sortBy)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "bearer AccessToken"))
                 .andExpect(status().isOk())
-                .andDo(document("reviews-of-member",
+                .andDo(document("reviews-unwritten",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -647,19 +642,10 @@ public class ReviewControllerTest {
                                 fieldWithPath("status").description("응답 상태"),
                                 fieldWithPath("message").description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.content[0].memberName").description("멤버 이름"),
-                                fieldWithPath("data.content[0].rating").description("별점"),
-//                                fieldWithPath("data.content[0].sellerName").description("셀러명"),
-                                fieldWithPath("data.content[0].productName").description("상품명"),
-                                fieldWithPath("data.content[0].summary").description("한줄요약"),
-                                fieldWithPath("data.content[0].reviewImageDtos").description("리뷰이미지DTO리스트"),
-                                fieldWithPath("data.content[0].reviewImageDtos[].seqNo").description("이미지 시퀀스넘버"),
-                                fieldWithPath("data.content[0].reviewImageDtos[].imgUrl").description("이미지 URL"),
-                                fieldWithPath("data.content[0].reviewImageDtos[].description").description("이미지 캡션(설명)"),
-                                fieldWithPath("data.content[0].content").description("리뷰 내용"),
-                                fieldWithPath("data.content[0].getReviewSurveyDtos").description("리뷰서베이DTO리스트"),
-                                fieldWithPath("data.content[0].getReviewSurveyDtos[].surveyCategoryName").description("서베이카테고리명"),
-                                fieldWithPath("data.content[0].getReviewSurveyDtos[].content").description("서베이 내용"),
+                                fieldWithPath("data.content[]").description("상품상세"),
+                                fieldWithPath("data.content[].productThumbnailUrl").description("상품이미지URL"),
+                                fieldWithPath("data.content[].productName").description("상품명"),
+                                fieldWithPath("data.content[].deliveredDate").description("배송일"),
                                 fieldWithPath("data.pageable").description("페이징 정보"),
                                 fieldWithPath("data.pageable.pageNumber").description("페이지 번호"),
                                 fieldWithPath("data.pageable.pageSize").description("페이지 크기"),
@@ -686,25 +672,30 @@ public class ReviewControllerTest {
                 ));
     }
 
+
+
+
     @Test
-    @DisplayName("상품의 리뷰 총갯수 조회")
-    public void getReviewsOfProduct() throws Exception {
+    @WithMockCustomUser
+    @DisplayName("멤버의 모든 리뷰 조회")
+    public void getReviewsOfMember() throws Exception {
         // given
-        Long productId = 1L;
+        Long memberId = 1L;
+
         List<ReviewImageDto> reviewImageDtos = new ArrayList<>();
         ReviewImageDto reviewImageDto1 = ReviewImageDto.builder()
                 .seqNo(1L)
-                .imgUrl("001.jpg")
+                .imgUrl("101.jpg")
                 .description("캡션1")
                 .build();
         ReviewImageDto reviewImageDto2 = ReviewImageDto.builder()
                 .seqNo(2L)
-                .imgUrl("002.jpg")
+                .imgUrl("102.jpg")
                 .description("캡션2")
                 .build();
         ReviewImageDto reviewImageDto3 = ReviewImageDto.builder()
                 .seqNo(3L)
-                .imgUrl("003.jpg")
+                .imgUrl("103.jpg")
                 .description("캡션3")
                 .build();
         reviewImageDtos.add(reviewImageDto1);
@@ -743,20 +734,265 @@ public class ReviewControllerTest {
                 .getReviewSurveyDtos(getReviewSurveyDtos)
                 .build();
 
+        //Dto2
+        List<ReviewImageDto> reviewImageDtos2 = new ArrayList<>();
+        ReviewImageDto reviewImageDto21 = ReviewImageDto.builder()
+                .seqNo(1L)
+                .imgUrl("201.jpg")
+                .description("캡션1")
+                .build();
+        ReviewImageDto reviewImageDto22 = ReviewImageDto.builder()
+                .seqNo(2L)
+                .imgUrl("202.jpg")
+                .description("캡션2")
+                .build();
+        ReviewImageDto reviewImageDto23 = ReviewImageDto.builder()
+                .seqNo(3L)
+                .imgUrl("203.jpg")
+                .description("캡션3")
+                .build();
+        reviewImageDtos2.add(reviewImageDto21);
+        reviewImageDtos2.add(reviewImageDto22);
+        reviewImageDtos2.add(reviewImageDto23);
+
+        List<GetReviewSurveyDto> getReviewSurveyDtos2 = new ArrayList<>();
+        GetReviewSurveyDto reviewSurveyDto21 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리1(질문1)")
+                .content("작성한 내용1")
+                .build();
+        GetReviewSurveyDto reviewSurveyDto22 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리2(질문2)")
+                .content("작성한 내용2")
+                .build();
+        GetReviewSurveyDto reviewSurveyDto23 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리2(질문3)")
+                .content("선택한 내용3")
+                .build();
+        GetReviewSurveyDto reviewSurveyDto24 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리4(질문4)")
+                .content("선택한 내용4")
+                .build();
+        getReviewSurveyDtos2.add(reviewSurveyDto21);
+        getReviewSurveyDtos2.add(reviewSurveyDto22);
+        getReviewSurveyDtos2.add(reviewSurveyDto23);
+        getReviewSurveyDtos2.add(reviewSurveyDto24);
+
+        GetReviewDto getReviewDto2 = GetReviewDto.builder()
+                .memberName("멤버명")
+                .rating(5)
+                .productName("상품명")
+                .summary("한줄요약")
+                .reviewImageDtos(reviewImageDtos2)
+                .content("리뷰내용")
+                .getReviewSurveyDtos(getReviewSurveyDtos2)
+                .build();
+
         // page 및 sortBy 설정
         // 정렬 선택: createdAt 또는 likes
-        int page = 1;
-        int springPage = page-1;
+        int page = 0;
         String sortBy = "createdAt";
-        Pageable pageable = PageRequest.of(springPage, 5, Sort.by(sortBy).descending());
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(sortBy).descending());
 
         // 실제 서비스 메서드 호출 결과를 설정
+//        Page<GetReviewDto> reviewDtoPage
+//                = new PageImpl<>(Collections.singletonList(getReviewDto), pageable, 1);
+//        given(reviewService.getReviewsOfMember(memberId, pageable, sortBy)).willReturn(reviewDtoPage);
+        //Dto가 2개일때
+        List<GetReviewDto> getReviewDtoList = Arrays.asList(getReviewDto, getReviewDto2);
         Page<GetReviewDto> reviewDtoPage
-                = new PageImpl<>(Collections.singletonList(getReviewDto), pageable, 1);
+                = new PageImpl<>(getReviewDtoList, pageable, getReviewDtoList.size());
+        given(reviewService.getReviewsOfMember(memberId, pageable, sortBy)).willReturn(reviewDtoPage);
+
+
+        // when // then
+        mockMvc.perform(get("/review/written/member/{memberId}", memberId)
+                        .param("page", String.valueOf(page))
+                        .param("sortBy", sortBy)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "bearer AccessToken"))
+                .andExpect(status().isOk())
+                .andDo(document("reviews-of-member",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("memberId").description("멤버 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 코드"),
+                                fieldWithPath("status").description("응답 상태"),
+                                fieldWithPath("message").description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                fieldWithPath("data.content[].memberName").description("멤버 이름"),
+                                fieldWithPath("data.content[].rating").description("별점"),
+//                                fieldWithPath("data.content[0].sellerName").description("셀러명"),
+                                fieldWithPath("data.content[].productName").description("상품명"),
+                                fieldWithPath("data.content[].summary").description("한줄요약"),
+                                fieldWithPath("data.content[].reviewImageDtos").description("리뷰이미지DTO리스트"),
+                                fieldWithPath("data.content[].reviewImageDtos[].seqNo").description("이미지 시퀀스넘버"),
+                                fieldWithPath("data.content[].reviewImageDtos[].imgUrl").description("이미지 URL"),
+                                fieldWithPath("data.content[].reviewImageDtos[].description").description("이미지 캡션(설명)"),
+                                fieldWithPath("data.content[].content").description("리뷰 내용"),
+                                fieldWithPath("data.content[].getReviewSurveyDtos").description("리뷰서베이DTO리스트"),
+                                fieldWithPath("data.content[].getReviewSurveyDtos[].surveyCategoryName").description("서베이카테고리명"),
+                                fieldWithPath("data.content[].getReviewSurveyDtos[].content").description("서베이 내용"),
+                                fieldWithPath("data.pageable").description("페이징 정보"),
+                                fieldWithPath("data.pageable.pageNumber").description("페이지 번호"),
+                                fieldWithPath("data.pageable.pageSize").description("페이지 크기"),
+                                fieldWithPath("data.pageable.sort").description("페이지 정렬 정보"),
+                                fieldWithPath("data.pageable.offset").description("페이지 오프셋"),
+                                fieldWithPath("data.pageable.paged").description("페이징 여부"),
+                                fieldWithPath("data.pageable.unpaged").description("페이징 되지 않았는지 여부"),
+                                fieldWithPath("data.pageable.sort").description("페이지 정렬 정보"),
+                                fieldWithPath("data.pageable.sort.empty").description("페이지 정렬 여부"),
+                                fieldWithPath("data.pageable.sort.sorted").description("페이지 정렬되었는지 여부"),
+                                fieldWithPath("data.pageable.sort.unsorted").description("페이지 정렬되지 않았는지 여부"),
+                                fieldWithPath("data.sort.empty").description("정렬 여부"),
+                                fieldWithPath("data.sort.sorted").description("정렬되었는지 여부"),
+                                fieldWithPath("data.sort.unsorted").description("정렬되지 않았는지 여부"),
+                                fieldWithPath("data.last").description("마지막 페이지 여부"),
+                                fieldWithPath("data.totalElements").description("총 요소 수"),
+                                fieldWithPath("data.totalPages").description("총 페이지 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.number").description("현재 페이지 번호"),
+                                fieldWithPath("data.first").description("첫 페이지 여부"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 요소 수"),
+                                fieldWithPath("data.empty").description("비어있는지 여부")
+                        )
+                ));
+    }
+
+
+
+
+    @Test
+    @DisplayName("상품의 모든 리뷰 조회")
+    public void getReviewsOfProduct() throws Exception {
+        // given
+        Long productId = 1L;
+
+        List<ReviewImageDto> reviewImageDtos = new ArrayList<>();
+        ReviewImageDto reviewImageDto1 = ReviewImageDto.builder()
+                .seqNo(1L)
+                .imgUrl("101.jpg")
+                .description("캡션1")
+                .build();
+        ReviewImageDto reviewImageDto2 = ReviewImageDto.builder()
+                .seqNo(2L)
+                .imgUrl("102.jpg")
+                .description("캡션2")
+                .build();
+        ReviewImageDto reviewImageDto3 = ReviewImageDto.builder()
+                .seqNo(3L)
+                .imgUrl("103.jpg")
+                .description("캡션3")
+                .build();
+        reviewImageDtos.add(reviewImageDto1);
+        reviewImageDtos.add(reviewImageDto2);
+        reviewImageDtos.add(reviewImageDto3);
+
+        List<GetReviewSurveyDto> getReviewSurveyDtos = new ArrayList<>();
+        GetReviewSurveyDto reviewSurveyDto1 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리1(질문1)")
+                .content("작성한 내용1")
+                .build();
+        GetReviewSurveyDto reviewSurveyDto2 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리2(질문2)")
+                .content("작성한 내용2")
+                .build();
+        GetReviewSurveyDto reviewSurveyDto3 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리2(질문3)")
+                .content("선택한 내용3")
+                .build();
+        GetReviewSurveyDto reviewSurveyDto4 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리4(질문4)")
+                .content("선택한 내용4")
+                .build();
+        getReviewSurveyDtos.add(reviewSurveyDto1);
+        getReviewSurveyDtos.add(reviewSurveyDto2);
+        getReviewSurveyDtos.add(reviewSurveyDto3);
+        getReviewSurveyDtos.add(reviewSurveyDto4);
+
+        GetReviewDto getReviewDto = GetReviewDto.builder()
+                .memberName("멤버명")
+                .rating(5)
+                .productName("상품명")
+                .summary("한줄요약")
+                .reviewImageDtos(reviewImageDtos)
+                .content("리뷰내용")
+                .getReviewSurveyDtos(getReviewSurveyDtos)
+                .build();
+
+        //Dto2
+        List<ReviewImageDto> reviewImageDtos2 = new ArrayList<>();
+        ReviewImageDto reviewImageDto21 = ReviewImageDto.builder()
+                .seqNo(1L)
+                .imgUrl("201.jpg")
+                .description("캡션1")
+                .build();
+        ReviewImageDto reviewImageDto22 = ReviewImageDto.builder()
+                .seqNo(2L)
+                .imgUrl("202.jpg")
+                .description("캡션2")
+                .build();
+        ReviewImageDto reviewImageDto23 = ReviewImageDto.builder()
+                .seqNo(3L)
+                .imgUrl("203.jpg")
+                .description("캡션3")
+                .build();
+        reviewImageDtos2.add(reviewImageDto21);
+        reviewImageDtos2.add(reviewImageDto22);
+        reviewImageDtos2.add(reviewImageDto23);
+
+        List<GetReviewSurveyDto> getReviewSurveyDtos2 = new ArrayList<>();
+        GetReviewSurveyDto reviewSurveyDto21 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리1(질문1)")
+                .content("작성한 내용1")
+                .build();
+        GetReviewSurveyDto reviewSurveyDto22 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리2(질문2)")
+                .content("작성한 내용2")
+                .build();
+        GetReviewSurveyDto reviewSurveyDto23 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리2(질문3)")
+                .content("선택한 내용3")
+                .build();
+        GetReviewSurveyDto reviewSurveyDto24 = GetReviewSurveyDto.builder()
+                .surveyCategoryName("서베이카테고리4(질문4)")
+                .content("선택한 내용4")
+                .build();
+        getReviewSurveyDtos2.add(reviewSurveyDto21);
+        getReviewSurveyDtos2.add(reviewSurveyDto22);
+        getReviewSurveyDtos2.add(reviewSurveyDto23);
+        getReviewSurveyDtos2.add(reviewSurveyDto24);
+
+        GetReviewDto getReviewDto2 = GetReviewDto.builder()
+                .memberName("멤버명")
+                .rating(5)
+                .productName("상품명")
+                .summary("한줄요약")
+                .reviewImageDtos(reviewImageDtos2)
+                .content("리뷰내용")
+                .getReviewSurveyDtos(getReviewSurveyDtos2)
+                .build();
+
+        // page 및 sortBy 설정
+        // 정렬 선택: createdAt 또는 likes
+        int page = 0;
+        String sortBy = "createdAt";
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(sortBy).descending());
+
+        // 실제 서비스 메서드 호출 결과를 설정
+//        Page<GetReviewDto> reviewDtoPage
+//                = new PageImpl<>(Collections.singletonList(getReviewDto), pageable, 1);
+//        given(reviewService.getReviewsOfProduct(productId, pageable, sortBy)).willReturn(reviewDtoPage);
+        //Dto가 2개일때
+        List<GetReviewDto> getReviewDtoList = Arrays.asList(getReviewDto, getReviewDto2);
+        Page<GetReviewDto> reviewDtoPage
+                = new PageImpl<>(getReviewDtoList, pageable, getReviewDtoList.size());
         given(reviewService.getReviewsOfProduct(productId, pageable, sortBy)).willReturn(reviewDtoPage);
 
         // when // then
-        mockMvc.perform(get("/review/reviews/product/{productId}", productId)
+        mockMvc.perform(get("/review/written/product/{productId}", productId)
                         .param("productId", String.valueOf(productId))
                         .param("page", String.valueOf(page))
                         .param("sortBy", sortBy)
@@ -774,19 +1010,19 @@ public class ReviewControllerTest {
                                 fieldWithPath("status").description("응답 상태"),
                                 fieldWithPath("message").description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.content[0].memberName").description("멤버 이름"),
-                                fieldWithPath("data.content[0].rating").description("별점"),
+                                fieldWithPath("data.content[].memberName").description("멤버 이름"),
+                                fieldWithPath("data.content[].rating").description("별점"),
 //                                fieldWithPath("data.content[0].sellerName").description("셀러명"),
-                                fieldWithPath("data.content[0].productName").description("상품명"),
-                                fieldWithPath("data.content[0].summary").description("한줄요약"),
-                                fieldWithPath("data.content[0].reviewImageDtos").description("리뷰이미지DTO리스트"),
-                                fieldWithPath("data.content[0].reviewImageDtos[].seqNo").description("이미지 시퀀스넘버"),
-                                fieldWithPath("data.content[0].reviewImageDtos[].imgUrl").description("이미지 URL"),
-                                fieldWithPath("data.content[0].reviewImageDtos[].description").description("이미지 캡션(설명)"),
-                                fieldWithPath("data.content[0].content").description("리뷰 내용"),
-                                fieldWithPath("data.content[0].getReviewSurveyDtos").description("리뷰서베이DTO리스트"),
-                                fieldWithPath("data.content[0].getReviewSurveyDtos[].surveyCategoryName").description("서베이카테고리명"),
-                                fieldWithPath("data.content[0].getReviewSurveyDtos[].content").description("서베이 내용"),
+                                fieldWithPath("data.content[].productName").description("상품명"),
+                                fieldWithPath("data.content[].summary").description("한줄요약"),
+                                fieldWithPath("data.content[].reviewImageDtos").description("리뷰이미지DTO리스트"),
+                                fieldWithPath("data.content[].reviewImageDtos[].seqNo").description("이미지 시퀀스넘버"),
+                                fieldWithPath("data.content[].reviewImageDtos[].imgUrl").description("이미지 URL"),
+                                fieldWithPath("data.content[].reviewImageDtos[].description").description("이미지 캡션(설명)"),
+                                fieldWithPath("data.content[].content").description("리뷰 내용"),
+                                fieldWithPath("data.content[].getReviewSurveyDtos").description("리뷰서베이DTO리스트"),
+                                fieldWithPath("data.content[].getReviewSurveyDtos[].surveyCategoryName").description("서베이카테고리명"),
+                                fieldWithPath("data.content[].getReviewSurveyDtos[].content").description("서베이 내용"),
                                 fieldWithPath("data.pageable").description("페이징 정보"),
                                 fieldWithPath("data.pageable.pageNumber").description("페이지 번호"),
                                 fieldWithPath("data.pageable.pageSize").description("페이지 크기"),

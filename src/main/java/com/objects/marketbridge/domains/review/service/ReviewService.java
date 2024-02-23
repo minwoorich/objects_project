@@ -4,6 +4,7 @@ import com.objects.marketbridge.domains.image.domain.Image;
 import com.objects.marketbridge.domains.image.infra.ImageRepository;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.order.domain.OrderDetail;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.review.domain.*;
 import com.objects.marketbridge.domains.review.dto.*;
@@ -36,6 +37,7 @@ public class ReviewService {
     private final SurveyContentRepository surveyContentRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final MemberRepository memberRepository;
+    private final OrderDetailReviewRepository orderDetailReviewRepository;
 
 
 
@@ -299,22 +301,23 @@ public class ReviewService {
 
 
 
-    //상품별 리뷰 총갯수 조회
+    //멤버의 리뷰 총갯수 조회
+    @Transactional
+    public ReviewCountDto getMemberReviewCount(Long memberId) {
+        Long count = reviewRepository.countByMemberId(memberId);
+        return ReviewCountDto.builder().count(count).build();
+    }
+
+
+
+
+    //상품의 리뷰 총갯수 조회
     @Transactional
     public ReviewCountDto getProductReviewCount(Long productId) {
         Long count = reviewRepository.countByProductId(productId);
         return ReviewCountDto.builder().count(count).build();
     }
 
-
-
-
-    //회원별 리뷰 총갯수 조회
-    @Transactional
-    public ReviewCountDto getMemberReviewCount(Long memberId) {
-        Long count = reviewRepository.countByMemberId(memberId);
-        return ReviewCountDto.builder().count(count).build();
-    }
 
 
 
@@ -360,7 +363,25 @@ public class ReviewService {
 
 
 
-    //멤버의 리뷰 리스트 조회(createdAt: 최신순 내림차순 정렬 / likes: 좋아요많은순 내림차순 정렬)
+    //멤버의 모든 리뷰미작성 주문상세 조회
+    public Page<ReviewableDto> getReviewable(Long memberId, Pageable pageable) {
+        Page<OrderDetail> orderDetails = orderDetailReviewRepository.findAllByMemberId(memberId, pageable);
+        List<ReviewableDto> reviewableDtos
+                = orderDetails.stream()
+                .map(orderDetail ->
+                        ReviewableDto.builder()
+                                .productThumbnailUrl(orderDetail.getProduct().getThumbImg())
+                                .productName(orderDetail.getProduct().getName())
+                                .deliveredDate(orderDetail.getDeliveredDate())
+                                .build())
+                .collect(Collectors.toList());
+        return new PageImpl<>(reviewableDtos, pageable, orderDetails.getTotalElements());
+    }
+
+
+
+
+    //멤버의 모든 리뷰 조회(createdAt: 최신순 내림차순 정렬 / likes: 좋아요많은순 내림차순 정렬)
     @Transactional
     public Page<GetReviewDto> getReviewsOfMember(Long memberId, Pageable pageable, String sortBy) {
         Page<Review> reviews;
@@ -379,7 +400,7 @@ public class ReviewService {
 
 
 
-    //상품의 리뷰 리스트 조회(createdAt: 최신순 내림차순 정렬 / likes: 좋아요많은순 내림차순 정렬)
+    //상품의 모든 리뷰 조회(createdAt: 최신순 내림차순 정렬 / likes: 좋아요많은순 내림차순 정렬)
     @Transactional
     public Page<GetReviewDto> getReviewsOfProduct(Long productId, Pageable pageable, String sortBy) {
         Page<Review> reviews;
