@@ -34,4 +34,9 @@ public class FakeMemberCouponRepository implements MemberCouponRepository {
     public List<MemberCoupon> findAll() {
         return null;
     }
+
+    @Override
+    public MemberCoupon findByMemberIdAndCouponIdAndProductId(Long memberId, Long couponId, Long productId) {
+        return null;
+    }
 }
