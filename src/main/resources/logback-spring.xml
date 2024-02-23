@@ -8,8 +8,10 @@
     <timestamp key ="today" datePattern="yyyy-MM-dd"/>
 
     <!-- log 변수 값 설정 -->
-    <springProperty name="LOG_PATH" source= "logging.file.path" />
-    <springProperty name="LOG_FILE_NAME" source= "logging.file.name" />
+    <springProperty name="ALL_LOG_PATH" source= "logging.file.path.all" />
+    <springProperty name="INFO_LOG_PATH" source= "logging.file.path.info" />
+    <springProperty name="WARN_LOG_PATH" source= "logging.file.path.warn" />
+    <springProperty name="ERROR_LOG_PATH" source= "logging.file.path.error" />
     <springProperty name="LOG_MAX_HISTORY" source= "logging.logback.rollingpolicy.history" />
     <springProperty name="LOG_MAX_FILE_SIZE" source= "logging.logback.rollingpolicy.max-file-size" />
     <springProperty name="LOG_TOTAL_SIZE_CAP" source= "logging.logback.rollingpolicy.total-size-cap" />
@@ -30,13 +32,13 @@
     <!-- 모든 레벨 파일(FILE) -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--     log 기록할 파일 위치 설정 -->
-        <file>${LOG_PATH}/${today}/${LOG_FILE_NAME}.log</file>
+        <file>${ALL_LOG_PATH}/${today}.log</file>
         <!--     log 기록 타입 인코딩 -->
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}_%i.log</fileNamePattern>
+            <fileNamePattern>${ALL_LOG_PATH}/%d{yyyy-MM-dd}_%i.log</fileNamePattern>
             <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
             <cleanHistoryOnStart>${CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
             <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
@@ -56,14 +58,14 @@
         </filter>
 
         <!--     log 기록할 파일 위치 설정 -->
-        <file>${LOG_PATH}/${today}/${LOG_FILE_NAME}_info.log</file>
+        <file>${INFO_LOG_PATH}/${today}.log</file>
         <!--     log 기록 타입 인코딩 -->
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}_info_%i.log</fileNamePattern>
+            <fileNamePattern>${INFO_LOG_PATH}/%d{yyyy-MM-dd}_%i.log</fileNamePattern>
             <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
             <cleanHistoryOnStart>${CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
             <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
@@ -83,14 +85,14 @@
         </filter>
 
         <!--     log 기록할 파일 위치 설정 -->
-        <file>${LOG_PATH}/${today}/${LOG_FILE_NAME}_warn.log</file>
+        <file>${WARN_LOG_PATH}/${today}.log</file>
         <!--     log 기록 타입 인코딩 -->
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}_warn_%i.log</fileNamePattern>
+            <fileNamePattern>${WARN_LOG_PATH}/%d{yyyy-MM-dd}_%i.log</fileNamePattern>
             <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
             <cleanHistoryOnStart>${CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
             <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
@@ -110,14 +112,14 @@
         </filter>
 
         <!--     log 기록할 파일 위치 설정 -->
-        <file>${LOG_PATH}/${today}/${LOG_FILE_NAME}_error.log</file>
+        <file>${ERROR_LOG_PATH}/${today}.log</file>
         <!--     log 기록 타입 인코딩 -->
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}_error_%i.log</fileNamePattern>
+            <fileNamePattern>${ERROR_LOG_PATH}/%d{yyyy-MM-dd}_%i.log</fileNamePattern>
             <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
             <cleanHistoryOnStart>${CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
             <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
@@ -131,6 +133,9 @@
         <root level="info">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="WARN_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
         </root>
     </springProfile>
 
