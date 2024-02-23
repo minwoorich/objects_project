@@ -56,10 +56,10 @@ logging:
       total-size-cap: 1GB #모든 로그 파일 사이즈
       clean-history-on-start: true #서버 껐다 킬때마다 이전 로그 파일 삭제
 
-#   [타임스탬프][쓰레드명][UUID][로깅레벨][로그출력한곳][메시지]
+#   [타임스탬프][쓰레드명][UUID][로깅레벨][메시지]
   pattern:
-    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){faint} %clr([traceId=%X{traceId}]){magenta} %clr(%-5level) %clr(%logger{36}.%M){cyan} %clr(-){faint} %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [traceId=%X{traceId}] %-5level %logger{36}.%M - %msg%n"
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){cyan} %clr([%X{traceId}]){magenta} %clr(%-5level) %clr(-){faint} %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [%X{traceId}] %-5level - %msg%n"
 
 # 액츄에이터 정보
 management:
@@ -153,10 +153,9 @@ logging:
       total-size-cap: 1GB #모든 로그 파일 사이즈
       clean-history-on-start: true #서버 껐다 킬때마다 이전 로그 파일 삭제
 
-  #   [타임스탬프][쓰레드명][UUID][로깅레벨][로그출력한곳][메시지]
+  #   [타임스탬프][쓰레드명][UUID][로깅레벨][메시지]
   pattern:
-    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){faint} %clr([traceId=%X{traceId}]){magenta} %clr(%-5level) %clr(%logger{36}.%M){cyan} %clr(-){faint} %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [traceId=%X{traceId}] %-5level %logger{36}.%M - %msg%n"
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){cyan} %clr([%X{traceId}]){magenta} %clr(%-5level) %clr(-){faint} %msg%n"
 
 payment:
   kakao:
@@ -199,10 +198,10 @@ logging:
       total-size-cap: 1GB #모든 로그 파일 사이즈
       clean-history-on-start: true #서버 껐다 킬때마다 이전 로그 파일 삭제
 
-  #   [타임스탬프][쓰레드명][UUID][로깅레벨][로그출력한곳][메시지]
+  #   [타임스탬프][쓰레드명][UUID][로깅레벨][메시지]
   pattern:
-    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){faint} %clr([traceId=%X{traceId}]){magenta} %clr(%-5level) %clr(%logger{36}.%M){cyan} %clr(-){faint} %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [traceId=%X{traceId}] %-5level %logger{36}.%M - %msg%n"
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){cyan} %clr([%X{traceId}]){magenta} %clr(%-5level) %clr(-){faint} %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [%X{traceId}] %-5level - %msg%n"
 
 payment:
   kakao:

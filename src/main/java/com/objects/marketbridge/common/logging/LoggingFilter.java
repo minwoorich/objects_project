@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
@@ -49,7 +50,11 @@ public class LoggingFilter extends OncePerRequestFilter {
     }
 
     private static void logClientIp(RequestWrapper request) {
-        ClientIpUtils.getClientIps(request).forEach((headerType, ip) -> log.info("{} : {}", headerType, ip));
+        ClientIpUtils.getClientIps(request).forEach((headerType, ip) -> {
+            if (StringUtils.hasText(ip)) {
+                log.info("[{}] : {}", headerType, ip);
+            }
+        });
     }
     private static void logRequest(RequestWrapper request) throws IOException {
         String queryString = request.getQueryString();

@@ -28,7 +28,8 @@ public enum ErrorCode {
     EXTERNAL_API_FAILURE("외부 API 호출에 실패하였습니다"),
     DUPLICATE_ERROR("이미 존재합니다."),
     INVALID_PASSWORD("비밀번호가 일치하지 않습니다."),
-    MEMBER_NOT_FOUND("회원 정보가 존재하지 않습니다.");
+    MEMBER_NOT_FOUND("회원 정보가 존재하지 않습니다."),
+    NO_ERROR_CODE("빈 에러코드");
 
     private final String message;
 
