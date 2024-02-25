@@ -5,6 +5,8 @@ import com.objects.marketbridge.domains.image.infra.ImageRepository;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.order.domain.StatusCode;
+import com.objects.marketbridge.domains.order.domain.StatusCodeType;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.review.domain.*;
 import com.objects.marketbridge.domains.review.dto.*;
@@ -42,7 +44,7 @@ public class ReviewService {
 
 
 
-    //리뷰서베이 선택창 조회
+    //리뷰 작성시 나오는 리뷰서베이 선택창 조회
 
     //1차(리팩토링전)
 //    @Transactional
@@ -301,6 +303,20 @@ public class ReviewService {
 
 
 
+    //멤버의 미작성 리뷰 총갯수 조회(주문완료된 orderDetail중 리뷰미작성 수)
+    @Transactional
+    public ReviewCountDto getMemberReviewCountUnwritten(Long memberId) {
+        Long countAll
+                = orderDetailReviewRepository
+                .countByMemberIdAndStatusCode(memberId, StatusCodeType.DELIVERY_COMPLETED.getCode());
+        Long countWritten = reviewRepository.countByMemberId(memberId);
+        Long countUnwritten = countAll - countWritten;
+        return ReviewCountDto.builder().count(countUnwritten).build();
+    }
+
+
+
+
     //멤버의 리뷰 총갯수 조회
     @Transactional
     public ReviewCountDto getMemberReviewCount(Long memberId) {
@@ -365,7 +381,9 @@ public class ReviewService {
 
     //멤버의 모든 리뷰미작성 주문상세 조회
     public Page<ReviewableDto> getReviewable(Long memberId, Pageable pageable) {
-        Page<OrderDetail> orderDetails = orderDetailReviewRepository.findAllByMemberId(memberId, pageable);
+
+        Page<OrderDetail> orderDetails = orderDetailReviewRepository.findAllByMemberIdAndStatusCode
+                (memberId, StatusCodeType.DELIVERY_COMPLETED.getCode(), pageable);
         List<ReviewableDto> reviewableDtos
                 = orderDetails.stream()
                 .map(orderDetail ->
