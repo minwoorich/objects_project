@@ -4,6 +4,7 @@ import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,6 +23,11 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     @Override
     public MemberCoupon findByMemberIdAndCouponId(Long memberId, Long couponId) {
         return memberCouponJpaRepository.findByMemberIdAndCouponId(memberId, couponId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public MemberCoupon findByMemberIdAndCouponIdAndProductId(Long memberId, Long couponId, Long productId) {
+        return memberCouponJpaRepository.findByMemberIdAndCouponIdAndProductId(memberId, couponId, productId).orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("멤버쿠폰이 존재하지 않습니다")));
     }
 
     @Override

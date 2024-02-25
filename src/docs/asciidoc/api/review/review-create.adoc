@@ -1,4 +1,4 @@
-==== *리뷰 생성*
+==== *리뷰 등록*
 
 .*HTTP Request*
 include::{snippets}/review-create/http-request.adoc[]

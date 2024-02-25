@@ -77,7 +77,8 @@ dependencies {
 	//hibernate 5
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
 
-	implementation 'org.springframework.boot:spring-boot-starter-actuator' // actuator 추가
+	implementation 'org.springframework.boot:spring-boot-starter-actuator' // 액츄에이터 추가
+	implementation 'io.micrometer:micrometer-registry-prometheus' // 프로메테우스 추가
 }
 
 ext { // 전역 변수

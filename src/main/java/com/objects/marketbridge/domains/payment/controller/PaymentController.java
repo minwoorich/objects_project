@@ -1,35 +1,39 @@
 package com.objects.marketbridge.domains.payment.controller;
 
-import com.objects.marketbridge.common.kakao.dto.KakaoPayApproveResponse;
-import com.objects.marketbridge.common.responseobj.ApiErrorResponse;
 import com.objects.marketbridge.common.exception.advice.ErrorResult;
+import com.objects.marketbridge.common.kakao.dto.KakaoPayApproveResponse;
 import com.objects.marketbridge.common.responseobj.ApiResponse;
-import com.objects.marketbridge.domains.payment.service.CreatePaymentService;
+import com.objects.marketbridge.common.utils.ErrorLoggerUtils;
 import com.objects.marketbridge.domains.payment.controller.dto.CancelledPaymentHttp;
 import com.objects.marketbridge.domains.payment.controller.dto.CompleteOrderHttp;
+import com.objects.marketbridge.domains.payment.service.CreatePaymentService;
 import com.objects.marketbridge.domains.payment.service.QuitPaymentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.HandlerMethod;
 
+import java.time.LocalDateTime;
+
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.NO_ERROR_CODE;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentController {
 
+    private final static String NONE = "none";
+
     private final CreatePaymentService createPaymentService;
     private final QuitPaymentService quitPaymentService;
 
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(INTERNAL_SERVER_ERROR)
-    public ApiErrorResponse<ErrorResult> kakaoApiExHandler(Exception e, HttpServletRequest httpRequest) {
-        log.error("[exceptionHandler] {} ", e.getMessage());
-        for (StackTraceElement element : e.getStackTrace()) {
-            log.error("[exceptionHandler] {} ", element);
-        }
+    public ErrorResult.Response kakaoApiExHandler(Exception e, HttpServletRequest httpRequest, HandlerMethod handlerMethod) {
+        StringBuilder sb = new StringBuilder();
 
         String requestURI = httpRequest.getRequestURI();
         String[] uri = requestURI.split("/");
@@ -37,7 +41,21 @@ public class PaymentController {
 
         quitPaymentService.cancel(orderNo);
 
-        return ApiErrorResponse.of(INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR, null, null);
+        ErrorResult errorResult = ErrorResult.builder()
+                .code(NOT_FOUND.value())
+                .status(NOT_FOUND)
+                .path(String.valueOf(sb.append(httpRequest.getMethod()).append(httpRequest.getRequestURI())))
+                .errorCode(NO_ERROR_CODE)
+                .message(e.getMessage())
+                .timestamp(LocalDateTime.now())
+                .className(handlerMethod.getBeanType().getName())
+                .methodName(handlerMethod.getMethod().getName())
+                .exceptionName(e.getClass().getName())
+                .build();
+
+        ErrorLoggerUtils.errorLog(errorResult);
+
+        return errorResult.toResponse();
     }
 
     @GetMapping("/payment/kakao-pay/approval/{orderNo}") // 결제 승인 성공

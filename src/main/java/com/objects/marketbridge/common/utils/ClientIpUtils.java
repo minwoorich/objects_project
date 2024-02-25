@@ -2,8 +2,8 @@ package com.objects.marketbridge.common.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientIpUtils {
     private final static String[] headerTypes = {"X-Forwarded-For", "Proxy-Client-IP",
@@ -20,7 +20,7 @@ public class ClientIpUtils {
                 ipMap.put(headerType, "");
             }
         }
-        ipMap.put("Real Remote(Client)", request.getRemoteAddr());
+        ipMap.put("Remote-IP", request.getRemoteAddr());
         return ipMap;
     }
 }
