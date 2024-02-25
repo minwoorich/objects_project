@@ -31,7 +31,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -144,7 +143,7 @@ public class ReviewControllerTest {
 
     @Test
     @WithMockCustomUser
-    @DisplayName("리뷰 생성")
+    @DisplayName("리뷰 등록")
     public void createReview() throws Exception {
         //given
         // 리뷰 생성에 필요한 요청 데이터
@@ -282,9 +281,6 @@ public class ReviewControllerTest {
                 ));
     }
 
-
-
-
     private UpdateReviewDto getUpdateReviewDto() {
         List<UpdateReviewSurveyDto> updateReviewSurveys = new ArrayList<>();
         UpdateReviewSurveyDto reviewSurvey1 = UpdateReviewSurveyDto.builder()
@@ -402,13 +398,13 @@ public class ReviewControllerTest {
         given(reviewService.countReviewLike(reviewId)).willReturn(reviewLikeCountDto);
 
         // when // then
-        mockMvc.perform(get("/review/{reviewId}/like/count", reviewId)
+        mockMvc.perform(get("/review/{reviewId}/likes/count", reviewId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "bearer AccessToken"))
                 .andExpect(status().isOk())
 //                .andExpect(jsonPath("$.data.reviewId").value(reviewId))
 //                .andExpect(jsonPath("$.data.count").value(10L))
-                .andDo(document("review-count-review-like",
+                .andDo(document("review-count-review-likes",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -427,6 +423,39 @@ public class ReviewControllerTest {
 
 
 
+
+    @Test
+    @WithMockCustomUser
+    @DisplayName("멤버의 미작성 리뷰 총갯수 조회")
+    public void getMemberReviewCountUnwritten() throws Exception {
+        //given
+        Long memberId = 1L;
+        ReviewCountDto reviewCountDto = ReviewCountDto.builder().count(0L).build();
+        given(reviewService.getMemberReviewCountUnwritten(memberId)).willReturn(reviewCountDto);
+
+        //when //then
+        mockMvc.perform(get("/reviews/members/{memberId}/unwritten/count", memberId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("reviews-count-of-member-unwritten",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("memberId").description("멤버 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 코드"),
+                                fieldWithPath("status").description("응답 상태"),
+                                fieldWithPath("message").description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                fieldWithPath("data.count").description("작성할 리뷰 총 갯수 (미작성 총갯수)")
+                        )
+                ));
+    }
+
+
+
+
     @Test
     @WithMockCustomUser
     @DisplayName("멤버의 리뷰 총갯수 조회")
@@ -437,10 +466,10 @@ public class ReviewControllerTest {
         given(reviewService.getMemberReviewCount(memberId)).willReturn(reviewCountDto);
 
         //when //then
-        mockMvc.perform(get("/review/count/member/{memberId}", memberId)
+        mockMvc.perform(get("/reviews/member/{memberId}/count", memberId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("review-count-of-member",
+                .andDo(document("reviews-count-of-member",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -468,10 +497,10 @@ public class ReviewControllerTest {
         given(reviewService.getProductReviewCount(productId)).willReturn(reviewCountDto);
 
         //when //then
-        mockMvc.perform(get("/review/count/product/{productId}", productId)
+        mockMvc.perform(get("/reviews/product/{productId}/count", productId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("review-count-of-product",
+                .andDo(document("reviews-count-of-product",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -626,12 +655,12 @@ public class ReviewControllerTest {
         given(reviewService.getReviewable(memberId, pageable)).willReturn(reviewableDtoPage);
 
         // when // then
-        mockMvc.perform(get("/review/unwritten/member/{memberId}", memberId)
+        mockMvc.perform(get("/reviews/member/{memberId}/unwritten", memberId)
                         .param("page", String.valueOf(page))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "bearer AccessToken"))
                 .andExpect(status().isOk())
-                .andDo(document("reviews-unwritten",
+                .andDo(document("reviews-of-member-unwritten",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -805,7 +834,7 @@ public class ReviewControllerTest {
 
 
         // when // then
-        mockMvc.perform(get("/review/written/member/{memberId}", memberId)
+        mockMvc.perform(get("/reviews/member/{memberId}", memberId)
                         .param("page", String.valueOf(page))
                         .param("sortBy", sortBy)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -992,7 +1021,7 @@ public class ReviewControllerTest {
         given(reviewService.getReviewsOfProduct(productId, pageable, sortBy)).willReturn(reviewDtoPage);
 
         // when // then
-        mockMvc.perform(get("/review/written/product/{productId}", productId)
+        mockMvc.perform(get("/reviews/product/{productId}", productId)
                         .param("productId", String.valueOf(productId))
                         .param("page", String.valueOf(page))
                         .param("sortBy", sortBy)
