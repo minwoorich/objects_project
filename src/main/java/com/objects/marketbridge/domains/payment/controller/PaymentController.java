@@ -72,12 +72,14 @@ public class PaymentController {
         return ApiResponse.ok(response);
     }
 
-    @GetMapping("/kakao-pay/fail/{orderNo}") // 결제 승인 실패
-    public ApiResponse<?> kakaoPaymentApproveFail(
+    @GetMapping("/kakao-pay/fail/{orderNo}") // 결제 승인 실패 (취소랑 동일함)
+    public ApiResponse<CancelledPaymentHttp.Response> kakaoPaymentApproveFail(
             @PathVariable(name = "orderNo") String orderNo){
-        // TODO : 결제 승인 실패로직 추가해야함
 
-        return ApiResponse.ok(null);
+        CancelledPaymentHttp.Response response = quitPaymentService.response(orderNo);
+        quitPaymentService.cancel(orderNo);
+
+        return ApiResponse.ok(response);
     }
 
     @GetMapping("/kakao-pay/cancel/{orderNo}") // 결제 승인 취소
