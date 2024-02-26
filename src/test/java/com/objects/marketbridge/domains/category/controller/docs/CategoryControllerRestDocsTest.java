@@ -6,7 +6,7 @@ import com.objects.marketbridge.domains.category.controller.CategoryController;
 import com.objects.marketbridge.domains.category.domain.Category;
 import com.objects.marketbridge.domains.category.dto.CategoryDto;
 import com.objects.marketbridge.domains.category.service.CategoryService;
-import com.objects.marketbridge.product.mock.FakeCategoryRepository;
+import com.objects.marketbridge.domains.product.mock.FakeCategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
