@@ -10,10 +10,13 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor
 public class ProductValue {
+
     @NotEmpty
     Long productId;
     Long sellerId;
     Long couponId;
+
+    @NotEmpty
     Long quantity;
     String deliveredDate; // yyyy-MM-dd HH:mm:ss
 

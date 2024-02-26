@@ -6,6 +6,7 @@ import com.objects.marketbridge.common.exception.exceptions.CustomLogicException
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.domains.order.domain.ProductValue;
 import com.objects.marketbridge.domains.order.service.dto.CreateOrderDto;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +21,23 @@ public class CreateOrderHttp {
     @Getter
     @NoArgsConstructor
     public static class Request {
+
+        @NotNull
         private Long totalAmount;
+
+        @NotNull
         private Long totalDiscountAmount; // 쿠폰 할인 만 적용
+
+        @NotNull
         private Long realAmount;
+
+        @NotNull
         private Long addressId;
+
+        @NotNull
         private String orderName;
+
+        @NotNull
         private List<ProductValue> productValues;
 
         @Builder
