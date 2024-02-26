@@ -14,11 +14,6 @@ public interface CategoryJpaRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findById(Long categoryId);
 
-    Optional<List<Category>> findAllByLevelAndParentIdIsNull(Long level);
-
-    @Query(value = "SELECT c FROM Category c WHERE c.level=:level AND c.parentId=:parentId ")
-    Optional<List<Category>> findAllByLevelAndParentId(@Param("level") Long level, @Param("parentId") Long parentId);
-
     @Query(value = "SELECT c FROM Category c WHERE c.parentId=:parentId ")
     Optional<List<Category>> findAllByParentId(@Param("parentId") Long parentId);
 

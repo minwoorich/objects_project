@@ -22,20 +22,8 @@ public class CategoryService {
 
     //전체(라지,미디엄,스몰). 라지가 해당 미디엄 전부를, 미디엄이 해당 스몰 전부를 포함하는 형태로 JSON형식.
     public List<CategoryDto> getTotalCategories() {
-        List<Category> categories = categoryRepository.findAllByLevelAndParentIdIsNull(1L);
-        return convertToDtoList(categories);
-    }
-
-    //특정부모카테고리(라지)의 미디엄(스몰 포함) 전체.
-    public List<CategoryDto> get2DepthCategories(Long parentId) {
-        List<Category> categories = categoryRepository.findAllByLevelAndParentId(2L, parentId);
-        return convertToDtoList(categories);
-    }
-
-    //특정부모카테고리(미디엄)의 스몰 전체.
-    public List<CategoryDto> get3DepthCategories(Long parentId) {
-        List<Category> categories = categoryRepository.findAllByLevelAndParentId(3L, parentId);
-        return convertToDtoList(categories);
+        List<Category> categoryList = categoryCustomRepository.findAllOrderByParentIdAscNullsFirstCategoryIdAsc();
+        return CategoryDto.toDtoList(categoryList);
     }
 
     // 요청 카테고리의 부모 카테고리 정보 반환
@@ -45,7 +33,6 @@ public class CategoryService {
 
     public List<CategoryDto> getLowerCategories(Long categoryId) {
         List<CategoryDto> categoryDtoList = new ArrayList<>();
-
         // 1. 카테고리 아이디 레벨 정보 받아오기
         Category category = categoryRepository.findById(categoryId);
         Long levelInfo = category.getLevel();
@@ -67,7 +54,6 @@ public class CategoryService {
 
         return categoryDtoList;
     }
-
     // 하위 카테고리 정보 다 가져오는 메서드
     public CategoryDto getCategoryById(Long categoryId){
         return CategoryDto.of(categoryRepository.findById(categoryId));
@@ -83,12 +69,10 @@ public class CategoryService {
                     .level(category.getLevel())
                     .name(category.getName())
                     .build();
-
             // childCategories 필드는 재귀적으로 연관관계 추가
             if (category.getLevel() != 3L) {
                 categoryDto.addChildCategories(convertToDtoList(categoryRepository.findAllByParentId(category.getId())));
             }
-
             categoryDtos.add(categoryDto);
         }
         return categoryDtos;

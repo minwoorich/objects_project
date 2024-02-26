@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
 import com.objects.marketbridge.domains.category.domain.Category;
 import com.objects.marketbridge.domains.image.domain.Image;
+import com.objects.marketbridge.domains.image.domain.ImageType;
 import com.objects.marketbridge.domains.product.controller.ProductController;
 import com.objects.marketbridge.domains.product.controller.request.CreateProductRequestDto;
 import com.objects.marketbridge.domains.product.domain.*;
@@ -196,11 +197,11 @@ class ProductControllerRestDocsTest {
                                         .description("상품 태그 카테고리 이름"),
                                 fieldWithPath("data.tagInfos[].tagValue").type(JsonFieldType.STRING)
                                         .description("상품 태그 값"),
-                                fieldWithPath("data.optionInfos[]").type(JsonFieldType.ARRAY)
+                                fieldWithPath("data.optionInfos[]").type(JsonFieldType.ARRAY).optional()
                                         .description("상품 옵션 정보"),
-                                fieldWithPath("data.optionInfos[].optionCategory").type(JsonFieldType.STRING)
+                                fieldWithPath("data.optionInfos[].optionCategory").type(JsonFieldType.STRING).optional()
                                         .description("상품 옵션 카테고리 이름"),
-                                fieldWithPath("data.optionInfos[].name").type(JsonFieldType.STRING)
+                                fieldWithPath("data.optionInfos[].name").type(JsonFieldType.STRING).optional()
                                         .description("상품 옵션 값"),
                                 fieldWithPath("data.imageInfo[]").type(JsonFieldType.ARRAY)
                                         .description("상품 이미지 정보"),
@@ -210,29 +211,29 @@ class ProductControllerRestDocsTest {
                                         .description("이미지 타입 정보 예) PRODUCT -> 상품이미지, DETAIL-> 상품 설명 이미지"),
                                 fieldWithPath("data.imageInfo[].seqNo").type(JsonFieldType.NUMBER)
                                         .description("이미지 정렬 순서, PRODUCT의 경우 메인 url 이미지가 맨처음에 와야한다."),
-                                fieldWithPath("data.optionProducts[]").type(JsonFieldType.ARRAY)
+                                fieldWithPath("data.optionProducts[]").type(JsonFieldType.ARRAY).optional()
                                         .description("같은 상품의 다른 옵션의 상품 정보"),
-                                fieldWithPath("data.optionProducts[].productId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.optionProducts[].productId").type(JsonFieldType.NUMBER).optional()
                                         .description("상품 아이디"),
-                                fieldWithPath("data.optionProducts[].prodNo").type(JsonFieldType.STRING)
+                                fieldWithPath("data.optionProducts[].prodNo").type(JsonFieldType.STRING).optional()
                                         .description("상품 번호"),
-                                fieldWithPath("data.optionProducts[].thumbUrl").type(JsonFieldType.STRING)
+                                fieldWithPath("data.optionProducts[].thumbUrl").type(JsonFieldType.STRING).optional()
                                         .description("상품 썸네일 이미지"),
-                                fieldWithPath("data.optionProducts[].name").type(JsonFieldType.STRING)
+                                fieldWithPath("data.optionProducts[].name").type(JsonFieldType.STRING).optional()
                                         .description("상품명"),
-                                fieldWithPath("data.optionProducts[].discountRate").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.optionProducts[].discountRate").type(JsonFieldType.NUMBER).optional()
                                         .description("상품 할인율"),
-                                fieldWithPath("data.optionProducts[].isOwn").type(JsonFieldType.BOOLEAN)
+                                fieldWithPath("data.optionProducts[].isOwn").type(JsonFieldType.BOOLEAN).optional()
                                         .description("마켓브릿지 상품 여부"),
-                                fieldWithPath("data.optionProducts[].price").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.optionProducts[].price").type(JsonFieldType.NUMBER).optional()
                                         .description("상품 가격"),
-                                fieldWithPath("data.optionProducts[].stock").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.optionProducts[].stock").type(JsonFieldType.NUMBER).optional()
                                         .description("상품 재고"),
-                                fieldWithPath("data.optionProducts[].optionInfos[]").type(JsonFieldType.ARRAY)
+                                fieldWithPath("data.optionProducts[].optionInfos[]").type(JsonFieldType.ARRAY).optional()
                                         .description("상품 옵션 정보"),
-                                fieldWithPath("data.optionProducts[].optionInfos[].optionCategory").type(JsonFieldType.STRING)
+                                fieldWithPath("data.optionProducts[].optionInfos[].optionCategory").type(JsonFieldType.STRING).optional()
                                         .description("상품 옵션 카테고리 이름"),
-                                fieldWithPath("data.optionProducts[].optionInfos[].name").type(JsonFieldType.STRING)
+                                fieldWithPath("data.optionProducts[].optionInfos[].name").type(JsonFieldType.STRING).optional()
                                         .description("상품 옵션 값")
                         )
                 ));
