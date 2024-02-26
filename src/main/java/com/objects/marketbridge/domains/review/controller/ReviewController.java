@@ -21,12 +21,15 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/review")
 public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @GetMapping("/surveys") //PathVariable -> QueryString으로. (완료)
+
+
+    //리뷰 작성시 나오는 리뷰서베이 선택창 조회
+    //http://localhost:8080/review/surveys?productId=1
+    @GetMapping("/review/surveys") //PathVariable -> QueryString으로. (완료)
     @UserAuthorize
     public ApiResponse<List<ReviewSurveyCategoryContentsDto>> getReviewSurveyCategoryContentsList
         (@RequestParam("productId") Long productId){
@@ -35,7 +38,8 @@ public class ReviewController {
         return ApiResponse.ok(response);
     }
 
-    @PostMapping("")
+    //리뷰 등록
+    @PostMapping("/review")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<ReviewIdDto> createReview
         (@Valid @RequestBody CreateReviewDto request, @AuthMemberId Long memberId) {
@@ -43,14 +47,16 @@ public class ReviewController {
         return ApiResponse.create();
     }
 
-    @PatchMapping("")
+    //리뷰 수정
+    @PatchMapping("/review")
     @UserAuthorize
     public ApiResponse<Void> updateReview(@RequestBody UpdateReviewDto request) {
         reviewService.updateReview(request);
         return ApiResponse.ok(null);
     }
 
-    @DeleteMapping("/{reviewId}")
+    //리뷰 삭제
+    @DeleteMapping("/review/{reviewId}")
     @UserAuthorize
     public ApiResponse<Void> deleteReview(@PathVariable("reviewId") Long reviewId) {
         reviewService.deleteReview(reviewId);
@@ -58,7 +64,7 @@ public class ReviewController {
     }
 
     //review_like upsert(없으면 create, 있으면 delete)
-    @PostMapping("/{reviewId}/like")
+    @PostMapping("/review/{reviewId}/like")
     public ApiResponse<Void> upsertReviewLike
     (@PathVariable("reviewId") Long reviewId, @AuthMemberId Long memberId) {
         reviewService.upsertReviewLike(reviewId, memberId);
@@ -66,24 +72,33 @@ public class ReviewController {
     }
 
     //review_like 총갯수 조회
-    @GetMapping("{reviewId}/like/count")
+    @GetMapping("/review/{reviewId}/likes/count")
     public ApiResponse<ReviewLikeCountDto> countReviewLike
     (@PathVariable("reviewId") Long reviewId) {
         ReviewLikeCountDto response = reviewService.countReviewLike(reviewId);
         return ApiResponse.ok(response);
     }
 
+    //멤버의 미작성 리뷰 총갯수 조회(주문완료된 orderDetail중 리뷰미작성 수)
+    @GetMapping("/reviews/members/{memberId}/unwritten/count")
+    @UserAuthorize
+    public ApiResponse<ReviewCountDto> getUnwrittenReviewCountOfMember
+    (@AuthMemberId Long memberId){
+        ReviewCountDto reviewCountDto = reviewService.getMemberReviewCountUnwritten(memberId);
+        return ApiResponse.ok(reviewCountDto);
+    }
+
     //멤버의 리뷰 총갯수 조회
-    @GetMapping("/count/member/{memberId}")
+    @GetMapping("/reviews/member/{memberId}/count")
     @UserAuthorize
     public ApiResponse<ReviewCountDto> getMemberReviewsCount
-    (@PathVariable("memberId") Long memberId){
+    (@AuthMemberId Long memberId){
         ReviewCountDto reviewCountDto = reviewService.getMemberReviewCount(memberId);
         return ApiResponse.ok(reviewCountDto);
     }
 
     //상품의 리뷰 총갯수 조회
-    @GetMapping("/count/product/{productId}")
+    @GetMapping("/reviews/product/{productId}/count")
     public ApiResponse<ReviewCountDto> getProductReviewCount
         (@PathVariable("productId") Long productId){
         ReviewCountDto reviewCountDto = reviewService.getProductReviewCount(productId);
@@ -91,7 +106,7 @@ public class ReviewController {
     }
 
     //리뷰아이디로 리뷰 단건 조회
-    @GetMapping("/{reviewId}")
+    @GetMapping("/review/{reviewId}")
     @UserAuthorize
     public ApiResponse<GetReviewDto> getReview
     (@PathVariable("reviewId") Long reviewId) {
@@ -100,8 +115,8 @@ public class ReviewController {
     }
 
     //멤버의 모든 리뷰미작성 주문상세 조회
-    //http://localhost:8080/review/unwritten/member/1?page=0
-    @GetMapping("/unwritten/member/{memberId}")
+    //http://localhost:8080/reviews/unwritten/member/1?page=0
+    @GetMapping("/reviews/member/{memberId}/unwritten")
     public ApiResponse<Page<ReviewableDto>> getReviewable(
             @AuthMemberId Long memberId,
             @RequestParam(name = "page", defaultValue = "0") int page) {
@@ -111,9 +126,9 @@ public class ReviewController {
     }
 
     //멤버의 모든 리뷰 조회(createdAt: 최신순 내림차순 정렬 / likes: 좋아요 많은순 내림차순 정렬
-    //http://localhost:8080/review/written/member/1?page=0&sortBy=createdAt
-    //http://localhost:8080/review/written/member/1?reviews?page=0&sortBy=likes
-    @GetMapping("/written/member/{memberId}")
+    //http://localhost:8080/reviews/member/1?page=0&sortBy=createdAt
+    //http://localhost:8080/reviews/member/1?reviews?page=0&sortBy=likes
+    @GetMapping("/reviews/member/{memberId}")
     public ApiResponse<Page<GetReviewDto>> getReviewsOfMember(
             @AuthMemberId Long memberId,
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -124,9 +139,9 @@ public class ReviewController {
     }
 
     //상품의 모른 리뷰 조회(createdAt: 최신순 내림차순 정렬 / likes: 좋아요 많은순 내림차순 정렬
-    //http://localhost:8080/review/written/product/1?page=0&sortBy=createdAt
-    //http://localhost:8080/review/written/product/1?reviews?page=0&sortBy=likes
-    @GetMapping("/written/product/{productId}")
+    //http://localhost:8080/reviews/product/1?page=0&sortBy=createdAt
+    //http://localhost:8080/reviews/product/1?reviews?page=0&sortBy=likes
+    @GetMapping("/reviews/product/{productId}")
     public ApiResponse<Page<GetReviewDto>> getReviewsOfProduct(
             @PathVariable("productId") Long productId,
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -135,6 +150,4 @@ public class ReviewController {
         Page<GetReviewDto> response = reviewService.getReviewsOfProduct(productId, pageRequest, sortBy);
         return ApiResponse.ok(response);
     }
-
-    //TODO: 리뷰리스트 조회, 리뷰조회, 상품별 리뷰 갯수, 리뷰 좋아요, mypage에 작성할 리뷰, 작성한 리뷰 리스트
 }
