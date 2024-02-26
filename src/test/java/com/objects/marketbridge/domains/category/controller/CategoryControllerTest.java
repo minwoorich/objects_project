@@ -4,7 +4,7 @@ import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
 import com.objects.marketbridge.domains.category.domain.Category;
 import com.objects.marketbridge.domains.category.dto.CategoryDto;
 import com.objects.marketbridge.domains.category.service.CategoryService;
-import com.objects.marketbridge.product.mock.FakeCategoryRepository;
+import com.objects.marketbridge.domains.product.mock.FakeCategoryRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
