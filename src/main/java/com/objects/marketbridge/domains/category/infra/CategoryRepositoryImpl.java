@@ -38,17 +38,6 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public List<Category> findAllByLevelAndParentIdIsNull(Long level) {
-        return categoryJpaRepository.findAllByLevelAndParentIdIsNull(level).orElseGet(ArrayList::new);
-    }
-
-    @Override
-    public List<Category> findAllByLevelAndParentId(Long level, Long parentId) {
-        // null일 때 빈 배열 반환
-        return categoryJpaRepository.findAllByLevelAndParentId(level, parentId).orElseGet(ArrayList::new);
-    }
-
-    @Override
     public List<Category> findAllByParentId(Long parentId) {
         return categoryJpaRepository.findAllByParentId(parentId).orElseGet(ArrayList::new);
     }

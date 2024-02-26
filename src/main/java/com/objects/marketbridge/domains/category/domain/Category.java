@@ -3,14 +3,15 @@ package com.objects.marketbridge.domains.category.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Category extends BaseEntity {
 
     @Id
@@ -20,6 +21,7 @@ public class Category extends BaseEntity {
 
     @ManyToOne()
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "parent_id",referencedColumnName = "category_id",insertable=false, updatable=false)
     private Category parent;
 
