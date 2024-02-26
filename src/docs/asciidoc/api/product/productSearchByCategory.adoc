@@ -7,7 +7,7 @@ paging 관련 파라미터는 기본값 첫 페이지, 60개의 상품 입니다
 image:../image/product/req_product_search_by_category.png[]
 
 .*결과 화면*
-image:../image/product/req_product_search_by_category2.png[]
+image:../image/product/req_proudct_search_by_category2.png[]
 
 .*HTTP Request*
 include::{snippets}/product-search-by-category/http-request.adoc[]
