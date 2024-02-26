@@ -116,21 +116,25 @@ include::api/member/kakaoPaySubsSubscribtion.adoc[]
 {empty}
 
 == *상품*
-include::api/product/productcreate.adoc[]
+include::api/product/productCreate.adoc[]
 {empty}
 {empty}
 
 === *상품 조회*
-include::api/product/productsearchbycategory.adoc[]
+include::api/product/productSearchByCategory.adoc[]
 {empty}
 {empty}
 
-include::api/product/productgetdetailinfo.adoc[]
+include::api/product/productGetDetailInfo.adoc[]
 {empty}
 {empty}
 
+== *카테고리*
+include::api/category/categoryGetTotaIinfo.adoc[]
+{empty}
+{empty}
 
-=== *리뷰*
+== *리뷰*
 include::api/review/review-get-single-review.adoc[]
 {empty}
 {empty}
@@ -178,7 +182,6 @@ include::api/review/review-update.adoc[]
 include::api/review/review-delete.adoc[]
 {empty}
 {empty}
-
 
 == *주문*
 === *주문서/결제*
