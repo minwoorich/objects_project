@@ -21,6 +21,7 @@ public class MemberShipJob {
     private final MembershipRepository membershipRepository;
 
     @Scheduled(cron = "0 0 3 * * *") // 매일 새벽3시 0분 0초
+//    @Scheduled(cron = "0/30 * * * * ?") // 30초마다 수행
     public void subscriptionPaymentJob() {
 
         // 1) 오늘이 결제일인 membership들 전부 조회
@@ -32,5 +33,4 @@ public class MemberShipJob {
             memberShipService.saveSubsApprovalResponse(kakaoPayApproveResponse);
         });
     }
-
 }
