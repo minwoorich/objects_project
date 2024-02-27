@@ -47,7 +47,7 @@ public class AddToCartService {
     }
     private void validDuplicate(Long productId) {
         if (cartQueryRepository.findByProductId(productId).isPresent()) {
-            throw CustomLogicException.createBadRequestError(DUPLICATE_OPERATION, "이미 장바구니에 담긴 상품입니다", LocalDateTime.now());
+            throw CustomLogicException.createBadRequestError(DUPLICATE_OPERATION, "이미 장바구니에 담긴 상품입니다");
         }
     }
 }

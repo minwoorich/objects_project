@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domains.product.domain;
 
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.domains.category.domain.Category;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
@@ -148,12 +149,7 @@ public class Product extends BaseEntity {
 
     public void verifyStockAvailable(Long quantity) {
         if (stock - quantity < 0) {
-            throw CustomLogicException.builder()
-                    .errorCode(OUT_OF_STOCK)
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .message("재고가 부족합니다")
-                    .timestamp(LocalDateTime.now())
-                    .build();
+            throw CustomLogicException.createBadRequestError(OUT_OF_STOCK);
         }
     }
 
