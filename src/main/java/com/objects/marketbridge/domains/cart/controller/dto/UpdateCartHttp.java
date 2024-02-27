@@ -13,8 +13,8 @@ public class UpdateCartHttp {
     @NoArgsConstructor
     public static class Request{
 
-        @Min(value = 1, message = "장바구니 수량은 1 이상이여야합니다")
-        @Max(value = 100, message = "장바구니 수량은 100 이하여야합니다")
+        @Min(value = 1, message = "장바구니 수량은 1 이상 100 이하여야합니다")
+        @Max(value = 100, message = "장바구니 수량은 1 이상 100 이하여야합니다")
         private Long quantity;
 
         @Builder

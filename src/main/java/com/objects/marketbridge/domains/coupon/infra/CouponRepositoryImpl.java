@@ -39,4 +39,9 @@ public class CouponRepositoryImpl implements CouponRepository {
     public void deleteAllInBatch() {
         couponJpaRepository.deleteAllInBatch();
     }
+
+    @Override
+    public Coupon saveAndFlush(Coupon coupon) {
+        return couponJpaRepository.saveAndFlush(coupon);
+    }
 }

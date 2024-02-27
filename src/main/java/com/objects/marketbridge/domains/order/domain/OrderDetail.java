@@ -2,20 +2,23 @@ package com.objects.marketbridge.domains.order.domain;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
-import com.objects.marketbridge.domains.member.domain.BaseEntity;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.member.domain.BaseEntity;
 import com.objects.marketbridge.domains.product.domain.Product;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.NON_CANCELLABLE_PRODUCT;
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.QUANTITY_EXCEEDED;
 
 @Entity
 @Getter
@@ -85,9 +88,9 @@ public class OrderDetail extends BaseEntity {
         this.statusCode = statusCode;
     }
 
-    public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long price, Long quantity, Long sellerId, String statusCode, DateTimeHolder dateTimeHolder) {
+    public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long price, Long quantity, String statusCode, DateTimeHolder dateTimeHolder) {
         if (memberCoupon != null) {
-            validMemberCoupon(memberCoupon, price, quantity, dateTimeHolder);
+            validMemberCoupon(memberCoupon, price, quantity, product.getAvailableCoupons(), dateTimeHolder);
         }
         return OrderDetail.builder()
                 .orderNo(orderNo)
@@ -97,25 +100,32 @@ public class OrderDetail extends BaseEntity {
                 .memberCoupon(memberCoupon)
                 .price(price)
                 .quantity(quantity)
-                .sellerId(sellerId)
                 .statusCode(statusCode)
                 .reducedQuantity(0L)
                 .build();
     }
 
-    private static void validMemberCoupon(MemberCoupon memberCoupon, Long price, Long quantity, DateTimeHolder dateTimeHolder) {
+    private static void validMemberCoupon(MemberCoupon memberCoupon, Long price, Long quantity, List<Coupon> coupons, DateTimeHolder dateTimeHolder) {
 
         if (isCouponAlreadyUsed(memberCoupon)){
-            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, "이미 사용한 쿠폰 입니다", dateTimeHolder.getTimeNow());
+            throw CustomLogicException.createBadRequestError(COUPON_ALREADY_USED);
         }
 
         if (isOrderBelowMinimumPrice(memberCoupon, price, quantity)){
-            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, "최소 주문금액 조건을 맞춰야합니다", dateTimeHolder.getTimeNow());
+            throw CustomLogicException.createBadRequestError(COUPON_CONDITION_VIOLATION);
         }
 
         if (isCouponExpired(memberCoupon, dateTimeHolder)){
-            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED, "유효기간이 만료된 쿠폰입니다", dateTimeHolder.getTimeNow());
+            throw CustomLogicException.createBadRequestError(COUPON_EXPIRED);
         }
+
+        if (isCouponUnAvailable(memberCoupon, coupons)){
+            throw CustomLogicException.createBadRequestError(COUPON_INCOMPATIBLE);
+        }
+    }
+
+    private static boolean isCouponUnAvailable(MemberCoupon memberCoupon, List<Coupon> coupons) {
+        return coupons.stream().noneMatch(c -> memberCoupon.getCoupon().getId().equals(c.getId()));
     }
 
     private static boolean isOrderBelowMinimumPrice(MemberCoupon memberCoupon, Long price, Long quantity) {
