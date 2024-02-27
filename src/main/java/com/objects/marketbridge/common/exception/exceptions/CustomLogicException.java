@@ -46,6 +46,15 @@ public class CustomLogicException extends RuntimeException {
                 .timestamp(timestamp)
                 .build();
     }
+
+    public static CustomLogicException createBadRequestError(ErrorCode errorCode, String message) {
+        return CustomLogicException.builder()
+                .httpStatus(BAD_REQUEST)
+                .errorCode(errorCode)
+                .message(message)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
     public static CustomLogicException createBadRequestError(ErrorCode errorCode, LocalDateTime timestamp) {
         return CustomLogicException.builder()
                 .httpStatus(BAD_REQUEST)
