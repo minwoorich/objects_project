@@ -1,26 +1,21 @@
 package com.objects.marketbridge.domains.order.controller;
 
-import com.objects.marketbridge.common.kakao.KakaoPayConfig;
 import com.objects.marketbridge.common.kakao.dto.KakaoPayReadyResponse;
-import com.objects.marketbridge.common.kakao.KakaoPayService;
 import com.objects.marketbridge.common.responseobj.ApiResponse;
 import com.objects.marketbridge.common.responseobj.PageResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.common.security.annotation.UserAuthorize;
-import com.objects.marketbridge.domains.order.service.CreateCheckoutService;
-import com.objects.marketbridge.domains.order.service.CreateOrderService;
-import com.objects.marketbridge.domains.order.service.GetOrderService;
-import com.objects.marketbridge.domains.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.domains.order.controller.dto.CreateOrderHttp;
 import com.objects.marketbridge.domains.order.controller.dto.select.GetOrderDetailHttp;
 import com.objects.marketbridge.domains.order.controller.dto.select.GetOrderHttp;
+import com.objects.marketbridge.domains.order.service.CreateOrderService;
+import com.objects.marketbridge.domains.order.service.GetOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -31,29 +26,24 @@ import java.util.UUID;
 public class OrderController {
 
     private final CreateOrderService createOrderService;
-    private final CreateCheckoutService createCheckoutService;
     private final GetOrderService getOrderService;
 
-    @GetMapping("/orders/checkout")
-    public ApiResponse<CreateCheckoutHttp.Response> createCheckout(
-            @AuthMemberId Long memberId) {
-
-        return ApiResponse.ok(createCheckoutService.create(memberId));
-    }
-
-    @PostMapping("/orders/checkout")
+    @PostMapping("/orders")
     public ApiResponse<CreateOrderHttp.Response> createOrder(
             @AuthMemberId Long memberId,
             @Valid @RequestBody CreateOrderHttp.Request request) {
 
-        // 0. orderNo 생성
+        // 0. 입력값 검증
+        request.valid();
+
+        // 1. orderNo 생성
         String orderNo = UUID.randomUUID().toString();
 
-        // 1. 카카오페이 결제 준비 요청
+        // 2. 카카오페이 결제 준비 요청
         KakaoPayReadyResponse kakaoReadyResponse = createOrderService.ready(request, orderNo, memberId);
         String tid = kakaoReadyResponse.getTid();
 
-        // 2. 주문 생성
+        // 3. 주문 생성
         createOrderService.create(request.toDto(orderNo, tid, memberId));
 
         return ApiResponse.ok(CreateOrderHttp.Response.of(kakaoReadyResponse));
