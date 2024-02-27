@@ -256,10 +256,3 @@ include::api/cart/cartdelete.adoc[]
 include::api/cart/cartupdate.adoc[]
 {empty}
 {empty}
-
-include::api/cart/error.adoc[]
-{empty}
-{empty}
-
-
-
