@@ -1,7 +1,6 @@
 package com.objects.marketbridge.domains.order.domain;
 
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductValue {
 
-    @NotEmpty
     Long productId;
     Long sellerId;
     Long couponId;
-
-    @NotEmpty
     Long quantity;
     String deliveredDate; // yyyy-MM-dd HH:mm:ss
 
