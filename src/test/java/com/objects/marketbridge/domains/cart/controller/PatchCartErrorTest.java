@@ -3,22 +3,23 @@ package com.objects.marketbridge.domains.cart.controller;
 import com.objects.marketbridge.common.RestDocsSupportWebAppContext;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.domains.cart.controller.dto.CreateCartHttp;
+import com.objects.marketbridge.domains.cart.service.AddToCartService;
+import com.objects.marketbridge.domains.cart.service.DeleteCartService;
+import com.objects.marketbridge.domains.cart.service.GetCartListService;
+import com.objects.marketbridge.domains.cart.service.UpdateCartService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,6 +27,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(CartController.class)
 public class PatchCartErrorTest extends RestDocsSupportWebAppContext {
+
+    @MockBean
+    AddToCartService addToCartService;
+    @MockBean
+    GetCartListService getCartListService;
+    @MockBean
+    UpdateCartService updateCartService;
+    @MockBean
+    DeleteCartService deleteCartService;
+
     @DisplayName("[PATCH/carts] 입력값 유효성 에러")
     @Test
     @WithMockCustomUser
