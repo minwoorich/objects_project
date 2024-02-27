@@ -50,14 +50,6 @@ public class LoggingFilter extends OncePerRequestFilter {
         }
     }
 
-//    private static void logClientIp(RequestWrapper request) {
-//        ClientIpUtils.getClientIps(request).forEach((headerType, ip) -> {
-//            if (StringUtils.hasText(ip)) {
-//                log.info("Request : {}={}", headerType, ip);
-//            }
-//        });
-//    }
-
     private static void logClientIp(String prefix, Map<String, String> clientIps) {
         clientIps.entrySet().stream()
                 .filter(entry -> StringUtils.hasText(entry.getValue()))
