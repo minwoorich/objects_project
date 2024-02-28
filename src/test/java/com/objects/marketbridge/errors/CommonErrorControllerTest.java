@@ -76,7 +76,7 @@ public class CommonErrorControllerTest extends RestDocsSupportWebAppContext {
 
         //then
         mockMvc.perform(requestBuilder)
-                .andExpect(status().isNotFound())
+                .andExpect(status().isBadRequest())
                 .andDo(print())
                 .andDo(document("error-invalid-query-parameter",
                         preprocessResponse(prettyPrint())
