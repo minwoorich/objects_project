@@ -22,10 +22,10 @@ public class ErrorResult {
     private String className;
     private String methodName;
     private String exceptionName;
-    private StackTraceElement element;
+    private StackTraceElement[] elements;
 
     @Builder
-    private ErrorResult(int code, HttpStatus status, String path, ErrorCode errorCode, String message, LocalDateTime timestamp, String className, String methodName, String exceptionName, StackTraceElement element) {
+    private ErrorResult(int code, HttpStatus status, String path, ErrorCode errorCode, String message, LocalDateTime timestamp, String className, String methodName, String exceptionName, StackTraceElement[] elements) {
         this.code = code;
         this.status = status;
         this.path = path;
@@ -35,7 +35,7 @@ public class ErrorResult {
         this.className = className;
         this.methodName = methodName;
         this.exceptionName = exceptionName;
-        this.element = element;
+        this.elements = elements;
     }
 
     public ErrorResult.Response toResponse() {
