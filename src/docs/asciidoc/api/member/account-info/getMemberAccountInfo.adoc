@@ -12,3 +12,6 @@ include::{snippets}/get-member-account-info/query-parameters.adoc[]
 .*HTTP Response*
 include::{snippets}/get-member-account-info/http-response.adoc[]
 include::{snippets}/get-member-account-info/response-fields.adoc[]
+
+.*HTTP Error Response*
+include::{snippets}/get-member-account-info-pw-err/http-response.adoc[]

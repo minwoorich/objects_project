@@ -33,7 +33,14 @@ public enum ErrorCode {
     DUPLICATE_ERROR("이미 존재합니다."),
     INVALID_PASSWORD("비밀번호가 일치하지 않습니다."),
     MEMBER_NOT_FOUND("회원 정보가 존재하지 않습니다."),
-    NO_ERROR_CODE("빈 에러코드.");
+    NO_ERROR_CODE("빈 에러코드."),
+    EXPIRED_JWT_ERROR("토큰이 만료되었습니다."),
+    MALFORMED_JWT_ERROR("JWT 토큰이 아닙니다."),
+    SIGNATURE_JWT_ERROR("잘못된 형식의 토큰입니다."),
+    BAD_CREDENTIALS_ERROR("로그인 정보가 일치하지 않습니다."),
+    UNSUPPORTED_JWT_ERROR(""),
+    INTERNAL_SECURITY_ERROR("자격 증명에 실패하였습니다.");
+
 
     private final String message;
 }
