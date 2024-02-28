@@ -27,6 +27,9 @@ public class ErrorLoggerUtils {
         log.error(formatter("[CLASS_NAME]"),errorResult.getClassName()); // 에러 발생한 클래스
         log.error(formatter("[METHOD_NAME]"),errorResult.getMethodName()); // 에러 발생한 메서드
         log.error(formatter("[EXCEPTION_NAME]"),errorResult.getExceptionName()); // 예외 인스턴스 이름
+//        for (StackTraceElement element : errorResult.getElements()) {
+//            log.error(formatter("[STACK_TRACE]"),element);
+//        }
     }
 
     public static String formatter(String str) {

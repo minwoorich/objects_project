@@ -30,7 +30,8 @@ public class LoggingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         if (!whiteList.contains(request.getRequestURI())) {
-            MDC.put("traceId", UUID.randomUUID().toString());
+            String uuid = UUID.randomUUID().toString();
+            MDC.put("traceId", uuid.substring(0,7));
             if (isAsyncDispatch(request)) {
                 filterChain.doFilter(request, response);
             } else {
@@ -49,14 +50,6 @@ public class LoggingFilter extends OncePerRequestFilter {
             response.copyBodyToResponse();
         }
     }
-
-//    private static void logClientIp(RequestWrapper request) {
-//        ClientIpUtils.getClientIps(request).forEach((headerType, ip) -> {
-//            if (StringUtils.hasText(ip)) {
-//                log.info("Request : {}={}", headerType, ip);
-//            }
-//        });
-//    }
 
     private static void logClientIp(String prefix, Map<String, String> clientIps) {
         clientIps.entrySet().stream()

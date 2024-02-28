@@ -136,6 +136,7 @@ create table membership
     card_purchase_name varchar(255) null,
     card_no            varchar(255) null,
     card_install_month bigint       null,
+    next_billing_date  date         null,
     created_at         datetime(6)  null,
     updated_at         datetime(6)  null,
     deleted_at         datetime(6)  null

@@ -18,24 +18,42 @@ import java.util.stream.IntStream;
 public class LogAspect {
 
     // 반환타입 상관X, com.objects.marketbridge 하위 모든 패키지, 메서드이름 상관X, 파라미터 상관 X
-    @Pointcut("execution(* com.objects.marketbridge..*(..))")
+    @Pointcut("execution(" +
+            "* " +
+            "com.objects.marketbridge.." +
+            "*.*" +
+            "(..))")
     public void all() {
     }
 
     // 반환타입 상관X, com.objects.marketbridge 하위 모든 패키지, *Controller로 끝나는 메서드이름, 파라미터 상관 X
-    @Pointcut("execution(* com.objects.marketbridge..*Controller.*(..))")
+//    @Pointcut("execution(* com.objects.marketbridge..*Controller.*(..))")
+    @Pointcut("execution(" +
+            "* " +
+            "com.objects.marketbridge..*.controller.." +
+            "*.*" +
+            "(..))")
     public void controller() {
     }
 
     // 반환타입 상관X, com.objects.marketbridge 하위 모든 패키지, *Service 끝나는 메서드이름, 파라미터 상관 X
-    @Pointcut("execution(* com.objects.marketbridge..*Service.*(..))")
+//    @Pointcut("execution(* com.objects.marketbridge..*Service.*(..))")
+    @Pointcut("execution(" +
+            "* " +
+            "com.objects.marketbridge..*.service.." +
+            "*.*" +
+            "(..))")
     public void service(){}
 
     // 반환타입 상관X, com.objects.marketbridge 하위 모든 패키지, *RepositoryImpl 끝나는 메서드이름, 파라미터 상관 X
-    @Pointcut("execution(* com.objects.marketbridge..*RepositoryImpl.*(..))")
+//    @Pointcut("execution(* com.objects.marketbridge..*RepositoryImpl.*(..))")
+    @Pointcut("execution(* com.objects.marketbridge..*.infra..*.*(..))")
     public void repository(){}
 
-    @Around("controller() || service() || repository()")
+    @Pointcut("execution(* com.objects.marketbridge..*.domain..*.*(..))")
+    public void domain() {}
+
+    @Around("controller() || service() || repository() || domain()")
     public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         try {

@@ -14,4 +14,6 @@ public interface CouponRepository {
     List<Coupon> findAll();
 
     void deleteAllInBatch();
+
+    Coupon saveAndFlush(Coupon coupon);
 }

@@ -7,10 +7,16 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@BatchSize(size = 100)
 public class Membership extends BaseEntity{
 
     @Id
@@ -38,6 +44,8 @@ public class Membership extends BaseEntity{
 
     private String paymentMethod; // CARD, MONEY
 
+    private LocalDate nextBillingDate; // 다음 결제 일
+
     // 카드 결제
     @Embedded
     private CardInfo cardInfo;
@@ -47,7 +55,7 @@ public class Membership extends BaseEntity{
     private Amount amount;
 
     @Builder
-    public Membership(Member member, String cid, String itemName, Long quantity, String tid, String sid, String subsOrderNo, String statusCode, String paymentMethod, CardInfo cardInfo, Amount amount) {
+    public Membership(Member member, String cid, String itemName, Long quantity, String tid, String sid, String subsOrderNo, String statusCode, String paymentMethod, CardInfo cardInfo, Amount amount, LocalDate nextBillingDate) {
         this.member = member;
         this.cid = cid;
         this.itemName = itemName;
@@ -59,6 +67,7 @@ public class Membership extends BaseEntity{
         this.paymentMethod = paymentMethod;
         this.cardInfo = cardInfo;
         this.amount = amount;
+        this.nextBillingDate = nextBillingDate;
     }
 
     public static Membership create(Member member, String subsOrderNo, String tid, Amount amount){
@@ -70,7 +79,7 @@ public class Membership extends BaseEntity{
                 .build();
     }
 
-    public void update(Member member , String subsOrderNo,String tid, String sid, String cid, String itemName ,Long quantity, String paymentMethod, CardInfo cardInfo , Amount amount) {
+    public void update(Member member , String subsOrderNo,String tid, String sid, String cid, String itemName ,Long quantity, String paymentMethod, CardInfo cardInfo , Amount amount, LocalDate nextBillingDate) {
            this.member =member;
            this.subsOrderNo=subsOrderNo;
            this.tid = tid;
@@ -81,5 +90,10 @@ public class Membership extends BaseEntity{
            this.paymentMethod = paymentMethod;
            this.cardInfo = cardInfo;
            this.amount = amount;
+           this.nextBillingDate = nextBillingDate;
+    }
+
+    public void update(LocalDate nextBillingDate) {
+        this.nextBillingDate = nextBillingDate;
     }
 }
