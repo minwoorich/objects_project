@@ -1,10 +1,10 @@
 package com.objects.marketbridge.domains.member.dto;
 
-
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.domain.MembershipType;
 import jakarta.validation.constraints.*;
 import lombok.*;
+
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -12,21 +12,22 @@ import lombok.*;
 @Builder
 public class SignUpDto {
 
-    @NotBlank()
+    @NotEmpty()
     @Email()
     private String email;
 
-    @NotBlank()
+    @NotEmpty()
     @Size(min=4)
     private String password;
 
-    @NotBlank()
+    @NotEmpty()
     private String name;
 
-    @NotBlank()
+    @NotEmpty()
     @Size(min = 11)
     private String phoneNo;
 
+    @NotNull
     private Boolean isAgree;
 
     public Member toEntity(String encodedPassword) {
