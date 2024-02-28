@@ -34,11 +34,9 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ImageRepository imageRepository;
     private final ReviewImageRepository reviewImageRepository;
-    private final ReviewSurveyRepository reviewSurveyRepository;
     private final SurveyCategoryRepository surveyCategoryRepository;
     private final SurveyContentRepository surveyContentRepository;
     private final ReviewLikeRepository reviewLikeRepository;
-    private final MemberRepository memberRepository;
     private final OrderDetailReviewRepository orderDetailReviewRepository;
 
 
