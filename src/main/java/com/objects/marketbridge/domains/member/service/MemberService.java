@@ -137,7 +137,6 @@ public class MemberService {
         try {
             return memberRepository.findEmailByNameAndPhoneNo(name, phoneNo);
         } catch (JpaObjectRetrievalFailureException e) {
-            log.error(e.getMessage(), e);
             throw CustomLogicException.createBadRequestError(MEMBER_NOT_FOUND);
         }
     }
@@ -146,7 +145,6 @@ public class MemberService {
         try {
             return memberRepository.findIdByNameAndEmail(name, email);
         } catch (JpaObjectRetrievalFailureException e) {
-            log.error(e.getMessage(), e);
             throw CustomLogicException.createBadRequestError(MEMBER_NOT_FOUND);
         }
     }

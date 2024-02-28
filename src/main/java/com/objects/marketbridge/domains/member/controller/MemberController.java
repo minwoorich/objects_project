@@ -5,6 +5,10 @@ import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.domains.member.dto.*;
 import com.objects.marketbridge.domains.member.service.MemberService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -108,7 +112,7 @@ public class MemberController {
     }
 
     @PatchMapping("/account-info")
-    public ApiResponse<Void> updateMemberInfo(@AuthMemberId Long memberId, @RequestBody UpdateMemberInfo updateMemberInfo) {
+    public ApiResponse<Void> updateMemberInfo(@AuthMemberId Long memberId, @Valid @RequestBody UpdateMemberInfo updateMemberInfo) {
         memberService.updateMemberInfo(memberId, updateMemberInfo);
         return ApiResponse.ok(null);
     }
@@ -126,7 +130,7 @@ public class MemberController {
     }
 
     @PatchMapping("/password-reset")
-    public ApiResponse<Void> updatePassword(@RequestBody UpdatePassword updatePassword) {
+    public ApiResponse<Void> updatePassword(@Valid @RequestBody UpdatePassword updatePassword) {
         memberService.updatePassword(updatePassword);
         return ApiResponse.ok(null);
     }

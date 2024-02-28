@@ -3,6 +3,7 @@ package com.objects.marketbridge.domains.member.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -10,10 +11,11 @@ import lombok.*;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignInDto {
-    @NotBlank()
+    @NotEmpty
     @Email()
     private String email;
 
+    @NotEmpty
     @NotBlank()
     private String password;
 

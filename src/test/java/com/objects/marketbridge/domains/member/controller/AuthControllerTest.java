@@ -1,12 +1,15 @@
 package com.objects.marketbridge.domains.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
 import com.objects.marketbridge.common.security.domain.CustomUserDetails;
 import com.objects.marketbridge.common.security.dto.JwtTokenDto;
+import com.objects.marketbridge.common.security.filter.ExceptionHandlerFilter;
+import com.objects.marketbridge.common.security.filter.JwtAuthenticationFilter;
 import com.objects.marketbridge.common.security.service.JwtTokenProvider;
-import com.objects.marketbridge.domains.member.controller.AuthController;
 import com.objects.marketbridge.domains.member.dto.SignInDto;
 import com.objects.marketbridge.domains.member.dto.SignUpDto;
 import com.objects.marketbridge.domains.member.service.AuthService;
@@ -17,11 +20,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,15 +38,18 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUPLICATE_ERROR;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.INTERNAL_SECURITY_ERROR;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
 @WebMvcTest(AuthController.class)
@@ -108,6 +120,61 @@ public class AuthControllerTest {
                                 fieldWithPath("data").type(JsonFieldType.NULL)
                                         .description("응답 데이터")
                         )
+                ));
+    }
+
+    @Test
+    public void singUp_valid_err() throws Exception {
+        //given
+        SignUpDto signUpDto = SignUpDto.builder()
+                .email("member@example.com")
+                .password("암호화_된_비밀번호")
+                .name("테스트")
+                .phoneNo("01000000")
+                .isAgree(true)
+                .build();
+
+        willDoNothing().given(authService).signUp(signUpDto);
+
+        //when
+        ResultActions actions = mockMvc.perform(post("/auth/sign-up")
+                .content(objectMapper.writeValueAsString(signUpDto))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isBadRequest())
+                .andDo(document("auth-sign-up-valid-err",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ));
+    }
+
+    @Test
+    public void singUp_email_dup() throws Exception {
+        //given
+        SignUpDto signUpDto = SignUpDto.builder()
+                .email("member@example.com")
+                .password("암호화_된_비밀번호")
+                .name("테스트")
+                .phoneNo("01000000000")
+                .isAgree(true)
+                .build();
+
+        CustomLogicException badRequestError = CustomLogicException.createBadRequestError(DUPLICATE_ERROR);
+
+        doThrow(badRequestError).when(authService).signUp(any());
+
+        //when
+        ResultActions actions = mockMvc.perform(post("/auth/sign-up")
+                .content(objectMapper.writeValueAsString(signUpDto))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(DUPLICATE_ERROR.name()))
+                .andDo(document("auth-sign-up-email-dup",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
                 ));
     }
 
