@@ -1,10 +1,11 @@
 package com.objects.marketbridge.domains.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
-import com.objects.marketbridge.domains.member.controller.MemberController;
 import com.objects.marketbridge.domains.member.domain.AddressValue;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.domain.Wishlist;
@@ -15,7 +16,6 @@ import com.objects.marketbridge.domains.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.domains.product.domain.Option;
 import com.objects.marketbridge.domains.product.domain.ProdOption;
 import com.objects.marketbridge.domains.product.domain.Product;
-import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.*;
@@ -75,15 +76,12 @@ public class MemberControllerTest {
     @MockBean
     private MemberService memberService;
 
-    @MockBean
-    private ProductRepository productRepository;
 
-
-    private LocalDateTime orderDate = LocalDateTime.of(2024, 2, 9, 3, 9);
-    private DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
+    private final LocalDateTime orderDate = LocalDateTime.of(2024, 2, 9, 3, 9);
+    private final DateTimeHolder dateTimeHolder = TestDateTimeHolder.builder()
             .createTime(orderDate)
             .build();
-    private TestContainer testContainer = TestContainer.builder()
+    private final TestContainer testContainer = TestContainer.builder()
             .dateTimeHolder(dateTimeHolder)
             .build();
 
@@ -970,6 +968,29 @@ public class MemberControllerTest {
 
     @Test
     @WithMockCustomUser
+    public void getMemberInfo_pw_err() throws Exception {
+        String password = "password";
+
+
+        CustomLogicException badRequestError = CustomLogicException.createBadRequestError(INVALID_PASSWORD);
+
+        doThrow(badRequestError).when(memberService).getMemberInfo(anyLong(), anyString());
+
+        ResultActions actions = mockMvc.perform(get("/member/account-info")
+                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                .param("password", password)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(INVALID_PASSWORD.name()))
+                .andDo(document("get-member-account-info-pw-err",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
+    }
+
+    @Test
+    @WithMockCustomUser
     public void updateMemberInfo() throws Exception {
         //given
         Long memberId = 1L;
@@ -1024,6 +1045,30 @@ public class MemberControllerTest {
     }
 
     @Test
+    @WithMockCustomUser
+    public void updateMemberInfo_valid_err() throws Exception {
+        UpdateMemberInfo updateMemberInfo = UpdateMemberInfo.builder()
+                .email("testtest.com")
+                .name("테스트")
+                .phoneNo("01012341234")
+                .password("password")
+                .isAlert(true)
+                .isAgree(true)
+                .build();
+
+        ResultActions actions = mockMvc.perform(patch("/member/account-info")
+                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                .content(objectMapper.writeValueAsString(updateMemberInfo))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(ErrorCode.INVALID_INPUT_VALUE.name()))
+                .andDo(document("patch-member-account-info-err",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
+    }
+
+    @Test
     public void findMemberEmail() throws Exception {
         //given;
         String name = "테스트";
@@ -1059,6 +1104,26 @@ public class MemberControllerTest {
                                         .description("가입된 멤버의 이메일(아이디)")
                         )
                 ));
+    }
+
+    @Test
+    public void findMemberEmail_err() throws Exception {
+        String name = "테스트";
+        String phoneNo = "01000000000";
+        CustomLogicException badRequestError = CustomLogicException.createBadRequestError(MEMBER_NOT_FOUND);
+
+        doThrow(badRequestError).when(memberService).findMemberEmail(anyString(), anyString());
+        //when
+        ResultActions actions = mockMvc.perform(get("/member/email-find")
+                .param("name", name).param("phoneNo", phoneNo)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(MEMBER_NOT_FOUND.name()))
+                .andDo(document("member-email-find-err",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
     }
 
     @Test
@@ -1101,6 +1166,28 @@ public class MemberControllerTest {
                         )
                 ));
     }
+
+    @Test
+    public void findMemberId_err() throws Exception {
+        String name = "테스트";
+        String email = "test@test.com";
+
+        CustomLogicException badRequestError = CustomLogicException.createBadRequestError(MEMBER_NOT_FOUND);
+
+        doThrow(badRequestError).when(memberService).findMemberId(anyString(), anyString());
+
+        ResultActions actions = mockMvc.perform(get("/member/password-find")
+                .param("name", name).param("email", email)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(MEMBER_NOT_FOUND.name()))
+                .andDo(document("member-password-find-err",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
+    }
+
 
     @Test
     public void updatePassword() throws Exception {
