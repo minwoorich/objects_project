@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.domains.cart.controller.dto.CreateCartHttp;
+import com.objects.marketbridge.domains.cart.controller.dto.UpdateCartHttp;
 import com.objects.marketbridge.domains.cart.service.AddToCartService;
 import com.objects.marketbridge.domains.cart.service.DeleteCartService;
 import com.objects.marketbridge.domains.cart.service.GetCartListService;
 import com.objects.marketbridge.domains.cart.service.UpdateCartService;
 import com.objects.marketbridge.domains.cart.service.dto.CreateCartDto;
+import com.objects.marketbridge.domains.cart.service.dto.UpdateCartDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,13 +31,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUPLICATE_OPERATION;
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.OUT_OF_STOCK;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -45,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(CartController.class)
 @ExtendWith(RestDocumentationExtension.class)
-class PostCartErrorTest {
+class CartControllerErrorTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
@@ -64,34 +65,10 @@ class PostCartErrorTest {
                 .build();
     }
 
-    @DisplayName("[POST/carts] 입력값 유효성 에러")
-    @Test
-    @WithMockCustomUser
-    void addToCart1() throws Exception {
-        // given
-        CreateCartHttp.Request request = CreateCartHttp.Request.create(null, 1L, false);
-
-        // when
-        MockHttpServletRequestBuilder requestBuilder =
-                post("/carts")
-                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON);
-
-        // then
-        mockMvc.perform(requestBuilder)
-                .andExpect(status().isBadRequest())
-                .andDo(print())
-                .andDo(document("cart-add-invalid-input-error",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())
-                ));
-    }
-
     @DisplayName("[POST/carts] 상품을 중복해서 장바구니에 담을경우")
     @Test
     @WithMockCustomUser
-    void addToCart2() throws Exception {
+    void addToCart1() throws Exception {
         // given
         CreateCartHttp.Request request = CreateCartHttp.Request.create(1L, 1L, false);
 
@@ -119,7 +96,7 @@ class PostCartErrorTest {
     @DisplayName("[POST/carts] 품절 된 상품을 장바구니에 담으려 할 경우")
     @Test
     @WithMockCustomUser
-    void addToCart3() throws Exception {
+    void addToCart2() throws Exception {
         // given
         CreateCartHttp.Request request = CreateCartHttp.Request.create(1L, 1L, false);
 
@@ -167,6 +144,33 @@ class PostCartErrorTest {
                 .andExpect(status().isBadRequest())
                 .andDo(print())
                 .andDo(document("cart-add-outofstock-error",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ));
+    }
+
+    @DisplayName("[PATCH/carts{cartId}] 리소스를 찾을수 없다")
+    @Test
+    @WithMockCustomUser
+    void update1() throws Exception {
+        // given
+        UpdateCartHttp.Request request = UpdateCartHttp.Request.builder().quantity(10L).build();
+
+        doThrow(CustomLogicException.createBadRequestError(RESOUCRE_NOT_FOUND))
+                .when(updateCartService).update(any(UpdateCartDto.class));
+
+        // when
+        MockHttpServletRequestBuilder requestBuilder =
+                patch("/carts/1")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isBadRequest())
+                .andDo(print())
+                .andDo(document("cart-update-resource-notfound-error",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
