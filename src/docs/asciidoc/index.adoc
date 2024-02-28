@@ -179,9 +179,6 @@ include::api/review/review-delete.adoc[]
 
 == *주문*
 === *주문서/결제*
-include::api/order/ordercheckout.adoc[]
-{empty}
-{empty}
 
 include::api/order/ordercreate.adoc[]
 {empty}
