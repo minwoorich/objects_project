@@ -16,12 +16,14 @@ public class GetOrderHttp {
     public static class Response {
 
         // TODO : orderId 추가
+        private Long orderId;
         private String orderNo;
         private String createdAt;// yyyy-MM-dd HH:mm:ss
         private List<OrderDetailInfo> orderDetailInfos;
 
         @Builder
-        public Response(String createdAt, String orderNo, List<OrderDetailInfo> orderDetailInfos) {
+        public Response(Long orderId, String createdAt, String orderNo, List<OrderDetailInfo> orderDetailInfos) {
+            this.orderId = orderId;
             this.createdAt = createdAt;
             this.orderNo = orderNo;
             this.orderDetailInfos = orderDetailInfos;
@@ -31,6 +33,7 @@ public class GetOrderHttp {
             return Response.builder()
                     .createdAt(getOrderDto.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .orderNo(getOrderDto.getOrderNo())
+                    .orderId(getOrderDto.getOrderId())
                     .orderDetailInfos(getOrderDto.getOrderDetails().stream().map(OrderDetailInfo::of).collect(Collectors.toList()))
                     .build();
         }
