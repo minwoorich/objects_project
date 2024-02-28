@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domains.order.service.dto;
 
-import com.objects.marketbridge.domains.order.domain.ProductValue;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,10 +19,10 @@ public class CreateOrderDto {
     private Long totalOrderPrice;
     private Long realOrderPrice;
     private Long totalDiscountPrice;
-    private List<ProductValue> productValues;
+    private List<CreateOrderDto.ProductDto> productValues;
 
     @Builder
-    public CreateOrderDto(String tid, Long memberId, Long addressId, String orderName, String orderNo, Long totalOrderPrice, Long realOrderPrice, Long totalDiscountPrice, List<ProductValue> productValues) {
+    public CreateOrderDto(String tid, Long memberId, Long addressId, String orderName, String orderNo, Long totalOrderPrice, Long realOrderPrice, Long totalDiscountPrice, List<CreateOrderDto.ProductDto> productValues) {
         this.tid = tid;
         this.memberId = memberId;
         this.addressId = addressId;
@@ -32,5 +32,33 @@ public class CreateOrderDto {
         this.realOrderPrice = realOrderPrice;
         this.totalDiscountPrice = totalDiscountPrice;
         this.productValues = productValues;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class ProductDto{
+
+        Long productId;
+        Long price;
+        Long quantity;
+        Boolean hasCouponUsed;
+        Long couponId;
+        Long couponPrice;
+        Long couponMinimumPrice;
+        String couponEndDate;
+        String deliveredDate; // yyyy-MM-dd HH:mm:ss
+
+        @Builder
+        public ProductDto(Long productId, Long price, Long quantity, Boolean hasCouponUsed, Long couponId, Long couponPrice, Long couponMinimumPrice, String couponEndDate, String deliveredDate) {
+            this.productId = productId;
+            this.price = price;
+            this.quantity = quantity;
+            this.hasCouponUsed = hasCouponUsed;
+            this.couponId = couponId;
+            this.couponPrice = couponPrice;
+            this.couponMinimumPrice = couponMinimumPrice;
+            this.couponEndDate = couponEndDate;
+            this.deliveredDate = deliveredDate;
+        }
     }
 }

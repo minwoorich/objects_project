@@ -34,7 +34,7 @@ public class CartController {
     @PostMapping("/carts")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<String> addToCart(
-            @RequestBody CreateCartHttp.Request request,
+            @Validated @RequestBody CreateCartHttp.Request request,
             @AuthMemberId Long memberId) {
 
         addToCartService.add(request.toDto(memberId));
@@ -70,7 +70,7 @@ public class CartController {
     @DeleteMapping("/carts")
     @UserAuthorize
     public ApiResponse<String> deleteCartItem(
-            @RequestBody DeleteCartHttp.Request request) {
+            @Validated @RequestBody DeleteCartHttp.Request request) {
 
         deleteCartService.delete(request.getSelectedCartIds());
         return ApiResponse.ok("delete successful");

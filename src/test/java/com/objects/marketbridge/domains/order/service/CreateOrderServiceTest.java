@@ -1,21 +1,19 @@
 package com.objects.marketbridge.domains.order.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.domains.member.domain.Address;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
-import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
+import com.objects.marketbridge.domains.member.domain.Address;
+import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.domain.OrderDetail;
-import com.objects.marketbridge.domains.order.domain.ProductValue;
 import com.objects.marketbridge.domains.order.domain.StatusCodeType;
-import com.objects.marketbridge.domains.order.service.CreateOrderService;
-import com.objects.marketbridge.domains.order.service.port.*;
 import com.objects.marketbridge.domains.order.service.dto.CreateOrderDto;
+import com.objects.marketbridge.domains.order.service.port.*;
 import com.objects.marketbridge.domains.product.domain.Product;
-import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
-import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.domains.product.infra.product.ProductJpaRepository;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -39,22 +38,16 @@ import static org.assertj.core.api.Assertions.*;
 @Slf4j
 class CreateOrderServiceTest {
 
-    @Autowired
-    CreateOrderService createOrderService;
+    @Autowired CreateOrderService createOrderService;
     @Autowired ProductRepository productRepository;
     @Autowired ProductJpaRepository productJpaRepository;
     @Autowired CouponRepository couponRepository;
     @Autowired MemberRepository memberRepository;
-    @Autowired
-    AddressRepository addressRepository;
-    @Autowired
-    OrderDetailQueryRepository orderDetailQueryRepository;
-    @Autowired
-    OrderCommendRepository orderCommendRepository;
-    @Autowired
-    OrderDetailCommendRepository orderDetailCommendRepository;
-    @Autowired
-    OrderQueryRepository orderQueryRepository;
+    @Autowired AddressRepository addressRepository;
+    @Autowired OrderDetailQueryRepository orderDetailQueryRepository;
+    @Autowired OrderCommendRepository orderCommendRepository;
+    @Autowired OrderDetailCommendRepository orderDetailCommendRepository;
+    @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired MemberCouponRepository memberCouponRepository;
 
     @BeforeEach
@@ -65,98 +58,39 @@ class CreateOrderServiceTest {
         orderDetailCommendRepository.deleteAllInBatch();
 
         // member 생성
-        Member member = createMember();
+        Member member = Member.builder().email("hong@email.com").name("홍길동").build();
         memberRepository.save(member);
 
         // address 생성
-        Address address = createAddress(member);
+        Address address = Address.builder().member(member).build();
         addressRepository.save(address);
 
-        // product 생성
-        List<Product> products = createProducts();
-        productRepository.saveAll(products);
-
         // coupon 생성
-        List<Coupon> coupons = createCoupons(products);
+        Coupon coupon1 = Coupon.builder().price(500L).minimumPrice(1L).endDate(LocalDateTime.of(9999,1,1,1,0,0,0)).name("가방쿠폰").build();
+        Coupon coupon2 = Coupon.builder().price(500L).minimumPrice(1L).endDate(LocalDateTime.of(9999,1,1,1,0,0,0)).name("티비쿠폰").build();
 
         // memberCoupon 생성
-        List<MemberCoupon> memberCoupons = createMemberCoupons(member);
+        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).endDate(LocalDateTime.of(9999,1,1,1,0,0,0)).isUsed(false).build();
+        MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).endDate(LocalDateTime.of(9999,1,1,1,0,0,0)).isUsed(false).build();
 
         // MemberCoupon <-> Coupon 양방향 연관관계
-        coupons.get(0).addMemberCoupon(memberCoupons.get(0));
-        coupons.get(1).addMemberCoupon(memberCoupons.get(1));
+        coupon1.addMemberCoupon(memberCoupon1);
+        coupon2.addMemberCoupon(memberCoupon2);
 
-        couponRepository.saveAll(coupons);
-    }
+        // product 생성
+        Product product1 = Product.builder().productNo("productNo1").name("가방").stock(5L).price(1000L).build();
+        Product product2 = Product.builder().productNo("productNo2").name("티비").stock(5L).price(2000L).build();
+        Product product3 = Product.builder().productNo("productNo3").name("워치").stock(5L).price(3000L).build();
 
-    private  Member createMember() {
+        // Product <-> Coupon 양방향 연관관계
+        product1.addCoupons(coupon1);
+        product2.addCoupons(coupon2);
 
-        return Member.builder()
-                .email("hong@email.com")
-                .name("홍길동").build();
-    }
+        productRepository.saveAndFlush(product1);
+        productRepository.saveAndFlush(product2);
+        productRepository.saveAndFlush(product3);
 
-    private Address createAddress(Member member) {
 
-        return Address.builder()
-                .member(member).build();
-    }
-
-    private List<Product> createProducts() {
-
-        Product product1 = Product.builder()
-                .productNo("productNo1")
-                .name("가방")
-                .price(1000L)
-                .stock(5L).build();
-
-        Product product2 = Product.builder()
-                .productNo("productNo2")
-                .name("티비")
-                .stock(5L)
-                .price(2000L).build();
-
-        Product product3 = Product.builder()
-                .productNo("productNo3")
-                .name("워치")
-                .stock(5L)
-                .price(3000L).build();
-
-        return List.of(product1, product2, product3);
-    }
-
-    private List<Coupon> createCoupons(List<Product> products) {
-
-        Coupon coupon1 = Coupon.builder()
-                .price(2000L)
-                .product(products.get(0))
-                .minimumPrice(1L)
-                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
-                .name("가방쿠폰").build();
-
-        Coupon coupon2 = Coupon.builder()
-                .price(2000L)
-                .product(products.get(1))
-                .minimumPrice(1L)
-                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
-                .name("티비쿠폰").build();
-
-        return List.of(coupon1, coupon2);
-    }
-
-    private List<MemberCoupon> createMemberCoupons(Member member) {
-
-        MemberCoupon memberCoupon1 = MemberCoupon.builder()
-                .member(member)
-                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
-                .isUsed(false).build();
-
-        MemberCoupon memberCoupon2 = MemberCoupon.builder()
-                .member(member)
-                .endDate(LocalDateTime.of(9999,1,1,1,0,0,0))
-                .isUsed(false).build();
-
-        return List.of(memberCoupon1, memberCoupon2);
     }
 
     @DisplayName("주문 생성시 Order 를 생성 한다.")
@@ -181,7 +115,7 @@ class CreateOrderServiceTest {
         assertThat(order.getTotalPrice()).isEqualTo(createOrderDto.getTotalOrderPrice());
     }
 
-    private long getTotalOrderPrice(List<ProductValue> productValues) {
+    private long getTotalOrderPrice(List<CreateOrderDto.ProductDto> productValues) {
 
         return productValues.stream().mapToLong(p ->
                 productRepository.findById(p.getProductId()).getPrice() * p.getQuantity()
@@ -277,13 +211,6 @@ class CreateOrderServiceTest {
         }
     }
 
-    private  long getTotalUsedCoupon(Order order) {
-        return order.getOrderDetails().stream().filter(o -> o.getMemberCoupon() != null)
-                .mapToLong(o -> o.getMemberCoupon().getCoupon().getPrice())
-                .sum();
-    }
-
-
     @DisplayName("MemberCoupon의 사용상태와 사용날짜를 기록해야한다.")
     @Test
     void memberCouponUsage(){
@@ -352,24 +279,24 @@ class CreateOrderServiceTest {
         List<Coupon> coupons = couponRepository.findAll();
         List<Product> products = productRepository.findAll();
 
-        ProductValue productValue1 = ProductValue.builder()
+        CreateOrderDto.ProductDto productValue1 = CreateOrderDto.ProductDto.builder()
                 .productId(coupons.get(0).getProduct().getId())
                 .couponId(coupons.get(0).getId())
                 .quantity(1L)
                 .build();
 
-        ProductValue productValue2 = ProductValue.builder()
+        CreateOrderDto.ProductDto productValue2 = CreateOrderDto.ProductDto.builder()
                 .productId(coupons.get(1).getProduct().getId())
                 .couponId(coupons.get(1).getId())
                 .quantity(2L)
                 .build();
 
-        ProductValue productValue3 = ProductValue.builder()
+        CreateOrderDto.ProductDto productValue3 = CreateOrderDto.ProductDto.builder()
                 .productId(products.get(2).getId())
                 .quantity(lastQuantity)
                 .build();
 
-        List<ProductValue> productValues = List.of(productValue1, productValue2, productValue3);
+        List<CreateOrderDto.ProductDto> productValues = List.of(productValue1, productValue2, productValue3);
 
         Long totalOrderPrice = getTotalOrderPrice(productValues);
 

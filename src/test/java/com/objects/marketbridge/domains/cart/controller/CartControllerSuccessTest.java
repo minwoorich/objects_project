@@ -1,7 +1,6 @@
 package com.objects.marketbridge.domains.cart.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.objects.marketbridge.domains.cart.controller.CartController;
 import com.objects.marketbridge.domains.cart.controller.dto.CreateCartHttp;
 import com.objects.marketbridge.domains.cart.controller.dto.DeleteCartHttp;
 import com.objects.marketbridge.domains.cart.controller.dto.UpdateCartHttp;
@@ -53,7 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(CartController.class)
 @ExtendWith(RestDocumentationExtension.class)
-class CartControllerTest {
+class CartControllerSuccessTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;

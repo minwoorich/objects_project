@@ -1,0 +1,4 @@
+=== *입력 값 유효성 에러*
+
+.*Error Response*
+include::{snippets}/common-invalid-input-error/http-response.adoc[]

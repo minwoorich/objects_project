@@ -2,22 +2,19 @@ package com.objects.marketbridge.domains.order.controller.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.kakao.KakaoPayConfig;
+import com.objects.marketbridge.common.kakao.KakaoPayService;
 import com.objects.marketbridge.common.kakao.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.kakao.enums.CardCoType;
-import com.objects.marketbridge.common.kakao.KakaoPayService;
 import com.objects.marketbridge.common.responseobj.PageResponse;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.domains.member.domain.AddressValue;
 import com.objects.marketbridge.domains.order.controller.OrderController;
-import com.objects.marketbridge.domains.order.controller.dto.CreateCheckoutHttp;
 import com.objects.marketbridge.domains.order.controller.dto.CreateOrderHttp;
 import com.objects.marketbridge.domains.order.controller.dto.select.GetOrderDetailHttp;
 import com.objects.marketbridge.domains.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.domains.order.controller.dto.select.OrderDetailInfo;
 import com.objects.marketbridge.domains.order.controller.dto.select.PaymentInfo;
-import com.objects.marketbridge.domains.order.domain.ProductValue;
 import com.objects.marketbridge.domains.order.domain.StatusCodeType;
-import com.objects.marketbridge.domains.order.service.CreateCheckoutService;
 import com.objects.marketbridge.domains.order.service.CreateOrderService;
 import com.objects.marketbridge.domains.order.service.GetOrderService;
 import com.objects.marketbridge.domains.order.service.dto.CreateOrderDto;
@@ -70,7 +67,6 @@ public class OrderControllerRestDocsTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
-    @MockBean CreateCheckoutService createCheckoutService;
     @MockBean CreateOrderService createOrderService;
     @MockBean KakaoPayConfig kakaoPayConfig;
     @MockBean KakaoPayService kakaoPayService;
@@ -86,59 +82,7 @@ public class OrderControllerRestDocsTest {
                 .build();
     }
 
-    @DisplayName("checkout 화면에 필요한 데이터를 반환해준다")
-    @Test
-    @WithMockCustomUser
-    void getCheckout() throws Exception {
-
-        // given
-        CreateCheckoutHttp.Response response = CreateCheckoutHttp.Response.builder()
-                .phoneNo("010-1234-1234")
-                .name("홍길동")
-                .city("서울")
-                .street("세종대로")
-                .zipcode("12345")
-                .detail("민들레 아파트 110동 1234호")
-                .alias("우리집")
-                .build();
-
-        given(createCheckoutService.create(anyLong())).willReturn(response);
-        // when, then
-        mockMvc.perform(get("/orders/checkout")
-                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken"))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document("order-checkout",
-                        preprocessResponse(prettyPrint()),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("응답 코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("HTTP 응답"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터"),
-
-                                fieldWithPath("data.phoneNo").type(JsonFieldType.STRING)
-                                        .description("수신인 핸드폰 번호"),
-                                fieldWithPath("data.name").type(JsonFieldType.STRING)
-                                        .description("수신인 이름"),
-                                fieldWithPath("data.city").type(JsonFieldType.STRING)
-                                        .description("시"),
-                                fieldWithPath("data.street").type(JsonFieldType.STRING)
-                                        .description("도로명"),
-                                fieldWithPath("data.zipcode").type(JsonFieldType.STRING)
-                                        .description("우편번호"),
-                                fieldWithPath("data.detail").type(JsonFieldType.STRING)
-                                        .description("상세 주소"),
-                                fieldWithPath("data.alias").type(JsonFieldType.STRING)
-                                        .description("배송지 별칭")
-                        )
-                ));
-    }
-
-    @DisplayName("주문을 생성하는 API")
+    @DisplayName("[API] POST/orders")
     @Test
     @WithMockCustomUser
     void createOrder() throws Exception {
@@ -158,11 +102,15 @@ public class OrderControllerRestDocsTest {
         given(createOrderService.ready(any(CreateOrderHttp.Request.class),anyString(), anyLong())).willReturn(response);
         willDoNothing().given(createOrderService).create(any(CreateOrderDto.class));
 
-        // when, then
-        mockMvc.perform(post("/orders/checkout")
-                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
-                        .content(objectMapper.writeValueAsString(createOrderRequest))
-                        .contentType(MediaType.APPLICATION_JSON))
+        // when
+        MockHttpServletRequestBuilder requestBuilder =
+                post("/orders")
+                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                .content(objectMapper.writeValueAsString(createOrderRequest))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("order-create",
@@ -184,12 +132,20 @@ public class OrderControllerRestDocsTest {
 
                                 fieldWithPath("productValues[].productId").type(JsonFieldType.NUMBER)
                                         .description("상품 아이디"),
-                                fieldWithPath("productValues[].couponId").type(JsonFieldType.NUMBER)
-                                        .description("사용한 쿠폰 아이디").optional(),
-                                fieldWithPath("productValues[].sellerId").type(JsonFieldType.NUMBER)
-                                        .description("판매자 아이디").optional(),
+                                fieldWithPath("productValues[].price").type(JsonFieldType.NUMBER)
+                                        .description("상품 가격"),
                                 fieldWithPath("productValues[].quantity").type(JsonFieldType.NUMBER)
-                                        .description("주문 상품 수량"),
+                                        .description("상품 수량"),
+                                fieldWithPath("productValues[].hasCouponUsed").type(JsonFieldType.BOOLEAN)
+                                        .description("쿠폰 사용 여부"),
+                                fieldWithPath("productValues[].couponId").type(JsonFieldType.NUMBER)
+                                        .description("사용한 쿠폰 아이디 (사용 안했으면 null 보내야함)"),
+                                fieldWithPath("productValues[].couponPrice").type(JsonFieldType.NUMBER)
+                                        .description("쿠폰 가격 (사용 안했으면 null 보내야함)").optional(),
+                                fieldWithPath("productValues[].couponMinimumPrice").type(JsonFieldType.NUMBER)
+                                        .description("쿠폰 최소 주문 금액 (사용 안했으면 null 보내야함)"),
+                                fieldWithPath("productValues[].couponEndDate").type(JsonFieldType.STRING)
+                                        .description("쿠폰 유효기간 (yyyy-MM-dd HH:mm:ss) (사용 안했으면 null 보내야함)"),
                                 fieldWithPath("productValues[].deliveredDate").type(JsonFieldType.STRING)
                                         .description("예상 배송 날짜 (yyyy-MM-dd HH:mm:ss)")
                         ),
@@ -220,33 +176,31 @@ public class OrderControllerRestDocsTest {
                         ));
     }
 
-    private CreateOrderHttp.Request getCreateOrderRequest(List<ProductValue> productValues) {
+    private CreateOrderHttp.Request getCreateOrderRequest(List<CreateOrderHttp.Request.ProductInfo> productValues) {
         return CreateOrderHttp.Request.builder()
-                .totalAmount(20000L)
-                .realAmount(15000L)
-                .totalDiscountAmount(5000L)
+                .totalAmount(10000L)
+                .realAmount(9500L)
+                .totalDiscountAmount(500L)
                 .addressId(1L)
-                .orderName("가방외 1건")
+                .orderName("가방 1건")
                 .productValues(productValues)
                 .build();
     }
 
-    private List<ProductValue> createProductValues() {
-        ProductValue productValue1 = ProductValue.builder()
-                .deliveredDate("2024-01-21")
-                .sellerId(1L)
-                .couponId(1L)
+    private List<CreateOrderHttp.Request.ProductInfo> createProductValues() {
+        CreateOrderHttp.Request.ProductInfo productValue1 = CreateOrderHttp.Request.ProductInfo.builder()
                 .productId(1L)
-                .quantity(1L).build();
-
-        ProductValue productValue2 = ProductValue.builder()
+                .price(10000L)
+                .quantity(1L)
+                .hasCouponUsed(true)
+                .couponId(1L)
+                .couponPrice(500L)
+                .couponMinimumPrice(1000L)
+                .couponEndDate("2030-01-01 12:00:00")
                 .deliveredDate("2024-01-21")
-                .sellerId(2L)
-                .couponId(2L)
-                .productId(2L)
-                .quantity(2L).build();
+                .build();
 
-        return List.of(productValue1, productValue2);
+        return List.of(productValue1);
     }
 
 
