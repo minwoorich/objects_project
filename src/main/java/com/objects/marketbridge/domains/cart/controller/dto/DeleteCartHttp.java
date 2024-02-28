@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domains.cart.controller.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ public class DeleteCartHttp {
     @Getter
     @NoArgsConstructor
     public static class Request {
+
+        @NotNull
         private List<Long> selectedCartIds;
 
         @Builder

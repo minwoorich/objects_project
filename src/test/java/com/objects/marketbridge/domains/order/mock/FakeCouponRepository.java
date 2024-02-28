@@ -22,6 +22,11 @@ public class FakeCouponRepository implements CouponRepository {
     }
 
     @Override
+    public Coupon saveAndFlush(Coupon coupon) {
+        return null;
+    }
+
+    @Override
     public List<Coupon> findAll() {
         return null;
     }

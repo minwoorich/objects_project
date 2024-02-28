@@ -1,7 +1,8 @@
 package com.objects.marketbridge.domains.cart.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.objects.marketbridge.domains.cart.controller.CartController;
+import com.objects.marketbridge.common.responseobj.SliceResponse;
+import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.domains.cart.controller.dto.CreateCartHttp;
 import com.objects.marketbridge.domains.cart.controller.dto.DeleteCartHttp;
 import com.objects.marketbridge.domains.cart.controller.dto.UpdateCartHttp;
@@ -12,8 +13,6 @@ import com.objects.marketbridge.domains.cart.service.GetCartListService;
 import com.objects.marketbridge.domains.cart.service.UpdateCartService;
 import com.objects.marketbridge.domains.cart.service.dto.GetCartDto;
 import com.objects.marketbridge.domains.cart.service.dto.UpdateCartDto;
-import com.objects.marketbridge.common.responseobj.SliceResponse;
-import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,7 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(CartController.class)
 @ExtendWith(RestDocumentationExtension.class)
-class CartControllerTest {
+class CartControllerSuccessTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;

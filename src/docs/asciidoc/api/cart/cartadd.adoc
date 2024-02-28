@@ -11,3 +11,11 @@ include::{snippets}/cart-add/request-fields.adoc[]
 .*HTTP Response*
 include::{snippets}/cart-add/http-response.adoc[]
 include::{snippets}/cart-add/response-fields.adoc[]
+
+.*Error Response*
+*입력값 유효성*
+include::{snippets}/cart-add-invalid-input-error/http-response.adoc[]
+*중복 저장*
+include::{snippets}/cart-add-duplicated-error/http-response.adoc[]
+*재고 소진*
+include::{snippets}/cart-add-outofstock-error/http-response.adoc[]
