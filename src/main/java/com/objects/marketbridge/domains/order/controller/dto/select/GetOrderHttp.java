@@ -15,6 +15,7 @@ public class GetOrderHttp {
     @NoArgsConstructor
     public static class Response {
 
+        // TODO : orderId 추가
         private String orderNo;
         private String createdAt;// yyyy-MM-dd HH:mm:ss
         private List<OrderDetailInfo> orderDetailInfos;
