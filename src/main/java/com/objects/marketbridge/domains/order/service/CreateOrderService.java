@@ -1,25 +1,24 @@
 package com.objects.marketbridge.domains.order.service;
 
 import com.objects.marketbridge.common.kakao.KakaoPayConfig;
+import com.objects.marketbridge.common.kakao.KakaoPayService;
 import com.objects.marketbridge.common.kakao.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.common.kakao.dto.KakaoPayReadyResponse;
-import com.objects.marketbridge.common.kakao.KakaoPayService;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.domains.member.domain.Address;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.order.controller.dto.CreateOrderHttp;
 import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.domain.OrderDetail;
-import com.objects.marketbridge.domains.order.domain.ProductValue;
 import com.objects.marketbridge.domains.order.domain.StatusCodeType;
-import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.domains.order.controller.dto.CreateOrderHttp;
 import com.objects.marketbridge.domains.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.domains.order.service.port.AddressRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderDetailCommendRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
-import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,25 +75,23 @@ public class CreateOrderService {
         return Order.create(member, address, orderName, orderNo, totalOrderPrice, realOrderPrice, totalDiscountPrice, tid);
     }
 
-    private List<OrderDetail> createOrderDetails(List<ProductValue> productValues, Order order) {
+    private List<OrderDetail> createOrderDetails(List<CreateOrderDto.ProductDto> productValues, Order order) {
 
         List<OrderDetail> orderDetails = new ArrayList<>();
 
-        for (ProductValue productValue : productValues) {
+        for (CreateOrderDto.ProductDto productValue : productValues) {
 
             Product product = productRepository.findById(productValue.getProductId());
             // 쿠폰이 적용안된 product 가 존재할 경우 그냥 null 저장
-//            MemberCoupon memberCoupon = (productValue.getCouponId() != null) ? memberCouponRepository.findByMemberIdAndCouponId(order.getMember().getId(), productValue.getCouponId()) : null;
             MemberCoupon memberCoupon = (productValue.getCouponId() != null) ? memberCouponRepository.findByMemberIdAndCouponIdAndProductId(order.getMember().getId(), productValue.getCouponId(), productValue.getProductId()) : null;
             String orderNo = order.getOrderNo();
             Long quantity = productValue.getQuantity();
             String tid = order.getTid();
             Long price = product.getPrice();
-            Long sellerId = productValue.getSellerId();
 
             // OrderDetail 엔티티 생성
             OrderDetail orderDetail =
-                    OrderDetail.create(tid, order, product, orderNo, memberCoupon, price, quantity, sellerId, StatusCodeType.ORDER_INIT.getCode(), dateTimeHolder);
+                    OrderDetail.create(tid, order, product, orderNo, memberCoupon, price, quantity, StatusCodeType.ORDER_INIT.getCode(), dateTimeHolder);
 
             // orderDetails 에 추가
             orderDetails.add(orderDetail);
