@@ -51,7 +51,7 @@ include::api/member/account-info/memberPasswordFind.adoc[]
 {empty}
 {empty}
 
-include::api/member/account-infomemberPasswordReset.adoc[]
+include::api/member/account-info/memberPasswordReset.adoc[]
 {empty}
 {empty}
 
@@ -65,7 +65,7 @@ include::api/member/account-info/getMemberAccountInfo.adoc[]
 {empty}
 {empty}
 
-include::api/member/patchMemberAccountInfo.adoc[]
+include::api/member/account-info/patchMemberAccountInfo.adoc[]
 {empty}
 {empty}
 

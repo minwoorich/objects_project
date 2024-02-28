@@ -61,7 +61,7 @@ public class SpringSecurityConfig {
                 }))
                 .csrf(CsrfConfigurer::disable)
                 .sessionManagement(configurer-> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/auth/re-issue","/auth/sign-out","/orders/checkout").hasAuthority("USER"))
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/auth/re-issue","/auth/sign-out").hasAuthority("USER"))
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
                 .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class)
