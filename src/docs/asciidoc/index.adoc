@@ -257,9 +257,7 @@ include::api/cart/cartupdate.adoc[]
 {empty}
 {empty}
 
-include::api/cart/error.adoc[]
-{empty}
-{empty}
-
-
-
+== *공통 에러 응답*
+include::api/errors/invalidinput.adoc[]
+include::api/errors/invaliduri.adoc[]
+include::api/errors/internalserver.adoc[]

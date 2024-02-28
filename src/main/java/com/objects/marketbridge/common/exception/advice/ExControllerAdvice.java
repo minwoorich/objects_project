@@ -2,6 +2,7 @@ package com.objects.marketbridge.common.exception.advice;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.utils.ErrorLoggerUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +39,8 @@ public class ExControllerAdvice {
     public ErrorResult.Response customExHandler(CustomLogicException e, HttpServletRequest httpRequest, HandlerMethod handlerMethod) {
 
         ErrorResult errorResult = ErrorResult.builder()
-                .code(BAD_REQUEST.value())
-                .status(BAD_REQUEST)
+                .code(e.getHttpStatus().value())
+                .status(e.getHttpStatus())
                 .path(getPath(httpRequest.getMethod(), httpRequest.getRequestURI()))
                 .errorCode(e.getErrorCode())
                 .message(e.getMessage())
@@ -94,7 +95,8 @@ public class ExControllerAdvice {
         String message = "";
         if (e.getCause() instanceof InvalidFormatException invalidFormatEx) {
             String fieldType = invalidFormatEx.getTargetType().getSimpleName();
-            message = getTypeMismatchErrorMessage(fieldType);
+            String filedName = invalidFormatEx.getValue().toString();
+            message = getTypeMismatchErrorMessage(fieldType, filedName);
         }
 
         ErrorResult errorResult = ErrorResult.builder()
@@ -117,14 +119,14 @@ public class ExControllerAdvice {
 
     // 지원하지 않는 HTTP 메서드 호출시 발생
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    @ResponseStatus(NOT_FOUND)
+    @ResponseStatus(METHOD_NOT_ALLOWED)
     protected ErrorResult.Response handleHttpRequestMethodNotSupportedExHandler(HttpRequestMethodNotSupportedException e, HttpServletRequest httpRequest) {
 
         ErrorResult errorResult = ErrorResult.builder()
-                .code(NOT_FOUND.value())
-                .status(NOT_FOUND)
+                .code(METHOD_NOT_ALLOWED.value())
+                .status(METHOD_NOT_ALLOWED)
                 .path(getPath(httpRequest.getMethod(), httpRequest.getRequestURI()))
-                .errorCode(NO_ERROR_CODE)
+                .errorCode(ErrorCode.METHOD_NOT_ALLOWED)
                 .message(e.getMessage())
                 .timestamp(LocalDateTime.now())
                 .className(NONE)
@@ -141,14 +143,14 @@ public class ExControllerAdvice {
 
     // 파라미터의 타입이 요청의 값과 호환되지 않는 경우. ex) /test/{1} -> /test/{a}
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseStatus(BAD_REQUEST)
+    @ResponseStatus(NOT_FOUND)
     protected ErrorResult.Response handleMethodArgumentTypeMismatchExHandler(MethodArgumentTypeMismatchException e, HttpServletRequest httpRequest) {
 
         ErrorResult errorResult = ErrorResult.builder()
-                .code(BAD_REQUEST.value())
-                .status(BAD_REQUEST)
+                .code(NOT_FOUND.value())
+                .status(NOT_FOUND)
                 .path(getPath(httpRequest.getMethod(), httpRequest.getRequestURI()))
-                .errorCode(NO_ERROR_CODE)
+                .errorCode(ErrorCode.RESOUCRE_NOT_FOUND)
                 .message(e.getMessage())
                 .timestamp(LocalDateTime.now())
                 .className(NONE)
@@ -171,7 +173,7 @@ public class ExControllerAdvice {
                 .code(NOT_FOUND.value())
                 .status(NOT_FOUND)
                 .path(getPath(httpRequest.getMethod(), httpRequest.getRequestURI()))
-                .errorCode(NO_ERROR_CODE)
+                .errorCode(ErrorCode.RESOUCRE_NOT_FOUND)
                 .message(e.getMessage())
                 .timestamp(LocalDateTime.now())
                 .className(NONE)
@@ -187,14 +189,14 @@ public class ExControllerAdvice {
 
     // HTTP 요청 파라미터가 누락 혹은 이상있는경우.  ex) /orders?keyword=2 -> /orders?keywo=2
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    @ResponseStatus(NOT_FOUND)
+    @ResponseStatus(BAD_REQUEST)
     protected ErrorResult.Response handleMissingServletRequestParameterExHandler(MissingServletRequestParameterException e, HttpServletRequest httpRequest) {
 
         ErrorResult errorResult = ErrorResult.builder()
-                .code(NOT_FOUND.value())
-                .status(NOT_FOUND)
+                .code(BAD_REQUEST.value())
+                .status(BAD_REQUEST)
                 .path(getPath(httpRequest.getMethod(), httpRequest.getRequestURI()))
-                .errorCode(NO_ERROR_CODE)
+                .errorCode(INVALID_INPUT_VALUE)
                 .message(e.getMessage())
                 .timestamp(LocalDateTime.now())
                 .className(NONE)
@@ -223,6 +225,7 @@ public class ExControllerAdvice {
                 .className(handlerMethod.getBeanType().getName())
                 .methodName(handlerMethod.getMethod().getName())
                 .exceptionName(e.getClass().getName())
+                .elements(e.getStackTrace())
                 .build();
 
         // 로그 찍기
@@ -240,7 +243,7 @@ public class ExControllerAdvice {
         return String.format("[%s] 은/는 %s [입력한 값:%s]", rejectedField, msg, rejectedValue);
     }
 
-    private String getTypeMismatchErrorMessage(String fieldType) {
-        return String.format("[%s] 타입의 값이 필요합니다.", fieldType);
+    private String getTypeMismatchErrorMessage(String fieldType, String fieldName) {
+        return String.format("[%s] 타입의 값이 필요합니다. [입력한 값:%s]", fieldType, fieldName);
     }
 }

@@ -1,12 +1,16 @@
 package com.objects.marketbridge.domains.cart.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.domains.cart.controller.dto.CreateCartHttp;
+import com.objects.marketbridge.domains.cart.controller.dto.UpdateCartHttp;
 import com.objects.marketbridge.domains.cart.service.AddToCartService;
 import com.objects.marketbridge.domains.cart.service.DeleteCartService;
 import com.objects.marketbridge.domains.cart.service.GetCartListService;
 import com.objects.marketbridge.domains.cart.service.UpdateCartService;
+import com.objects.marketbridge.domains.cart.service.dto.CreateCartDto;
+import com.objects.marketbridge.domains.cart.service.dto.UpdateCartDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,18 +23,22 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDateTime;
+
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,12 +65,16 @@ class CartControllerErrorTest {
                 .build();
     }
 
-    @DisplayName("[API] 입력값 유효성 에러")
+    @DisplayName("[POST/carts] 상품을 중복해서 장바구니에 담을경우")
     @Test
     @WithMockCustomUser
-    void addToCart() throws Exception {
+    void addToCart1() throws Exception {
         // given
-        CreateCartHttp.Request request = CreateCartHttp.Request.create(null, 1L, false);
+        CreateCartHttp.Request request = CreateCartHttp.Request.create(1L, 1L, false);
+
+        // 중복 상황을 시뮬레이션하기 위해 예외를 던지도록 설정
+        doThrow(CustomLogicException.createBadRequestError(DUPLICATE_OPERATION, "이미 장바구니에 담긴 상품입니다", LocalDateTime.now()))
+                .when(addToCartService).add(any(CreateCartDto.class));
 
         // when
         MockHttpServletRequestBuilder requestBuilder =
@@ -75,32 +87,92 @@ class CartControllerErrorTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isBadRequest())
                 .andDo(print())
-                .andDo(document("common-invalid-input-error",
+                .andDo(document("cart-add-duplicated-error",
                         preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("productId").type(JsonFieldType.NULL)
-                                        .description("상품 아이디"),
-                                fieldWithPath("quantity").type(JsonFieldType.NUMBER)
-                                        .description("상품 수량"),
-                                fieldWithPath("isSubs").type(JsonFieldType.BOOLEAN)
-                                        .description("정기 구독 상품인지 아닌지 구분 하는 값")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("HTTP 상태 코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("HTTP 상태"),
-                                fieldWithPath("path").type(JsonFieldType.STRING)
-                                        .description("URI"),
-                                fieldWithPath("errorCode").type(JsonFieldType.STRING)
-                                        .description("에러 코드"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("에러 메시지"),
-                                fieldWithPath("timestamp").type(JsonFieldType.STRING)
-                                        .description("타임 스탬프")
-                        )
+                        preprocessResponse(prettyPrint())
+                ));
+    }
 
+    @DisplayName("[POST/carts] 품절 된 상품을 장바구니에 담으려 할 경우")
+    @Test
+    @WithMockCustomUser
+    void addToCart2() throws Exception {
+        // given
+        CreateCartHttp.Request request = CreateCartHttp.Request.create(1L, 1L, false);
+
+        // 중복 상황을 시뮬레이션하기 위해 예외를 던지도록 설정
+        doThrow(CustomLogicException.createBadRequestError(OUT_OF_STOCK))
+                .when(addToCartService).add(any(CreateCartDto.class));
+
+        // when
+        MockHttpServletRequestBuilder requestBuilder =
+                post("/carts")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isBadRequest())
+                .andDo(print())
+                .andDo(document("cart-add-outofstock-error",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ));
+    }
+
+    @DisplayName("[POST/carts] 품절 된 상품을 장바구니에 담으려 할 경우")
+    @Test
+    @WithMockCustomUser
+    void addToCart4() throws Exception {
+        // given
+        CreateCartHttp.Request request = CreateCartHttp.Request.create(1L, 1L, false);
+
+        // 중복 상황을 시뮬레이션하기 위해 예외를 던지도록 설정
+        doThrow(CustomLogicException.createBadRequestError(OUT_OF_STOCK))
+                .when(addToCartService).add(any(CreateCartDto.class));
+
+        // when
+        MockHttpServletRequestBuilder requestBuilder =
+                post("/carts")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isBadRequest())
+                .andDo(print())
+                .andDo(document("cart-add-outofstock-error",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ));
+    }
+
+    @DisplayName("[PATCH/carts{cartId}] 리소스를 찾을수 없다")
+    @Test
+    @WithMockCustomUser
+    void update1() throws Exception {
+        // given
+        UpdateCartHttp.Request request = UpdateCartHttp.Request.builder().quantity(10L).build();
+
+        doThrow(CustomLogicException.createBadRequestError(RESOUCRE_NOT_FOUND))
+                .when(updateCartService).update(any(UpdateCartDto.class));
+
+        // when
+        MockHttpServletRequestBuilder requestBuilder =
+                patch("/carts/1")
+                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isBadRequest())
+                .andDo(print())
+                .andDo(document("cart-update-resource-notfound-error",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
                 ));
     }
 }

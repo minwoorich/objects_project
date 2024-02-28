@@ -30,7 +30,8 @@ public class LoggingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         if (!whiteList.contains(request.getRequestURI())) {
-            MDC.put("traceId", UUID.randomUUID().toString());
+            String uuid = UUID.randomUUID().toString();
+            MDC.put("traceId", uuid.substring(0,7));
             if (isAsyncDispatch(request)) {
                 filterChain.doFilter(request, response);
             } else {
