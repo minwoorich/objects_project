@@ -286,9 +286,6 @@ public class ReviewService {
         }
     }
 
-
-
-
     //review_like 총갯수 조회
     @Transactional
     public ReviewLikeCountDto countReviewLike(Long reviewId) {

@@ -8,6 +8,7 @@ import com.objects.marketbridge.domains.product.controller.request.CreateProduct
 import com.objects.marketbridge.domains.product.domain.*;
 import com.objects.marketbridge.domains.product.dto.*;
 import com.objects.marketbridge.domains.product.service.port.*;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,7 +21,6 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -38,6 +38,24 @@ public class ProductService {
     private final ProdTagCustomRepository prodTagCustomRepository;
     private final ProductImageCustomRepository productImageCustomRepository;
 
+    @Builder
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ImageRepository imageRepository, ProductImageRepository productImageRepository, OptionRepository optionRepository, ProdOptionRepository prodOptionRepository, OptionCategoryRepository optionCategoryRepository, TagCategoryRepository tagCategoryRepository, TagRepository tagRepository, ProdTagRepository prodTagRepository, CategoryService categoryService, ProductCustomRepository productCustomRepository, ProdOptionCustomRepository prodOptionCustomRepository, ProdTagCustomRepository prodTagCustomRepository, ProductImageCustomRepository productImageCustomRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.imageRepository = imageRepository;
+        this.productImageRepository = productImageRepository;
+        this.optionRepository = optionRepository;
+        this.prodOptionRepository = prodOptionRepository;
+        this.optionCategoryRepository = optionCategoryRepository;
+        this.tagCategoryRepository = tagCategoryRepository;
+        this.tagRepository = tagRepository;
+        this.prodTagRepository = prodTagRepository;
+        this.categoryService = categoryService;
+        this.productCustomRepository = productCustomRepository;
+        this.prodOptionCustomRepository = prodOptionCustomRepository;
+        this.prodTagCustomRepository = prodTagCustomRepository;
+        this.productImageCustomRepository = productImageCustomRepository;
+    }
 
     // 상품 상세 정보 조회
     @Transactional
