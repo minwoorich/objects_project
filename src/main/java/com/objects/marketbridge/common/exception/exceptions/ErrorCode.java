@@ -16,7 +16,7 @@ public enum ErrorCode {
     OUT_OF_STOCK("재고가 없습니다."),
     SESSION_EXPIRED("세션값이 만료되었습니다."),
     COUPON_EXPIRED("만료된 쿠폰입니다."),
-    COUPON_INCOMPATIBLE("상품과 호환되지 않는 쿠폰입니다"),
+    COUPON_INCOMPATIBLE("상품과 호환되지 않는 쿠폰입니다."),
     COUPON_CONDITION_VIOLATION("최소 주문 금액 조건 미달입니다."),
     COUPON_ALREADY_USED("이미 사용한 쿠폰입니다."),
     BALANCE_INSUFFICIENT("잔액이 부족합니다."),

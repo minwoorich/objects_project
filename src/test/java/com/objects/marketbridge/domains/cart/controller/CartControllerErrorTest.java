@@ -72,7 +72,6 @@ class CartControllerErrorTest {
         // given
         CreateCartHttp.Request request = CreateCartHttp.Request.create(1L, 1L, false);
 
-        // 중복 상황을 시뮬레이션하기 위해 예외를 던지도록 설정
         doThrow(CustomLogicException.createBadRequestError(DUPLICATE_OPERATION, "이미 장바구니에 담긴 상품입니다", LocalDateTime.now()))
                 .when(addToCartService).add(any(CreateCartDto.class));
 
@@ -100,35 +99,6 @@ class CartControllerErrorTest {
         // given
         CreateCartHttp.Request request = CreateCartHttp.Request.create(1L, 1L, false);
 
-        // 중복 상황을 시뮬레이션하기 위해 예외를 던지도록 설정
-        doThrow(CustomLogicException.createBadRequestError(OUT_OF_STOCK))
-                .when(addToCartService).add(any(CreateCartDto.class));
-
-        // when
-        MockHttpServletRequestBuilder requestBuilder =
-                post("/carts")
-                        .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON);
-
-        // then
-        mockMvc.perform(requestBuilder)
-                .andExpect(status().isBadRequest())
-                .andDo(print())
-                .andDo(document("cart-add-outofstock-error",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())
-                ));
-    }
-
-    @DisplayName("[POST/carts] 품절 된 상품을 장바구니에 담으려 할 경우")
-    @Test
-    @WithMockCustomUser
-    void addToCart4() throws Exception {
-        // given
-        CreateCartHttp.Request request = CreateCartHttp.Request.create(1L, 1L, false);
-
-        // 중복 상황을 시뮬레이션하기 위해 예외를 던지도록 설정
         doThrow(CustomLogicException.createBadRequestError(OUT_OF_STOCK))
                 .when(addToCartService).add(any(CreateCartDto.class));
 
