@@ -171,8 +171,6 @@ public class CreateOrderHttp {
                 this.deliveredDate = deliveredDate;
             }
 
-
-
             public CreateOrderDto.ProductDto toDto() {
                 return CreateOrderDto.ProductDto.builder()
                         .productId(productId)
