@@ -281,18 +281,21 @@ class CreateOrderServiceTest {
 
         CreateOrderDto.ProductDto productValue1 = CreateOrderDto.ProductDto.builder()
                 .productId(coupons.get(0).getProduct().getId())
+                .hasCouponUsed(true)
                 .couponId(coupons.get(0).getId())
                 .quantity(1L)
                 .build();
 
         CreateOrderDto.ProductDto productValue2 = CreateOrderDto.ProductDto.builder()
                 .productId(coupons.get(1).getProduct().getId())
+                .hasCouponUsed(true)
                 .couponId(coupons.get(1).getId())
                 .quantity(2L)
                 .build();
 
         CreateOrderDto.ProductDto productValue3 = CreateOrderDto.ProductDto.builder()
                 .productId(products.get(2).getId())
+                .hasCouponUsed(false)
                 .quantity(lastQuantity)
                 .build();
 
