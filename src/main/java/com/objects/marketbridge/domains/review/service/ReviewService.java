@@ -11,6 +11,7 @@ import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.review.domain.*;
 import com.objects.marketbridge.domains.review.dto.*;
 import com.objects.marketbridge.domains.review.service.port.*;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReviewService {
 
@@ -39,8 +40,19 @@ public class ReviewService {
     private final ReviewLikeRepository reviewLikeRepository;
     private final OrderDetailReviewRepository orderDetailReviewRepository;
 
-
-
+    @Builder
+    public ReviewService(ReviewRepository reviewRepository, ImageRepository imageRepository,
+                         ReviewImageRepository reviewImageRepository, SurveyCategoryRepository surveyCategoryRepository,
+                         SurveyContentRepository surveyContentRepository, ReviewLikeRepository reviewLikeRepository,
+                         OrderDetailReviewRepository orderDetailReviewRepository) {
+        this.reviewRepository = reviewRepository;
+        this.imageRepository = imageRepository;
+        this.reviewImageRepository = reviewImageRepository;
+        this.surveyCategoryRepository = surveyCategoryRepository;
+        this.surveyContentRepository = surveyContentRepository;
+        this.reviewLikeRepository = reviewLikeRepository;
+        this.orderDetailReviewRepository = orderDetailReviewRepository;
+    }
 
     //리뷰 작성시 나오는 리뷰서베이 선택창 조회
 
@@ -286,6 +298,9 @@ public class ReviewService {
         }
     }
 
+
+
+
     //review_like 총갯수 조회
     @Transactional
     public ReviewLikeCountDto countReviewLike(Long reviewId) {
@@ -298,7 +313,7 @@ public class ReviewService {
 
 
 
-    //멤버의 미작성 리뷰 총갯수 조회(주문완료된 orderDetail중 리뷰미작성 수)
+    //멤버의 모든 리뷰미작성 주문상세 총갯수 조회
     @Transactional
     public ReviewCountDto getMemberReviewCountUnwritten(Long memberId) {
         Long countAll
@@ -312,7 +327,7 @@ public class ReviewService {
 
 
 
-    //멤버의 리뷰 총갯수 조회
+    //멤버의 모든 리뷰 총갯수 조회
     @Transactional
     public ReviewCountDto getMemberReviewCount(Long memberId) {
         Long count = reviewRepository.countByMemberId(memberId);
@@ -322,7 +337,7 @@ public class ReviewService {
 
 
 
-    //상품의 리뷰 총갯수 조회
+    //상품의 모든 리뷰 총갯수 조회
     @Transactional
     public ReviewCountDto getProductReviewCount(Long productId) {
         Long count = reviewRepository.countByProductId(productId);
@@ -374,7 +389,7 @@ public class ReviewService {
 
 
 
-    //멤버의 모든 리뷰미작성 주문상세 조회
+    //멤버의 모든 리뷰미작성 주문상세들 조회
     public Page<ReviewableDto> getReviewable(Long memberId, Pageable pageable) {
 
         Page<OrderDetail> orderDetails = orderDetailReviewRepository.findAllByMemberIdAndStatusCode
