@@ -70,8 +70,9 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
         OrderSpecifier[] orderSpecifiers = createOrderSpecifierArray(pageable.getSort());
         List<Order> orders = queryFactory
                 .selectFrom(order)
-                .innerJoin(order.address, address)
-                .innerJoin(order.member, member)
+                .innerJoin(order.address, address).fetchJoin()
+                .innerJoin(order.member, member).fetchJoin()
+                .innerJoin(order.payment, payment).fetchJoin()
                 .where(
                         selectOne()
                                 .from(orderDetail)
