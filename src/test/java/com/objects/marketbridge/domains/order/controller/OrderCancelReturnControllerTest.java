@@ -19,10 +19,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 
-import static com.objects.marketbridge.domains.order.domain.StatusCodeType.*;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.ORDER_CANCEL;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.OK;
 
 public class OrderCancelReturnControllerTest {
 
@@ -42,59 +41,6 @@ public class OrderCancelReturnControllerTest {
         testContainer.memberRepository.deleteAllInBatch();
         testContainer.productRepository.deleteAllInBatch();
     }
-
-    // TODO 취소시간 테스트 고려 + 반품/취소 구별 필요
-//    @Test
-//    @DisplayName("취소/반품 확정")
-//    public void confirmCancelReturn() {
-//        // given
-//        ConfirmCancelReturnHttp.OrderDetailInfo orderDetailInfo1 = ConfirmCancelReturnHttp.OrderDetailInfo.builder()
-//                .orderDetailId(1L)
-//                .numberOfCancellation(1L)
-//                .build();
-//        ConfirmCancelReturnHttp.OrderDetailInfo orderDetailInfo2 = ConfirmCancelReturnHttp.OrderDetailInfo.builder()
-//                .orderDetailId(2L)
-//                .numberOfCancellation(2L)
-//                .build();
-//        List<ConfirmCancelReturnHttp.OrderDetailInfo> orderDetailInfos = List.of(orderDetailInfo1, orderDetailInfo2);
-//
-//        ConfirmCancelReturnHttp.Request request = ConfirmCancelReturnHttp.Request.builder()
-//                .orderDetailInfos(orderDetailInfos)
-//                .cancelReason("단순변심")
-//                .build();
-//
-//        // when
-//        ApiResponse<ConfirmCancelReturnHttp.Response> result = orderCancelReturnController.confirmCancelReturn(request);
-//
-//        // then
-//        assertThat(result.getCode()).isEqualTo(OK.value());
-//        assertThat(result.getStatus()).isEqualTo(OK);
-//        assertThat(result.getMessage()).isEqualTo(OK.name());
-//        assertThat(result.getData().getOrderId()).isEqualTo(1L);
-//        assertThat(result.getData().getOrderNo()).isEqualTo("1");
-//        assertThat(result.getData().getTotalPrice()).isEqualTo(30000L);
-//
-//        assertThat(result.getData().getCancelledItems().get(0).getProductId()).isEqualTo(1L);
-//        assertThat(result.getData().getCancelledItems().get(0).getProductNo()).isEqualTo("1");
-//        assertThat(result.getData().getCancelledItems().get(0).getName()).isEqualTo("빵빵이키링");
-//        assertThat(result.getData().getCancelledItems().get(0).getPrice()).isEqualTo(1000L);
-//        assertThat(result.getData().getCancelledItems().get(0).getQuantity()).isEqualTo(1L);
-//
-//        assertThat(result.getData().getCancelledItems().get(1).getProductId()).isEqualTo(2L);
-//        assertThat(result.getData().getCancelledItems().get(1).getProductNo()).isEqualTo("2");
-//        assertThat(result.getData().getCancelledItems().get(1).getName()).isEqualTo("옥지얌키링");
-//        assertThat(result.getData().getCancelledItems().get(1).getPrice()).isEqualTo(2000L);
-//        assertThat(result.getData().getCancelledItems().get(1).getQuantity()).isEqualTo(2L);
-//
-//        assertThat(result.getData().getRefundInfo().getRefundMethod()).isEqualTo("카드");
-//        assertThat(result.getData().getRefundInfo().getTotalRefundAmount()).isEqualTo(5000L);
-//    }
-
-
-
-
-
-
 
     @Test
     @DisplayName("취소/반품한 상품들을 조회할 수 있다.")
@@ -191,7 +137,5 @@ public class OrderCancelReturnControllerTest {
         assertThat(orderDetailInfo2.getQuantity()).isEqualTo(10L);
         assertThat(orderDetailInfo2.getOrderStatus()).isEqualTo(ORDER_CANCEL.getCode());
     }
-
-
 
 }

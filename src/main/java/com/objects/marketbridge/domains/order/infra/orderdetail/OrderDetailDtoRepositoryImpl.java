@@ -1,6 +1,5 @@
 package com.objects.marketbridge.domains.order.infra.orderdetail;
 
-import com.objects.marketbridge.domains.order.domain.QOrder;
 import com.objects.marketbridge.domains.order.domain.StatusCodeType;
 import com.objects.marketbridge.domains.order.infra.dtio.GetCancelReturnListDtio;
 import com.objects.marketbridge.domains.order.infra.dtio.QGetCancelReturnListDtio_OrderDetailInfo;
@@ -20,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.objects.marketbridge.domains.order.domain.QOrder.*;
+import static com.objects.marketbridge.domains.order.domain.QOrder.order;
 import static com.objects.marketbridge.domains.order.domain.QOrderDetail.orderDetail;
 
 
