@@ -17,11 +17,6 @@ public class FakeOrderDetailQueryRepository extends BaseFakeOrderDetailRepositor
     }
 
     @Override
-    public List<OrderDetail> findByProductId(Long id) {
-        return null;
-    }
-
-    @Override
     public List<OrderDetail> findAll() {
         return null;
     }
@@ -44,18 +39,4 @@ public class FakeOrderDetailQueryRepository extends BaseFakeOrderDetailRepositor
                 .toList();
     }
 
-    @Override
-    public List<OrderDetail> findByIdIn(List<Long> orderDetailIds) {
-        return getInstance().getData().stream()
-                .filter(orderDetail -> orderDetailIds.contains(orderDetail.getId()))
-                .toList();
-    }
-
-    @Override
-    public List<OrderDetail> findByOrderNoAndOrderDetail_In(String orderNo, List<Long> orderDetailIds) {
-        return getInstance().getData().stream()
-                .filter(od -> od.getOrder().getOrderNo().equals(orderNo)
-                        && orderDetailIds.contains(od.getId()))
-                .toList();
-    }
 }

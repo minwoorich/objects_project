@@ -18,7 +18,7 @@ public class FakeProductRepository implements ProductRepository , ProductCustomR
 
     @Override
     public Product findById(Long id) {
-        return null;
+        return data.stream().filter(item -> item.getId().equals(id)).findAny().orElseThrow();
     }
 
     @Override
@@ -83,7 +83,7 @@ public class FakeProductRepository implements ProductRepository , ProductCustomR
 
     @Override
     public Product findByIdwithCategory(Long id) {
-        return null;
+        return data.stream().filter(item -> item.getId().equals(id)).findAny().orElseThrow();
     }
 
     @Override

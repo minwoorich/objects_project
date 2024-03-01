@@ -1,10 +1,10 @@
 package com.objects.marketbridge.domains.order.domain;
 
+import com.objects.marketbridge.common.utils.DateTimeHolder;
 import com.objects.marketbridge.domains.member.domain.Address;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.payment.domain.Payment;
-import com.objects.marketbridge.common.utils.DateTimeHolder;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

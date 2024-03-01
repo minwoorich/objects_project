@@ -1,4 +1,4 @@
-package com.objects.marketbridge.domains.service;
+package com.objects.marketbridge.domains.member.service;
 
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.domain.MembershipType;

@@ -19,7 +19,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     @Override
     public Category findById(Long id) {
         return categoryJpaRepository.findById(id)
-                .orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
+                .orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("카테고리가 존재하지 않습니다.")));
     }
 
     @Override

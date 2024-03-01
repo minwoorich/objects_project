@@ -1,4 +1,4 @@
-==== *상품의 리뷰들 조회*
+==== *상품의 모든 리뷰들 조회*
 
 .*HTTP Request*
 include::{snippets}/reviews-of-product/http-request.adoc[]

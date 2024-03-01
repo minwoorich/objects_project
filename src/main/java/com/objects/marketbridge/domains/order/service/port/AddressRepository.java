@@ -12,8 +12,6 @@ public interface AddressRepository {
 
     void save(Address address);
 
-    Address findAddressValueByAddressId(Long addressId ,Long memberId);
-
     void deleteById(Long addressId);
 
     void saveAll(List<Address> addresses);
