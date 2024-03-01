@@ -6,7 +6,6 @@ import com.objects.marketbridge.common.security.annotation.UserAuthorize;
 import com.objects.marketbridge.domains.review.dto.*;
 import com.objects.marketbridge.domains.review.service.ReviewService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,8 +23,6 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
-
-
 
     //리뷰 작성시 나오는 리뷰서베이 선택창 조회
     //http://localhost:8080/review/surveys?productId=1
@@ -79,7 +76,7 @@ public class ReviewController {
         return ApiResponse.ok(response);
     }
 
-    //멤버의 미작성 리뷰 총갯수 조회(주문완료된 orderDetail중 리뷰미작성 수)
+    //멤버의 모든 리뷰미작성 주문상세 총갯수 조회
     @GetMapping("/reviews/members/{memberId}/unwritten/count")
     @UserAuthorize
     public ApiResponse<ReviewCountDto> getUnwrittenReviewCountOfMember
@@ -88,7 +85,7 @@ public class ReviewController {
         return ApiResponse.ok(reviewCountDto);
     }
 
-    //멤버의 리뷰 총갯수 조회
+    //멤버의 모든 리뷰 총갯수 조회
     @GetMapping("/reviews/member/{memberId}/count")
     @UserAuthorize
     public ApiResponse<ReviewCountDto> getMemberReviewsCount
@@ -97,7 +94,7 @@ public class ReviewController {
         return ApiResponse.ok(reviewCountDto);
     }
 
-    //상품의 리뷰 총갯수 조회
+    //상품의 모든 리뷰 총갯수 조회
     @GetMapping("/reviews/product/{productId}/count")
     public ApiResponse<ReviewCountDto> getProductReviewCount
         (@PathVariable("productId") Long productId){

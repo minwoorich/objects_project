@@ -68,6 +68,8 @@ public class ReviewControllerTest {
     }
 
 
+
+
     @Test
     @WithMockCustomUser
     @DisplayName("리뷰서베이 선택창 조회")
@@ -124,7 +126,6 @@ public class ReviewControllerTest {
                 .andExpect(status().isOk())
                 .andDo(document("review-get-surveys",
                         preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER).description("HTTP 상태 코드"),
                                 fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
@@ -426,7 +427,7 @@ public class ReviewControllerTest {
 
     @Test
     @WithMockCustomUser
-    @DisplayName("멤버의 미작성 리뷰 총갯수 조회")
+    @DisplayName("멤버의 리뷰미작성 주문상세들 총갯수 조회")
     public void getMemberReviewCountUnwritten() throws Exception {
         //given
         Long memberId = 1L;
@@ -619,7 +620,7 @@ public class ReviewControllerTest {
 
     @Test
     @WithMockCustomUser
-    @DisplayName("멤버의 모든 리뷰미작성 주문상세 조회")
+    @DisplayName("멤버의 리뷰미작성 주문상세들 조회")
     public void getReviewable() throws Exception {
         // given
         Long memberId = 1L;

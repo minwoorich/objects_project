@@ -1,4 +1,4 @@
-==== *멤버의 리뷰들 조회*
+==== *멤버의 모든 리뷰들 조회*
 
 .*HTTP Request*
 include::{snippets}/reviews-of-member/http-request.adoc[]
