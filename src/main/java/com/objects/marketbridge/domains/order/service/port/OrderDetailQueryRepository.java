@@ -9,8 +9,6 @@ public interface OrderDetailQueryRepository {
 
     OrderDetail findById(Long id);
 
-    List<OrderDetail> findByProductId(Long id);
-
     List<OrderDetail> findAll();
 
     List<OrderDetail> findByOrderNo(String orderNo);
@@ -18,9 +16,5 @@ public interface OrderDetailQueryRepository {
     List<OrderDetail> findByOrder_IdAndProductIn(Long orderId, List<Product> products);
 
     List<OrderDetail> findByOrderNoAndProduct_IdIn(String orderNo, List<Long> productIds);
-
-    List<OrderDetail> findByIdIn(List<Long> orderDetailIds);
-
-    List<OrderDetail> findByOrderNoAndOrderDetail_In(String orderNo, List<Long> orderDetailIds);
 
 }

@@ -2,6 +2,7 @@ package com.objects.marketbridge.common.kakao;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.kakao.dto.*;
+import com.objects.marketbridge.domains.payment.service.dto.RefundCancelDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -73,11 +74,11 @@ public class KakaoPayService {
     }
 
     // 취소
-    public KaKaoPayCancelResponse cancel(String tid, Integer cancelAmount) {
+    public KaKaoPayCancelResponse cancel(RefundCancelDto refundCancelDto) {
         KakaoPayCancelRequest request = KakaoPayCancelRequest.builder()
                 .cid(ONE_TIME_CID)
-                .tid(tid)
-                .cancelAmount(cancelAmount)
+                .tid(refundCancelDto.getTid())
+                .cancelAmount(refundCancelDto.getCancelAmount())
                 .cancelTaxFreeAmount(0)
                 .build();
 

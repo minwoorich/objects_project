@@ -1,8 +1,5 @@
 package com.objects.marketbridge.domains.order.domain;
 
-import com.objects.marketbridge.domains.order.domain.CancelReturnStatusCode;
-import com.objects.marketbridge.domains.order.domain.OrderCancelReturn;
-import com.objects.marketbridge.domains.order.domain.OrderDetail;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

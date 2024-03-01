@@ -5,6 +5,7 @@ import com.objects.marketbridge.common.utils.DateTimeHolder;
 import com.objects.marketbridge.domains.order.domain.CancelReturnStatusCode;
 import com.objects.marketbridge.domains.order.domain.OrderCancelReturn;
 import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.payment.service.dto.RefundCancelDto;
 import com.objects.marketbridge.domains.payment.service.dto.RefundDto;
 import com.objects.marketbridge.domains.payment.service.port.PaymentClient;
 import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnCommendRepository;
@@ -35,7 +36,7 @@ public abstract class OrderCancelReturnService {
 
         CancelReturnStatusCode statusInfo = operation.apply(orderDetail, numberOfOperations, dateTimeHolder);
 
-        RefundDto refundDto = paymentClient.refund(getTid(orderDetail), orderDetail.cancelAmount());
+        RefundDto refundDto = paymentClient.refund(createRefundCancelDto(getTid(orderDetail), orderDetail.cancelAmount()));
 
         orderCancelReturnCommendRepository.save(OrderCancelReturn.create(orderDetail, statusInfo, reason));
 
@@ -44,6 +45,13 @@ public abstract class OrderCancelReturnService {
 
     private String getTid(OrderDetail orderDetail) {
         return orderDetail.getTid();
+    }
+
+    private RefundCancelDto createRefundCancelDto(String tid, Integer cancelAmount) {
+        return RefundCancelDto.builder()
+                .cancelAmount(cancelAmount)
+                .tid(tid)
+                .build();
     }
 
     @FunctionalInterface

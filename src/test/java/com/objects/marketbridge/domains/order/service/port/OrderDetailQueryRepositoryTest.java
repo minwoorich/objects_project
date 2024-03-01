@@ -1,12 +1,8 @@
 package com.objects.marketbridge.domains.order.service.port;
 
-import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
-import com.objects.marketbridge.domains.order.service.port.OrderDetailCommendRepository;
-import com.objects.marketbridge.domains.order.service.port.OrderDetailQueryRepository;
-import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
-import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.domain.OrderDetail;
+import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
