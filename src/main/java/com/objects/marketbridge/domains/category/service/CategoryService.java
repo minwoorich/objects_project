@@ -4,6 +4,7 @@ import com.objects.marketbridge.domains.category.domain.Category;
 import com.objects.marketbridge.domains.category.dto.CategoryDto;
 import com.objects.marketbridge.domains.category.service.port.CategoryCustomRepository;
 import com.objects.marketbridge.domains.category.service.port.CategoryRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +14,16 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryCustomRepository categoryCustomRepository;
 
+    @Builder
+    public CategoryService(CategoryRepository categoryRepository, CategoryCustomRepository categoryCustomRepository) {
+        this.categoryRepository = categoryRepository;
+        this.categoryCustomRepository = categoryCustomRepository;
+    }
 
     //전체(라지,미디엄,스몰). 라지가 해당 미디엄 전부를, 미디엄이 해당 스몰 전부를 포함하는 형태로 JSON형식.
     public List<CategoryDto> getTotalCategories() {

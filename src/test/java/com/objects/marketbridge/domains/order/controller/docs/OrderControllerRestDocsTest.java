@@ -255,6 +255,8 @@ public class OrderControllerRestDocsTest {
 
                                         fieldWithPath("data.content[].orderNo").type(JsonFieldType.STRING)
                                                 .description("주문 번호"),
+                                        fieldWithPath("data.content[].orderId").type(JsonFieldType.NUMBER)
+                                                .description("주문 아이디"),
                                         fieldWithPath("data.content[].createdAt").type(JsonFieldType.STRING)
                                                 .description("주문 생성 일자"),
 
@@ -307,6 +309,7 @@ public class OrderControllerRestDocsTest {
 
     private GetOrderHttp.Response createResponse(OrderDetailInfo orderDetailInfo) {
         return GetOrderHttp.Response.builder()
+                .orderId(1L)
                 .orderNo("orderNo")
                 .createdAt("2023-12-31 12:00:00")
                 .orderDetailInfos(List.of(orderDetailInfo))

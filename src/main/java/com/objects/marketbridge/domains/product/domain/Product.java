@@ -1,5 +1,6 @@
 package com.objects.marketbridge.domains.product.domain;
 
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.domains.category.domain.Category;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
@@ -116,22 +117,6 @@ public class Product extends BaseEntity {
         coupon.addProduct(this);
     }
 
-    public Product update(Category category, Boolean isOwn, String name, Long price,
-                          Boolean isSubs, Long stock, String thumbImg, Long discountRate,
-                          String productNo ) {
-        this.category = category;
-        this.isOwn = isOwn; // 로켓 true , 오픈 마켓 false
-        this.name = name;
-        this.price = price;
-        this.isSubs = isSubs;
-        this.stock = stock;
-        this.thumbImg = thumbImg;
-        this.discountRate = discountRate;
-        this.productNo = productNo;
-
-        return this;
-    }
-
     public void addOrderDetail(OrderDetail orderDetail) {
         orderDetails.add(orderDetail);
         orderDetail.setProduct(this);
@@ -148,12 +133,7 @@ public class Product extends BaseEntity {
 
     public void verifyStockAvailable(Long quantity) {
         if (stock - quantity < 0) {
-            throw CustomLogicException.builder()
-                    .errorCode(OUT_OF_STOCK)
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .message("재고가 부족합니다")
-                    .timestamp(LocalDateTime.now())
-                    .build();
+            throw CustomLogicException.createBadRequestError(OUT_OF_STOCK);
         }
     }
 

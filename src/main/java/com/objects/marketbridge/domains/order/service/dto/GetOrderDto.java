@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class GetOrderDto {
 
+    private Long orderId;
     private Long memberId;
     private AddressValue address;
     private String orderName;
@@ -29,7 +30,8 @@ public class GetOrderDto {
     private List<GetOrderDetailDto> orderDetails;
 
     @Builder
-    private GetOrderDto(Long memberId, AddressValue address, String orderName, String orderNo, Long totalDiscount, Long totalPrice, Long realPrice, LocalDateTime createdAt, String paymentMethod, String cardIssuerName, List<GetOrderDetailDto> orderDetails) {
+    private GetOrderDto(Long orderId, Long memberId, AddressValue address, String orderName, String orderNo, Long totalDiscount, Long totalPrice, Long realPrice, LocalDateTime createdAt, String paymentMethod, String cardIssuerName, List<GetOrderDetailDto> orderDetails) {
+        this.orderId = orderId;
         this.memberId = memberId;
         this.address = address;
         this.orderName = orderName;
@@ -47,6 +49,7 @@ public class GetOrderDto {
         CardInfo cardInfo = order.getPayment().getCardInfo();
 
         return GetOrderDto.builder()
+                .orderId(order.getId())
                 .memberId(order.getMember().getId())
                 .address(order.getAddress().getAddressValue())
                 .orderName(order.getOrderName())
