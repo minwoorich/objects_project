@@ -66,8 +66,7 @@ public class OrderDetailDtoRepositoryImpl implements OrderDetailDtoRepository {
                 .join(orderDetail.order, order)
                 .where(
                         eqMemberId(memberId),
-                        orderDetail.statusCode.eq(StatusCodeType.ORDER_CANCEL.getCode())
-                                .or(orderDetail.statusCode.eq(StatusCodeType.RETURN_COMPLETED.getCode()))
+                        eqStatusCode()
                 )
                 .fetch();
     }
@@ -92,12 +91,16 @@ public class OrderDetailDtoRepositoryImpl implements OrderDetailDtoRepository {
                 .join(orderDetail.order, order)
                 .where(
                         eqMemberId(memberId),
-                        orderDetail.statusCode.eq(StatusCodeType.ORDER_CANCEL.getCode())
-                                .or(orderDetail.statusCode.eq(StatusCodeType.RETURN_COMPLETED.getCode()))
+                        eqStatusCode()
                 );
     }
 
     private BooleanExpression eqMemberId(Long memberId) {
         return order.member.id.eq(memberId);
+    }
+
+    private static BooleanExpression eqStatusCode() {
+        return orderDetail.statusCode.eq(StatusCodeType.ORDER_CANCEL.getCode())
+                .or(orderDetail.statusCode.eq(StatusCodeType.RETURN_COMPLETED.getCode()));
     }
 }
