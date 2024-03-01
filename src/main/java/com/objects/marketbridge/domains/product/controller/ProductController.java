@@ -7,11 +7,14 @@ import com.objects.marketbridge.domains.product.dto.ProductDetailDto;
 import com.objects.marketbridge.domains.product.dto.ProductSimpleDto;
 import com.objects.marketbridge.domains.product.service.ProductService;
 import jakarta.validation.Valid;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
