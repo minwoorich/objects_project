@@ -1,5 +1,7 @@
 package com.objects.marketbridge.domains.order.domain;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
 import com.objects.marketbridge.domains.member.domain.Address;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
@@ -88,6 +90,12 @@ public class Order extends BaseEntity {
 //                .mapToInt(od -> od.changeReasonAndStatus(reason, statusCode))
 //                .sum();
 //    }
+
+    public void validPayment(Long realAmount, Long totalDiscount) {
+        if (!(this.realPrice.equals(realAmount)  && this.totalDiscount.equals(totalDiscount))) {
+            throw CustomLogicException.createBadRequestError(ErrorCode.INVALID_PAYMENT_AMOUNT);
+        }
+    }
 
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
 
