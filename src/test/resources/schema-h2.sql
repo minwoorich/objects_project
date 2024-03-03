@@ -24,7 +24,7 @@ create table cart
     member_id  bigint      null,
     product_id bigint      null,
     is_subs    bit         null,
-    quantity   int         null,
+    quantity   bigint      null,
     created_at datetime(6) null,
     updated_at datetime(6) null,
     deleted_at datetime(6) null

@@ -44,6 +44,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
+
     @Override
     public Optional<Order> findById(Long orderId) {
         return orderJpaRepository.findById(orderId);
