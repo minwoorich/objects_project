@@ -19,5 +19,5 @@ public interface OrderJpaRepository extends JpaRepository<Order, Long> {
     Optional<Order> findByOrderNoWithMember(String orderNo);
 
     void deleteByOrderNo(String orderNo);
-    
+
 }

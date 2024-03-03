@@ -44,6 +44,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
+
     @Override
     public Optional<Order> findById(Long orderId) {
         return orderJpaRepository.findById(orderId);
@@ -117,18 +118,15 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
         return queryFactory
                 .select(count(order))
                 .from(order)
+                .innerJoin(order.member, member)
+                .innerJoin(order.address, address)
+                .innerJoin(order.orderDetails, orderDetail)
+                .innerJoin(orderDetail.product, product)
                 .where(
-                        selectOne()
-                                .from(orderDetail)
-                                .innerJoin(orderDetail.product, product)
-                                .where(
-                                        orderDetail.order.eq(order),
-                                        containsKeyword(condition.getKeyword())
-                                ).exists()
-                        ,
-                        eqMemberId(condition.getMemberId()),
-                        eqYear(condition.getYear())
-                );
+                        containsKeyword(condition.getKeyword()),
+                        order.member.id.eq(condition.getMemberId())
+                )
+                .groupBy(order.id);
     }
 
     private BooleanExpression eqYear(String year) {
