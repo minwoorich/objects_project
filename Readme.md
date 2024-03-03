@@ -74,7 +74,7 @@
 <br>
 
 ### [DB Modeling]()
-![](https://velog.velcdn.com/images/jeongin/post/36640df1-ccc9-4ca1-acd2-81bddd2a6937/image.pngå)
+![](https://velog.velcdn.com/images/jeongin/post/36640df1-ccc9-4ca1-acd2-81bddd2a6937/image.png)
 
 
 ### 구현 기능
