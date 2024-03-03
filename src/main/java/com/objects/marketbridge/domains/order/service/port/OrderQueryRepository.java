@@ -6,6 +6,7 @@ import com.objects.marketbridge.domains.order.domain.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OrderQueryRepository {
@@ -19,6 +20,6 @@ public interface OrderQueryRepository {
     Order findByOrderNoWithMember(String orderNo);
 
     Order findByOrderNoWithOrderDetailsAndProduct(String orderNo);
-    Page<Order> findAllPaged(GetOrderHttp.Condition condition, Pageable pageable);
 
+    Page<Order> findAllPaged(GetOrderHttp.Condition condition, Pageable pageable);
 }
