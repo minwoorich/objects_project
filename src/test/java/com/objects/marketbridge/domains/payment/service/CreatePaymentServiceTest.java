@@ -49,6 +49,7 @@ class CreatePaymentServiceTest {
 
     @BeforeEach
     void init() {
+
         // 1. Member, Address 생성
         Member member = createMember();
         Address address = createAddress();
@@ -161,7 +162,7 @@ class CreatePaymentServiceTest {
     private Amount createAmount() {
         return Amount.builder()
                 .totalAmount(10000L)
-                .discountAmount(4000L)
+                .discountAmount(0L)
                 .build();
     }
 

@@ -51,7 +51,7 @@ class OrderQueryRepositoryTest {
 
     @DisplayName("전체 주문 목록을 조회 할 경우 현재 사용자의 전체 주문 정보를 알 수 있다.")
     @Test
-    @Rollback(value = false)
+//    @Rollback(value = false)
     void findByMemberIdWithMemberAddress_paging_filter(){
 
         //given
@@ -82,16 +82,21 @@ class OrderQueryRepositoryTest {
         OrderDetail orderDetail11 = createOrderDetail(product3, 4L, "4");
         OrderDetail orderDetail12 = createOrderDetail(product4, 4L, "4");
 
-        Payment payment = createPayment("카드", "카카오뱅크");
+        Payment payment1 = createPayment("카드", "카카오뱅크");
+        Payment payment2 = createPayment("카드", "카카오뱅크");
+        Payment payment3 = createPayment("카드", "카카오뱅크");
+        Payment payment4 = createPayment("카드", "카카오뱅크");
 
-        // 상품 번호
-        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3), payment); // 1,2,3
-        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6), payment); // 1,2,4
-        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9), payment); // 1,3,4
-        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12), payment); // 2,3,4
+
+        Order order1 = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3), payment1); // 1,2,3
+        Order order2 = createOrder(member, address, "2", List.of(orderDetail4, orderDetail5, orderDetail6), payment2); // 1,2,4
+        Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9), payment3); // 1,3,4
+        Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12), payment4); // 2,3,4
+
         orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
 
         Pageable pageSize1_3 = PageRequest.of(1, 3);
+//        Pageable pageSize1_3 = PageRequest.of(0, 4);
 
         GetOrderHttp.Condition condition1
                 = createCondition(member.getId(), "상품", String.valueOf(LocalDateTime.now().getYear()));
