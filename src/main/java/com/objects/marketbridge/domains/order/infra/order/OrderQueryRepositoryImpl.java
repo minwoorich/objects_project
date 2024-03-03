@@ -2,10 +2,8 @@ package com.objects.marketbridge.domains.order.infra.order;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.utils.MyQueryDslUtil;
-import com.objects.marketbridge.domains.member.domain.QMember;
-import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.controller.dto.select.GetOrderHttp;
-import com.objects.marketbridge.domains.order.domain.QOrder;
+import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -26,7 +24,7 @@ import java.util.Optional;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.RESOUCRE_NOT_FOUND;
 import static com.objects.marketbridge.domains.member.domain.QAddress.address;
-import static com.objects.marketbridge.domains.member.domain.QMember.*;
+import static com.objects.marketbridge.domains.member.domain.QMember.member;
 import static com.objects.marketbridge.domains.order.domain.QOrder.order;
 import static com.objects.marketbridge.domains.order.domain.QOrderDetail.orderDetail;
 import static com.objects.marketbridge.domains.payment.domain.QPayment.payment;
@@ -72,8 +70,9 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
         OrderSpecifier[] orderSpecifiers = createOrderSpecifierArray(pageable.getSort());
         List<Order> orders = queryFactory
                 .selectFrom(order)
-                .innerJoin(order.address, address)
-                .innerJoin(order.member, member)
+                .innerJoin(order.address, address).fetchJoin()
+                .innerJoin(order.member, member).fetchJoin()
+                .innerJoin(order.payment, payment).fetchJoin()
                 .where(
                         selectOne()
                                 .from(orderDetail)

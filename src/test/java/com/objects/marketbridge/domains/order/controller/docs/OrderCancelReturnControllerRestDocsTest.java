@@ -29,8 +29,9 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.objects.marketbridge.domains.order.domain.StatusCodeType.*;
-import static org.mockito.ArgumentMatchers.*;
+import static com.objects.marketbridge.domains.order.domain.StatusCodeType.ORDER_CANCEL;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;

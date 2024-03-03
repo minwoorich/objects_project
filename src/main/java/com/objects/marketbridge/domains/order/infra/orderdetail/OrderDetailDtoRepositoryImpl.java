@@ -1,6 +1,5 @@
 package com.objects.marketbridge.domains.order.infra.orderdetail;
 
-import com.objects.marketbridge.domains.order.domain.QOrder;
 import com.objects.marketbridge.domains.order.domain.StatusCodeType;
 import com.objects.marketbridge.domains.order.infra.dtio.GetCancelReturnListDtio;
 import com.objects.marketbridge.domains.order.infra.dtio.QGetCancelReturnListDtio_OrderDetailInfo;
@@ -20,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.objects.marketbridge.domains.order.domain.QOrder.*;
+import static com.objects.marketbridge.domains.order.domain.QOrder.order;
 import static com.objects.marketbridge.domains.order.domain.QOrderDetail.orderDetail;
 
 
@@ -67,8 +66,7 @@ public class OrderDetailDtoRepositoryImpl implements OrderDetailDtoRepository {
                 .join(orderDetail.order, order)
                 .where(
                         eqMemberId(memberId),
-                        orderDetail.statusCode.eq(StatusCodeType.ORDER_CANCEL.getCode())
-                                .or(orderDetail.statusCode.eq(StatusCodeType.RETURN_COMPLETED.getCode()))
+                        eqStatusCode()
                 )
                 .fetch();
     }
@@ -93,12 +91,16 @@ public class OrderDetailDtoRepositoryImpl implements OrderDetailDtoRepository {
                 .join(orderDetail.order, order)
                 .where(
                         eqMemberId(memberId),
-                        orderDetail.statusCode.eq(StatusCodeType.ORDER_CANCEL.getCode())
-                                .or(orderDetail.statusCode.eq(StatusCodeType.RETURN_COMPLETED.getCode()))
+                        eqStatusCode()
                 );
     }
 
     private BooleanExpression eqMemberId(Long memberId) {
         return order.member.id.eq(memberId);
+    }
+
+    private static BooleanExpression eqStatusCode() {
+        return orderDetail.statusCode.eq(StatusCodeType.ORDER_CANCEL.getCode())
+                .or(orderDetail.statusCode.eq(StatusCodeType.RETURN_COMPLETED.getCode()));
     }
 }

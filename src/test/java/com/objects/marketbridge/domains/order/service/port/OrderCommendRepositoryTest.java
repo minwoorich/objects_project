@@ -1,9 +1,7 @@
 package com.objects.marketbridge.domains.order.service.port;
 
-import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
-import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
-import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
+import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
