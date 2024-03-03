@@ -33,13 +33,11 @@ public class PaymentController {
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ErrorResult.Response kakaoApiExHandler(Exception e, HttpServletRequest httpRequest, HandlerMethod handlerMethod) {
+
         StringBuilder sb = new StringBuilder();
 
-        String requestURI = httpRequest.getRequestURI();
-        String[] uri = requestURI.split("/");
-        String orderNo = uri[uri.length - 1];
-
-        quitPaymentService.cancel(orderNo);
+        // 사용쿠폰, 재고, 주문, 상세주문 전부 롤백
+        quitPaymentService.cancel(getOrderNoFromUri(httpRequest.getRequestURI()));
 
         ErrorResult errorResult = ErrorResult.builder()
                 .code(NOT_FOUND.value())
@@ -92,5 +90,8 @@ public class PaymentController {
         return ApiResponse.ok(response);
     }
 
-
+    private String getOrderNoFromUri(String requestUri) {
+        String[] uri = requestUri.split("/");
+        return uri[uri.length - 1];
+    }
 }
