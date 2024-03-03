@@ -35,3 +35,14 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Qflie
+**/src/main/generated/
+
+spy.log
+
+.Ds_Store
+
+/src/main/resources/static/docs/index.html
+/src/docs/asciidoc/index.html
+/src/main/resources/logs/
