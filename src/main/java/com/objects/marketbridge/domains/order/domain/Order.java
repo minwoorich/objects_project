@@ -91,12 +91,6 @@ public class Order extends BaseEntity {
 //                .sum();
 //    }
 
-    public void validPayment(Long realAmount, Long totalDiscount) {
-        if (!(this.realPrice.equals(realAmount)  && this.totalDiscount.equals(totalDiscount))) {
-            throw CustomLogicException.createBadRequestError(ErrorCode.INVALID_PAYMENT_AMOUNT);
-        }
-    }
-
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
 
         orderDetails.stream()

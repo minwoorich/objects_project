@@ -36,15 +36,12 @@ public class CreatePaymentService {
     @Transactional
     public CompleteOrderHttp.Response create(KakaoPayApproveResponse response) {
 
-        // 0. 결제 데이터 위변조 검증
-        Order order = orderQueryRepository.findByOrderNoWithOrderDetailsAndProduct(response.getPartnerOrderId());
-        order.validPayment(response.getAmount().getTotalAmount(), response.getAmount().getDiscountAmount());
-
         // 1. Payment 엔티티 생성
         Payment payment = createPayment(response);
         paymentRepository.save(payment);
 
         // 2. Order - Payment 연관관계 매핑
+        Order order = orderQueryRepository.findByOrderNoWithOrderDetailsAndProduct(response.getPartnerOrderId());
         order.linkPayment(payment);
 
         // 3. orderDetail 의 statusCode 업데이트
