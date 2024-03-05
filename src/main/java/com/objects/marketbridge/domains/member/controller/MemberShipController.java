@@ -29,7 +29,7 @@ public class MemberShipController {
     private final KakaoPayConfig kakaoPayConfig;
 
     //TODO uri명명
-    @PostMapping("/subsMember")
+    @PostMapping("/kakao-pay/ready/subs")
     public ApiResponse<KakaoPayReadyResponse> saveOrder( // 받을때 cid를 정기결제용
                                                          @AuthMemberId Long memberId,
                                                          @Valid @RequestBody CreateSubsRequest request) {
