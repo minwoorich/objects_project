@@ -371,6 +371,7 @@ public class ReviewService {
 
         GetReviewDto getReviewDto
                 = GetReviewDto.builder()
+                .productThumbnailUrl(review.getProduct().getThumbImg())
                 .memberName(review.getMember().getName())
                 .productName(review.getProduct().getName())
                 .summary(review.getSummary())
