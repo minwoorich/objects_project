@@ -1,8 +1,13 @@
 package com.objects.marketbridge.domains.payment.service;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
+import com.objects.marketbridge.common.kakao.KakaoPayConfig;
 import com.objects.marketbridge.common.kakao.dto.KakaoPayApproveRequest;
 import com.objects.marketbridge.common.kakao.dto.KakaoPayApproveResponse;
 import com.objects.marketbridge.common.kakao.KakaoPayService;
+import com.objects.marketbridge.common.kakao.dto.KakaoPayOrderRequest;
+import com.objects.marketbridge.common.kakao.dto.KakaoPayOrderResponse;
 import com.objects.marketbridge.domains.payment.domain.Amount;
 import com.objects.marketbridge.domains.payment.domain.CardInfo;
 import com.objects.marketbridge.domains.payment.domain.Payment;
@@ -59,6 +64,15 @@ public class CreatePaymentService {
 
     public KakaoPayApproveResponse approve(String orderNo, String pgToken) throws RestClientException {
         Order order = orderQueryRepository.findByOrderNoWithMember(orderNo);
+        validAmount(KakaoPayOrderRequest.create(KakaoPayConfig.ONE_TIME_CID, order.getTid()), order.getRealPrice());
+
         return kakaoPayService.approve(KakaoPayApproveRequest.create(order, pgToken));
+    }
+
+    private void validAmount(KakaoPayOrderRequest request, Long savedAmount) {
+        Long totalAmount = kakaoPayService.getOrders(request).getAmount().getTotalAmount();
+        if (totalAmount.equals(savedAmount)) {
+            throw CustomLogicException.createBadRequestError(ErrorCode.INVALID_PAYMENT_AMOUNT);
+        }
     }
 }
