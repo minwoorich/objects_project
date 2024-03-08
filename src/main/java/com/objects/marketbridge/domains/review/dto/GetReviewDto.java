@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class GetReviewDto {
 
+    private String productThumbnailUrl;
     private String memberName;
     private Integer rating; //별점, 1~5
 //    private String SellerName;
@@ -23,9 +24,10 @@ public class GetReviewDto {
     private List<GetReviewSurveyDto> getReviewSurveyDtos = new ArrayList<>();
 
     @Builder
-    public GetReviewDto(String memberName, Integer rating, String productName, String summary,
+    public GetReviewDto(String productThumbnailUrl, String memberName, Integer rating, String productName, String summary,
                         List<ReviewImageDto> reviewImageDtos, String content,
                         List<GetReviewSurveyDto> getReviewSurveyDtos) {
+        this.productThumbnailUrl = productThumbnailUrl;
         this.memberName = memberName;
         this.rating = rating;
         this.productName = productName;
