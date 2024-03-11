@@ -3,7 +3,6 @@ package com.objects.marketbridge.domains.review.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
-import com.objects.marketbridge.domains.review.controller.ReviewController;
 import com.objects.marketbridge.domains.review.dto.*;
 import com.objects.marketbridge.domains.review.service.ReviewService;
 import org.junit.jupiter.api.BeforeEach;
@@ -570,6 +569,7 @@ public class ReviewControllerTest {
         getReviewSurveyDtos.add(reviewSurveyDto4);
 
         GetReviewDto getReviewDto = GetReviewDto.builder()
+                .productThumbnailUrl("thumbnail.jpg")
                 .memberName("멤버명")
                 .rating(5)
                 .productName("상품명")
@@ -597,6 +597,7 @@ public class ReviewControllerTest {
                                 fieldWithPath("status").description("응답 상태"),
                                 fieldWithPath("message").description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                fieldWithPath("data.productThumbnailUrl").description("상품 썸네일 이미지"),
                                 fieldWithPath("data.memberName").description("멤버명"),
                                 fieldWithPath("data.rating").description("별점"),
                                 fieldWithPath("data.productName").description("상품명"),
@@ -755,6 +756,7 @@ public class ReviewControllerTest {
         getReviewSurveyDtos.add(reviewSurveyDto4);
 
         GetReviewDto getReviewDto = GetReviewDto.builder()
+                .productThumbnailUrl("thumbnail0001.jpg")
                 .memberName("멤버명")
                 .rating(5)
                 .productName("상품명")
@@ -808,6 +810,7 @@ public class ReviewControllerTest {
         getReviewSurveyDtos2.add(reviewSurveyDto24);
 
         GetReviewDto getReviewDto2 = GetReviewDto.builder()
+                .productThumbnailUrl("thumbnail0002.jpg")
                 .memberName("멤버명")
                 .rating(5)
                 .productName("상품명")
@@ -852,6 +855,7 @@ public class ReviewControllerTest {
                                 fieldWithPath("status").description("응답 상태"),
                                 fieldWithPath("message").description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                fieldWithPath("data.content[].productThumbnailUrl").description("상품 썸네일 이미지"),
                                 fieldWithPath("data.content[].memberName").description("멤버 이름"),
                                 fieldWithPath("data.content[].rating").description("별점"),
 //                                fieldWithPath("data.content[0].sellerName").description("셀러명"),
@@ -943,6 +947,7 @@ public class ReviewControllerTest {
         getReviewSurveyDtos.add(reviewSurveyDto4);
 
         GetReviewDto getReviewDto = GetReviewDto.builder()
+                .productThumbnailUrl("thumbnail0001.jpg")
                 .memberName("멤버명")
                 .rating(5)
                 .productName("상품명")
@@ -996,6 +1001,7 @@ public class ReviewControllerTest {
         getReviewSurveyDtos2.add(reviewSurveyDto24);
 
         GetReviewDto getReviewDto2 = GetReviewDto.builder()
+                .productThumbnailUrl("thumbnail0002.jpg")
                 .memberName("멤버명")
                 .rating(5)
                 .productName("상품명")
@@ -1040,6 +1046,7 @@ public class ReviewControllerTest {
                                 fieldWithPath("status").description("응답 상태"),
                                 fieldWithPath("message").description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                fieldWithPath("data.content[].productThumbnailUrl").description("상품 썸네일 이미지"),
                                 fieldWithPath("data.content[].memberName").description("멤버 이름"),
                                 fieldWithPath("data.content[].rating").description("별점"),
 //                                fieldWithPath("data.content[0].sellerName").description("셀러명"),
