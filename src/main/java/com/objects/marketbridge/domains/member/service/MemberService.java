@@ -40,6 +40,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final ProductRepository productRepository;
 
+
+    @Transactional
     public CheckedResultDto isDuplicateEmail(String email){
         boolean isDuplicateEmail = memberRepository.existsByEmail(email);
         return CheckedResultDto.builder().checked(isDuplicateEmail).build();
@@ -50,13 +52,16 @@ public class MemberService {
         return addresses.stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional
     public List<GetAddressesResponse> addMemberAddress(Long id , AddAddressRequestDto addAddressRequestDto){
         Member member = memberRepository.findById(id);
-        member.addAddress(addAddressRequestDto.toEntity());
+        Address address = addAddressRequestDto.toEntity();
+        member.addAddress(address);
         memberRepository.save(member);
         return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional
     public List<GetAddressesResponse> updateMemberAddress(Long memberId,Long addressId,AddAddressRequestDto request){
         Member member = memberRepository.findById(memberId);
         Address address = addressRepository.findById(addressId);
@@ -64,6 +69,7 @@ public class MemberService {
         return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional
     public List<GetAddressesResponse> deleteMemberAddress(Long memberId,Long addressId){
         Member member = memberRepository.findById(memberId);
         addressRepository.deleteById(addressId);
@@ -78,6 +84,7 @@ public class MemberService {
         return new SliceImpl<>(responses,pageable,wishlists.hasNext());
     }
 
+    @Transactional
     public Boolean checkWishlist(Long memberId, WishlistRequest request){
         //true면 wishList에 이미 존재 false면 wishList 추가가능
         Long wishResult = wishRepository.countByProductIdAndMemberId(memberId, request.getProductId());
