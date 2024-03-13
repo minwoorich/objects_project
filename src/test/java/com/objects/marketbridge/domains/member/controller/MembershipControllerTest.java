@@ -96,7 +96,7 @@ public class MembershipControllerTest {
         given(memberShipService.kakaoPayReady(any(KakaoPayReadyRequest.class))).willReturn(response);
         willDoNothing().given(memberShipService).savePayReadyData(any(CreateSubsDto.class));
         //when,then
-        mockMvc.perform(post("/membership/subsMember")
+        mockMvc.perform(post("/membership/kakao-pay/ready")
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .content(objectMapper.writeValueAsString(createSubsRequest))
                         .contentType(MediaType.APPLICATION_JSON))

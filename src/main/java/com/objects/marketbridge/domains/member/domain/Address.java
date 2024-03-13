@@ -41,9 +41,12 @@ public class Address extends BaseEntity {
         this.member = member;
     }
 
-    public void update(AddressValue addressValue){
+    public void update(AddressValue addressValue , Boolean isDefault){
         this.addressValue=addressValue;
+        this.isDefault = isDefault;
     }
+
+    public void update(Boolean isDefault){ this.isDefault= isDefault;}
 
     // 비즈니스 로직
     public static Address create(AddressValue addressValue, Boolean isDefault) {
