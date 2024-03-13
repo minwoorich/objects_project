@@ -1,7 +1,10 @@
 package com.objects.marketbridge.domains.member.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
+import com.objects.marketbridge.domains.member.constant.MemberConst;
 import com.objects.marketbridge.domains.member.domain.Address;
+import com.objects.marketbridge.domains.member.domain.AddressValue;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.domain.Wishlist;
 import com.objects.marketbridge.domains.member.dto.*;
@@ -47,14 +50,17 @@ public class MemberService {
         return CheckedResultDto.builder().checked(isDuplicateEmail).build();
     }
 
-    public List<GetAddressesResponse> findByMemberId(Long id){
-        List<Address> addresses = addressRepository.findByMemberId(id);
+    public List<GetAddressesResponse> findByMemberId(Long memberId){
+        List<Address> addresses = addressRepository.findByMemberId(memberId);
         return addresses.stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
     @Transactional
-    public List<GetAddressesResponse> addMemberAddress(Long id , AddAddressRequestDto addAddressRequestDto){
-        Member member = memberRepository.findById(id);
+    public List<GetAddressesResponse> addMemberAddress(Long memberId , AddAddressRequestDto addAddressRequestDto){
+        if(addAddressRequestDto.getIsDefault()){
+            changeDefaultAddress(memberId);
+        }
+        Member member = memberRepository.findById(memberId);
         Address address = addAddressRequestDto.toEntity();
         member.addAddress(address);
         memberRepository.save(member);
@@ -62,18 +68,44 @@ public class MemberService {
     }
 
     @Transactional
-    public List<GetAddressesResponse> updateMemberAddress(Long memberId,Long addressId,AddAddressRequestDto request){
+    public List<GetAddressesResponse> updateMemberAddress(Long memberId,Long addressId,UpdateAddressRequestDto request){
+        if(request.getIsDefault()){
+            changeDefaultAddress(memberId);
+        }
         Member member = memberRepository.findById(memberId);
         Address address = addressRepository.findById(addressId);
-        address.update(request.getAddressValue());
+
+        AddressValue addressValue = AddressValue.builder()
+                    .phoneNo(request.getPhoneNo() != null ? request.getPhoneNo() : address.getAddressValue().getPhoneNo())
+                    .name(request.getName() != null ? request.getName() : address.getAddressValue().getName())
+                    .city(request.getCity() != null ? request.getCity() : address.getAddressValue().getCity())
+                    .street(request.getStreet() != null ? request.getStreet() : address.getAddressValue().getStreet())
+                    .zipcode(request.getZipcode() != null ? request.getZipcode() : address.getAddressValue().getZipcode())
+                    .detail(request.getDetail() != null ? request.getDetail() : address.getAddressValue().getDetail())
+                    .alias(request.getAlias() != null ? request.getAlias() : address.getAddressValue().getAlias())
+                    .build();
+
+        Boolean isDefault = request.getIsDefault() != null ? request.getIsDefault() : address.getIsDefault();
+        address.update(addressValue ,isDefault);
         return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
+    private void changeDefaultAddress(Long memberId){
+        Long addressCount = addressRepository.countAddress(memberId);
+        if(addressCount != 0L){
+            Address defaultAddress = addressRepository.findDefaultAddress(memberId);
+            defaultAddress.update(false);
+        }
+    }
+
     @Transactional
-    public List<GetAddressesResponse> deleteMemberAddress(Long memberId,Long addressId){
-        Member member = memberRepository.findById(memberId);
-        addressRepository.deleteById(addressId);
-        return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
+    public String deleteMemberAddress(Long addressId){
+        Address byMemberIdAndaddressId = addressRepository.findById(addressId);
+        if(byMemberIdAndaddressId.getIsDefault()){
+            throw CustomLogicException.createBadRequestError(ErrorCode.DEFAULT_ADDRESS_DELETION_NOT_ALLOWED);
+        }
+        addressRepository.deleteAllByIdInBatch(addressId);
+        return MemberConst.DELETE_ADDRESS_SUCCESSFULLY;
     }
 
     public Slice<WishlistResponse> findWishlistById(Pageable pageable, Long memberId){
