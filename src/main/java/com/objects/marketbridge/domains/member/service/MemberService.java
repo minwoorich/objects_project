@@ -151,11 +151,28 @@ public class MemberService {
 
     public GetMemberInfo getMemberInfo(Long memberId, String password) {
         try {
-            return memberRepository.getMemberInfoByIdAndPassword(memberId, password);
+            GetMemberInfoWithPassword memberInfo = memberRepository.getMemberInfoById(memberId);
+            boolean isMatched = matchPassword(password, memberInfo.password());
+            if (isMatched) {
+                return GetMemberInfo.builder()
+                        .email(memberInfo.email())
+                        .name(memberInfo.phoneNo())
+                        .phoneNo(memberInfo.phoneNo())
+                        .isAlert(memberInfo.isAlert())
+                        .isAgree(memberInfo.isAgree())
+                        .build();
+            } else {
+                throw CustomLogicException.createBadRequestError(INVALID_PASSWORD);
+            }
+
         } catch (JpaObjectRetrievalFailureException e) {
             log.error(e.getMessage(), e);
-            throw CustomLogicException.createBadRequestError(INVALID_PASSWORD);
+            throw CustomLogicException.createBadRequestError(MEMBER_NOT_FOUND);
         }
+    }
+
+    private boolean matchPassword(String password, String savedPassword) {
+        return passwordEncoder.matches(password, savedPassword);
     }
 
     @Transactional

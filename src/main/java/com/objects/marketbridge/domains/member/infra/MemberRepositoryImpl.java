@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domains.member.infra;
 
-import com.objects.marketbridge.domains.member.dto.GetMemberInfo;
+import com.objects.marketbridge.domains.member.dto.GetMemberInfoWithPassword;
 import com.objects.marketbridge.domains.member.dto.MemberEmail;
 import com.objects.marketbridge.domains.member.dto.MemberId;
 import com.objects.marketbridge.domains.member.domain.Member;
@@ -60,8 +60,8 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public GetMemberInfo getMemberInfoByIdAndPassword(Long memberId, String password) {
-        return memberJpaRepository.getMemberInfoByIdAndPassword(memberId, password).orElseThrow(EntityNotFoundException::new);
+    public GetMemberInfoWithPassword getMemberInfoById(Long memberId) {
+        return memberJpaRepository.getMemberInfoById(memberId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
