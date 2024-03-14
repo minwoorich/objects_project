@@ -53,7 +53,7 @@ public class MemberController {
 
     @DeleteMapping("/address/{addressId}")
     public ApiResponse<String> deleteAddress(
-            @AuthMemberId Long memberId ,@PathVariable (name = "addressId")  Long addressId){
+            @AuthMemberId Long memberId ,@PathVariable (name = "addressId") Long addressId){
         String result = memberService.deleteMemberAddress(addressId);
         return ApiResponse.ok(result);
     }
