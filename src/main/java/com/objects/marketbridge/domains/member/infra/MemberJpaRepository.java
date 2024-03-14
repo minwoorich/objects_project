@@ -1,10 +1,7 @@
 package com.objects.marketbridge.domains.member.infra;
 
 import com.objects.marketbridge.domains.member.domain.Member;
-import com.objects.marketbridge.domains.member.dto.AuthMember;
-import com.objects.marketbridge.domains.member.dto.GetMemberInfo;
-import com.objects.marketbridge.domains.member.dto.MemberEmail;
-import com.objects.marketbridge.domains.member.dto.MemberId;
+import com.objects.marketbridge.domains.member.dto.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,7 +20,7 @@ public interface MemberJpaRepository extends JpaRepository<Member, Long> {
     
     Optional<AuthMember> findAuthMemberByEmail(String email);
 
-    Optional<GetMemberInfo> getMemberInfoByIdAndPassword(Long memberId, String password);
+    Optional<GetMemberInfoWithPassword> getMemberInfoById(Long memberId);
 
     Optional<MemberEmail> getEmailById(Long id);
 
