@@ -156,7 +156,7 @@ public class MemberService {
             if (isMatched) {
                 return GetMemberInfo.builder()
                         .email(memberInfo.email())
-                        .name(memberInfo.phoneNo())
+                        .name(memberInfo.name())
                         .phoneNo(memberInfo.phoneNo())
                         .isAlert(memberInfo.isAlert())
                         .isAgree(memberInfo.isAgree())
