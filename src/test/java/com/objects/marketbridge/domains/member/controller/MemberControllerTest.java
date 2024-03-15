@@ -952,12 +952,9 @@ public class MemberControllerTest {
         //given
         Long memberId = 1L;
         UpdateMemberInfo updateMemberInfo = UpdateMemberInfo.builder()
-                .email("test@test.com")
                 .name("테스트")
                 .phoneNo("01012341234")
-                .password("password")
-                .isAlert(true)
-                .isAgree(true)
+                .newPassword("변경이 있을 때만 보내기, 변경이 없으면 null이나 보내지 않기")
                 .build();
 
         willDoNothing().given(memberService).updateMemberInfo(memberId, updateMemberInfo);
@@ -974,18 +971,12 @@ public class MemberControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("email").type(JsonFieldType.STRING)
-                                        .description("이메일"),
                                 fieldWithPath("name").type(JsonFieldType.STRING)
                                         .description("이름"),
-                                fieldWithPath("password").type(JsonFieldType.STRING)
-                                        .description("암호화 된 비밀번호"),
                                 fieldWithPath("phoneNo").type(JsonFieldType.STRING)
                                         .description("휴대폰 번호"),
-                                fieldWithPath("isAlert").type(JsonFieldType.BOOLEAN)
-                                        .description("알림 동의 여부"),
-                                fieldWithPath("isAgree").type(JsonFieldType.BOOLEAN)
-                                        .description("마케팅 수신 동의 여부")
+                                fieldWithPath("newPassword").type(JsonFieldType.STRING).optional()
+                                        .description("변경된 비밀번호")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -1005,12 +996,9 @@ public class MemberControllerTest {
     @WithMockCustomUser
     public void updateMemberInfo_valid_err() throws Exception {
         UpdateMemberInfo updateMemberInfo = UpdateMemberInfo.builder()
-                .email("testtest.com")
                 .name("테스트")
-                .phoneNo("01012341234")
-                .password("password")
-                .isAlert(true)
-                .isAgree(true)
+                .phoneNo("0101234123")
+                .newPassword("변경이 있을 때만 보내기, 변경이 없으면 null이나 보내지 않기")
                 .build();
 
         ResultActions actions = mockMvc.perform(patch("/member/account-info")
