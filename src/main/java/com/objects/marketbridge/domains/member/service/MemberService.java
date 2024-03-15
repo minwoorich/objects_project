@@ -185,7 +185,7 @@ public class MemberService {
                 member.getEmail(),
                 updateMemberInfo.name(),
                 encodedPassword,
-                member.getPhoneNo(),
+                updateMemberInfo.phoneNo(),
                 member.getIsAlert(),
                 member.getIsAgree()
         );
@@ -213,6 +213,4 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(updatePassword.password());
         member.updatePassword(encodedPassword);
     }
-
-
 }
