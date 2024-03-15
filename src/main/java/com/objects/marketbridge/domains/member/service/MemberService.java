@@ -178,14 +178,16 @@ public class MemberService {
     @Transactional
     public void updateMemberInfo(Long memberId, UpdateMemberInfo updateMemberInfo) {
         Member member = memberRepository.findById(memberId);
-        String encodedPassword = passwordEncoder.encode(updateMemberInfo.password());
+        String encodedPassword = updateMemberInfo.newPassword() != null
+                ? passwordEncoder.encode(updateMemberInfo.newPassword())
+                : member.getPassword();
         member.updateMemberInfo(
-                updateMemberInfo.email(),
+                member.getEmail(),
                 updateMemberInfo.name(),
                 encodedPassword,
-                updateMemberInfo.phoneNo(),
-                updateMemberInfo.isAlert(),
-                updateMemberInfo.isAgree()
+                member.getPhoneNo(),
+                member.getIsAlert(),
+                member.getIsAgree()
         );
     }
 
