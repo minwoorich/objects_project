@@ -151,24 +151,43 @@ public class MemberService {
 
     public GetMemberInfo getMemberInfo(Long memberId, String password) {
         try {
-            return memberRepository.getMemberInfoByIdAndPassword(memberId, password);
+            GetMemberInfoWithPassword memberInfo = memberRepository.getMemberInfoById(memberId);
+            boolean isMatched = matchPassword(password, memberInfo.password());
+            if (isMatched) {
+                return GetMemberInfo.builder()
+                        .email(memberInfo.email())
+                        .name(memberInfo.name())
+                        .phoneNo(memberInfo.phoneNo())
+                        .isAlert(memberInfo.isAlert())
+                        .isAgree(memberInfo.isAgree())
+                        .build();
+            } else {
+                throw CustomLogicException.createBadRequestError(INVALID_PASSWORD);
+            }
+
         } catch (JpaObjectRetrievalFailureException e) {
             log.error(e.getMessage(), e);
-            throw CustomLogicException.createBadRequestError(INVALID_PASSWORD);
+            throw CustomLogicException.createBadRequestError(MEMBER_NOT_FOUND);
         }
+    }
+
+    private boolean matchPassword(String password, String savedPassword) {
+        return passwordEncoder.matches(password, savedPassword);
     }
 
     @Transactional
     public void updateMemberInfo(Long memberId, UpdateMemberInfo updateMemberInfo) {
         Member member = memberRepository.findById(memberId);
-        String encodedPassword = passwordEncoder.encode(updateMemberInfo.password());
+        String encodedPassword = updateMemberInfo.newPassword() != null
+                ? passwordEncoder.encode(updateMemberInfo.newPassword())
+                : member.getPassword();
         member.updateMemberInfo(
-                updateMemberInfo.email(),
+                member.getEmail(),
                 updateMemberInfo.name(),
                 encodedPassword,
                 updateMemberInfo.phoneNo(),
-                updateMemberInfo.isAlert(),
-                updateMemberInfo.isAgree()
+                member.getIsAlert(),
+                member.getIsAgree()
         );
     }
 
@@ -194,6 +213,4 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(updatePassword.password());
         member.updatePassword(encodedPassword);
     }
-
-
 }
