@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domains.order.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
@@ -244,17 +245,15 @@ class CreateOrderServiceTest {
         Long defaultQuantity = 3L;
         CreateOrderDto createOrderDto = createDto(member, address, defaultQuantity);
         List<Product> products = productRepository.findAll();
-        List<Long> stocks = products.stream().map(Product::getStock).toList();
 
         //when
         createOrderService.create(createOrderDto);
-        List<Long> quantities = orderDetailQueryRepository.findAll().stream().map(OrderDetail::getQuantity).toList();
 
         //then
         assertThat(products).hasSize(3);
-        assertThat(products.get(0).getStock()).isEqualTo(stocks.get(0)-quantities.get(0));
-        assertThat(products.get(1).getStock()).isEqualTo(stocks.get(1)-quantities.get(1));
-        assertThat(products.get(2).getStock()).isEqualTo(stocks.get(2)-quantities.get(2));
+        assertThat(products.get(0).getStock()).isEqualTo(4L); // 주문 전 재고=5, 주문 수량=1, 주문 후 재고=4
+        assertThat(products.get(1).getStock()).isEqualTo(3L); // 주문 전 재고=5, 주문 수량=2, 주문 후 재고=3
+        assertThat(products.get(2).getStock()).isEqualTo(2L); // 주문 전 재고=5, 주문 수량=3, 주문 후 재고=2
     }
 
     @DisplayName("주문량이 재고보다 많을 경우 예외를 발생시켜야한다")
@@ -264,14 +263,16 @@ class CreateOrderServiceTest {
         //given
         Member member = memberRepository.findByEmail("hong@email.com");
         Address address = addressRepository.findByMemberId(member.getId()).get(0);
-        Long maxQuantity = 100L;
-        CreateOrderDto createOrderDto = createDto(member, address, maxQuantity);
+        Long orderedQuantity = 100L;
+        CreateOrderDto createOrderDto = createDto(member, address, orderedQuantity); // 주문 전 재고=5, 주문 수량=100 => 예외 발생
 
         // when
         Throwable thrown = catchThrowable(() -> createOrderService.create(createOrderDto));
 
         // then
-        assertThat(thrown).isInstanceOf(CustomLogicException.class);
+        assertThat(thrown).isInstanceOf(CustomLogicException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.OUT_OF_STOCK)
+                .hasMessage(ErrorCode.OUT_OF_STOCK.getMessage());
     }
 
     private CreateOrderDto createDto(Member member, Address address, Long lastQuantity) {

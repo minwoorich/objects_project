@@ -77,7 +77,6 @@ class CartControllerSuccessTest {
         CreateCartHttp.Request request = CreateCartHttp.Request.create(1L, 1L, false);
         given(addToCartService.add(request.toDto(anyLong()))).willReturn(any(Cart.class));
 
-
         // when
         MockHttpServletRequestBuilder requestBuilder =
                 post("/carts")

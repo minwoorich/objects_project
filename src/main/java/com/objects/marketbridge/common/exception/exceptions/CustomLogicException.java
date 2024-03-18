@@ -26,6 +26,9 @@ public class CustomLogicException extends RuntimeException {
         this.timestamp = timestamp;
     }
 
+    public CustomLogicException(String message) {
+        super(message);
+    }
     @Builder(builderMethodName = "builderWithCause")
     private CustomLogicException(String message, Throwable cause, ErrorCode errorCode,HttpStatus httpStatus, LocalDateTime timestamp) {
         super(message, cause);
@@ -34,8 +37,18 @@ public class CustomLogicException extends RuntimeException {
         this.timestamp = timestamp;
     }
 
-    public CustomLogicException(String message) {
-        super(message);
+
+    public static CustomLogicException createBadRequestError(ErrorCode errorCode, LocalDateTime timestamp) {
+        return CustomLogicException.builder()
+                .httpStatus(BAD_REQUEST)
+                .errorCode(errorCode)
+                .message(errorCode.getMessage())
+                .timestamp(timestamp)
+                .build();
+    }
+
+    public static CustomLogicException createBadRequestError(ErrorCode errorCode) {
+        return createBadRequestError(errorCode, LocalDateTime.now());
     }
 
     public static CustomLogicException createBadRequestError(ErrorCode errorCode, String message, LocalDateTime timestamp) {
@@ -55,18 +68,7 @@ public class CustomLogicException extends RuntimeException {
                 .timestamp(LocalDateTime.now())
                 .build();
     }
-    public static CustomLogicException createBadRequestError(ErrorCode errorCode, LocalDateTime timestamp) {
-        return CustomLogicException.builder()
-                .httpStatus(BAD_REQUEST)
-                .errorCode(errorCode)
-                .message(errorCode.getMessage())
-                .timestamp(timestamp)
-                .build();
-    }
 
-    public static CustomLogicException createBadRequestError(ErrorCode errorCode) {
-        return createBadRequestError(errorCode, LocalDateTime.now());
-    }
 
     public static CustomLogicException createBadRequestError(ErrorCode errorCode, DateTimeHolder dateTimeHolder) {
         return createBadRequestError(errorCode, dateTimeHolder.getTimeNow());
