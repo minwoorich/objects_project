@@ -1,7 +1,10 @@
 package com.objects.marketbridge.domains.member.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
+import com.objects.marketbridge.domains.member.constant.MemberConst;
 import com.objects.marketbridge.domains.member.domain.Address;
+import com.objects.marketbridge.domains.member.domain.AddressValue;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.domain.Wishlist;
 import com.objects.marketbridge.domains.member.dto.*;
@@ -40,34 +43,69 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final ProductRepository productRepository;
 
+
+    @Transactional
     public CheckedResultDto isDuplicateEmail(String email){
         boolean isDuplicateEmail = memberRepository.existsByEmail(email);
         return CheckedResultDto.builder().checked(isDuplicateEmail).build();
     }
 
-    public List<GetAddressesResponse> findByMemberId(Long id){
-        List<Address> addresses = addressRepository.findByMemberId(id);
+    public List<GetAddressesResponse> findByMemberId(Long memberId){
+        List<Address> addresses = addressRepository.findByMemberId(memberId);
         return addresses.stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
-    public List<GetAddressesResponse> addMemberAddress(Long id , AddAddressRequestDto addAddressRequestDto){
-        Member member = memberRepository.findById(id);
-        member.addAddress(addAddressRequestDto.toEntity());
+    @Transactional
+    public List<GetAddressesResponse> addMemberAddress(Long memberId , AddAddressRequestDto addAddressRequestDto){
+        if(addAddressRequestDto.getIsDefault()){
+            changeDefaultAddress(memberId);
+        }
+        Member member = memberRepository.findById(memberId);
+        Address address = addAddressRequestDto.toEntity();
+        member.addAddress(address);
         memberRepository.save(member);
         return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
-    public List<GetAddressesResponse> updateMemberAddress(Long memberId,Long addressId,AddAddressRequestDto request){
+    @Transactional
+    public List<GetAddressesResponse> updateMemberAddress(Long memberId,Long addressId,UpdateAddressRequestDto request){
+        if(request.getIsDefault()){
+            changeDefaultAddress(memberId);
+        }
         Member member = memberRepository.findById(memberId);
         Address address = addressRepository.findById(addressId);
-        address.update(request.getAddressValue());
+
+        AddressValue addressValue = AddressValue.builder()
+                    .phoneNo(request.getPhoneNo() != null ? request.getPhoneNo() : address.getAddressValue().getPhoneNo())
+                    .name(request.getName() != null ? request.getName() : address.getAddressValue().getName())
+                    .city(request.getCity() != null ? request.getCity() : address.getAddressValue().getCity())
+                    .street(request.getStreet() != null ? request.getStreet() : address.getAddressValue().getStreet())
+                    .zipcode(request.getZipcode() != null ? request.getZipcode() : address.getAddressValue().getZipcode())
+                    .detail(request.getDetail() != null ? request.getDetail() : address.getAddressValue().getDetail())
+                    .alias(request.getAlias() != null ? request.getAlias() : address.getAddressValue().getAlias())
+                    .build();
+
+        Boolean isDefault = request.getIsDefault() != null ? request.getIsDefault() : address.getIsDefault();
+        address.update(addressValue ,isDefault);
         return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
     }
 
-    public List<GetAddressesResponse> deleteMemberAddress(Long memberId,Long addressId){
-        Member member = memberRepository.findById(memberId);
-        addressRepository.deleteById(addressId);
-        return member.getAddresses().stream().map(GetAddressesResponse::of).collect(Collectors.toList());
+    private void changeDefaultAddress(Long memberId){
+        Long addressCount = addressRepository.countAddress(memberId);
+        if(addressCount != 0L){
+            Address defaultAddress = addressRepository.findDefaultAddress(memberId);
+            defaultAddress.update(false);
+        }
+    }
+
+    @Transactional
+    public String deleteMemberAddress(Long addressId){
+        Address byMemberIdAndaddressId = addressRepository.findById(addressId);
+        if(byMemberIdAndaddressId.getIsDefault()){
+            throw CustomLogicException.createBadRequestError(ErrorCode.DEFAULT_ADDRESS_DELETION_NOT_ALLOWED);
+        }
+        addressRepository.deleteAllByIdInBatch(addressId);
+        return MemberConst.DELETE_ADDRESS_SUCCESSFULLY;
     }
 
     public Slice<WishlistResponse> findWishlistById(Pageable pageable, Long memberId){
@@ -78,6 +116,7 @@ public class MemberService {
         return new SliceImpl<>(responses,pageable,wishlists.hasNext());
     }
 
+    @Transactional
     public Boolean checkWishlist(Long memberId, WishlistRequest request){
         //true면 wishList에 이미 존재 false면 wishList 추가가능
         Long wishResult = wishRepository.countByProductIdAndMemberId(memberId, request.getProductId());
@@ -112,24 +151,43 @@ public class MemberService {
 
     public GetMemberInfo getMemberInfo(Long memberId, String password) {
         try {
-            return memberRepository.getMemberInfoByIdAndPassword(memberId, password);
+            GetMemberInfoWithPassword memberInfo = memberRepository.getMemberInfoById(memberId);
+            boolean isMatched = matchPassword(password, memberInfo.password());
+            if (isMatched) {
+                return GetMemberInfo.builder()
+                        .email(memberInfo.email())
+                        .name(memberInfo.name())
+                        .phoneNo(memberInfo.phoneNo())
+                        .isAlert(memberInfo.isAlert())
+                        .isAgree(memberInfo.isAgree())
+                        .build();
+            } else {
+                throw CustomLogicException.createBadRequestError(INVALID_PASSWORD);
+            }
+
         } catch (JpaObjectRetrievalFailureException e) {
             log.error(e.getMessage(), e);
-            throw CustomLogicException.createBadRequestError(INVALID_PASSWORD);
+            throw CustomLogicException.createBadRequestError(MEMBER_NOT_FOUND);
         }
+    }
+
+    private boolean matchPassword(String password, String savedPassword) {
+        return passwordEncoder.matches(password, savedPassword);
     }
 
     @Transactional
     public void updateMemberInfo(Long memberId, UpdateMemberInfo updateMemberInfo) {
         Member member = memberRepository.findById(memberId);
-        String encodedPassword = passwordEncoder.encode(updateMemberInfo.password());
+        String encodedPassword = updateMemberInfo.newPassword() != null
+                ? passwordEncoder.encode(updateMemberInfo.newPassword())
+                : member.getPassword();
         member.updateMemberInfo(
-                updateMemberInfo.email(),
+                member.getEmail(),
                 updateMemberInfo.name(),
                 encodedPassword,
                 updateMemberInfo.phoneNo(),
-                updateMemberInfo.isAlert(),
-                updateMemberInfo.isAgree()
+                member.getIsAlert(),
+                member.getIsAgree()
         );
     }
 
@@ -155,6 +213,4 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(updatePassword.password());
         member.updatePassword(encodedPassword);
     }
-
-
 }

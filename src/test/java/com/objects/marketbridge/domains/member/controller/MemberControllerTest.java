@@ -6,6 +6,7 @@ import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.member.constant.MemberConst;
 import com.objects.marketbridge.domains.member.domain.AddressValue;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.domain.Wishlist;
@@ -217,8 +218,8 @@ public class MemberControllerTest {
      void addAddress() throws Exception{
         //given
          AddressValue addressValue1 = AddressValue.builder()
-                 .phoneNo("12312341234")
-                 .name("집")
+                 .phoneNo("01012341234")
+                 .name("김민수")
                  .city("인천")
                  .street("소래역남로 40")
                  .zipcode("12345")
@@ -226,8 +227,8 @@ public class MemberControllerTest {
                  .alias("우리집").build();
 
          AddressValue addressValue2 = AddressValue.builder()
-                 .phoneNo("56756785678")
-                 .name("회사")
+                 .phoneNo("01012341234")
+                 .name("이민수")
                  .city("서울")
                  .street("강남대로 123")
                  .zipcode("54321")
@@ -235,8 +236,8 @@ public class MemberControllerTest {
                  .alias("회사").build();
 
          AddressValue addressValue3 = AddressValue.builder()
-                 .phoneNo("1234567890")
-                 .name("식당")
+                 .phoneNo("01012341234")
+                 .name("박민수")
                  .city("서울")
                  .street("123 Main St")
                  .zipcode("12345")
@@ -261,8 +262,14 @@ public class MemberControllerTest {
                          .build()
          );
 
-         String requestBody = "{\"addressValue\": {\"phoneNo\": \"1234567890\", \"name\": \"식당\", \"city\": \"서울\", \"street\": \"123 Main St\", \"zipcode\": \"12345\", \"detail\": \"Apt 101\", \"alias\": \"단골집\"}, \"isDefault\": false}";
-
+         AddAddressRequestDto request = AddAddressRequestDto.builder()
+                 .phoneNo("01012341234")
+                 .name("박민수")
+                 .city("서울")
+                 .street("123 Main St")
+                 .zipcode("12345")
+                 .detail("Apt 101")
+                 .alias("단골집").isDefault(false).build();
 
          // when ,then
          given(memberService.addMemberAddress(any(),any())).willReturn(responses);
@@ -270,26 +277,26 @@ public class MemberControllerTest {
          mockMvc.perform(post("/member/address")
                          .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                          .contentType(MediaType.APPLICATION_JSON)
-                         .content(requestBody))
+                         .content(objectMapper.writeValueAsString(request)))
                  .andExpect(status().isOk())
                  .andDo(print())
                  .andDo(document("add-address",
                          preprocessRequest(prettyPrint()),
                          preprocessResponse(prettyPrint()),
                          requestFields(
-                                 fieldWithPath("addressValue.phoneNo").type(JsonFieldType.STRING)
+                                 fieldWithPath("phoneNo").type(JsonFieldType.STRING)
                                          .description("전화번호"),
-                                 fieldWithPath("addressValue.name").type(JsonFieldType.STRING)
+                                 fieldWithPath("name").type(JsonFieldType.STRING)
                                          .description("이름"),
-                                 fieldWithPath("addressValue.city").type(JsonFieldType.STRING)
+                                 fieldWithPath("city").type(JsonFieldType.STRING)
                                          .description("도시"),
-                                 fieldWithPath("addressValue.street").type(JsonFieldType.STRING)
+                                 fieldWithPath("street").type(JsonFieldType.STRING)
                                          .description("거리"),
-                                 fieldWithPath("addressValue.zipcode").type(JsonFieldType.STRING)
+                                 fieldWithPath("zipcode").type(JsonFieldType.STRING)
                                          .description("우편번호"),
-                                 fieldWithPath("addressValue.detail").type(JsonFieldType.STRING)
+                                 fieldWithPath("detail").type(JsonFieldType.STRING)
                                          .description("상세주소"),
-                                 fieldWithPath("addressValue.alias").type(JsonFieldType.STRING)
+                                 fieldWithPath("alias").type(JsonFieldType.STRING)
                                          .description("별칭"),
                                  fieldWithPath("isDefault").type(JsonFieldType.BOOLEAN)
                                          .description("기본 주소 여부")
@@ -332,8 +339,8 @@ public class MemberControllerTest {
      void updateAddress() throws Exception{
         //given
          AddressValue addressValue1 = AddressValue.builder()
-                 .phoneNo("12312341234")
-                 .name("집")
+                 .phoneNo("01012341234")
+                 .name("김길동")
                  .city("인천")
                  .street("소래역남로 40")
                  .zipcode("12345")
@@ -341,8 +348,8 @@ public class MemberControllerTest {
                  .alias("우리집").build();
 
          AddressValue addressValue2 = AddressValue.builder()
-                 .phoneNo("56756785678")
-                 .name("회사")
+                 .phoneNo("01012341234")
+                 .name("홍길동")
                  .city("서울")
                  .street("강남대로 123")
                  .zipcode("54321")
@@ -350,8 +357,8 @@ public class MemberControllerTest {
                  .alias("회사").build();
 
          AddressValue addressValue3 = AddressValue.builder()
-                 .phoneNo("111111111")
-                 .name("줄서는식당")
+                 .phoneNo("01012341234")
+                 .name("이승우")
                  .city("서울")
                  .street("메인로 123")
                  .zipcode("12345")
@@ -376,18 +383,19 @@ public class MemberControllerTest {
                          .build()
          );
 
+         UpdateAddressRequestDto request = UpdateAddressRequestDto.builder().city("제주").phoneNo("01088881111").build();
 
-         String requestBody = "{\"addressValue\": {\"phoneNo\": \"111111111\", \"name\": \"줄서는식당\", \"city\": \"서울\", \"street\": \"메인로 123\", \"zipcode\": \"12345\", \"detail\": \"101호\", \"alias\": \"회식장소\"}, \"isDefault\": false}";
+
 
          //when
          given(memberService.updateMemberAddress(any(),any(),any())).willReturn(responses);
 
         //then
          String addressId = "1006"; // 예시로 사용할 주문 번호를 지정합니다.
-         mockMvc.perform(RestDocumentationRequestBuilders.patch("/member/address/{addressId}",addressId)
+         mockMvc.perform(RestDocumentationRequestBuilders.patch("/member/address/{addressId}",Long.parseLong(addressId))
                          .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                          .contentType(MediaType.APPLICATION_JSON)
-                         .content(requestBody))
+                         .content(objectMapper.writeValueAsString(request)))
                  .andExpect(status().isOk())
                  .andDo(print())
                  .andDo(document("update-address",
@@ -398,22 +406,22 @@ public class MemberControllerTest {
                                          .description("수정할 주소 id")
                          ),
                          requestFields(
-                                 fieldWithPath("addressValue.phoneNo").type(JsonFieldType.STRING)
-                                         .description("전화번호"),
-                                 fieldWithPath("addressValue.name").type(JsonFieldType.STRING)
-                                         .description("이름"),
-                                 fieldWithPath("addressValue.city").type(JsonFieldType.STRING)
-                                         .description("도시"),
-                                 fieldWithPath("addressValue.street").type(JsonFieldType.STRING)
-                                         .description("거리"),
-                                 fieldWithPath("addressValue.zipcode").type(JsonFieldType.STRING)
-                                         .description("우편번호"),
-                                 fieldWithPath("addressValue.detail").type(JsonFieldType.STRING)
-                                         .description("상세주소"),
-                                 fieldWithPath("addressValue.alias").type(JsonFieldType.STRING)
-                                         .description("별칭"),
+                                 fieldWithPath("phoneNo").type(JsonFieldType.STRING)
+                                         .description("전화번호").optional(),
+                                 fieldWithPath("name").type(JsonFieldType.STRING)
+                                         .description("이름").optional(),
+                                 fieldWithPath("city").type(JsonFieldType.STRING)
+                                         .description("도시").optional(),
+                                 fieldWithPath("street").type(JsonFieldType.STRING)
+                                         .description("거리").optional(),
+                                 fieldWithPath("zipcode").type(JsonFieldType.STRING)
+                                         .description("우편번호").optional(),
+                                 fieldWithPath("detail").type(JsonFieldType.STRING)
+                                         .description("상세주소").optional(),
+                                 fieldWithPath("alias").type(JsonFieldType.STRING)
+                                         .description("별칭").optional(),
                                  fieldWithPath("isDefault").type(JsonFieldType.BOOLEAN)
-                                         .description("기본 주소 여부")
+                                         .description("기본 주소 여부").optional()
                          ),
                          responseFields(
                                  fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -451,41 +459,10 @@ public class MemberControllerTest {
      @Test
      @DisplayName("등록되어 있는 주소를 찾아서 삭제")
      void deleteAddress() throws Exception{
-        //given
-         AddressValue addressValue1 = AddressValue.builder()
-                 .phoneNo("12312341234")
-                 .name("집")
-                 .city("인천")
-                 .street("소래역남로 40")
-                 .zipcode("12345")
-                 .detail("C동 307호")
-                 .alias("우리집").build();
-
-         AddressValue addressValue2 = AddressValue.builder()
-                 .phoneNo("56756785678")
-                 .name("회사")
-                 .city("서울")
-                 .street("강남대로 123")
-                 .zipcode("54321")
-                 .detail("A동 101호")
-                 .alias("회사").build();
-
-         List<GetAddressesResponse> responses = Arrays.asList(
-                 GetAddressesResponse.builder()
-                         .addressValue(addressValue1)
-                         .addressId(1004L)
-                         .isDefault(true)
-                         .build(),
-                 GetAddressesResponse.builder()
-                         .addressValue(addressValue2)
-                         .addressId(1005L)
-                         .isDefault(false)
-                         .build()
-         );
+         String responses = MemberConst.DELETE_ADDRESS_SUCCESSFULLY;
 
         //when
-         given(memberService.deleteMemberAddress(any(),any())).willReturn(responses);
-
+         given(memberService.deleteMemberAddress(any())).willReturn(responses);
 
         //then
          String addressId = "1006";
@@ -508,28 +485,8 @@ public class MemberControllerTest {
                                          .description("HTTP 응답"),
                                  fieldWithPath("message").type(JsonFieldType.STRING)
                                          .description("응답 메시지"),
-                                 fieldWithPath("data").type(JsonFieldType.ARRAY)
-                                         .description("주소 목록").optional(),
-                                 fieldWithPath("data[].addressId").type(JsonFieldType.NUMBER)
-                                         .description("주소 ID"),
-                                 fieldWithPath("data[].addressValue").type(JsonFieldType.OBJECT)
-                                         .description("주소 정보"),
-                                 fieldWithPath("data[].addressValue.phoneNo").type(JsonFieldType.STRING)
-                                         .description("전화번호"),
-                                 fieldWithPath("data[].addressValue.name").type(JsonFieldType.STRING)
-                                         .description("이름"),
-                                 fieldWithPath("data[].addressValue.city").type(JsonFieldType.STRING)
-                                         .description("도시"),
-                                 fieldWithPath("data[].addressValue.street").type(JsonFieldType.STRING)
-                                         .description("거리"),
-                                 fieldWithPath("data[].addressValue.zipcode").type(JsonFieldType.STRING)
-                                         .description("우편번호"),
-                                 fieldWithPath("data[].addressValue.detail").type(JsonFieldType.STRING)
-                                         .description("상세주소"),
-                                 fieldWithPath("data[].addressValue.alias").type(JsonFieldType.STRING)
-                                         .description("별칭"),
-                                 fieldWithPath("data[].isDefault").type(JsonFieldType.BOOLEAN)
-                                         .description("기본 주소 여부")
+                                 fieldWithPath("data").type(JsonFieldType.STRING)
+                                         .description("메세지")
                          )
                  ));
      }
@@ -995,12 +952,9 @@ public class MemberControllerTest {
         //given
         Long memberId = 1L;
         UpdateMemberInfo updateMemberInfo = UpdateMemberInfo.builder()
-                .email("test@test.com")
                 .name("테스트")
                 .phoneNo("01012341234")
-                .password("password")
-                .isAlert(true)
-                .isAgree(true)
+                .newPassword("변경이 있을 때만 보내기, 변경이 없으면 null이나 보내지 않기")
                 .build();
 
         willDoNothing().given(memberService).updateMemberInfo(memberId, updateMemberInfo);
@@ -1017,18 +971,12 @@ public class MemberControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("email").type(JsonFieldType.STRING)
-                                        .description("이메일"),
                                 fieldWithPath("name").type(JsonFieldType.STRING)
                                         .description("이름"),
-                                fieldWithPath("password").type(JsonFieldType.STRING)
-                                        .description("암호화 된 비밀번호"),
                                 fieldWithPath("phoneNo").type(JsonFieldType.STRING)
                                         .description("휴대폰 번호"),
-                                fieldWithPath("isAlert").type(JsonFieldType.BOOLEAN)
-                                        .description("알림 동의 여부"),
-                                fieldWithPath("isAgree").type(JsonFieldType.BOOLEAN)
-                                        .description("마케팅 수신 동의 여부")
+                                fieldWithPath("newPassword").type(JsonFieldType.STRING).optional()
+                                        .description("변경된 비밀번호")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -1048,12 +996,9 @@ public class MemberControllerTest {
     @WithMockCustomUser
     public void updateMemberInfo_valid_err() throws Exception {
         UpdateMemberInfo updateMemberInfo = UpdateMemberInfo.builder()
-                .email("testtest.com")
                 .name("테스트")
-                .phoneNo("01012341234")
-                .password("password")
-                .isAlert(true)
-                .isAgree(true)
+                .phoneNo("0101234123")
+                .newPassword("변경이 있을 때만 보내기, 변경이 없으면 null이나 보내지 않기")
                 .build();
 
         ResultActions actions = mockMvc.perform(patch("/member/account-info")

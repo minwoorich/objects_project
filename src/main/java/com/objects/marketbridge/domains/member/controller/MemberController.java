@@ -29,7 +29,6 @@ public class MemberController {
 
     private final MemberService memberService;
 
-
     @GetMapping("/address")
     public ApiResponse<List<GetAddressesResponse>> findAddrress(@AuthMemberId Long memberId){
         List<GetAddressesResponse> addressesResponses =memberService.findByMemberId(memberId);
@@ -46,17 +45,17 @@ public class MemberController {
 
     @PatchMapping("/address/{addressId}")
     public ApiResponse<List<GetAddressesResponse>> updateAddress(
-            @AuthMemberId Long memberId ,@Valid @RequestBody AddAddressRequestDto request ,
+            @AuthMemberId Long memberId ,@Valid @RequestBody UpdateAddressRequestDto request ,
             @PathVariable (name = "addressId") Long addressId){
         List<GetAddressesResponse> addressesResponses = memberService.updateMemberAddress(memberId,addressId,request);
         return ApiResponse.ok(addressesResponses);
     }
 
     @DeleteMapping("/address/{addressId}")
-    public ApiResponse<List<GetAddressesResponse>> deleteAddress(
-            @AuthMemberId Long memberId ,@PathVariable (name = "addressId")  Long addressId){
-        List<GetAddressesResponse> addressesResponses = memberService.deleteMemberAddress(memberId,addressId);
-        return ApiResponse.ok(addressesResponses);
+    public ApiResponse<String> deleteAddress(
+            @AuthMemberId Long memberId ,@PathVariable (name = "addressId") Long addressId){
+        String result = memberService.deleteMemberAddress(addressId);
+        return ApiResponse.ok(result);
     }
 
     @GetMapping("/email-check")
