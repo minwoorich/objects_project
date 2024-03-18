@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domains.order.infra.order;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.common.utils.MyQueryDslUtil;
+import com.objects.marketbridge.common.utils.MyQueryDslUtils;
 import com.objects.marketbridge.domains.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
@@ -52,18 +52,18 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
     @Override
     public Order findByOrderNo(String orderNo) {
-        return orderJpaRepository.findByOrderNo(orderNo).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
+        return orderJpaRepository.findByOrderNo(orderNo).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다. 입력 orderNo : "+orderNo));
     }
 
     @Override
     public Order findByOrderNoWithMember(String orderNo) {
-        return orderJpaRepository.findByOrderNoWithMember(orderNo).orElseThrow(EntityNotFoundException::new);
+        return orderJpaRepository.findByOrderNoWithMember(orderNo).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다. 입력 orderNo : "+orderNo));
     }
 
     // orderNo 로 가져오기
     @Override
     public Order findByOrderNoWithOrderDetailsAndProduct(String orderNo) {
-        return orderJpaRepository.findByOrderNoWithOrderDetailsAndProduct(orderNo).orElseThrow(EntityNotFoundException::new);
+        return orderJpaRepository.findByOrderNoWithOrderDetailsAndProduct(orderNo).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다. 입력 orderNo : "+orderNo));
     }
 
     @Override
@@ -102,7 +102,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
         sort.forEach(o -> {
             switch (o.getProperty()) {
                 case "createdAt" :
-                    orderSpecifiers.add(MyQueryDslUtil.getSortedColumn(o, order, "createdAt"));
+                    orderSpecifiers.add(MyQueryDslUtils.createOrderSpecifier(o, order, "createdAt"));
                     break;
 
                 default:
@@ -110,7 +110,6 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
             }
         });
 
-        // 0 으로 하면 자동으로 배열의 크기를 지정해줌
         return orderSpecifiers.toArray(new OrderSpecifier[0]);
     }
 
