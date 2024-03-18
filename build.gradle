@@ -3,7 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.2.1'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id "org.asciidoctor.jvm.convert" version '3.3.2'
-	id "com.gorylenko.gradle-git-properties" version "2.4.1" //git info
+//	id "com.gorylenko.gradle-git-properties" version "2.4.1" //git info
 }
 
 group = 'com.objects'
@@ -140,6 +140,6 @@ clean.doLast {
 //}
 
 // 액츄에이터 빌드 정보 추가
-springBoot {
-	buildInfo()
-}
+//springBoot {
+//	buildInfo()
+//}
