@@ -6,7 +6,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import org.springframework.data.domain.Sort;
 
-public class MyQueryDslUtil {
+public class MyQueryDslUtils {
     public static  OrderSpecifier<?> createOrderSpecifier(Sort.Order order, Path<?> parent, String fieldName) {
 
         // 1. 내림차순 or 오름차순 구분

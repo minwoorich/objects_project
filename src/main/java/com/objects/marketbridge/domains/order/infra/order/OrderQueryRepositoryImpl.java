@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domains.order.infra.order;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.common.utils.MyQueryDslUtil;
+import com.objects.marketbridge.common.utils.MyQueryDslUtils;
 import com.objects.marketbridge.domains.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
@@ -102,7 +102,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
         sort.forEach(o -> {
             switch (o.getProperty()) {
                 case "createdAt" :
-                    orderSpecifiers.add(MyQueryDslUtil.createOrderSpecifier(o, order, "createdAt"));
+                    orderSpecifiers.add(MyQueryDslUtils.createOrderSpecifier(o, order, "createdAt"));
                     break;
 
                 default:
