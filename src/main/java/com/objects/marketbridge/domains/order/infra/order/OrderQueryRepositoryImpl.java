@@ -102,7 +102,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
         sort.forEach(o -> {
             switch (o.getProperty()) {
                 case "createdAt" :
-                    orderSpecifiers.add(MyQueryDslUtil.getSortedColumn(o, order, "createdAt"));
+                    orderSpecifiers.add(MyQueryDslUtil.createOrderSpecifier(o, order, "createdAt"));
                     break;
 
                 default:
@@ -110,7 +110,6 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
             }
         });
 
-        // 0 으로 하면 자동으로 배열의 크기를 지정해줌
         return orderSpecifiers.toArray(new OrderSpecifier[0]);
     }
 
