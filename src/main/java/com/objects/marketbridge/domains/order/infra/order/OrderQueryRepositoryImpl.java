@@ -52,18 +52,18 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
     @Override
     public Order findByOrderNo(String orderNo) {
-        return orderJpaRepository.findByOrderNo(orderNo).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다"));
+        return orderJpaRepository.findByOrderNo(orderNo).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다. 입력 orderNo : "+orderNo));
     }
 
     @Override
     public Order findByOrderNoWithMember(String orderNo) {
-        return orderJpaRepository.findByOrderNoWithMember(orderNo).orElseThrow(EntityNotFoundException::new);
+        return orderJpaRepository.findByOrderNoWithMember(orderNo).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다. 입력 orderNo : "+orderNo));
     }
 
     // orderNo 로 가져오기
     @Override
     public Order findByOrderNoWithOrderDetailsAndProduct(String orderNo) {
-        return orderJpaRepository.findByOrderNoWithOrderDetailsAndProduct(orderNo).orElseThrow(EntityNotFoundException::new);
+        return orderJpaRepository.findByOrderNoWithOrderDetailsAndProduct(orderNo).orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다. 입력 orderNo : "+orderNo));
     }
 
     @Override
