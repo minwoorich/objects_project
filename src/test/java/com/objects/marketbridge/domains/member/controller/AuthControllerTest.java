@@ -1,14 +1,13 @@
 package com.objects.marketbridge.domains.member.controller;
 
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
 import com.objects.marketbridge.common.security.domain.CustomUserDetails;
 import com.objects.marketbridge.common.security.dto.JwtTokenDto;
-import com.objects.marketbridge.common.security.filter.ExceptionHandlerFilter;
-import com.objects.marketbridge.common.security.filter.JwtAuthenticationFilter;
 import com.objects.marketbridge.common.security.service.JwtTokenProvider;
 import com.objects.marketbridge.domains.member.dto.SignInDto;
 import com.objects.marketbridge.domains.member.dto.SignUpDto;
@@ -20,17 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,9 +31,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUPLICATE_ERROR;
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.INTERNAL_SECURITY_ERROR;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
@@ -48,7 +40,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
@@ -98,28 +89,35 @@ public class AuthControllerTest {
                 .andDo(document("auth-sign-up",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("email").type(JsonFieldType.STRING)
-                                        .description("중복 체크가 완료된 이메일"),
-                                fieldWithPath("password").type(JsonFieldType.STRING)
-                                        .description("암호화 된 비밀번호"),
-                                fieldWithPath("name").type(JsonFieldType.STRING)
-                                        .description("이름"),
-                                fieldWithPath("phoneNo").type(JsonFieldType.STRING)
-                                        .description("연락처"),
-                                fieldWithPath("isAgree").type(JsonFieldType.BOOLEAN)
-                                        .description("회원가입 동의 여부")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.NULL)
-                                        .description("응답 데이터")
+                        resource(
+                                ResourceSnippetParameters.builder()
+                                        .requestFields(
+                                        fieldWithPath("email").type(JsonFieldType.STRING)
+                                                .description("중복 체크가 완료된 이메일"),
+                                        fieldWithPath("password").type(JsonFieldType.STRING)
+                                                .description("암호화 된 비밀번호"),
+                                        fieldWithPath("name").type(JsonFieldType.STRING)
+                                                .description("이름"),
+                                        fieldWithPath("phoneNo").type(JsonFieldType.STRING)
+                                                .description("연락처"),
+                                        fieldWithPath("isAgree").type(JsonFieldType.BOOLEAN)
+                                                .description("회원가입 동의 여부")
+                                )
+                                        .responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.NULL)
+                                                .description("응답 데이터")
+                                )
+                                .requestSchema(Schema.schema("AuthSignUpReq"))
+                                .responseSchema(Schema.schema("AuthSignUpRes"))
+                                .build()
                         )
+
                 ));
     }
 
@@ -205,28 +203,34 @@ public class AuthControllerTest {
                 .andDo(document("auth-sign-in",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("email").type(JsonFieldType.STRING)
-                                        .description("이메일"),
-                                fieldWithPath("password").type(JsonFieldType.STRING)
-                                        .description("암호화 된 비밀번호")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터"),
-                                fieldWithPath("data.grantType").type(JsonFieldType.STRING)
-                                        .description("토큰 타입: bearer"),
-                                fieldWithPath("data.accessToken").type(JsonFieldType.STRING)
-                                        .description("api 요청용 AccessToken"),
-                                fieldWithPath("data.refreshToken").type(JsonFieldType.STRING)
-                                        .description("AccessToken 만료시 재발급용 Token 다른 api 요청 안됨")
+                        resource(ResourceSnippetParameters.builder()
+                                .requestFields(
+                                        fieldWithPath("email").type(JsonFieldType.STRING)
+                                                .description("이메일"),
+                                        fieldWithPath("password").type(JsonFieldType.STRING)
+                                                .description("암호화 된 비밀번호")
+                                )
+                                .responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.grantType").type(JsonFieldType.STRING)
+                                                .description("토큰 타입: bearer"),
+                                        fieldWithPath("data.accessToken").type(JsonFieldType.STRING)
+                                                .description("api 요청용 AccessToken"),
+                                        fieldWithPath("data.refreshToken").type(JsonFieldType.STRING)
+                                                .description("AccessToken 만료시 재발급용 Token 다른 api 요청 안됨")
+                                )
+                                .requestSchema(Schema.schema("AuthSignInReq"))
+                                .responseSchema(Schema.schema("AuthSignInRes"))
+                                .build()
                         )
+
                 ));
     }
 
@@ -246,7 +250,8 @@ public class AuthControllerTest {
         actions.andExpect(status().isOk())
                 .andDo(document("auth-sign-out",
                         preprocessResponse(prettyPrint()),
-                        responseFields(
+                        resource(ResourceSnippetParameters.builder()
+                                .responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
                                         .description("코드"),
                                 fieldWithPath("status").type(JsonFieldType.STRING)
@@ -255,6 +260,9 @@ public class AuthControllerTest {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NULL)
                                         .description("응답 데이터")
+                        )
+                                .responseSchema(Schema.schema("AuthSignOutRes"))
+                                .build()
                         )
                 ));
 
@@ -282,7 +290,8 @@ public class AuthControllerTest {
         actions.andExpect(status().isOk())
                 .andDo(document("auth-re-issue",
                         preprocessResponse(prettyPrint()),
-                        responseFields(
+                        resource(ResourceSnippetParameters.builder()
+                                        .responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
                                         .description("코드"),
                                 fieldWithPath("status").type(JsonFieldType.STRING)
@@ -297,7 +306,10 @@ public class AuthControllerTest {
                                         .description("api 요청용 AccessToken"),
                                 fieldWithPath("data.refreshToken").type(JsonFieldType.STRING)
                                         .description("AccessToken 만료시 재발급용 Token 다른 api 요청 안됨")
+                        )                                .responseSchema(Schema.schema("AuthReissueRes"))
+                                        .build()
                         )
+
                 ));
     }
 
