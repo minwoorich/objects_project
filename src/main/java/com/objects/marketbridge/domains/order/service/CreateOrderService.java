@@ -33,6 +33,7 @@ import static com.objects.marketbridge.common.kakao.KakaoPayConfig.ONE_TIME_CID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class CreateOrderService {
 
     private final OrderDetailCommendRepository orderDetailCommendRepository;
@@ -45,7 +46,6 @@ public class CreateOrderService {
     private final KakaoPayService kakaoPayService;
     private final KakaoPayConfig kakaoPayConfig;
 
-    @Transactional
     public void create(CreateOrderDto createOrderDto) {
 
         // 1. Order 생성

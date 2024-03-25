@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domains.member.service.port;
 
 import com.objects.marketbridge.domains.member.domain.Member;
-import com.objects.marketbridge.domains.member.dto.GetMemberInfo;
+import com.objects.marketbridge.domains.member.dto.GetMemberInfoWithPassword;
 import com.objects.marketbridge.domains.member.dto.MemberEmail;
 import com.objects.marketbridge.domains.member.dto.MemberId;
 
@@ -26,7 +26,7 @@ public interface MemberRepository {
 
     void deleteAllInBatch();
 
-    GetMemberInfo getMemberInfoByIdAndPassword(Long memberId, String password);
+    GetMemberInfoWithPassword getMemberInfoById(Long memberId);
 
     MemberEmail getEmailById(Long memberId);
 

@@ -36,7 +36,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -49,13 +48,13 @@ import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -131,8 +130,6 @@ public class MemberControllerTest {
                         )
                 ));
     }
-
-
 
     @Test
     @DisplayName("등록되어 있는 주소를 찾아서 반환")
@@ -392,7 +389,7 @@ public class MemberControllerTest {
 
         //then
          String addressId = "1006"; // 예시로 사용할 주문 번호를 지정합니다.
-         mockMvc.perform(RestDocumentationRequestBuilders.patch("/member/address/{addressId}",Long.parseLong(addressId))
+         mockMvc.perform(patch("/member/address/{addressId}",Long.parseLong(addressId))
                          .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                          .contentType(MediaType.APPLICATION_JSON)
                          .content(objectMapper.writeValueAsString(request)))
@@ -746,15 +743,13 @@ public class MemberControllerTest {
         System.out.println("mockResponseSlice = " + mockResponseSlice.getContent().get(0).getProductId());
         System.out.println("product1.getId() = " + product1.getId());
 
-        MockHttpServletRequestBuilder requestBuilder = get("/member/wishlist")
+        //then
+        mockMvc.perform(get("/member/wishlist")
                 .param("page", "0")
                 .param("size", "2")
                 .param("sort", "createdAt,DESC")
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken");
-
-        //then
-        mockMvc.perform(requestBuilder)
+                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("find-wishlist",
@@ -776,10 +771,9 @@ public class MemberControllerTest {
                                         .description("데이터"),
                                 fieldWithPath("data.content").type(JsonFieldType.ARRAY)
                                         .description("위시 리스트"),
-
                                 fieldWithPath("data.content[].productId").type(JsonFieldType.NUMBER)
                                         .description("제품 ID").optional(),
-                                fieldWithPath("data.content[].optionNameList").type(JsonFieldType.ARRAY)
+                                fieldWithPath("data.content[].optionNameList[]").type(JsonFieldType.ARRAY)
                                         .description("옵션 목록"),
                                 fieldWithPath("data.content[].optionNameList[]").type(JsonFieldType.ARRAY)
                                         .description("옵션 이름"),
@@ -799,7 +793,6 @@ public class MemberControllerTest {
                                         .description("페이지 크기"),
                                 fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT)
                                         .description("정렬 정보"),
-
                                 fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
                                         .description("정렬 정보: 비어 있음 여부").optional(),
                                 fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
@@ -952,12 +945,9 @@ public class MemberControllerTest {
         //given
         Long memberId = 1L;
         UpdateMemberInfo updateMemberInfo = UpdateMemberInfo.builder()
-                .email("test@test.com")
                 .name("테스트")
                 .phoneNo("01012341234")
-                .password("password")
-                .isAlert(true)
-                .isAgree(true)
+                .newPassword("변경이 있을 때만 보내기, 변경이 없으면 null이나 보내지 않기")
                 .build();
 
         willDoNothing().given(memberService).updateMemberInfo(memberId, updateMemberInfo);
@@ -974,18 +964,12 @@ public class MemberControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("email").type(JsonFieldType.STRING)
-                                        .description("이메일"),
                                 fieldWithPath("name").type(JsonFieldType.STRING)
                                         .description("이름"),
-                                fieldWithPath("password").type(JsonFieldType.STRING)
-                                        .description("암호화 된 비밀번호"),
                                 fieldWithPath("phoneNo").type(JsonFieldType.STRING)
                                         .description("휴대폰 번호"),
-                                fieldWithPath("isAlert").type(JsonFieldType.BOOLEAN)
-                                        .description("알림 동의 여부"),
-                                fieldWithPath("isAgree").type(JsonFieldType.BOOLEAN)
-                                        .description("마케팅 수신 동의 여부")
+                                fieldWithPath("newPassword").type(JsonFieldType.STRING).optional()
+                                        .description("변경된 비밀번호")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -1005,12 +989,9 @@ public class MemberControllerTest {
     @WithMockCustomUser
     public void updateMemberInfo_valid_err() throws Exception {
         UpdateMemberInfo updateMemberInfo = UpdateMemberInfo.builder()
-                .email("testtest.com")
                 .name("테스트")
-                .phoneNo("01012341234")
-                .password("password")
-                .isAlert(true)
-                .isAgree(true)
+                .phoneNo("0101234123")
+                .newPassword("변경이 있을 때만 보내기, 변경이 없으면 null이나 보내지 않기")
                 .build();
 
         ResultActions actions = mockMvc.perform(patch("/member/account-info")
