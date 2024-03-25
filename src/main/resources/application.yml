@@ -107,6 +107,14 @@ server:
     mbeanregistry:
       enabled: true
 
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    url: /docs/openapi3.yaml
+    path: /
+    disable-swagger-default-url: true
+
 ---
 
 spring:
@@ -225,3 +233,11 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    url: /docs/openapi3.yaml
+    path: /
+    disable-swagger-default-url: true

@@ -36,14 +36,15 @@ import java.util.*;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -120,7 +121,7 @@ class ProductControllerRestDocsTest {
                 .build();
         product2.setCategory(categoryRepository.findById(2L));
         Product productEntity2 = productRepository.save(product2);
-        
+
         // 옵션정보 넣기
         addOptionInfo(productEntity1,productEntity2);
         // 이미지 정보 넣기
@@ -153,7 +154,7 @@ class ProductControllerRestDocsTest {
                 .willReturn(productDetailDto);
 
         //when //then
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/product/{id}","1")
+        mockMvc.perform(get("/product/{id}","1")
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
