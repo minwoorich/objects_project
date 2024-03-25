@@ -1,5 +1,7 @@
 package com.objects.marketbridge.domains.member.controller;
 
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
@@ -44,6 +46,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -113,21 +116,26 @@ public class MemberControllerTest {
                 .andDo(document("member-email-check",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        queryParameters(
-                                parameterWithName("email").description("중복 체크할 이메일")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터"),
-                                fieldWithPath("data.checked").type(JsonFieldType.BOOLEAN)
-                                        .description("중복 체크 결과")
-                        )
+                        resource(    ResourceSnippetParameters.builder()
+                                .queryParameters(
+                                        parameterWithName("email").description("중복 체크할 이메일")
+                                )
+                                .responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.checked").type(JsonFieldType.BOOLEAN)
+                                                .description("중복 체크 결과")
+                                )
+                                .requestSchema(Schema.schema("MemberEmailCheckReq"))
+                                .responseSchema(Schema.schema("MemberEmailCheckRes"))
+                                .build())
+
                 ));
     }
 
@@ -848,7 +856,8 @@ public class MemberControllerTest {
                .andDo(document("member-account-email",
                        preprocessRequest(prettyPrint()),
                        preprocessResponse(prettyPrint()),
-                       responseFields(
+                       resource(ResourceSnippetParameters.builder()
+                               .responseFields(
                                fieldWithPath("code").type(JsonFieldType.NUMBER)
                                        .description("코드"),
                                fieldWithPath("status").type(JsonFieldType.STRING)
@@ -860,6 +869,9 @@ public class MemberControllerTest {
                                fieldWithPath("data.email").type(JsonFieldType.STRING)
                                        .description("로그인 이메일")
                        )
+                        .responseSchema(Schema.schema("MemberAccountEmailRes"))
+                               .build())
+
                ));
    }
 
@@ -890,29 +902,34 @@ public class MemberControllerTest {
                 .andDo(document("get-member-account-info",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        queryParameters(
-                                parameterWithName("password").description("암호화된 비밀번호")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터"),
-                                fieldWithPath("data.email").type(JsonFieldType.STRING)
-                                        .description("로그인 이메일"),
-                                fieldWithPath("data.name").type(JsonFieldType.STRING)
-                                        .description("이름"),
-                                fieldWithPath("data.phoneNo").type(JsonFieldType.STRING)
-                                        .description("휴대폰 번호"),
-                                fieldWithPath("data.isAlert").type(JsonFieldType.BOOLEAN)
-                                        .description("알림 동의 여부"),
-                                fieldWithPath("data.isAgree").type(JsonFieldType.BOOLEAN)
-                                        .description("마케팅 수신 동의 여부")
-                        )
+                        resource(ResourceSnippetParameters.builder()
+                                        .queryParameters(
+                                        parameterWithName("password").description("암호화된 비밀번호")
+                                )
+                                .responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.email").type(JsonFieldType.STRING)
+                                                .description("로그인 이메일"),
+                                        fieldWithPath("data.name").type(JsonFieldType.STRING)
+                                                .description("이름"),
+                                        fieldWithPath("data.phoneNo").type(JsonFieldType.STRING)
+                                                .description("휴대폰 번호"),
+                                        fieldWithPath("data.isAlert").type(JsonFieldType.BOOLEAN)
+                                                .description("알림 동의 여부"),
+                                        fieldWithPath("data.isAgree").type(JsonFieldType.BOOLEAN)
+                                                .description("마케팅 수신 동의 여부")
+                                )
+                                .requestSchema(Schema.schema("GetMemberAccountInfoReq"))
+                                .responseSchema(Schema.schema("GetMemberAccountInfoRes"))
+                                .build())
+
                 ));
     }
 
@@ -963,25 +980,30 @@ public class MemberControllerTest {
                 .andDo(document("patch-member-account-info",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("name").type(JsonFieldType.STRING)
-                                        .description("이름"),
-                                fieldWithPath("phoneNo").type(JsonFieldType.STRING)
-                                        .description("휴대폰 번호"),
-                                fieldWithPath("newPassword").type(JsonFieldType.STRING).optional()
-                                        .description("변경된 비밀번호")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.NULL)
-                                        .description("응답 데이터")
+                        resource(ResourceSnippetParameters.builder()
+                                .requestFields(
+                                        fieldWithPath("name").type(JsonFieldType.STRING)
+                                                .description("이름"),
+                                        fieldWithPath("phoneNo").type(JsonFieldType.STRING)
+                                                .description("휴대폰 번호"),
+                                        fieldWithPath("newPassword").type(JsonFieldType.STRING).optional()
+                                                .description("변경된 비밀번호")
+                                )
+                                .responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.NULL)
+                                                .description("응답 데이터")
 
-                        )
+                                )
+                                .requestSchema(Schema.schema("PatchMemberAccountInfoReq"))
+                                .responseSchema(Schema.schema("PatchMemberAccountInfoRes"))
+                                .build())
+
                 ));
     }
 
@@ -1025,22 +1047,26 @@ public class MemberControllerTest {
                 .andDo(document("member-email-find",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        queryParameters(
-                                parameterWithName("name").description("이름"),
-                                parameterWithName("phoneNo").description("휴대폰 번호")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터"),
-                                fieldWithPath("data.email").type(JsonFieldType.STRING)
-                                        .description("가입된 멤버의 이메일(아이디)")
-                        )
+                        resource(         ResourceSnippetParameters.builder()
+                                        .queryParameters(
+                                        parameterWithName("name").description("이름"),
+                                        parameterWithName("phoneNo").description("휴대폰 번호")
+                                )
+                                .responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.email").type(JsonFieldType.STRING)
+                                                .description("가입된 멤버의 이메일(아이디)")
+                                ).requestSchema(Schema.schema("MemberEmailFindReq"))
+                                .responseSchema(Schema.schema("MemberEmailFindRes"))
+                                .build())
+
                 ));
     }
 
@@ -1085,23 +1111,27 @@ public class MemberControllerTest {
                 .andDo(document("member-password-find",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        queryParameters(
-                                parameterWithName("name").description("이름"),
-                                parameterWithName("email").description("이메일")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터"),
-                                fieldWithPath("data.memberId").type(JsonFieldType.NUMBER)
-                                        .description("가입된 멤버의 아이디")
+                        resource(   ResourceSnippetParameters.builder()
+                                        .queryParameters(
+                                        parameterWithName("name").description("이름"),
+                                        parameterWithName("email").description("이메일")
+                                )
+                                .responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("응답 데이터"),
+                                        fieldWithPath("data.memberId").type(JsonFieldType.NUMBER)
+                                                .description("가입된 멤버의 아이디")
 
-                        )
+                                ).requestSchema(Schema.schema("MemberPasswordFindReq"))
+                                .responseSchema(Schema.schema("MemberPasswordFindRes"))
+                                .build())
+
                 ));
     }
 
@@ -1147,22 +1177,29 @@ public class MemberControllerTest {
                 .andDo(document("member-password-reset",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
-                                        .description("GET /member/account-find 찾은 멤버 아이디"),
-                                fieldWithPath("password").type(JsonFieldType.STRING)
-                                        .description("암호화 된 비밀번호")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.NULL)
-                                        .description("응답 데이터")
+                        resource(ResourceSnippetParameters.builder()
+                                        .requestFields(
+                                        fieldWithPath("memberId").type(JsonFieldType.NUMBER)
+                                                .description("GET /member/account-find 찾은 멤버 아이디"),
+                                        fieldWithPath("password").type(JsonFieldType.STRING)
+                                                .description("암호화 된 비밀번호")
+                                )
+                                .responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.NULL)
+                                                .description("응답 데이터")
+                                )
+                                        .requestSchema(Schema.schema("MemberPasswordResetReq"))
+                                        .responseSchema(Schema.schema("MemberPasswordResetRes"))
+                                        .build()
+
                         )
+
                 ));
     }
 
