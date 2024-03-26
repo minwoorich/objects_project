@@ -12,16 +12,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
-import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,10 +38,7 @@ public class CommonErrorControllerTest extends RestDocsSupportWebAppContext {
         //then
         mockMvc.perform(post("/errors/methodNotAllowed"))
                 .andExpect(status().isMethodNotAllowed())
-                .andDo(print())
-                .andDo(document("error-method-not-allowed",
-                        preprocessResponse(prettyPrint())
-                ));
+                .andDo(print());
     }
 
     @DisplayName("PathVariable 의 타입을 잘못 입력한 경우")
@@ -59,10 +52,7 @@ public class CommonErrorControllerTest extends RestDocsSupportWebAppContext {
         //then
         mockMvc.perform(get("/errors/r"))
                 .andExpect(status().isNotFound())
-                .andDo(print())
-                .andDo(document("error-method-argument-type-mismatch",
-                        preprocessResponse(prettyPrint())
-                ));
+                .andDo(print());
     }
 
     @DisplayName("QueryParameter 을 잘못 요청한 경우")
@@ -74,10 +64,7 @@ public class CommonErrorControllerTest extends RestDocsSupportWebAppContext {
         //then
         mockMvc.perform(get("/errors").param("sizee","2"))
                 .andExpect(status().isBadRequest())
-                .andDo(print())
-                .andDo(document("error-invalid-query-parameter",
-                        preprocessResponse(prettyPrint())
-                ));
+                .andDo(print());
     }
 
     @DisplayName("URI 를 잘못 요청한 경우")
@@ -89,10 +76,7 @@ public class CommonErrorControllerTest extends RestDocsSupportWebAppContext {
         //then
         mockMvc.perform(get("/errorssssss"))
                 .andExpect(status().isNotFound())
-                .andDo(print())
-                .andDo(document("error-invalid-uri",
-                        preprocessResponse(prettyPrint())
-                ));
+                .andDo(print());
     }
 
     @DisplayName("RequestBody 의 필드 타입이 안 맞는 경우")
@@ -108,10 +92,7 @@ public class CommonErrorControllerTest extends RestDocsSupportWebAppContext {
                         .content(objectMapper.writeValueAsString(errRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andDo(print())
-                .andDo(document("error-invalid-request-field-type",
-                        preprocessResponse(prettyPrint())
-                ));
+                .andDo(print());
     }
 
     @DisplayName("RequestBody 의 필드 유효성 검증에 실패한 경우")
@@ -127,10 +108,7 @@ public class CommonErrorControllerTest extends RestDocsSupportWebAppContext {
                         .content(objectMapper.writeValueAsString(errRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andDo(print())
-                .andDo(document("error-invalid-request-field",
-                        preprocessResponse(prettyPrint())
-                ));
+                .andDo(print());
     }
 
     @DisplayName("내부 서버 에러")
@@ -144,10 +122,7 @@ public class CommonErrorControllerTest extends RestDocsSupportWebAppContext {
         //then
         mockMvc.perform(post("/server-errors"))
                 .andExpect(status().isInternalServerError())
-                .andDo(print())
-                .andDo(document("error-internal-server",
-                        preprocessResponse(prettyPrint())
-                ));
+                .andDo(print());
     }
 
     @Getter
