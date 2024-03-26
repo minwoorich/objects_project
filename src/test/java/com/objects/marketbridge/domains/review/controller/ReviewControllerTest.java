@@ -32,6 +32,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
@@ -78,43 +79,42 @@ public class ReviewControllerTest {
     public void getReviewSurveyCategoryContentsList() throws Exception {
         //given
         Long productId = 1L;
-        List<ReviewSurveyCategoryContentsDto> reviewSurveyCategoryContentsDtos = new ArrayList<>();
+        List<ReviewSurveyCategoryContentsDto> reviewSurveyCategoryContentsDtos;
 
+        List<String> contents1 = new ArrayList<>();
         ReviewSurveyCategoryContentsDto reviewSurveyCategoryContentsDto1
                 = ReviewSurveyCategoryContentsDto.builder()
-                .category("질문(카테고리)1)")
-                .build();
-        ReviewSurveyCategoryContentsDto reviewSurveyCategoryContentsDto2
-                = ReviewSurveyCategoryContentsDto.builder()
-                .category("질문(카테고리2)")
+                .category("평소사이즈")
+                .contents(contents1)
                 .build();
 
-        List<String> contents3 = new ArrayList<>();
-        contents3.add("선택지(컨텐트)3-1");
-        contents3.add("선택지(컨텐트)3-2");
-        contents3.add("선택지(컨텐트)3-3");
-        contents3.add("선택지(컨텐트)3-4");
+        List<String> contents2 = new ArrayList<>();
+        ReviewSurveyCategoryContentsDto reviewSurveyCategoryContentsDto2
+                = ReviewSurveyCategoryContentsDto.builder()
+                .category("키")
+                .contents(contents2)
+                .build();
+
+        List<String> contents3 = Arrays.asList("화면보다 옅어요", "화면과같아요", "화면보다진해요", "화면과달라요");
         ReviewSurveyCategoryContentsDto reviewSurveyCategoryContentsDto3
                 = ReviewSurveyCategoryContentsDto.builder()
-                .category("질문(카테고리)3")
+                .category("색상")
                 .contents(contents3)
                 .build();
 
-        List<String> contents4 = new ArrayList<>();
-        contents4.add("선택지(컨텐트)4-1");
-        contents4.add("선택지(컨텐트)4-2");
-        contents4.add("선택지(컨텐트)4-3");
-        contents4.add("선택지(컨텐트)4-4");
+        List<String> contents4 = Arrays.asList("딱맞아요", "보통이예요", "너무커요", "너무작아요");
         ReviewSurveyCategoryContentsDto reviewSurveyCategoryContentsDto4
                 = ReviewSurveyCategoryContentsDto.builder()
-                .category("질문(카테고리)4")
+                .category("사이즈")
                 .contents(contents4)
                 .build();
 
-        reviewSurveyCategoryContentsDtos.add(reviewSurveyCategoryContentsDto1);
-        reviewSurveyCategoryContentsDtos.add(reviewSurveyCategoryContentsDto2);
-        reviewSurveyCategoryContentsDtos.add(reviewSurveyCategoryContentsDto3);
-        reviewSurveyCategoryContentsDtos.add(reviewSurveyCategoryContentsDto4);
+        reviewSurveyCategoryContentsDtos
+                = Arrays.asList(
+                reviewSurveyCategoryContentsDto1,
+                reviewSurveyCategoryContentsDto2,
+                reviewSurveyCategoryContentsDto3,
+                reviewSurveyCategoryContentsDto4);
 
         given(reviewService.getReviewSurveyCategoryContentsList(productId))
                 .willReturn(reviewSurveyCategoryContentsDtos);
@@ -124,26 +124,27 @@ public class ReviewControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .param("productId", String.valueOf(productId)))
-
                 .andExpect(status().isOk())
                 .andDo(document("review-get-surveys",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        resource(ResourceSnippetParameters.builder()
-                                .responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("HTTP 상태 코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("응답데이터(리뷰서베이 질문과 선택지들)"),
-                                subsectionWithPath("data[]").type(JsonFieldType.ARRAY).description("응답데이터(리뷰서베이 질문과 선택지들)"),
-                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("리뷰서베이 질문(카테고리)"),
-                                fieldWithPath("data[].content").type(JsonFieldType.ARRAY).optional().description("리뷰서베이 선택지들(컨텐트들) (null인경우 선택X, 직접 작성 요함)"),
-                                fieldWithPath("data[].content[]").type(JsonFieldType.ARRAY).optional().description("리뷰서베이 선택지들(컨텐트들) (null인경우 선택X, 직접 작성 요함)")
-                        )
-                        .requestSchema(Schema.schema("GetReviewSurveysReq"))
-                        .responseSchema(Schema.schema("GetReviewSurveysRes"))
-                        .build()
-            )));
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .queryParameters(
+                                                parameterWithName("productId").description("상품 ID")
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("HTTP 상태 코드"),
+                                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+//                                        fieldWithPath("data").type(JsonFieldType.ARRAY).description("응답데이터(리뷰서베이 질문과 선택지들)"),
+                                                fieldWithPath("data[]").type(JsonFieldType.ARRAY).description("응답데이터(리뷰서베이 질문과 선택지들)"),
+                                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("리뷰서베이 질문(카테고리)"),
+//                                        fieldWithPath("data[0].contents").type(JsonFieldType.ARRAY).optional().description("리뷰서베이 선택지들(컨텐트들) (빈배열이거나 null인경우 직접 입력)"),
+                                                fieldWithPath("data[].contents[]").type(JsonFieldType.ARRAY).optional().description("리뷰서베이 선택지들(컨텐트들) (빈배열이거나 null인경우 직접 입력)")
+                                        )
+                                        .responseSchema(Schema.schema("GetReviewSurveysRes"))
+                                        .build()))
+                );
     }
 
 
@@ -193,8 +194,8 @@ public class ReviewControllerTest {
                                 )
                                 .requestSchema(Schema.schema("PostReviewReq"))
                                 .responseSchema(Schema.schema("PostReviewRes"))
-                                .build()
-                )));
+                                .build()))
+                );
     }
 
     private CreateReviewDto getCreateReviewDto() {
@@ -265,7 +266,6 @@ public class ReviewControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .content(objectMapper.writeValueAsString(updateReviewDto))) // 요청 바디에 수정 정보를 포함
-
                 .andExpect(status().isOk())
                 .andDo(document("review-update",
                         preprocessRequest(prettyPrint()),
@@ -277,7 +277,7 @@ public class ReviewControllerTest {
                                         fieldWithPath("summary").type(JsonFieldType.STRING).description("수정한 한줄요약"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("수정한 리뷰내용"),
                                         fieldWithPath("updateReviewSurveys").type(JsonFieldType.ARRAY).optional().description("리뷰서베이 데이터 리스트(카테고리, 선택 또는 입력된 내용 의 데이터 리스트)")
-                                                , // 필드가 선택적인 경우 optional()을 사용
+                                        , // 필드가 선택적인 경우 optional()을 사용
                                         fieldWithPath("updateReviewSurveys[].reviewSurveyId").type(JsonFieldType.NUMBER).description("리뷰서베이 아이디(리뷰 조회때 아이디 제공)"),
                                         fieldWithPath("updateReviewSurveys[].content").type(JsonFieldType.STRING).description("선택을 변경하거나 입력을 수정한 내용"),
                                         fieldWithPath("reviewImages").type(JsonFieldType.ARRAY).description("리뷰 이미지 URL 목록 - 이 목록에 없는 이미지는 데이터베이스에서 삭제됨.").type(JsonFieldType.ARRAY).optional(),
@@ -294,8 +294,6 @@ public class ReviewControllerTest {
                                 .requestSchema(Schema.schema("PatchReviewReq"))
                                 .responseSchema(Schema.schema("PatchReviewRes"))
                                 .build()))
-
-
                 );
     }
 
@@ -354,19 +352,19 @@ public class ReviewControllerTest {
                 .andDo(document("review-delete",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("reviewId").description("삭제할 리뷰의 ID")
-                        ),
                         resource(ResourceSnippetParameters.builder()
+                                .pathParameters(
+                                        parameterWithName("reviewId").description("삭제할 리뷰의 ID")
+                                )
                                 .responseFields(
                                         fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
                                         fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                                         fieldWithPath("data").type(JsonFieldType.NULL).description("응답 데이터")
                                 )
-                                .requestSchema(Schema.schema("DeleteReviewReq"))
                                 .responseSchema(Schema.schema("DeleteReviewRes"))
-                                .build())));
+                                .build()))
+                );
     }
 
 
@@ -391,19 +389,17 @@ public class ReviewControllerTest {
                 .andDo(document("review-upsert-review-like",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("reviewId").description("리뷰 ID")
-//                                , parameterWithName("memberId").description("멤버 ID")
-                        ),
                         resource(ResourceSnippetParameters.builder()
+                                .pathParameters(
+                                        parameterWithName("reviewId").description("리뷰 ID")
+                                )
                                 .responseFields(
                                         fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
                                         fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                                         fieldWithPath("data").type(JsonFieldType.NULL).description("응답 데이터")
                                 )
-                                .requestSchema(Schema.schema("PostReviewLikeUpsertReq"))
-                                .responseSchema(Schema.schema("PostReviewLikeUpsertRes"))
+                                .responseSchema(Schema.schema("PostReviewReviewIdLikeRes"))
                                 .build()))
                 );
     }
@@ -432,10 +428,10 @@ public class ReviewControllerTest {
                 .andDo(document("review-count-review-likes",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("reviewId").description("리뷰 ID")
-                        ),
                         resource(ResourceSnippetParameters.builder()
+                                .pathParameters(
+                                        parameterWithName("reviewId").description("리뷰 ID")
+                                )
                                 .responseFields(
                                         fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
                                         fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
@@ -443,8 +439,7 @@ public class ReviewControllerTest {
                                         fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
                                         fieldWithPath("data.count").type(JsonFieldType.NUMBER).description("좋아요 수")
                                 )
-                                .requestSchema(Schema.schema("GetCountReviewLikeReq"))
-                                .responseSchema(Schema.schema("GetCountReviewLikeRes"))
+                                .responseSchema(Schema.schema("GetReviewReviewIdLikesCountRes"))
                                 .build()))
                 );
     }
@@ -469,10 +464,10 @@ public class ReviewControllerTest {
                 .andDo(document("reviews-count-of-member-unwritten",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("memberId").description("멤버 ID")
-                        ),
                         resource(ResourceSnippetParameters.builder()
+                                .pathParameters(
+                                        parameterWithName("memberId").description("멤버 ID")
+                                )
                                 .responseFields(
                                         fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
                                         fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
@@ -480,8 +475,7 @@ public class ReviewControllerTest {
                                         fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
                                         fieldWithPath("data.count").type(JsonFieldType.NUMBER).description("작성할 리뷰 총 갯수 (미작성 총갯수)")
                                 )
-                                .requestSchema(Schema.schema("GetReviewsCountOfMemberUnwrittenReq"))
-                                .responseSchema(Schema.schema("GetReviewsCountOfMemberUnwrittenRes"))
+                                .responseSchema(Schema.schema("GetReviewsMembersMemberIdUnwrittenCountRes"))
                                 .build()))
                 );
     }
@@ -505,19 +499,18 @@ public class ReviewControllerTest {
                 .andDo(document("reviews-count-of-member",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("memberId").description("멤버 ID")
-                        ),
                         resource(ResourceSnippetParameters.builder()
+                                .pathParameters(
+                                        parameterWithName("memberId").description("멤버 ID")
+                                )
                                 .responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.count").type(JsonFieldType.NUMBER).description("리뷰 총 갯수")
-                        )
-                                .requestSchema(Schema.schema("GetReviewsCountOfMemberReq"))
-                                .responseSchema(Schema.schema("GetReviewsCountOfMemberRes"))
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                        fieldWithPath("data.count").type(JsonFieldType.NUMBER).description("리뷰 총 갯수")
+                                )
+                                .responseSchema(Schema.schema("GetReviewsMemberMemberIdCountRes"))
                                 .build()))
                 );
     }
@@ -540,10 +533,10 @@ public class ReviewControllerTest {
                 .andDo(document("reviews-count-of-product",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("productId").description("상품 ID")
-                        ),
                         resource(ResourceSnippetParameters.builder()
+                                .pathParameters(
+                                        parameterWithName("productId").description("상품 ID")
+                                )
                                 .responseFields(
                                         fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
                                         fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
@@ -551,8 +544,7 @@ public class ReviewControllerTest {
                                         fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
                                         fieldWithPath("data.count").type(JsonFieldType.NUMBER).description("리뷰 총 갯수")
                                 )
-                                .requestSchema(Schema.schema("GetReviewsCountOfProductReq"))
-                                .responseSchema(Schema.schema("GetReviewsCountOfProductRes"))
+                                .responseSchema(Schema.schema("GetReviewsProductProductIdCountRes"))
                                 .build()))
                 );
     }
@@ -630,33 +622,32 @@ public class ReviewControllerTest {
                 .andDo(document("review-get-single-review",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("reviewId").description("리뷰 ID")
-                        ),
                         resource(ResourceSnippetParameters.builder()
+                                .pathParameters(
+                                        parameterWithName("reviewId").description("리뷰 ID")
+                                )
                                 .responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.productThumbnailUrl").type(JsonFieldType.STRING).description("상품 썸네일 이미지"),
-                                fieldWithPath("data.memberName").type(JsonFieldType.STRING).description("멤버명"),
-                                fieldWithPath("data.rating").type(JsonFieldType.NUMBER).description("별점"),
-                                fieldWithPath("data.productName").type(JsonFieldType.STRING).description("상품명"),
-                                fieldWithPath("data.summary").type(JsonFieldType.STRING).description("한줄요약"),
-                                fieldWithPath("data.reviewImageDtos").type(JsonFieldType.ARRAY).optional().description("이미지DTO리스트)")
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                        fieldWithPath("data.productThumbnailUrl").type(JsonFieldType.STRING).description("상품 썸네일 이미지"),
+                                        fieldWithPath("data.memberName").type(JsonFieldType.STRING).description("멤버명"),
+                                        fieldWithPath("data.rating").type(JsonFieldType.NUMBER).description("별점"),
+                                        fieldWithPath("data.productName").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("data.summary").type(JsonFieldType.STRING).description("한줄요약"),
+                                        fieldWithPath("data.reviewImageDtos").type(JsonFieldType.ARRAY).optional().description("이미지DTO리스트)")
                                         , // 필드가 선택적인 경우 optional()을 사용
-                                fieldWithPath("data.reviewImageDtos[].seqNo").type(JsonFieldType.NUMBER).description("이미지DTO리스트 시퀀스넘버"),
-                                fieldWithPath("data.reviewImageDtos[].imgUrl").type(JsonFieldType.STRING).description("이미지DTO리스트 이미지URL"),
-                                fieldWithPath("data.reviewImageDtos[].description").type(JsonFieldType.STRING).description("이미지DTO리스트 캡션(이미지설명)"),
-                                fieldWithPath("data.content").type(JsonFieldType.STRING).description("리뷰내용"),
-                                fieldWithPath("data.getReviewSurveyDtos").type(JsonFieldType.ARRAY).optional().description("작성된 리뷰서베이리스트")
+                                        fieldWithPath("data.reviewImageDtos[].seqNo").type(JsonFieldType.NUMBER).description("이미지DTO리스트 시퀀스넘버"),
+                                        fieldWithPath("data.reviewImageDtos[].imgUrl").type(JsonFieldType.STRING).description("이미지DTO리스트 이미지URL"),
+                                        fieldWithPath("data.reviewImageDtos[].description").type(JsonFieldType.STRING).description("이미지DTO리스트 캡션(이미지설명)"),
+                                        fieldWithPath("data.content").type(JsonFieldType.STRING).description("리뷰내용"),
+                                        fieldWithPath("data.getReviewSurveyDtos").type(JsonFieldType.ARRAY).optional().description("작성된 리뷰서베이리스트")
                                         , // 필드가 선택적인 경우 optional()을 사용
-                                fieldWithPath("data.getReviewSurveyDtos[].surveyCategoryName").type(JsonFieldType.STRING).description("서베이카테고리명"),
-                                fieldWithPath("data.getReviewSurveyDtos[].content").type(JsonFieldType.STRING).description("서베이내용(입력또는선택된)")
-                        )
-                                .requestSchema(Schema.schema("GetSingleReviewReq"))
-                                .responseSchema(Schema.schema("GetSingleReviewRes"))
+                                        fieldWithPath("data.getReviewSurveyDtos[].surveyCategoryName").type(JsonFieldType.STRING).description("서베이카테고리명"),
+                                        fieldWithPath("data.getReviewSurveyDtos[].content").type(JsonFieldType.STRING).description("서베이내용(입력또는선택된)")
+                                )
+                                .responseSchema(Schema.schema("GetReviewReviewIdRes"))
                                 .build()))
                 );
     }
@@ -710,44 +701,43 @@ public class ReviewControllerTest {
                 .andDo(document("reviews-of-member-unwritten",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("memberId").description("멤버 ID")
-                        ),
                         resource(ResourceSnippetParameters.builder()
+                                .pathParameters(
+                                        parameterWithName("memberId").description("멤버 ID")
+                                )
                                 .responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.content[]").type(JsonFieldType.ARRAY).description("상품상세"),
-                                fieldWithPath("data.content[].productThumbnailUrl").type(JsonFieldType.STRING).description("상품이미지URL"),
-                                fieldWithPath("data.content[].productName").type(JsonFieldType.STRING).description("상품명"),
-                                fieldWithPath("data.content[].deliveredDate").type(JsonFieldType.STRING).description("배송일"),
-                                fieldWithPath("data.pageable").type(JsonFieldType.OBJECT).description("페이징 정보"),
-                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER).description("페이지 번호"),
-                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER).description("페이지 크기"),
-                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
-                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER).description("페이지 오프셋"),
-                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN).description("페이징 여부"),
-                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN).description("페이징 되지 않았는지 여부"),
-                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
-                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN).description("페이지 정렬 여부"),
-                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되었는지 여부"),
-                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되지 않았는지 여부"),
-                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN).description("정렬 여부"),
-                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN).description("정렬되었는지 여부"),
-                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN).description("정렬되지 않았는지 여부"),
-                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
-                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER).description("총 요소 수"),
-                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수"),
-                                fieldWithPath("data.size").type(JsonFieldType.NUMBER).description("페이지 크기"),
-                                fieldWithPath("data.number").type(JsonFieldType.NUMBER).description("현재 페이지 번호"),
-                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN).description("첫 페이지 여부"),
-                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER).description("현재 페이지 요소 수"),
-                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN).description("비어있는지 여부")
-                        )
-                                .requestSchema(Schema.schema("GetReviewsOfMemberUnwrittenReq"))
-                                .responseSchema(Schema.schema("GetReviewsOfMemberUnwrittenRes"))
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                        fieldWithPath("data.content[]").type(JsonFieldType.ARRAY).description("상품상세"),
+                                        fieldWithPath("data.content[].productThumbnailUrl").type(JsonFieldType.STRING).description("상품이미지URL"),
+                                        fieldWithPath("data.content[].productName").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("data.content[].deliveredDate").type(JsonFieldType.STRING).description("배송일"),
+                                        fieldWithPath("data.pageable").type(JsonFieldType.OBJECT).description("페이징 정보"),
+                                        fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER).description("페이지 번호"),
+                                        fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER).description("페이지 크기"),
+                                        fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
+                                        fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER).description("페이지 오프셋"),
+                                        fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN).description("페이징 여부"),
+                                        fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN).description("페이징 되지 않았는지 여부"),
+                                        fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
+                                        fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN).description("페이지 정렬 여부"),
+                                        fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되었는지 여부"),
+                                        fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되지 않았는지 여부"),
+                                        fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN).description("정렬 여부"),
+                                        fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN).description("정렬되었는지 여부"),
+                                        fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN).description("정렬되지 않았는지 여부"),
+                                        fieldWithPath("data.last").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
+                                        fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER).description("총 요소 수"),
+                                        fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수"),
+                                        fieldWithPath("data.size").type(JsonFieldType.NUMBER).description("페이지 크기"),
+                                        fieldWithPath("data.number").type(JsonFieldType.NUMBER).description("현재 페이지 번호"),
+                                        fieldWithPath("data.first").type(JsonFieldType.BOOLEAN).description("첫 페이지 여부"),
+                                        fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER).description("현재 페이지 요소 수"),
+                                        fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN).description("비어있는지 여부")
+                                )
+                                .responseSchema(Schema.schema("GetReviewsMemberMemberIdUnwrittenRes"))
                                 .build()))
                 );
     }
@@ -885,7 +875,6 @@ public class ReviewControllerTest {
                 = new PageImpl<>(getReviewDtoList, pageable, getReviewDtoList.size());
         given(reviewService.getReviewsOfMember(memberId, pageable, sortBy)).willReturn(reviewDtoPage);
 
-
         // when // then
         mockMvc.perform(get("/reviews/member/{memberId}", memberId)
                         .param("page", String.valueOf(page))
@@ -896,54 +885,52 @@ public class ReviewControllerTest {
                 .andDo(document("reviews-of-member",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("memberId").description("멤버 ID")
-                        ),
-                                resource(ResourceSnippetParameters.builder()
-                                        .responseFields(
-                                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
-                                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
-                                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                                fieldWithPath("data.content[].productThumbnailUrl").type(JsonFieldType.STRING).description("상품 썸네일 이미지"),
-                                                fieldWithPath("data.content[].memberName").type(JsonFieldType.STRING).description("멤버 이름"),
-                                                fieldWithPath("data.content[].rating").type(JsonFieldType.NUMBER).description("별점"),
-//                                fieldWithPath("data.content[0].sellerName").description("셀러명"),
-                                                fieldWithPath("data.content[].productName").type(JsonFieldType.STRING).description("상품명"),
-                                                fieldWithPath("data.content[].summary").type(JsonFieldType.STRING).description("한줄요약"),
-                                                fieldWithPath("data.content[].reviewImageDtos").type(JsonFieldType.ARRAY).description("리뷰이미지DTO리스트"),
-                                                fieldWithPath("data.content[].reviewImageDtos[].seqNo").type(JsonFieldType.NUMBER).description("이미지 시퀀스넘버"),
-                                                fieldWithPath("data.content[].reviewImageDtos[].imgUrl").type(JsonFieldType.STRING).description("이미지 URL"),
-                                                fieldWithPath("data.content[].reviewImageDtos[].description").type(JsonFieldType.STRING).description("이미지 캡션(설명)"),
-                                                fieldWithPath("data.content[].content").type(JsonFieldType.STRING).description("리뷰 내용"),
-                                                fieldWithPath("data.content[].getReviewSurveyDtos").type(JsonFieldType.ARRAY).description("리뷰서베이DTO리스트"),
-                                                fieldWithPath("data.content[].getReviewSurveyDtos[].surveyCategoryName").type(JsonFieldType.STRING).description("서베이카테고리명"),
-                                                fieldWithPath("data.content[].getReviewSurveyDtos[].content").type(JsonFieldType.STRING).description("서베이 내용"),
-                                                fieldWithPath("data.pageable").type(JsonFieldType.OBJECT).description("페이징 정보"),
-                                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER).description("페이지 번호"),
-                                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER).description("페이지 크기"),
-                                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
-                                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER).description("페이지 오프셋"),
-                                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN).description("페이징 여부"),
-                                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN).description("페이징 되지 않았는지 여부"),
-                                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
-                                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN).description("페이지 정렬 여부"),
-                                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되었는지 여부"),
-                                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되지 않았는지 여부"),
-                                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN).description("정렬 여부"),
-                                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN).description("정렬되었는지 여부"),
-                                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN).description("정렬되지 않았는지 여부"),
-                                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
-                                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER).description("총 요소 수"),
-                                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수"),
-                                                fieldWithPath("data.size").type(JsonFieldType.NUMBER).description("페이지 크기"),
-                                                fieldWithPath("data.number").type(JsonFieldType.NUMBER).description("현재 페이지 번호"),
-                                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN).description("첫 페이지 여부"),
-                                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER).description("현재 페이지 요소 수"),
-                                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN).description("비어있는지 여부")
-                                        )
-                                .requestSchema(Schema.schema("GetReviewsOfMemberReq"))
-                                .responseSchema(Schema.schema("GetReviewsOfMemberRes"))
+                        resource(ResourceSnippetParameters.builder()
+                                .pathParameters(
+                                        parameterWithName("memberId").description("멤버 ID")
+                                )
+                                .responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                        fieldWithPath("data.content[].productThumbnailUrl").type(JsonFieldType.STRING).description("상품 썸네일 이미지"),
+                                        fieldWithPath("data.content[].memberName").type(JsonFieldType.STRING).description("멤버 이름"),
+                                        fieldWithPath("data.content[].rating").type(JsonFieldType.NUMBER).description("별점"),
+                                        fieldWithPath("data.content[].productName").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("data.content[].summary").type(JsonFieldType.STRING).description("한줄요약"),
+                                        fieldWithPath("data.content[].reviewImageDtos").type(JsonFieldType.ARRAY).description("리뷰이미지DTO리스트"),
+                                        fieldWithPath("data.content[].reviewImageDtos[].seqNo").type(JsonFieldType.NUMBER).description("이미지 시퀀스넘버"),
+                                        fieldWithPath("data.content[].reviewImageDtos[].imgUrl").type(JsonFieldType.STRING).description("이미지 URL"),
+                                        fieldWithPath("data.content[].reviewImageDtos[].description").type(JsonFieldType.STRING).description("이미지 캡션(설명)"),
+                                        fieldWithPath("data.content[].content").type(JsonFieldType.STRING).description("리뷰 내용"),
+                                        fieldWithPath("data.content[].getReviewSurveyDtos").type(JsonFieldType.ARRAY).description("리뷰서베이DTO리스트"),
+                                        fieldWithPath("data.content[].getReviewSurveyDtos[].surveyCategoryName").type(JsonFieldType.STRING).description("서베이카테고리명"),
+                                        fieldWithPath("data.content[].getReviewSurveyDtos[].content").type(JsonFieldType.STRING).description("서베이 내용"),
+                                        fieldWithPath("data.pageable").type(JsonFieldType.OBJECT).description("페이징 정보"),
+                                        fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER).description("페이지 번호"),
+                                        fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER).description("페이지 크기"),
+                                        fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
+                                        fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER).description("페이지 오프셋"),
+                                        fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN).description("페이징 여부"),
+                                        fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN).description("페이징 되지 않았는지 여부"),
+                                        fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
+                                        fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN).description("페이지 정렬 여부"),
+                                        fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되었는지 여부"),
+                                        fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되지 않았는지 여부"),
+                                        fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN).description("정렬 여부"),
+                                        fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN).description("정렬되었는지 여부"),
+                                        fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN).description("정렬되지 않았는지 여부"),
+                                        fieldWithPath("data.last").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
+                                        fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER).description("총 요소 수"),
+                                        fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수"),
+                                        fieldWithPath("data.size").type(JsonFieldType.NUMBER).description("페이지 크기"),
+                                        fieldWithPath("data.number").type(JsonFieldType.NUMBER).description("현재 페이지 번호"),
+                                        fieldWithPath("data.first").type(JsonFieldType.BOOLEAN).description("첫 페이지 여부"),
+                                        fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER).description("현재 페이지 요소 수"),
+                                        fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN).description("비어있는지 여부")
+                                )
+                                .responseSchema(Schema.schema("GetReviewsMemberMemberIdRes"))
                                 .build()))
                 );
     }
@@ -1091,54 +1078,52 @@ public class ReviewControllerTest {
                 .andDo(document("reviews-of-product",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("productId").description("상품 ID")
-                        ),
                         resource(ResourceSnippetParameters.builder()
-                                        .responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.content[].productThumbnailUrl").type(JsonFieldType.STRING).description("상품 썸네일 이미지"),
-                                fieldWithPath("data.content[].memberName").type(JsonFieldType.STRING).description("멤버 이름"),
-                                fieldWithPath("data.content[].rating").type(JsonFieldType.NUMBER).description("별점"),
-//                                fieldWithPath("data.content[0].sellerName").description("셀러명"),
-                                fieldWithPath("data.content[].productName").type(JsonFieldType.STRING).description("상품명"),
-                                fieldWithPath("data.content[].summary").type(JsonFieldType.STRING).description("한줄요약"),
-                                fieldWithPath("data.content[].reviewImageDtos").type(JsonFieldType.ARRAY).description("리뷰이미지DTO리스트"),
-                                fieldWithPath("data.content[].reviewImageDtos[].seqNo").type(JsonFieldType.NUMBER).description("이미지 시퀀스넘버"),
-                                fieldWithPath("data.content[].reviewImageDtos[].imgUrl").type(JsonFieldType.STRING).description("이미지 URL"),
-                                fieldWithPath("data.content[].reviewImageDtos[].description").type(JsonFieldType.STRING).description("이미지 캡션(설명)"),
-                                fieldWithPath("data.content[].content").type(JsonFieldType.STRING).description("리뷰 내용"),
-                                fieldWithPath("data.content[].getReviewSurveyDtos").type(JsonFieldType.ARRAY).description("리뷰서베이DTO리스트"),
-                                fieldWithPath("data.content[].getReviewSurveyDtos[].surveyCategoryName").type(JsonFieldType.STRING).description("서베이카테고리명"),
-                                fieldWithPath("data.content[].getReviewSurveyDtos[].content").type(JsonFieldType.STRING).description("서베이 내용"),
-                                fieldWithPath("data.pageable").type(JsonFieldType.OBJECT).description("페이징 정보"),
-                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER).description("페이지 번호"),
-                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER).description("페이지 크기"),
-                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
-                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER).description("페이지 오프셋"),
-                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN).description("페이징 여부"),
-                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN).description("페이징 되지 않았는지 여부"),
-                                fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
-                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN).description("페이지 정렬 여부"),
-                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되었는지 여부"),
-                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되지 않았는지 여부"),
-                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN).description("정렬 여부"),
-                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN).description("정렬되었는지 여부"),
-                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN).description("정렬되지 않았는지 여부"),
-                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
-                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER).description("총 요소 수"),
-                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수"),
-                                fieldWithPath("data.size").type(JsonFieldType.NUMBER).description("페이지 크기"),
-                                fieldWithPath("data.number").type(JsonFieldType.NUMBER).description("현재 페이지 번호"),
-                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN).description("첫 페이지 여부"),
-                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER).description("현재 페이지 요소 수"),
-                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN).description("비어있는지 여부")
-                        )
-                                .requestSchema(Schema.schema("GetReviewsOfProductReq"))
-                                .responseSchema(Schema.schema("GetReviewsOfProductRes"))
+                                .pathParameters(
+                                        parameterWithName("productId").description("상품 ID")
+                                )
+                                .responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                        fieldWithPath("data.content[].productThumbnailUrl").type(JsonFieldType.STRING).description("상품 썸네일 이미지"),
+                                        fieldWithPath("data.content[].memberName").type(JsonFieldType.STRING).description("멤버 이름"),
+                                        fieldWithPath("data.content[].rating").type(JsonFieldType.NUMBER).description("별점"),
+                                        fieldWithPath("data.content[].productName").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("data.content[].summary").type(JsonFieldType.STRING).description("한줄요약"),
+                                        fieldWithPath("data.content[].reviewImageDtos").type(JsonFieldType.ARRAY).description("리뷰이미지DTO리스트"),
+                                        fieldWithPath("data.content[].reviewImageDtos[].seqNo").type(JsonFieldType.NUMBER).description("이미지 시퀀스넘버"),
+                                        fieldWithPath("data.content[].reviewImageDtos[].imgUrl").type(JsonFieldType.STRING).description("이미지 URL"),
+                                        fieldWithPath("data.content[].reviewImageDtos[].description").type(JsonFieldType.STRING).description("이미지 캡션(설명)"),
+                                        fieldWithPath("data.content[].content").type(JsonFieldType.STRING).description("리뷰 내용"),
+                                        fieldWithPath("data.content[].getReviewSurveyDtos").type(JsonFieldType.ARRAY).description("리뷰서베이DTO리스트"),
+                                        fieldWithPath("data.content[].getReviewSurveyDtos[].surveyCategoryName").type(JsonFieldType.STRING).description("서베이카테고리명"),
+                                        fieldWithPath("data.content[].getReviewSurveyDtos[].content").type(JsonFieldType.STRING).description("서베이 내용"),
+                                        fieldWithPath("data.pageable").type(JsonFieldType.OBJECT).description("페이징 정보"),
+                                        fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER).description("페이지 번호"),
+                                        fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER).description("페이지 크기"),
+                                        fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
+                                        fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER).description("페이지 오프셋"),
+                                        fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN).description("페이징 여부"),
+                                        fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN).description("페이징 되지 않았는지 여부"),
+                                        fieldWithPath("data.pageable.sort").type(JsonFieldType.OBJECT).description("페이지 정렬 정보"),
+                                        fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN).description("페이지 정렬 여부"),
+                                        fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되었는지 여부"),
+                                        fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN).description("페이지 정렬되지 않았는지 여부"),
+                                        fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN).description("정렬 여부"),
+                                        fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN).description("정렬되었는지 여부"),
+                                        fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN).description("정렬되지 않았는지 여부"),
+                                        fieldWithPath("data.last").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
+                                        fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER).description("총 요소 수"),
+                                        fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수"),
+                                        fieldWithPath("data.size").type(JsonFieldType.NUMBER).description("페이지 크기"),
+                                        fieldWithPath("data.number").type(JsonFieldType.NUMBER).description("현재 페이지 번호"),
+                                        fieldWithPath("data.first").type(JsonFieldType.BOOLEAN).description("첫 페이지 여부"),
+                                        fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER).description("현재 페이지 요소 수"),
+                                        fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN).description("비어있는지 여부")
+                                )
+                                .responseSchema(Schema.schema("GetReviewsProductProductIdRes"))
                                 .build()))
                 );
     }
