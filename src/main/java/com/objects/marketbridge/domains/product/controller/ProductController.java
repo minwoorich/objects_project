@@ -46,7 +46,7 @@ public class ProductController {
     //상품 카테고리별 조회
     @UserAuthorize
     @GetMapping()
-    public ApiResponse<Page<ProductSimpleDto>> getProductByCategory(@PageableDefault(page = 1, size = 60, sort = "createdAt", direction = Sort.Direction.DESC)  Pageable pageable
+    public ApiResponse<Page<ProductSimpleDto>> getProductByCategory(@PageableDefault(page = 1, size = 60, sort = "created_at", direction = Sort.Direction.DESC)  Pageable pageable
             , @RequestParam("categoryCode") String categoryId){
         Page<ProductSimpleDto> productPage = productService.getProductByCategory(pageable,categoryId);
         return ApiResponse.ok(productPage);
