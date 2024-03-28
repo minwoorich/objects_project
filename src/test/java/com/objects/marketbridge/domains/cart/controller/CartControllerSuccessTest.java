@@ -304,13 +304,13 @@ class CartControllerSuccessTest {
     @WithMockCustomUser
     void updateCartItems() throws Exception {
         //given
-
+        String cartId = "1";
         UpdateCartHttp.Request request = UpdateCartHttp.Request.builder().quantity(1L).build();
         willDoNothing().given(updateCartService).update(any(UpdateCartDto.class));
 
         //when
         MockHttpServletRequestBuilder requestBuilder =
-                patch("/carts/{cartId}", "1")
+                patch("/carts/{cartId}", Long.parseLong(cartId))
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
