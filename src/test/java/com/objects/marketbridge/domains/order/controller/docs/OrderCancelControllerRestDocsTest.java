@@ -324,7 +324,7 @@ public class OrderCancelControllerRestDocsTest {
                                                 parameterWithName("cancelledOrderDetailId")
                                                         .description("주문 취소 ID")
                                         )
-                                        . responseFields(
+                                        .responseFields(
                                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
                                                         .description("코드"),
                                                 fieldWithPath("status").type(JsonFieldType.STRING)
