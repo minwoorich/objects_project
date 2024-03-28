@@ -310,7 +310,7 @@ class CartControllerSuccessTest {
 
         //when
         MockHttpServletRequestBuilder requestBuilder =
-                patch("/carts/{cartId}", cartId)
+                patch("/carts/{cartId}", Long.parseLong(cartId))
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
