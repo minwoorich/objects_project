@@ -36,7 +36,7 @@ public class ProductController {
 //
     //상품등록
     @UserAuthorize
-    @PostMapping("/new")
+    @PostMapping()
     public ApiResponse<Long> createProduct(@Valid @RequestBody CreateProductRequestDto request) {
         Long productId = productService.create(request);
         return ApiResponse.ok(productId);
