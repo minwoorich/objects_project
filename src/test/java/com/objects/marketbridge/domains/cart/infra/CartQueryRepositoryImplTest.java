@@ -41,7 +41,7 @@ class CartQueryRepositoryImplTest {
         memberRepository.deleteAllInBatch();
     }
 
-    @DisplayName("상품 번호를 통해 카트를 조회할 수 있다")
+    @DisplayName("상품 ID와 멤버 ID를 통해 카트를 조회할 수 있다")
     @Test
     void findByProductNo(){
         //given
@@ -57,8 +57,8 @@ class CartQueryRepositoryImplTest {
         cartCommendRepository.saveAll(List.of(cart1, cart2));
 
         //when
-        Optional<Cart> findProduct1 = cartQueryRepository.findByProductId(product1.getId());
-        Optional<Cart> findProduct2 = cartQueryRepository.findByProductId(product1.getId());
+        Optional<Cart> findProduct1 = cartQueryRepository.findByProductIdAndMemberId(product1.getId(), member.getId());
+        Optional<Cart> findProduct2 = cartQueryRepository.findByProductIdAndMemberId(product2.getId(), member.getId());
 
         //then
         assertThat(findProduct1.isPresent()).isTrue();

@@ -41,8 +41,8 @@ public class CartQueryRepositoryImpl implements CartQueryRepository {
     }
 
     @Override
-    public Optional<Cart> findByProductId(Long productId) {
-        return cartJpaRepository.findByProductId(productId);
+    public Optional<Cart> findByProductIdAndMemberId(Long productId, Long memberId) {
+        return cartJpaRepository.findByProductIdAndMemberId(productId, memberId);
     }
 
     @Override
