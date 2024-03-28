@@ -34,11 +34,9 @@ class AddToCartServiceTest {
     @Autowired CartQueryRepository cartQueryRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired ProductRepository productRepository;
-    @Autowired
-    AddToCartService addToCartService;
+    @Autowired AddToCartService addToCartService;
     @BeforeEach
     void init() {
-
         Product product1 = Product.create( true, "가방", 1000L, false, 100L, "thumbImg1", 0L, "productNo1");
         Product outOfStockProduct = Product.create( true, "신발", 1000L, false, 1L, "thumbImg1", 0L, "outOfStockProductNo");
         Product addedProduct = Product.create( true, "옷", 1000L, false, 100L, "thumbImg1", 0L, "addedProductNo");
@@ -47,8 +45,13 @@ class AddToCartServiceTest {
         Member member = Member.create(MembershipType.BASIC.getText(), "test@email.com", "1234", "홍길동", "01012341234", true, true);
         memberRepository.save(member);
 
+        Member member2 = Member.create(MembershipType.BASIC.getText(), "test2@email.com", "1234", "김길동", "01012341234", true, true);
+        memberRepository.save(member2);
+
         Cart cart = Cart.create(member, addedProduct, false, 2L);
+        Cart cart2 = Cart.create(member2, product1, false, 2L);
         cartCommendRepository.save(cart);
+        cartCommendRepository.save(cart2);
     }
     @AfterEach
     void clear() {
@@ -78,6 +81,7 @@ class AddToCartServiceTest {
     void add_validDuplicate(){
         //given
         Member member = memberRepository.findByEmail("test@email.com");
+
         Product addedProduct = productRepository.findByProductNo("addedProductNo");
         CreateCartDto cartDto = CreateCartDto.create(addedProduct.getId(), member.getId(), 2L, false);
 

@@ -32,7 +32,7 @@ public class AddToCartService {
     @Transactional
     public Cart add(CreateCartDto createCartDto) {
         // 1. 이미 장바구니에 담긴 상품인지 아닌지 검증
-        validDuplicate(createCartDto.getProductId());
+        validDuplicate(createCartDto.getProductId(), createCartDto.getMemberId());
 
         return cartCommendRepository.save(create(createCartDto));
     }
@@ -45,8 +45,8 @@ public class AddToCartService {
 
         return Cart.create(member, product, isSubs, quantity);
     }
-    private void validDuplicate(Long productId) {
-        if (cartQueryRepository.findByProductId(productId).isPresent()) {
+    private void validDuplicate(Long productId, Long memberId) {
+        if (cartQueryRepository.findByProductIdAndMemberId(productId, memberId).isPresent()) {
             throw CustomLogicException.createBadRequestError(DUPLICATE_OPERATION, "이미 장바구니에 담긴 상품입니다");
         }
     }
