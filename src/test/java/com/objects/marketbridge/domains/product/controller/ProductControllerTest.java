@@ -344,7 +344,7 @@ class ProductControllerTest {
         given(productService.create(any(CreateProductRequestDto.class))).willReturn(1L);
 
         //when //then
-        mockMvc.perform(post("/product/new")
+        mockMvc.perform(post("/product")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "bearer AccessToken")
