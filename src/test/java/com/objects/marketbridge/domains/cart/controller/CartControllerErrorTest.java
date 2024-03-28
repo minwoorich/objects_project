@@ -130,10 +130,10 @@ class CartControllerErrorTest {
 
         doThrow(CustomLogicException.createBadRequestError(RESOUCRE_NOT_FOUND))
                 .when(updateCartService).update(any(UpdateCartDto.class));
-
+        String cartId = "1";
         // when
         MockHttpServletRequestBuilder requestBuilder =
-                patch("/carts/1")
+                patch("/carts/{cartId}", Long.parseLong(cartId))
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON);
