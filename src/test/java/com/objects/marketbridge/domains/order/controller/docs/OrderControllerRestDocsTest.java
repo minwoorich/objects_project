@@ -434,7 +434,7 @@ public class OrderControllerRestDocsTest {
                                                 fieldWithPath("data.paymentInfo.deliveryFee").type(JsonFieldType.NUMBER)
                                                         .description("배송비")
                                         )
-                                        .responseSchema(Schema.schema("GetOrders{orderId}Res"))
+                                        .responseSchema(Schema.schema("GetOrdersOrderIdRes"))
                                         .build()
                         )
                 ));
