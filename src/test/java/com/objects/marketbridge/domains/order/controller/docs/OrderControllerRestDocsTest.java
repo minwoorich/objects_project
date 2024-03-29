@@ -249,10 +249,10 @@ public class OrderControllerRestDocsTest {
                                 ResourceSnippetParameters.builder()
                                         .queryParameters(
                                                 parameterWithName("page").description("페이지 번호"),
-                                                parameterWithName("size").description("페이지 사이즈"),
-                                                parameterWithName("sort").description("정렬기준,정렬순서"),
-                                                parameterWithName("year").description("연도"),
-                                                parameterWithName("keyword").description("검색 키워드")
+                                                parameterWithName("size").description("페이지 사이즈").optional(),
+                                                parameterWithName("sort").description("정렬기준,정렬순서 ex) createdAt,DESC").optional(),
+                                                parameterWithName("year").description("연도").optional(),
+                                                parameterWithName("keyword").description("검색 키워드").optional()
                                         )
                                         .responseFields(
                                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

@@ -153,7 +153,7 @@ class CartControllerSuccessTest {
                                 ResourceSnippetParameters.builder()
                                         .queryParameters(
                                                 parameterWithName("page").description("페이지 번호"),
-                                                parameterWithName("size").description("페이지 사이즈")
+                                                parameterWithName("size").description("페이지 사이즈").optional()
                                         )
                                         .responseFields(
                                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
