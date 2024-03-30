@@ -32,7 +32,7 @@ public class ErrorLoggerUtils {
 //        }
     }
 
-    public static String formatter(String str) {
+    private static String formatter(String str) {
 
         StringBuilder sb = new StringBuilder();
         String msg = String.format("%-20s", str);
