@@ -1,7 +1,5 @@
 package com.objects.marketbridge.domains.order.domain;
 
-import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
 import com.objects.marketbridge.domains.member.domain.Address;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
@@ -85,12 +83,6 @@ public class Order extends BaseEntity {
     }
 
     //== 비즈니스 로직==//
-//    public Integer changeDetailsReasonAndStatus(String reason, String statusCode) {
-//        return orderDetails.stream()
-//                .mapToInt(od -> od.changeReasonAndStatus(reason, statusCode))
-//                .sum();
-//    }
-
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder) {
 
         orderDetails.stream()
