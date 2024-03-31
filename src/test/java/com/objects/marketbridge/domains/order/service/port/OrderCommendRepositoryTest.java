@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
-class OrderCommendRepositoryTest {
+class OrderCommandRepositoryTest {
 
     @Autowired
-    OrderCommendRepository orderCommendRepository;
+    OrderCommandRepository orderCommandRepository;
 
     @Autowired
     OrderQueryRepository orderQueryRepository;
@@ -37,7 +37,7 @@ class OrderCommendRepositoryTest {
     public void findByOrderId() {
         // given
         Order order = Order.builder().build();
-        Order savedOrder = orderCommendRepository.save(order);
+        Order savedOrder = orderCommandRepository.save(order);
 
         // when
         Optional<Order> foundOrder = orderQueryRepository.findById(savedOrder.getId());
@@ -68,7 +68,7 @@ class OrderCommendRepositoryTest {
         Order order = Order.builder().build();
 
         // when
-        Order savedOrder = orderCommendRepository.save(order);
+        Order savedOrder = orderCommandRepository.save(order);
 
         // then
         assertNotNull(savedOrder.getId());

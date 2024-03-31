@@ -4,7 +4,7 @@ package com.objects.marketbridge.domains.cart.service;
 import com.objects.marketbridge.domains.cart.domain.Cart;
 import com.objects.marketbridge.domains.cart.service.GetCartListService;
 import com.objects.marketbridge.domains.cart.service.dto.GetCartDto;
-import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartDtoRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.common.responseobj.SliceResponse;
@@ -47,7 +47,7 @@ class GetCartListServiceTest {
 
     @Autowired CartQueryRepository cartQueryRepository;
     @Autowired CartDtoRepository cartDtoRepository;
-    @Autowired CartCommendRepository cartCommendRepository;
+    @Autowired CartCommandRepository cartCommandRepository;
     @Autowired ProductRepository productRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired GetCartListService getCartListService;
@@ -196,18 +196,18 @@ class GetCartListServiceTest {
         Cart cart6 = Cart.create(member, product6, false, 1L);
 
 
-        cartCommendRepository.saveAndFlush(cart1);
-        cartCommendRepository.saveAndFlush(cart2);
-        cartCommendRepository.saveAndFlush(cart3);
-        cartCommendRepository.saveAndFlush(cart4);
-        cartCommendRepository.saveAndFlush(cart5);
-        cartCommendRepository.saveAndFlush(cart6);
+        cartCommandRepository.saveAndFlush(cart1);
+        cartCommandRepository.saveAndFlush(cart2);
+        cartCommandRepository.saveAndFlush(cart3);
+        cartCommandRepository.saveAndFlush(cart4);
+        cartCommandRepository.saveAndFlush(cart5);
+        cartCommandRepository.saveAndFlush(cart6);
 
     }
 
     @AfterEach
     void clear() {
-        cartCommendRepository.deleteAllInBatch();
+        cartCommandRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
         prodOptionRepository.deleteAllInBatch();

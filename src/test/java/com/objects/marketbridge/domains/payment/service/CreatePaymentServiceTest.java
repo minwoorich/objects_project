@@ -9,7 +9,7 @@ import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import com.objects.marketbridge.domains.member.domain.Address;
 import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.domain.OrderDetail;
-import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCommandRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.domains.payment.domain.Amount;
 import com.objects.marketbridge.domains.payment.domain.CardInfo;
@@ -41,7 +41,7 @@ class CreatePaymentServiceTest {
     @Autowired PaymentRepository paymentRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired ProductRepository productRepository;
-    @Autowired OrderCommendRepository orderCommendRepository;
+    @Autowired OrderCommandRepository orderCommandRepository;
     @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired
     CreatePaymentService createPaymentService;
@@ -67,7 +67,7 @@ class CreatePaymentServiceTest {
         Order order = createOrder(member, address);
         order.addOrderDetail(orderDetails.get(0));
         order.addOrderDetail(orderDetails.get(1));
-        orderCommendRepository.save(order);
+        orderCommandRepository.save(order);
     }
 
     private List<Product> createProducts() {

@@ -32,7 +32,7 @@ class OrderDetailDtoRepositoryTest {
 
 
     @Autowired
-    OrderCommendRepository orderCommendRepository;
+    OrderCommandRepository orderCommandRepository;
     @Autowired
     ProductRepository productRepository;
     @Autowired
@@ -116,8 +116,8 @@ class OrderDetailDtoRepositoryTest {
 
         productRepository.saveAll(List.of(product1, product2, product3));
         memberRepository.save(member);
-        orderCommendRepository.save(order1);
-        orderCommendRepository.save(order2);
+        orderCommandRepository.save(order1);
+        orderCommandRepository.save(order2);
 
         // when
         Page<GetCancelReturnListDtio.Response> orderCancelReturnListResponsePage = orderDetailDtoRepository.findCancelReturnListDtio(member.getId(), PageRequest.of(0, 3));

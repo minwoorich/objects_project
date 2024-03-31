@@ -1,6 +1,6 @@
 package com.objects.marketbridge.domains.cart.service;
 
-import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,9 +14,9 @@ import java.util.List;
 @Transactional
 public class DeleteCartService {
 
-    private final CartCommendRepository cartCommendRepository;
+    private final CartCommandRepository cartCommandRepository;
 
     public void delete(List<Long> cartIds) {
-        cartCommendRepository.deleteAllByIdInBatch(cartIds);
+        cartCommandRepository.deleteAllByIdInBatch(cartIds);
     }
 }

@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domains.order.infra.order;
 
 import com.objects.marketbridge.domains.order.domain.Order;
-import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCommandRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
@@ -9,12 +9,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class OrderCommendRepositoryImpl implements OrderCommendRepository {
+public class OrderCommandRepositoryImpl implements OrderCommandRepository {
 
     private final OrderJpaRepository orderJpaRepository;
     private final JPAQueryFactory queryFactory;
 
-    public OrderCommendRepositoryImpl(OrderJpaRepository orderJpaRepository, EntityManager em) {
+    public OrderCommandRepositoryImpl(OrderJpaRepository orderJpaRepository, EntityManager em) {
         this.orderJpaRepository = orderJpaRepository;
         this.queryFactory = new JPAQueryFactory(em);
     }

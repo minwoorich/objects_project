@@ -1,13 +1,13 @@
 package com.objects.marketbridge.domains.order.mock;
 
 import com.objects.marketbridge.domains.order.domain.Order;
-import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCommandRepository;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.Objects;
 
-public class FakeOrderCommendRepository extends BaseFakeOrderRepository implements OrderCommendRepository {
+public class FakeOrderCommandRepository extends BaseFakeOrderRepository implements OrderCommandRepository {
 
     @Override
     public Order save(Order order) {

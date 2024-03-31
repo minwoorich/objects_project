@@ -4,7 +4,7 @@ import com.objects.marketbridge.domains.cart.domain.Cart;
 
 import java.util.List;
 
-public interface CartCommendRepository {
+public interface CartCommandRepository {
 
     Cart save(Cart cart);
 

@@ -25,10 +25,10 @@ import static org.assertj.core.api.Assertions.tuple;
 @Slf4j
 class OrderDetailQueryRepositoryTest {
 
-    @Autowired private OrderCommendRepository orderCommendRepository;
+    @Autowired private OrderCommandRepository orderCommandRepository;
     @Autowired private OrderQueryRepository orderQueryRepository;
     @Autowired private OrderDetailQueryRepository orderDetailQueryRepository;
-    @Autowired private OrderDetailCommendRepository orderDetailCommendRepository;
+    @Autowired private OrderDetailCommandRepository orderDetailCommandRepository;
     @Autowired private ProductRepository productRepository;
 
 
@@ -48,11 +48,11 @@ class OrderDetailQueryRepositoryTest {
         order.addOrderDetail(orderDetail2);
         order.addOrderDetail(orderDetail3);
 
-        Order savedOrder = orderCommendRepository.save(order);
+        Order savedOrder = orderCommandRepository.save(order);
         Long orderId = savedOrder.getId();
 
         // when
-        int result = orderDetailCommendRepository.changeAllType(orderId, changeCodeType);
+        int result = orderDetailCommandRepository.changeAllType(orderId, changeCodeType);
 
         // then
         assertThat(result).isEqualTo(3);
@@ -69,7 +69,7 @@ class OrderDetailQueryRepositoryTest {
         List<OrderDetail> orderDetails = List.of(orderDetail1, orderDetail2, orderDetail3);
 
         // when
-        List<OrderDetail> savedOrderDetails = orderDetailCommendRepository.saveAll(orderDetails);
+        List<OrderDetail> savedOrderDetails = orderDetailCommandRepository.saveAll(orderDetails);
 
         // then
         assertThat(savedOrderDetails.size()).isEqualTo(3);
@@ -94,7 +94,7 @@ class OrderDetailQueryRepositoryTest {
 
         List<Product> products = List.of(product1, product2, product3);
         productRepository.saveAll(products);
-        orderCommendRepository.save(order);
+        orderCommandRepository.save(order);
 
         // when
         List<OrderDetail> orderDetails = orderDetailQueryRepository.findByOrder_IdAndProductIn(order.getId(), products);
@@ -160,7 +160,7 @@ class OrderDetailQueryRepositoryTest {
 
         List<Product> products = List.of(product1, product2, product3);
         productRepository.saveAll(products);
-        orderCommendRepository.save(order);
+        orderCommandRepository.save(order);
         List<Long> productIds = products.stream().map(Product::getId).toList();
 
         // when

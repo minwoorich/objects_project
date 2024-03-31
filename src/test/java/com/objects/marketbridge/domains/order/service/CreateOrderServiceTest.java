@@ -46,8 +46,8 @@ class CreateOrderServiceTest {
     @Autowired MemberRepository memberRepository;
     @Autowired AddressRepository addressRepository;
     @Autowired OrderDetailQueryRepository orderDetailQueryRepository;
-    @Autowired OrderCommendRepository orderCommendRepository;
-    @Autowired OrderDetailCommendRepository orderDetailCommendRepository;
+    @Autowired OrderCommandRepository orderCommandRepository;
+    @Autowired OrderDetailCommandRepository orderDetailCommandRepository;
     @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired MemberCouponRepository memberCouponRepository;
 
@@ -55,8 +55,8 @@ class CreateOrderServiceTest {
     void init(){
         // clear 로직
         productRepository.deleteAllInBatch();
-        orderCommendRepository.deleteAllInBatch();
-        orderDetailCommendRepository.deleteAllInBatch();
+        orderCommandRepository.deleteAllInBatch();
+        orderDetailCommandRepository.deleteAllInBatch();
 
         // member 생성
         Member member = Member.builder().email("hong@email.com").name("홍길동").build();

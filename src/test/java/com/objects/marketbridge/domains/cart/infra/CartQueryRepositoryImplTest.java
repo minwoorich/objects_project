@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domains.cart.infra;
 
 import com.objects.marketbridge.domains.cart.domain.Cart;
-import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartDtoRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.domains.member.domain.Member;
@@ -30,13 +30,13 @@ class CartQueryRepositoryImplTest {
 
     @Autowired CartQueryRepository cartQueryRepository;
     @Autowired CartDtoRepository cartDtoRepository;
-    @Autowired CartCommendRepository cartCommendRepository;
+    @Autowired CartCommandRepository cartCommandRepository;
     @Autowired ProductRepository productRepository;
     @Autowired MemberRepository memberRepository;
 
     @AfterEach
     void clear() {
-        cartCommendRepository.deleteAllInBatch();
+        cartCommandRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
     }
@@ -54,7 +54,7 @@ class CartQueryRepositoryImplTest {
 
         Cart cart1 = Cart.create(member, product1, false, 1L);
         Cart cart2 = Cart.create(member, product2, false, 1L);
-        cartCommendRepository.saveAll(List.of(cart1, cart2));
+        cartCommandRepository.saveAll(List.of(cart1, cart2));
 
         //when
         Optional<Cart> findProduct1 = cartQueryRepository.findByProductIdAndMemberId(product1.getId(), member.getId());
@@ -86,12 +86,12 @@ class CartQueryRepositoryImplTest {
         Cart cart4 = Cart.create(member, product4, false, 1L);
         Cart cart5 = Cart.create(member, product5, false, 1L);
         Cart cart6 = Cart.create(member, product6, false, 1L);
-        cartCommendRepository.save(cart1);
-        cartCommendRepository.save(cart2);
-        cartCommendRepository.save(cart3);
-        cartCommendRepository.save(cart4);
-        cartCommendRepository.save(cart5);
-        cartCommendRepository.save(cart6);
+        cartCommandRepository.save(cart1);
+        cartCommandRepository.save(cart2);
+        cartCommandRepository.save(cart3);
+        cartCommandRepository.save(cart4);
+        cartCommandRepository.save(cart5);
+        cartCommandRepository.save(cart6);
 
         int pageNumber = 0;
         int pageSize = 2;
@@ -134,12 +134,12 @@ class CartQueryRepositoryImplTest {
         Cart cart5 = Cart.create(member, product5, false, 1L);
         Cart cart6 = Cart.create(member, product6, false, 1L);
 
-        cartCommendRepository.save(cart1);
-        cartCommendRepository.save(cart2);
-        cartCommendRepository.save(cart3);
-        cartCommendRepository.save(cart4);
-        cartCommendRepository.save(cart5);
-        cartCommendRepository.save(cart6);
+        cartCommandRepository.save(cart1);
+        cartCommandRepository.save(cart2);
+        cartCommandRepository.save(cart3);
+        cartCommandRepository.save(cart4);
+        cartCommandRepository.save(cart5);
+        cartCommandRepository.save(cart6);
 
         int pageNumber = 1;
         int pageSize = 4;
@@ -182,12 +182,12 @@ class CartQueryRepositoryImplTest {
         Cart cart5 = Cart.create(member, product5, false, 1L);
         Cart cart6 = Cart.create(member, product6, false, 1L);
 
-        cartCommendRepository.save(cart1);
-        cartCommendRepository.save(cart2);
-        cartCommendRepository.save(cart3);
-        cartCommendRepository.save(cart4);
-        cartCommendRepository.save(cart5);
-        cartCommendRepository.save(cart6);
+        cartCommandRepository.save(cart1);
+        cartCommandRepository.save(cart2);
+        cartCommandRepository.save(cart3);
+        cartCommandRepository.save(cart4);
+        cartCommandRepository.save(cart5);
+        cartCommandRepository.save(cart6);
 
         //when
         Long countResult = cartQueryRepository.countByMemberId(member.getId());
