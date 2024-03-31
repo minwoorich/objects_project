@@ -1,10 +1,10 @@
 package com.objects.marketbridge.domains.cart.service;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.domains.cart.domain.Cart;
 import com.objects.marketbridge.domains.cart.service.dto.CreateCartDto;
 import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
-import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
@@ -13,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUPLICATE_OPERATION;
 
