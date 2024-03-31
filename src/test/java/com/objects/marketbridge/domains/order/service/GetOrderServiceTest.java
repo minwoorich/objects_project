@@ -11,7 +11,7 @@ import com.objects.marketbridge.domains.order.controller.dto.select.GetOrderDeta
 import com.objects.marketbridge.domains.order.controller.dto.select.GetOrderHttp;
 import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.domain.OrderDetail;
-import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCommandRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.domains.payment.domain.Amount;
@@ -45,7 +45,7 @@ class GetOrderServiceTest {
 
     @Autowired
     GetOrderService getOrderService;
-    @Autowired OrderCommendRepository orderCommendRepository;
+    @Autowired OrderCommandRepository orderCommandRepository;
     @Autowired OrderDtoRepository orderDtoRepository;
     @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired MemberRepository memberRepository;
@@ -54,7 +54,7 @@ class GetOrderServiceTest {
 
     @AfterEach
     void clear() {
-        orderCommendRepository.deleteAllInBatch();
+        orderCommandRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
     }
@@ -97,7 +97,7 @@ class GetOrderServiceTest {
         Order order3 = createOrder(member, address, "상품1 외 2건", "orderNo3", 9000L, 9000L, 0L,"tid3", List.of(orderDetail7, orderDetail8, orderDetail9), payment3);
         Order order4 = createOrder(member, address, "상품2 외 2건", "orderNo4", 12000L, 12000L, 0L,"tid4", List.of(orderDetail10, orderDetail11, orderDetail12), payment4);
 
-        orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
+        orderCommandRepository.saveAll(List.of(order1, order2, order3, order4));
     }
     private Address createAddress(AddressValue addressValue, Boolean isDefault) {
         return Address.create(addressValue, isDefault);

@@ -80,7 +80,7 @@ class OrderCancelServiceTest {
                 .statusCode(DELIVERY_COMPLETED.getCode())
                 .build();
 
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         // when // then
         assertThatThrownBy(() -> testContainer.orderCancelService.confirmCancel(request, dateTimeHolder))
@@ -115,7 +115,7 @@ class OrderCancelServiceTest {
                 .statusCode(ORDER_RECEIVED.getCode())
                 .build();
 
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         // when // then
         assertThatThrownBy(() -> testContainer.orderCancelService.confirmCancel(request, dateTimeHolder))
@@ -147,7 +147,7 @@ class OrderCancelServiceTest {
                 .build();
 
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderDetailId = 1L;
         Long numberOfCancellation = 2L;
@@ -188,7 +188,7 @@ class OrderCancelServiceTest {
                 .build();
 
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderDetailId = 1L;
         Long numberOfCancellation = 2L;
@@ -239,7 +239,7 @@ class OrderCancelServiceTest {
                 .build();
 
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderDetailId = 1L;
         Long numberOfCancellation = 2L;
@@ -290,7 +290,7 @@ class OrderCancelServiceTest {
                 .build();
 
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderDetailId = 1L;
         Long numberOfCancellation = 2L;
@@ -344,7 +344,7 @@ class OrderCancelServiceTest {
                 .build();
 
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderDetailId = 1L;
         Long numberOfCancellation = 2L;
@@ -388,9 +388,9 @@ class OrderCancelServiceTest {
                 .reason("단순변심")
                 .build();
 
-        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
+        testContainer.orderCancelReturnCommandRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderCancelId = 1L;
         String membership = WOW.getText();
@@ -444,9 +444,9 @@ class OrderCancelServiceTest {
                 .reason("단순변심")
                 .build();
 
-        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
+        testContainer.orderCancelReturnCommandRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderCancelId = 1L;
         String membership = BASIC.getText();
@@ -510,9 +510,9 @@ class OrderCancelServiceTest {
                 .reason("단순변심")
                 .build();
 
-        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
+        testContainer.orderCancelReturnCommandRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderCancelId = 1L;
         String membership = WOW.getText();
@@ -576,9 +576,9 @@ class OrderCancelServiceTest {
                 .reason("단순변심")
                 .build();
 
-        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
+        testContainer.orderCancelReturnCommandRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderCancelId = 1L;
         String membership = BASIC.getText();

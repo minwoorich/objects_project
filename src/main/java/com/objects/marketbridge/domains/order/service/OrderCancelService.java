@@ -10,9 +10,9 @@ import com.objects.marketbridge.domains.payment.service.port.PaymentClient;
 import com.objects.marketbridge.domains.order.service.dto.ConfirmCancelDto;
 import com.objects.marketbridge.domains.order.service.dto.GetCancelDetailDto;
 import com.objects.marketbridge.domains.order.service.dto.RequestCancelDto;
-import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnCommandRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnQueryRepository;
-import com.objects.marketbridge.domains.order.service.port.OrderDetailCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailCommandRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderDetailQueryRepository;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
@@ -31,8 +31,8 @@ import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.NON
 public class OrderCancelService extends OrderCancelReturnService {
 
     @Builder
-    public OrderCancelService(PaymentClient paymentClient, DateTimeHolder dateTimeHolder, OrderDetailQueryRepository orderDetailQueryRepository, OrderDetailCommendRepository orderDetailCommendRepository, OrderCancelReturnQueryRepository orderCancelReturnQueryRepository, OrderCancelReturnCommendRepository orderCancelReturnCommendRepository) {
-        super(paymentClient, dateTimeHolder, orderDetailQueryRepository, orderDetailCommendRepository, orderCancelReturnQueryRepository, orderCancelReturnCommendRepository);
+    public OrderCancelService(PaymentClient paymentClient, DateTimeHolder dateTimeHolder, OrderDetailQueryRepository orderDetailQueryRepository, OrderDetailCommandRepository orderDetailCommandRepository, OrderCancelReturnQueryRepository orderCancelReturnQueryRepository, OrderCancelReturnCommandRepository orderCancelReturnCommandRepository) {
+        super(paymentClient, dateTimeHolder, orderDetailQueryRepository, orderDetailCommandRepository, orderCancelReturnQueryRepository, orderCancelReturnCommandRepository);
     }
 
     @Counted("order")

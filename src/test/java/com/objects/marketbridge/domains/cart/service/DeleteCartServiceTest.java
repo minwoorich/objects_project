@@ -2,7 +2,7 @@ package com.objects.marketbridge.domains.cart.service;
 
 import com.objects.marketbridge.domains.cart.domain.Cart;
 import com.objects.marketbridge.domains.cart.service.DeleteCartService;
-import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
@@ -33,14 +33,14 @@ class DeleteCartServiceTest {
     @Autowired
     ProductRepository productRepository;
     @Autowired CartQueryRepository cartQueryRepository;
-    @Autowired CartCommendRepository cartCommendRepository;
+    @Autowired CartCommandRepository cartCommandRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired EntityManager em;
 
     @AfterEach
     void clear() {
         productRepository.deleteAllInBatch();
-        cartCommendRepository.deleteAllInBatch();
+        cartCommandRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
     }
 
@@ -52,10 +52,10 @@ class DeleteCartServiceTest {
         Cart cart2 = Cart.builder().build();
         Cart cart3 = Cart.builder().build();
         Cart cart4 = Cart.builder().build();
-        cartCommendRepository.save(cart1);
-        cartCommendRepository.save(cart2);
-        cartCommendRepository.save(cart3);
-        cartCommendRepository.save(cart4);
+        cartCommandRepository.save(cart1);
+        cartCommandRepository.save(cart2);
+        cartCommandRepository.save(cart3);
+        cartCommandRepository.save(cart4);
 
         List<Long> selected = List.of(cart1.getId());
 
@@ -76,10 +76,10 @@ class DeleteCartServiceTest {
         Cart cart2 = Cart.builder().build();
         Cart cart3 = Cart.builder().build();
         Cart cart4 = Cart.builder().build();
-        cartCommendRepository.save(cart1);
-        cartCommendRepository.save(cart2);
-        cartCommendRepository.save(cart3);
-        cartCommendRepository.save(cart4);
+        cartCommandRepository.save(cart1);
+        cartCommandRepository.save(cart2);
+        cartCommandRepository.save(cart3);
+        cartCommandRepository.save(cart4);
 
         List<Long> selected = List.of(cart1.getId());
 

@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domains.cart.infra;
 
 import com.objects.marketbridge.domains.cart.domain.Cart;
-import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 @Slf4j
 @RequiredArgsConstructor
-public class CartCommendRepositoryImpl implements CartCommendRepository {
+public class CartCommandRepositoryImpl implements CartCommandRepository {
 
     private final CartJpaRepository cartJpaRepository;
 

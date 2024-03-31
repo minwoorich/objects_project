@@ -24,11 +24,11 @@ public class TestContainer {
     public final OrderReturnService orderReturnService;
 
     public final OrderQueryRepository orderQueryRepository;
-    public final OrderCommendRepository orderCommendRepository;
+    public final OrderCommandRepository orderCommandRepository;
     public final OrderDetailQueryRepository orderDetailQueryRepository;
-    public final OrderDetailCommendRepository orderDetailCommendRepository;
+    public final OrderDetailCommandRepository orderDetailCommandRepository;
     public final OrderCancelReturnQueryRepository orderCancelReturnQueryRepository;
-    public final OrderCancelReturnCommendRepository orderCancelReturnCommendRepository;
+    public final OrderCancelReturnCommandRepository orderCancelReturnCommandRepository;
     public final OrderDtoRepository orderDtoRepository;
     public final OrderDetailDtoRepository orderDetailDtoRepository;
     public final ProductRepository productRepository;
@@ -41,11 +41,11 @@ public class TestContainer {
     public TestContainer(DateTimeHolder dateTimeHolder) {
         // Repository
         this.orderQueryRepository = new FakeOrderQueryRepository();
-        this.orderCommendRepository = new FakeOrderCommendRepository();
+        this.orderCommandRepository = new FakeOrderCommandRepository();
         this.orderDetailQueryRepository = new FakeOrderDetailQueryRepository();
-        this.orderDetailCommendRepository = new FakeOrderDetailCommendRepository();
+        this.orderDetailCommandRepository = new FakeOrderDetailCommandRepository();
         this.orderCancelReturnQueryRepository = new FakeOrderCancelReturnQueryRepository();
-        this.orderCancelReturnCommendRepository = new FakeOrderCancelReturnCommendRepository();
+        this.orderCancelReturnCommandRepository = new FakeOrderCancelReturnCommandRepository();
         this.orderDtoRepository = new FakeOrderDtoRepository();
         this.orderDetailDtoRepository = new FakeOrderDetailDtoRepository();
         this.productRepository = new FakeProductRepository();
@@ -57,17 +57,17 @@ public class TestContainer {
         // Service
         this.orderCancelService = OrderCancelService.builder()
                 .orderDetailQueryRepository(this.orderDetailQueryRepository)
-                .orderDetailCommendRepository(this.orderDetailCommendRepository)
+                .orderDetailCommandRepository(this.orderDetailCommandRepository)
                 .orderCancelReturnQueryRepository(this.orderCancelReturnQueryRepository)
-                .orderCancelReturnCommendRepository(this.orderCancelReturnCommendRepository)
+                .orderCancelReturnCommandRepository(this.orderCancelReturnCommandRepository)
                 .paymentClient(this.paymentClient)
                 .dateTimeHolder(dateTimeHolder)
                 .build();
         this.orderReturnService = OrderReturnService.builder()
                 .orderDetailQueryRepository(this.orderDetailQueryRepository)
-                .orderDetailCommendRepository(this.orderDetailCommendRepository)
+                .orderDetailCommandRepository(this.orderDetailCommandRepository)
                 .orderCancelReturnQueryRepository(this.orderCancelReturnQueryRepository)
-                .orderCancelReturnCommendRepository(this.orderCancelReturnCommendRepository)
+                .orderCancelReturnCommandRepository(this.orderCancelReturnCommandRepository)
                 .paymentClient(this.paymentClient)
                 .dateTimeHolder(dateTimeHolder)
                 .build();

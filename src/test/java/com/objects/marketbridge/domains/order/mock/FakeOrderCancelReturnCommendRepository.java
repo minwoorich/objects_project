@@ -1,12 +1,12 @@
 package com.objects.marketbridge.domains.order.mock;
 
 import com.objects.marketbridge.domains.order.domain.OrderCancelReturn;
-import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnCommandRepository;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Objects;
 
-public class FakeOrderCancelReturnCommendRepository extends BaseFakeOrderCancelReturnRepository implements OrderCancelReturnCommendRepository {
+public class FakeOrderCancelReturnCommandRepository extends BaseFakeOrderCancelReturnRepository implements OrderCancelReturnCommandRepository {
 
     @Override
     public OrderCancelReturn save(OrderCancelReturn orderCancelReturn) {

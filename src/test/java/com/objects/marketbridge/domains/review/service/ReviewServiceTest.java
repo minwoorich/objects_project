@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domains.review.service;
 
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
-import com.objects.marketbridge.domains.order.service.port.OrderDetailCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailCommandRepository;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import com.objects.marketbridge.domains.review.domain.SurveyCategory;
 import com.objects.marketbridge.domains.review.domain.SurveyContent;
@@ -33,7 +33,7 @@ public class ReviewServiceTest {
     @Autowired
     ProductRepository productRepository;
     @Autowired
-    OrderDetailCommendRepository orderDetailCommendRepository;
+    OrderDetailCommandRepository orderDetailCommandRepository;
     @Autowired
     ReviewService reviewService;
     @Autowired
@@ -242,7 +242,7 @@ public class ReviewServiceTest {
 //        OrderDetail testOrderDetail = OrderDetail.builder()
 //                .statusCode(StatusCodeType.DELIVERY_COMPLETED.toString())
 //                .build();
-//        orderDetailCommendRepository.save(testOrderDetail);
+//        orderDetailCommandRepository.save(testOrderDetail);
 //        Long testOrderDetailId = testOrderDetail.getId();
 //
 //        List<String> testReviewImgUrls = new ArrayList<>();
@@ -286,7 +286,7 @@ public class ReviewServiceTest {
 //        OrderDetail testOrderDetail = OrderDetail.builder()
 //                .statusCode(StatusCodeType.DELIVERY_COMPLETED.toString())
 //                .build();
-//        orderDetailCommendRepository.save(testOrderDetail);
+//        orderDetailCommandRepository.save(testOrderDetail);
 //        Long testOrderDetailId = testOrderDetail.getId();
 //
 //        List<String> testReviewImgUrls = new ArrayList<>();
@@ -331,7 +331,7 @@ public class ReviewServiceTest {
 //        OrderDetail testOrderDetail = OrderDetail.builder()
 //                .statusCode(StatusCodeType.DELIVERY_COMPLETED.toString())
 //                .build();
-//        orderDetailCommendRepository.save(testOrderDetail);
+//        orderDetailCommandRepository.save(testOrderDetail);
 //        Long testOrderDetailId = testOrderDetail.getId();
 //
 //        List<String> testReviewImgUrls = new ArrayList<>();
@@ -391,7 +391,7 @@ public class ReviewServiceTest {
 //        OrderDetail testOrderDetail = OrderDetail.builder()
 //                .statusCode(StatusCodeType.DELIVERY_COMPLETED.toString())
 //                .build();
-//        orderDetailCommendRepository.save(testOrderDetail);
+//        orderDetailCommandRepository.save(testOrderDetail);
 //        Long testOrderDetailId = testOrderDetail.getId();
 //
 //        List<String> testReviewImgUrls = new ArrayList<>();
