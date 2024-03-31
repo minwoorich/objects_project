@@ -3,7 +3,7 @@ package com.objects.marketbridge.domains.cart.service;
 import com.objects.marketbridge.domains.cart.domain.Cart;
 import com.objects.marketbridge.domains.cart.service.UpdateCartService;
 import com.objects.marketbridge.domains.cart.service.dto.UpdateCartDto;
-import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.domains.member.domain.Member;
@@ -31,7 +31,7 @@ class UpdateCartServiceTest {
     UpdateCartService updateCartService;
     @Autowired ProductRepository productRepository;
     @Autowired CartQueryRepository cartQueryRepository;
-    @Autowired CartCommendRepository cartCommendRepository;
+    @Autowired CartCommandRepository cartCommandRepository;
     @Autowired MemberRepository memberRepository;
 
     @DisplayName("장바구니 수량을 수정 할 수 있다")
@@ -45,7 +45,7 @@ class UpdateCartServiceTest {
         memberRepository.save(member);
 
         Cart cart = Cart.builder().member(member).product(product).build();
-        cartCommendRepository.save(cart);
+        cartCommandRepository.save(cart);
 
         UpdateCartDto updateDto = UpdateCartDto.builder().cartId(cart.getId()).quantity(3L).build();
 
@@ -67,7 +67,7 @@ class UpdateCartServiceTest {
         memberRepository.save(member);
 
         Cart cart = Cart.builder().member(member).product(product).build();
-        cartCommendRepository.save(cart);
+        cartCommandRepository.save(cart);
 
         UpdateCartDto updateDto1 = UpdateCartDto.builder().cartId(cart.getId()).quantity(1L).build();
         UpdateCartDto updateDto2 = UpdateCartDto.builder().cartId(cart.getId()).quantity(100L).build();

@@ -8,7 +8,7 @@ import com.objects.marketbridge.domains.member.domain.MembershipType;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.domain.OrderDetail;
-import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCommandRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderDtoRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.domains.payment.controller.dto.CancelledPaymentHttp;
@@ -41,7 +41,7 @@ import static com.objects.marketbridge.domains.payment.domain.PaymentType.*;
 @Slf4j
 class CancelledPaymentHttpTest {
 
-    @Autowired OrderCommendRepository orderCommendRepository;
+    @Autowired OrderCommandRepository orderCommandRepository;
     @Autowired OrderQueryRepository orderQueryRepository;
     @Autowired OrderDtoRepository orderDtoRepository;
     @Autowired MemberRepository memberRepository;
@@ -64,7 +64,7 @@ class CancelledPaymentHttpTest {
         OrderDetail orderDetail3 = OrderDetail.create("tid1", null, product3, "orderNo1", null, 3000L, 1L,  PAYMENT_COMPLETED.getCode(), null);
 
         Order order = createOrder(member, address, "상품1 외 2건", "orderNo1", 6000L, 6000L, 0L, "tid1", List.of(orderDetail1, orderDetail2, orderDetail3), null);
-        orderCommendRepository.save(order);
+        orderCommandRepository.save(order);
     }
 
     private Address createAddress(AddressValue addressValue, Boolean isDefault) {

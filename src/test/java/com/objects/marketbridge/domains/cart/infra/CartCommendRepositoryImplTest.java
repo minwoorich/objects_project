@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domains.cart.infra;
 
 import com.objects.marketbridge.domains.cart.domain.Cart;
-import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import jakarta.persistence.EntityManager;
@@ -23,9 +23,9 @@ import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 @ActiveProfiles("test")
 @Transactional
 @Slf4j
-class CartCommendRepositoryImplTest {
+class CartCommandRepositoryImplTest {
     @Autowired CartQueryRepository cartQueryRepository;
-    @Autowired CartCommendRepository cartCommendRepository;
+    @Autowired CartCommandRepository cartCommandRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired EntityManager em;
 
@@ -38,12 +38,12 @@ class CartCommendRepositoryImplTest {
         Cart cart3 = Cart.builder().build();
         Cart cart4 = Cart.builder().build();
         Cart cart5 = Cart.builder().build();
-        cartCommendRepository.saveAll(List.of(cart1, cart2, cart3, cart4, cart5));
+        cartCommandRepository.saveAll(List.of(cart1, cart2, cart3, cart4, cart5));
 
         List<Long> selected = List.of(cart1.getId(), cart2.getId());
 
         //when
-        cartCommendRepository.deleteAllByIdInBatch(selected);
+        cartCommandRepository.deleteAllByIdInBatch(selected);
         em.clear();
         em.flush();
 

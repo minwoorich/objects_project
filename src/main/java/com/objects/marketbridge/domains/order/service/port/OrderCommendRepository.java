@@ -5,7 +5,7 @@ import com.objects.marketbridge.domains.order.domain.Order;
 
 import java.util.List;
 
-public interface OrderCommendRepository {
+public interface OrderCommandRepository {
 
     Order save(Order order);
 

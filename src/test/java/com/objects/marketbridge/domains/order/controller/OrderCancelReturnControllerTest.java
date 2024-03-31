@@ -95,11 +95,11 @@ public class OrderCancelReturnControllerTest {
         order.addOrderDetail(orderDetail1);
         order.addOrderDetail(orderDetail2);
 
-        testContainer.orderCommendRepository.save(order);
+        testContainer.orderCommandRepository.save(order);
         testContainer.productRepository.save(product1);
         testContainer.productRepository.save(product2);
-        testContainer.orderDetailCommendRepository.save(orderDetail1);
-        testContainer.orderDetailCommendRepository.save(orderDetail2);
+        testContainer.orderDetailCommandRepository.save(orderDetail1);
+        testContainer.orderDetailCommandRepository.save(orderDetail2);
         testContainer.memberRepository.save(member);
 
         Integer page = 0;

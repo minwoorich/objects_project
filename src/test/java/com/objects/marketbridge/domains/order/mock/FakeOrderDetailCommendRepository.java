@@ -1,7 +1,7 @@
 package com.objects.marketbridge.domains.order.mock;
 
 import com.objects.marketbridge.domains.order.domain.OrderDetail;
-import com.objects.marketbridge.domains.order.service.port.OrderDetailCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailCommandRepository;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Objects;
 
 import static com.objects.marketbridge.domains.order.domain.StatusCodeType.ORDER_PARTIAL_CANCEL;
 
-public class FakeOrderDetailCommendRepository extends BaseFakeOrderDetailRepository implements OrderDetailCommendRepository {
+public class FakeOrderDetailCommandRepository extends BaseFakeOrderDetailRepository implements OrderDetailCommandRepository {
 
     @Override
     public void save(OrderDetail orderDetail) {

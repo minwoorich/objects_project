@@ -4,7 +4,7 @@ import com.objects.marketbridge.domains.order.domain.OrderDetail;
 
 import java.util.List;
 
-public interface OrderDetailCommendRepository {
+public interface OrderDetailCommandRepository {
 
     void save(OrderDetail orderDetail);
 

@@ -8,9 +8,9 @@ import com.objects.marketbridge.domains.order.domain.OrderDetail;
 import com.objects.marketbridge.domains.payment.service.dto.RefundCancelDto;
 import com.objects.marketbridge.domains.payment.service.dto.RefundDto;
 import com.objects.marketbridge.domains.payment.service.port.PaymentClient;
-import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnCommandRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderCancelReturnQueryRepository;
-import com.objects.marketbridge.domains.order.service.port.OrderDetailCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailCommandRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderDetailQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +27,9 @@ public abstract class OrderCancelReturnService {
     protected final DateTimeHolder dateTimeHolder;
 
     protected final OrderDetailQueryRepository orderDetailQueryRepository;
-    protected final OrderDetailCommendRepository orderDetailCommendRepository;
+    protected final OrderDetailCommandRepository orderDetailCommandRepository;
     protected final OrderCancelReturnQueryRepository orderCancelReturnQueryRepository;
-    private final OrderCancelReturnCommendRepository orderCancelReturnCommendRepository;
+    private final OrderCancelReturnCommandRepository orderCancelReturnCommandRepository;
 
     protected <T> T confirmProcess(Long orderDetailId, String reason, Long numberOfOperations, DateTimeHolder dateTimeHolder, OrderDetailOperation operation, ResponseBuilder<T> responseBuilder) {
         OrderDetail orderDetail = orderDetailQueryRepository.findById(orderDetailId);
@@ -38,7 +38,7 @@ public abstract class OrderCancelReturnService {
 
         RefundDto refundDto = paymentClient.refund(createRefundCancelDto(getTid(orderDetail), orderDetail.cancelAmount()));
 
-        orderCancelReturnCommendRepository.save(OrderCancelReturn.create(orderDetail, statusInfo, reason));
+        orderCancelReturnCommandRepository.save(OrderCancelReturn.create(orderDetail, statusInfo, reason));
 
         return responseBuilder.build(orderDetail, refundDto);
     }

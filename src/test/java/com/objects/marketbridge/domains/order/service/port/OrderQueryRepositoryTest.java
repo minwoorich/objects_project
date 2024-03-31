@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OrderQueryRepositoryTest {
 
     @Autowired
-    OrderCommendRepository orderCommendRepository;
+    OrderCommandRepository orderCommandRepository;
     @Autowired
     ProductRepository productRepository;
     @Autowired
@@ -93,7 +93,7 @@ class OrderQueryRepositoryTest {
         Order order3 = createOrder(member, address, "3", List.of(orderDetail7, orderDetail8, orderDetail9), payment3); // 1,3,4
         Order order4 = createOrder(member, address, "4", List.of(orderDetail10, orderDetail11, orderDetail12), payment4); // 2,3,4
 
-        orderCommendRepository.saveAll(List.of(order1, order2, order3, order4));
+        orderCommandRepository.saveAll(List.of(order1, order2, order3, order4));
 
         Pageable pageSize1_3 = PageRequest.of(1, 3);
 //        Pageable pageSize1_3 = PageRequest.of(0, 4);
@@ -142,7 +142,7 @@ class OrderQueryRepositoryTest {
         Payment payment = createPayment("카드", "카카오뱅크");
 
         Order order = createOrder(member, address, "1", List.of(orderDetail1, orderDetail2, orderDetail3), payment);
-        orderCommendRepository.save(order);
+        orderCommandRepository.save(order);
 
         // when
         Order findOrder = orderQueryRepository.findByOrderIdFetchJoin(order.getId());

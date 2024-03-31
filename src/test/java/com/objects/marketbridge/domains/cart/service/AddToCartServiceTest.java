@@ -4,7 +4,7 @@ package com.objects.marketbridge.domains.cart.service;
 import com.objects.marketbridge.domains.cart.domain.Cart;
 import com.objects.marketbridge.domains.cart.service.AddToCartService;
 import com.objects.marketbridge.domains.cart.service.dto.CreateCartDto;
-import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.*;
 @ActiveProfiles("test")
 @Transactional
 class AddToCartServiceTest {
-    @Autowired CartCommendRepository cartCommendRepository;
+    @Autowired CartCommandRepository cartCommandRepository;
     @Autowired CartQueryRepository cartQueryRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired ProductRepository productRepository;
@@ -50,12 +50,12 @@ class AddToCartServiceTest {
 
         Cart cart = Cart.create(member, addedProduct, false, 2L);
         Cart cart2 = Cart.create(member2, product1, false, 2L);
-        cartCommendRepository.save(cart);
-        cartCommendRepository.save(cart2);
+        cartCommandRepository.save(cart);
+        cartCommandRepository.save(cart2);
     }
     @AfterEach
     void clear() {
-        cartCommendRepository.deleteAllInBatch();
+        cartCommandRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
     }

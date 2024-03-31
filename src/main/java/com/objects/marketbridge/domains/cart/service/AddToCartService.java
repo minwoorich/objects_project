@@ -1,10 +1,10 @@
 package com.objects.marketbridge.domains.cart.service;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.domains.cart.domain.Cart;
 import com.objects.marketbridge.domains.cart.service.dto.CreateCartDto;
-import com.objects.marketbridge.domains.cart.service.port.CartCommendRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
-import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
@@ -14,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUPLICATE_OPERATION;
 
 @Service
@@ -24,7 +22,7 @@ import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.DUP
 @Transactional(readOnly = true)
 public class AddToCartService {
 
-    private final CartCommendRepository cartCommendRepository;
+    private final CartCommandRepository cartCommandRepository;
     private final CartQueryRepository cartQueryRepository;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
@@ -34,7 +32,7 @@ public class AddToCartService {
         // 1. 이미 장바구니에 담긴 상품인지 아닌지 검증
         validDuplicate(createCartDto.getProductId(), createCartDto.getMemberId());
 
-        return cartCommendRepository.save(create(createCartDto));
+        return cartCommandRepository.save(create(createCartDto));
     }
 
     private Cart create(CreateCartDto createCartDto) {
