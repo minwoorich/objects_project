@@ -99,16 +99,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
     private OrderSpecifier[] createOrderSpecifierArray(Sort sort) {
         ArrayList<OrderSpecifier> orderSpecifiers = new ArrayList<>();
-        sort.forEach(o -> {
-            switch (o.getProperty()) {
-                case "createdAt" :
-                    orderSpecifiers.add(MyQueryDslUtils.createOrderSpecifier(o, order, "createdAt"));
-                    break;
-
-                default:
-                    break;
-            }
-        });
+        sort.forEach(o -> orderSpecifiers.add(MyQueryDslUtils.createOrderSpecifier(o, order, o.getProperty())));
 
         return orderSpecifiers.toArray(new OrderSpecifier[0]);
     }
