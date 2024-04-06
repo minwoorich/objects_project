@@ -1,6 +1,10 @@
 package com.objects.marketbridge.domains.order.mock;
 
 import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.cart.mock.FakeCartCommandRepository;
+import com.objects.marketbridge.domains.cart.mock.FakeCartQueryRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import com.objects.marketbridge.domains.order.controller.OrderCancelController;
 import com.objects.marketbridge.domains.order.controller.OrderCancelReturnController;
@@ -36,6 +40,8 @@ public class TestContainer {
     public final MemberCouponRepository memberCouponRepository;
     public final MemberRepository memberRepository;
     public final PaymentClient paymentClient;
+    public final CartQueryRepository cartQueryRepository;
+    public final CartCommandRepository cartCommandRepository;
 
     @Builder
     public TestContainer(DateTimeHolder dateTimeHolder) {
@@ -53,6 +59,8 @@ public class TestContainer {
         this.memberCouponRepository = new FakeMemberCouponRepository();
         this.memberRepository = new FakeMemberRepository();
         this.paymentClient = new FakePaymentClient(dateTimeHolder);
+        this.cartQueryRepository = new FakeCartQueryRepository();
+        this.cartCommandRepository = new FakeCartCommandRepository();
 
         // Service
         this.orderCancelService = OrderCancelService.builder()
