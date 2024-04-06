@@ -22,7 +22,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-public class CartQueryRepositoryTestWithMock {
+public class FakeCartQueryRepositoryTest {
+
     CartQueryRepository cartQueryRepository = new FakeCartQueryRepository();
     MemberRepository memberRepository = new FakeMemberRepository();
     ProductRepository productRepository = new FakeProductRepository();
@@ -115,11 +116,12 @@ public class CartQueryRepositoryTestWithMock {
 
         //then
         assertThat(carts).hasSize(3);
-
     }
 
     @AfterEach
     void afterEach() {
         BaseFakeCartRepository.getInstance().clear();
+        memberRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
     }
 }
