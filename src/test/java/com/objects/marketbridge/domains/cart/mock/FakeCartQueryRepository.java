@@ -42,6 +42,6 @@ public class FakeCartQueryRepository extends BaseFakeCartRepository implements C
 
     @Override
     public Slice<Cart> findSlicedCart(Pageable pageable, Long memberId) {
-        return null;
+        throw new IllegalArgumentException("findSlicedCart()는 아직 구현이 되지 않았습니다");
     }
 }
