@@ -59,11 +59,15 @@ public class Cart extends BaseEntity {
     }
 
     public Cart updateQuantity(Long quantity) {
-        if (quantity < 1 || quantity > 100) {
-            throw CustomLogicException.createBadRequestError(INVALID_INPUT_VALUE, "장바구니 수량은 0 이상 100 이하 입니다");
-        }
+        validQuantity(quantity);
         this.quantity = quantity;
 
         return this;
+    }
+
+    private void validQuantity(Long quantity) {
+        if (quantity < 1 || quantity > 100) {
+            throw CustomLogicException.createBadRequestError(INVALID_INPUT_VALUE, "장바구니 수량은 0 이상 100 이하 입니다");
+        }
     }
 }
