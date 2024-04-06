@@ -21,24 +21,27 @@ public class FakeCartQueryRepository extends BaseFakeCartRepository implements C
     }
 
     @Override
-    public Optional<Cart> findByProductIdAndMemberId(Long productId, Long memberId) {
-        return Optional.empty();
-    }
-
-
-
-    @Override
-    public Slice<Cart> findSlicedCart(Pageable pageable, Long memberId) {
-        return null;
-    }
-
-    @Override
     public List<Cart> findAll() {
-        return null;
+        return getInstance().getData();
+    }
+
+    @Override
+    public Optional<Cart> findByProductIdAndMemberId(Long productId, Long memberId) {
+        return getInstance().getData().stream()
+                .filter(cart -> Objects.equals(productId, cart.getProduct().getId()))
+                .filter(cart -> Objects.equals(memberId, cart.getMember().getId()))
+                .findAny();
     }
 
     @Override
     public Long countByMemberId(Long memberId) {
+        return getInstance().getData().stream()
+                .filter(cart -> Objects.equals(cart.getMember().getId(), memberId))
+                .count();
+    }
+
+    @Override
+    public Slice<Cart> findSlicedCart(Pageable pageable, Long memberId) {
         return null;
     }
 }
