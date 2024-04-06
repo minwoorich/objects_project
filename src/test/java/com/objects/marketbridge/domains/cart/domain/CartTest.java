@@ -1,6 +1,9 @@
 package com.objects.marketbridge.domains.cart.domain;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.product.domain.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -53,6 +56,38 @@ class CartTest {
         //then
         assertThat(thrown1).isInstanceOf(CustomLogicException.class).hasMessage("장바구니 수량은 0 이상 100 이하 입니다");
         assertThat(thrown2).isInstanceOf(CustomLogicException.class).hasMessage("장바구니 수량은 0 이상 100 이하 입니다");
+    }
+
+    @DisplayName("장바구니를 생성 할 수 있다.")
+    @Test
+    void create() {
+        // given
+        Member member = Member.builder().name("임꺽정").build();
+        Product product = Product.builder().productNo("productNo1").stock(100L).build();
+
+        // when
+        Cart cart = Cart.create(member, product, false, 1L);
+
+        //then
+        Assertions.assertThat(cart.getQuantity()).isEqualTo(1L);
+        Assertions.assertThat(cart.getMember().getName()).isEqualTo("임꺽정");
+        Assertions.assertThat(cart.getProduct().getProductNo()).isEqualTo("productNo1");
+        Assertions.assertThat(cart.getIsSubs()).isFalse();
+
+    }
+
+    @DisplayName("재고보다 많은 수량을 담으려고 할 경우 에러가 발생한다.")
+    @Test
+    void create_error_with_stock() {
+        // given
+        Member member = Member.builder().name("임꺽정").build();
+        Product product = Product.builder().productNo("productNo1").stock(1L).build();
+
+        // when
+        Throwable thrown = catchThrowable(() -> Cart.create(member, product, false, 10L));
+
+        //then
+        assertThat(thrown).isInstanceOf(CustomLogicException.class).hasMessage(ErrorCode.OUT_OF_STOCK.getMessage());
     }
 
 }
