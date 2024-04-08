@@ -49,4 +49,19 @@ class CouponRepositoryImplTestWithFake {
                 extracting(c -> c.getProduct().getProductNo())
                 .containsExactly(productNo, productNo, productNo);
     }
+
+    @DisplayName("상품에 등록된 쿠폰이 없을 경우 빈 List 객체를 반환한다.")
+    @Test
+    void findByProductId_empty(){
+        //given
+        // 아무런 쿠폰도 저장하지 않은 상태
+
+        //when
+        List<Coupon> coupons = couponRepository.findByProductId(9L);
+
+        //then
+        assertThat(coupons).isNotNull();
+        assertThat(coupons).isInstanceOf(List.class);
+        assertThat(coupons).isEmpty();
+    }
 }
