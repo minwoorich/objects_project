@@ -2,6 +2,7 @@ package com.objects.marketbridge.domains.cart.service;
 
 
 import com.objects.marketbridge.domains.cart.domain.Cart;
+import com.objects.marketbridge.domains.cart.mock.BaseFakeCartRepository;
 import com.objects.marketbridge.domains.cart.mock.FakeCartCommandRepository;
 import com.objects.marketbridge.domains.cart.mock.FakeCartQueryRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
@@ -10,6 +11,7 @@ import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.product.domain.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +22,11 @@ public class GetCartListServiceTestWithFake {
 
     CartQueryRepository cartQueryRepository = new FakeCartQueryRepository();
     CartCommandRepository cartCommandRepository = new FakeCartCommandRepository();
+
+    @AfterEach
+    void afterEach() {
+        BaseFakeCartRepository.getInstance().clear();
+    }
 
     @DisplayName("장바구니에 담긴 총 물건 수를 조회 할 수 있다")
     @Test
