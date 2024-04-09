@@ -342,7 +342,7 @@ void get_withCoupon3(){
             .contains("[상품5]1000원 할인");
 
 }
-    @DisplayName("회원이 장바구니를 조회할 수 있다")
+    @DisplayName("장바구니에 담긴 총 물건 수를 조회 할 수 있다")
     @Test
     void countAll(){
         //given
