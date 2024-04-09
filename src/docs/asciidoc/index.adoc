@@ -263,6 +263,11 @@ include::api/cart/cartupdate.adoc[]
 {empty}
 {empty}
 
+== *쿠폰*
+include::api/coupon/coupongetbyproductid.adoc[]
+{empty}
+{empty}
+
 == *공통 에러 응답*
 include::api/errors/invalidinput.adoc[]
 include::api/errors/invaliduri.adoc[]

@@ -1,0 +1,10 @@
+=== *상품에 등록된 모든 쿠폰 조회*
+
+.*HTTP Request*
+include::{snippets}/coupon-get-by-productId/http-request.adoc[]
+include::{snippets}/coupon-get-by-productId/curl-request.adoc[]
+
+
+.*HTTP Response*
+include::{snippets}/coupon-get-by-productId/http-response.adoc[]
+include::{snippets}/cart-list/response-fields.adoc[]
