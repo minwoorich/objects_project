@@ -50,7 +50,7 @@ public class FakeCouponRepository extends BaseFakeCouponRepository implements Co
 
     @Override
     public List<Coupon> findAll() {
-        return null;
+        return getInstance().getData();
     }
 
     @Override
