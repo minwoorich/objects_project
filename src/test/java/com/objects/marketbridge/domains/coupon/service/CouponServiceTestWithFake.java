@@ -51,7 +51,7 @@ class CouponServiceTestWithFake {
         assertThat(response.getHasCoupons()).isTrue();
         assertThat(response.getCouponInfos()).hasSize(3);
         assertThat(response.getCouponInfos())
-                .extracting(c -> c.getProductId(), c -> c.getProductNo(), c -> c.getPrice())
+                .extracting(c -> c.getProductId(), c -> c.getProductNo(), c -> c.getCouponPrice())
                 .containsExactly(
                         tuple(1L, "productNo1", 1000L),
                         tuple(1L, "productNo1", 2000L),

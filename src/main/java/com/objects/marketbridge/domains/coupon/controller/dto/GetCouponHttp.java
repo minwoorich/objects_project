@@ -33,17 +33,17 @@ public class GetCouponHttp {
             private Long productId;
             private String productNo;
             private String couponName;
-            private Long price;
+            private Long couponPrice;
             private Long minimumPrice;
             private LocalDateTime startDate;
             private LocalDateTime endDate;
 
             @Builder
-            private CouponInfo(Long productId, String productNo, String couponName, Long price, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+            private CouponInfo(Long productId, String productNo, String couponName, Long couponPrice, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
                 this.productId = productId;
                 this.productNo = productNo;
                 this.couponName = couponName;
-                this.price = price;
+                this.couponPrice = couponPrice;
                 this.minimumPrice = minimumPrice;
                 this.startDate = startDate;
                 this.endDate = endDate;
@@ -54,7 +54,7 @@ public class GetCouponHttp {
                         .productId(dto.getProductId())
                         .productNo(dto.getProductNo())
                         .couponName(dto.getCouponName())
-                        .price(dto.getPrice())
+                        .couponPrice(dto.getPrice())
                         .minimumPrice(dto.getMinimumPrice())
                         .startDate(dto.getStartDate())
                         .endDate(dto.getEndDate())
