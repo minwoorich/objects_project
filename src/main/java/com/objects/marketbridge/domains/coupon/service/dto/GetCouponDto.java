@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class GetCouponDto {
-    private Boolean haveCoupons;
+    private Boolean hasCoupons;
     private Long productId;
     private String productNo;
     private String couponName;
@@ -19,8 +19,8 @@ public class GetCouponDto {
     private LocalDateTime endDate;
 
     @Builder
-    private GetCouponDto(Boolean haveCoupons, Long productId, String productNo, String couponName, Long price, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
-        this.haveCoupons = haveCoupons;
+    private GetCouponDto(Boolean hasCoupons, Long productId, String productNo, String couponName, Long price, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+        this.hasCoupons = hasCoupons;
         this.productId = productId;
         this.productNo = productNo;
         this.couponName = couponName;
@@ -30,9 +30,9 @@ public class GetCouponDto {
         this.endDate = endDate;
     }
 
-    public static GetCouponDto of(Coupon coupon, Boolean haveCoupons) {
+    public static GetCouponDto of(Coupon coupon, Boolean hasCoupons) {
         return GetCouponDto.builder()
-                .haveCoupons(haveCoupons)
+                .hasCoupons(hasCoupons)
                 .productId(coupon.getProduct().getId())
                 .productNo(coupon.getProduct().getProductNo())
                 .couponName(coupon.getName())

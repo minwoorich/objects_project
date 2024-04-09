@@ -14,17 +14,17 @@ public class GetCouponHttp {
     @Getter
     public static class Response{
         private List<CouponInfo> couponInfos;
-        private Boolean haveCoupons;
+        private Boolean hasCoupons;
 
         @Builder
-        private Response(List<CouponInfo> couponInfos, Boolean haveCoupons) {
+        private Response(List<CouponInfo> couponInfos, Boolean hasCoupons) {
             this.couponInfos = couponInfos;
-            this.haveCoupons = haveCoupons;
+            this.hasCoupons = hasCoupons;
         }
-        public static GetCouponHttp.Response create(Boolean haveCoupons, List<GetCouponHttp.Response.CouponInfo> couponInfos) {
+        public static GetCouponHttp.Response create(Boolean hasCoupons, List<GetCouponHttp.Response.CouponInfo> couponInfos) {
             return Response.builder()
-                    .haveCoupons(haveCoupons)
-                    .couponInfos(haveCoupons ? couponInfos : Collections.emptyList())
+                    .hasCoupons(hasCoupons)
+                    .couponInfos(hasCoupons ? couponInfos : Collections.emptyList())
                     .build();
         }
 
