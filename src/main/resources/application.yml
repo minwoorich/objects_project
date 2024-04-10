@@ -58,8 +58,8 @@ logging:
 
 #   [타임스탬프][쓰레드명][UUID][로깅레벨][메시지]
   pattern:
-    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){cyan} %clr([%X{traceId}]){magenta} %clr(%-5level) %clr(-){faint} %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [%X{traceId}] %-5level - %msg%n"
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS, Asia/Seoul}){green} %clr([%20.20thread]){cyan} %clr([%X{traceId}]){magenta} %clr(%-5level) %clr(-){faint} %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS, Asia/Seoul} [%20.20thread] [%X{traceId}] %-5level - %msg%n"
 
 # 액츄에이터 정보
 management:
@@ -163,7 +163,7 @@ logging:
 
   #   [타임스탬프][쓰레드명][UUID][로깅레벨][메시지]
   pattern:
-    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){cyan} %clr([%X{traceId}]){magenta} %clr(%-5level) %clr(-){faint} %msg%n"
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS, Asia/Seoul}){green} %clr([%20.20thread]){cyan} %clr([%X{traceId}]){magenta} %clr(%-5level) %clr(-){faint} %msg%n"
 
 payment:
   kakao:
@@ -208,8 +208,8 @@ logging:
 
   #   [타임스탬프][쓰레드명][UUID][로깅레벨][메시지]
   pattern:
-    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr([%20.20thread]){cyan} %clr([%X{traceId}]){magenta} %clr(%-5level) %clr(-){faint} %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%20.20thread] [%X{traceId}] %-5level - %msg%n"
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS, Asia/Seoul}){green} %clr([%20.20thread]){cyan} %clr([%X{traceId}]){magenta} %clr(%-5level) %clr(-){faint} %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS, Asia/Seoul} [%20.20thread] [%X{traceId}] %-5level - %msg%n"
 
 payment:
   kakao:
