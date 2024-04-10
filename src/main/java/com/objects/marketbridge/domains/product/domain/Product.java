@@ -1,19 +1,16 @@
 package com.objects.marketbridge.domains.product.domain;
 
-import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.domains.category.domain.Category;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
 import com.objects.marketbridge.domains.order.domain.OrderDetail;
-import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
