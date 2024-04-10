@@ -31,7 +31,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     private static final List<String> whiteList = List.of("/actuator/prometheus");
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException,IOException {
 
         if (!whiteList.contains(request.getRequestURI())) {
 
