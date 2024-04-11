@@ -11,6 +11,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,15 +35,11 @@ import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository
+@RequiredArgsConstructor
 public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
     private final OrderJpaRepository orderJpaRepository;
     private final JPAQueryFactory queryFactory;
-
-    public OrderQueryRepositoryImpl(OrderJpaRepository orderJpaRepository, EntityManager em) {
-        this.orderJpaRepository = orderJpaRepository;
-        this.queryFactory = new JPAQueryFactory(em);
-    }
 
 
     @Override
