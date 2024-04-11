@@ -4,7 +4,7 @@ import com.objects.marketbridge.domains.cart.domain.Cart;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepositoryQueryDsl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -19,15 +19,13 @@ import static com.objects.marketbridge.domains.member.domain.QMember.member;
 import static com.objects.marketbridge.domains.product.domain.QProduct.product;
 
 @Repository
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
 public class CartQueryRepositoryQueryDslImpl implements CartQueryRepositoryQueryDsl {
 
     private final JPAQueryFactory queryFactory;
 
-    public CartQueryRepositoryQueryDslImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
     @Override
     public Slice<Cart> findSlicedCart(Pageable pageable, Long memberId) {
         int pageSize = pageable.getPageSize();
