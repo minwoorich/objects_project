@@ -46,6 +46,11 @@ public class FakeCouponRepository extends BaseFakeCouponRepository implements Co
     }
 
     @Override
+    public List<Coupon> findByProductGroupIdWithMemberCoupons(Long productGroupId) {
+        return findByProductGroupId(productGroupId);
+    }
+
+    @Override
     public void saveAll(List<Coupon> coupons) {
         coupons.forEach(this::save);
     }

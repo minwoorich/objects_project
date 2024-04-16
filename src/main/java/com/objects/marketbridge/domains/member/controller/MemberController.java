@@ -133,11 +133,6 @@ public class MemberController {
         memberService.updatePassword(updatePassword);
         return ApiResponse.ok(null);
     }
-
-//    @GetMapping("/coupons")
-//    public ApiResponse<?> findAllCoupons() {
-//
-//    }
 }
 
 

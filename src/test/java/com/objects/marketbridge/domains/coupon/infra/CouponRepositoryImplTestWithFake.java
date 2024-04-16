@@ -1,9 +1,13 @@
 package com.objects.marketbridge.domains.coupon.infra;
 
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.mock.BaseFakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.order.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.order.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
@@ -19,10 +23,11 @@ import static org.assertj.core.api.Assertions.*;
 class CouponRepositoryImplTestWithFake {
     CouponRepository couponRepository = new FakeCouponRepository();
     ProductRepository productRepository = new FakeProductRepository();
-
+    MemberRepository memberRepository = new FakeMemberRepository();
     @AfterEach
     void clear() {
         BaseFakeCouponRepository.getInstance().clear();
+        memberRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
     }
 
@@ -134,5 +139,47 @@ class CouponRepositoryImplTestWithFake {
                         Tuple.tuple(111111L, 2000L),
                         Tuple.tuple(111111L, 3000L)
                 );
+    }
+
+    @DisplayName("쿠폰을 조회할 때 MemberCoupons 들도 같이 fetch join 해서 가져온다.")
+    @Test
+    void findByProductGroupIdWithMemberCoupons(){
+        //given
+        Member member = Member.builder().name("홍길동").build();
+        memberRepository.save(member);
+
+        Coupon coupon1 = Coupon.builder().price(1000L).count(999L).build();
+        Coupon coupon2 = Coupon.builder().price(2000L).count(999L).build();
+        Coupon coupon3 = Coupon.builder().price(3000L).count(999L).build();
+
+        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).build();
+        MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).build();
+        MemberCoupon memberCoupon3 = MemberCoupon.builder().member(member).build();
+
+        coupon1.addMemberCoupon(memberCoupon1);
+        coupon2.addMemberCoupon(memberCoupon2);
+        coupon3.addMemberCoupon(memberCoupon3);
+        couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
+
+        Product product = Product.builder().productNo("111111 - 111111").build();
+        product.addCoupons(coupon1);
+        product.addCoupons(coupon2);
+        product.addCoupons(coupon3);
+
+        productRepository.save(product);
+
+        //when
+        List<Coupon> coupons = couponRepository.findByProductGroupIdWithMemberCoupons(coupon1.getProductGroupId());
+
+        //then
+        assertThat(coupons).hasSize(3);
+        assertThat(coupons)
+                .extracting(Coupon::getPrice, Coupon::getProductGroupId)
+                .contains(
+                        Tuple.tuple(1000L, 111111L),
+                        Tuple.tuple(2000L, 111111L),
+                        Tuple.tuple(3000L, 111111L));
+
+        assertThat(coupons.get(0).getMemberCoupons()).extracting(MemberCoupon::getMember).contains(member);
     }
 }

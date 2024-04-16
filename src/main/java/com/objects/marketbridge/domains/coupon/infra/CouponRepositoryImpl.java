@@ -33,6 +33,11 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
+    public List<Coupon> findByProductGroupIdWithMemberCoupons(Long productGroupId) {
+        return couponJpaRepository.findByProductGroupIdWithMemberCoupons(productGroupId);
+    }
+
+    @Override
     public Coupon save(Coupon coupon) {
         return couponJpaRepository.save(coupon);
     }

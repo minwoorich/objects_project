@@ -15,4 +15,7 @@ public interface CouponJpaRepository extends JpaRepository<Coupon, Long> {
 
     @Query("select c from Coupon c where c.productGroupId = :productGroupId and c.count > 0")
     List<Coupon> findByProductGroupId(@Param(value = "productGroupId") Long productGroupId);
+
+    @Query("select c from Coupon c join fetch c.memberCoupons mc where c.productGroupId = :productGroupId and c.count > 0")
+    List<Coupon> findByProductGroupIdWithMemberCoupons(@Param(value = "productGroupId") Long productGroupId);
 }
