@@ -451,8 +451,8 @@ class OrderDetailTest {
         Coupon coupon2 = Coupon.builder().name("1000원 할인").minimumPrice(5000L).endDate(LocalDateTime.of(9999, 1, 1, 0, 0, 0)).build();
         MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(false).endDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0)).build();
         MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).coupon(coupon2).isUsed(true).endDate(LocalDateTime.of(9999, 1, 1, 0, 0, 0)).build();
-        Product product1 = Product.builder().productNo("productNo1").build();
-        Product product2 = Product.builder().productNo("productNo2").build();
+        Product product1 = Product.builder().productNo("111111-111111").build();
+        Product product2 = Product.builder().productNo("222222-222222").build();
         product1.addCoupons(coupon1);
         product2.addCoupons(coupon2);
         DateTimeHolder dateTimeHolder = new TestDateTimeHolder(LocalDateTime.of(3024, 1, 1, 0, 0, 0), null, null, null);
@@ -472,7 +472,7 @@ class OrderDetailTest {
         Member member = Member.builder().email("test@email.com").build();
         Coupon coupon1 = Coupon.builder().name("1000원 할인").minimumPrice(15000L).endDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0)).build();
         MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(false).endDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0)).build();
-        Product product1 = Product.builder().productNo("productNo1").price(2000L).build();
+        Product product1 = Product.builder().productNo("111111-111111").price(2000L).build();
         product1.addCoupons(coupon1);
         DateTimeHolder dateTimeHolder = new TestDateTimeHolder(LocalDateTime.of(3024, 1, 1, 0, 0, 0), null, null, null);
 
