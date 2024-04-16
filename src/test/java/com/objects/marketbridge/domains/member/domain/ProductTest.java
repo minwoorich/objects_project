@@ -46,7 +46,7 @@ class ProductTest {
         coupon2.addMemberCoupon(unUsedMemberCoupon2);
         coupon3.addMemberCoupon(usedMemberCoupon);
 
-        Product product = Product.builder().productNo("productNo1").build();
+        Product product = Product.builder().productNo("111111-111111").build();
         product.addCoupons(coupon1);
         product.addCoupons(coupon2);
         product.addCoupons(coupon3);
