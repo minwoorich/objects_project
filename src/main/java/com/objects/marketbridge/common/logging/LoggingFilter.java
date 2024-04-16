@@ -36,18 +36,28 @@ public class LoggingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException,IOException {
 
-        if (!whiteList.contains(request.getRequestURI())) {
-
-            String uuid = UUID.randomUUID().toString();
-            MDC.put("traceId", uuid.substring(0,7));
-
-            if (isAsyncDispatch(request)) {
-                filterChain.doFilter(request, response);
-            } else {
-                doFilterWrapped(new RequestWrapper(request), new ResponseWrapper(response), filterChain);
-            }
-            MDC.clear();
+        if (isWhiteListed(request)) {
+            // 화이트리스트에 포함된 요청은 로깅 없이 다음 필터 또는 서블릿으로 전달
+            filterChain.doFilter(request, response);
+        } else {
+            proceedWithLogging(request, response, filterChain);
         }
+    }
+
+    private void proceedWithLogging(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        String uuid = UUID.randomUUID().toString();
+        MDC.put("traceId", uuid.substring(0,7));
+
+        if (isAsyncDispatch(request)) {
+            filterChain.doFilter(request, response);
+        } else {
+            doFilterWrapped(new RequestWrapper(request), new ResponseWrapper(response), filterChain);
+        }
+        MDC.clear();
+    }
+
+    private boolean isWhiteListed(HttpServletRequest request) {
+        return whiteList.contains(request.getRequestURI());
     }
 
     protected void doFilterWrapped(RequestWrapper request, ContentCachingResponseWrapper response, FilterChain filterChain) throws ServletException, IOException {
