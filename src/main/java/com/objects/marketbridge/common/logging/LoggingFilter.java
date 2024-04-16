@@ -28,7 +28,10 @@ public class LoggingFilter extends OncePerRequestFilter {
     private static final String REQUEST_PREFIX = "[REQUEST]";
     private static final String RESP_PREFIX = "[RESPONSE]";
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final List<String> whiteList = List.of("/actuator/prometheus");
+    private static final List<String> whiteList = List.of(
+            "/actuator/prometheus",
+            "/docs/index.html",
+            "/swagger-ui/index.html");
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException,IOException {
