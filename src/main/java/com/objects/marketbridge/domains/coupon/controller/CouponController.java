@@ -23,12 +23,12 @@ public class CouponController {
         this.couponService = couponService;
     }
 
-    @GetMapping("/coupons/{productId}")
+    @GetMapping("/coupons/{productGroupId}")
     @UserAuthorize
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<GetCouponHttp.Response> findCouponsForProduct(
-            @PathVariable Long productId) {
+    public ApiResponse<GetCouponHttp.Response> findCouponsForProductGroup(
+            @PathVariable Long productGroupId) {
 
-        return ApiResponse.ok(couponService.findCouponsForProduct(productId));
+        return ApiResponse.ok(couponService.findCouponsForProductGroup(productGroupId));
     }
 }

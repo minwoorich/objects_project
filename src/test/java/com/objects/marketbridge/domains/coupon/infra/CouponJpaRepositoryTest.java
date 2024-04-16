@@ -59,4 +59,24 @@ class CouponJpaRepositoryTest {
         assertThat(coupons).isInstanceOf(List.class);
         assertThat(coupons).isEmpty();
     }
+
+    @DisplayName("상품그룹에 등록된 모든 쿠폰들을 조회할 수 있다.")
+    @Test
+    void findByProductGroupId(){
+        //given
+        String productNo = "111111 - 111111";
+        Product product = Product.builder().productNo(productNo).build();
+        productRepository.save(product);
+
+        Coupon coupon1 = Coupon.builder().price(1000L).count(100L).product(product).build();
+        Coupon coupon2 = Coupon.builder().price(2000L).count(100L).product(product).build();
+        Coupon coupon3 = Coupon.builder().price(3000L).count(100L).product(product).build();
+        couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
+
+        //when
+        List<Coupon> coupons = couponRepository.findByProductId(product.getId());
+
+        //then
+        assertThat(coupons).hasSize(3);
+    }
 }

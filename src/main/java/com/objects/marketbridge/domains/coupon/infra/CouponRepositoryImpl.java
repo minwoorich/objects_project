@@ -6,11 +6,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional
 public class CouponRepositoryImpl implements CouponRepository {
 
     private final CouponJpaRepository couponJpaRepository;
@@ -23,6 +25,11 @@ public class CouponRepositoryImpl implements CouponRepository {
     @Override
     public List<Coupon> findByProductId(Long productId) {
         return couponJpaRepository.findByProductId(productId);
+    }
+
+    @Override
+    public List<Coupon> findByProductGroupId(Long productGroupId) {
+        return couponJpaRepository.findByProductGroupId(productGroupId);
     }
 
     @Override

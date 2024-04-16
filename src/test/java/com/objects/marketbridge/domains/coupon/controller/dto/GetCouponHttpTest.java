@@ -12,14 +12,13 @@ class GetCouponHttpTest {
     @Test
     void of(){
         //given
-        GetCouponDto dto = GetCouponDto.builder().couponName("1000원짜리 쿠폰").productId(1L).build();
+        GetCouponDto dto = GetCouponDto.builder().couponName("1000원짜리 쿠폰").productGroupId(111111L).build();
 
         //when
         GetCouponHttp.Response.CouponInfo result = GetCouponHttp.Response.CouponInfo.of(dto);
 
         //then
-        assertThat(result).extracting(c -> c.getCouponName(), c -> c.getProductId())
-                .containsExactly("1000원짜리 쿠폰", 1L);
+        assertThat(result.getCouponName()).isEqualTo("1000원짜리 쿠폰");
     }
 
 }

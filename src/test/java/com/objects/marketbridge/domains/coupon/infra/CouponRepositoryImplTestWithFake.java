@@ -7,6 +7,7 @@ import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
 import com.objects.marketbridge.domains.order.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class CouponRepositoryImplTestWithFake {
     @Test
     void findByProductId(){
         //given
-        String productNo = "111111-111111";
+        String productNo = "111111 - 111111";
         Product product = productRepository.save(Product.builder().productNo(productNo).build());
 
         Coupon coupon1 = couponRepository.save(Coupon.builder().price(1000L).product(product).build());
@@ -105,5 +106,33 @@ class CouponRepositoryImplTestWithFake {
         assertThat(coupons).isEmpty();
         assertThat(coupons).isNotNull();
         assertThat(coupons).isInstanceOf(List.class);
+    }
+
+    @DisplayName("상품그룹아이디를 통해 상품에 등록된 모든 쿠폰들을 조회할 수 있다.")
+    @Test
+    void findByProductGroupId(){
+        //given
+        String productNo = "111111 - 111111";
+        Product product = productRepository.save(Product.builder().productNo(productNo).build());
+
+        Coupon coupon1 = couponRepository.save(Coupon.builder().price(1000L).product(product).build());
+        Coupon coupon2 = couponRepository.save(Coupon.builder().price(2000L).product(product).build());
+        Coupon coupon3 = couponRepository.save(Coupon.builder().price(3000L).product(product).build());
+
+        product.addCoupons(coupon1);
+        product.addCoupons(coupon2);
+        product.addCoupons(coupon3);
+
+        //when
+        List<Coupon> coupons = couponRepository.findByProductGroupId(111111L);
+
+        //then
+        assertThat(coupons).hasSize(3);
+        assertThat(coupons).extracting(Coupon::getProductGroupId, Coupon::getPrice)
+                .contains(
+                        Tuple.tuple(111111L, 1000L),
+                        Tuple.tuple(111111L, 2000L),
+                        Tuple.tuple(111111L, 3000L)
+                );
     }
 }

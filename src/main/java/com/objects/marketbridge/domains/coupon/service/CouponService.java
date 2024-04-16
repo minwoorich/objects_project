@@ -25,16 +25,16 @@ public class CouponService {
         this.couponRepository = couponRepository;
     }
 
-    public GetCouponHttp.Response findCouponsForProduct(Long productId) {
+    public GetCouponHttp.Response findCouponsForProductGroup(Long productGroupId) {
 
-        List<Coupon> coupons = couponRepository.findByProductId(productId);
+        List<Coupon> coupons = couponRepository.findByProductGroupId(productGroupId);
         boolean hasCoupons = !coupons.isEmpty();
 
         List<GetCouponHttp.Response.CouponInfo> couponInfos = coupons.stream()
-                .map(c -> GetCouponDto.of(c, hasCoupons))
-                .map(GetCouponHttp.Response.CouponInfo::of)
+                .map(c -> GetCouponDto.of(c, hasCoupons))// Coupon -> GetCouponDto
+                .map(GetCouponHttp.Response.CouponInfo::of) // CouponDto -> GetCouponHttp.Response.CouponInfo
                 .collect(Collectors.toList());
 
-        return GetCouponHttp.Response.create(hasCoupons, hasCoupons ? couponInfos : Collections.emptyList());
+        return GetCouponHttp.Response.create(hasCoupons, productGroupId, hasCoupons ? couponInfos : Collections.emptyList());
     }
 }
