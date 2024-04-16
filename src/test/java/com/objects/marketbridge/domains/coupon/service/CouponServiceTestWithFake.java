@@ -33,7 +33,7 @@ class CouponServiceTestWithFake {
     @Test
     void findCouponsForProduct(){
         //given
-        Product product = productRepository.save(Product.builder().productNo("productNo1").name("신발").build());
+        Product product = productRepository.save(Product.builder().productNo("111111-111111").name("신발").build());
 
         Coupon coupon1 = Coupon.builder().price(1000L).product(product).build();
         product.addCoupons(coupon1);
@@ -53,9 +53,9 @@ class CouponServiceTestWithFake {
         assertThat(response.getCouponInfos())
                 .extracting(c -> c.getProductId(), c -> c.getProductNo(), c -> c.getCouponPrice())
                 .containsExactly(
-                        tuple(1L, "productNo1", 1000L),
-                        tuple(1L, "productNo1", 2000L),
-                        tuple(1L, "productNo1", 3000L)
+                        tuple(1L, "111111-111111", 1000L),
+                        tuple(1L, "111111-111111", 2000L),
+                        tuple(1L, "111111-111111", 3000L)
                 );
     }
 
@@ -63,7 +63,7 @@ class CouponServiceTestWithFake {
     @Test
     void findCouponsForProduct_empty(){
         //given
-        Product product = productRepository.save(Product.builder().productNo("productNo1").name("신발").build());
+        Product product = productRepository.save(Product.builder().productNo("111111-111111").name("신발").build());
 
         Coupon coupon1 = Coupon.builder().price(1000L).product(product).build();
         product.addCoupons(coupon1);

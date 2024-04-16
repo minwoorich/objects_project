@@ -30,7 +30,7 @@ class CouponRepositoryImplTestWithFake {
     @Test
     void findByProductId(){
         //given
-        String productNo = "1번";
+        String productNo = "111111-111111";
         Product product = productRepository.save(Product.builder().productNo(productNo).build());
 
         Coupon coupon1 = couponRepository.save(Coupon.builder().price(1000L).product(product).build());

@@ -32,6 +32,8 @@ public class Coupon extends BaseEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    private Long productGroupId;
+
     @OneToMany(mappedBy = "coupon", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberCoupon> memberCoupons = new ArrayList<>();
 
@@ -54,6 +56,10 @@ public class Coupon extends BaseEntity {
         this.endDate = endDate;
     }
 
+    private Long parseProductGroupId(Product product) {
+        return Long.parseLong(product.getProductNo().split("-")[0]);
+    }
+
     public static Coupon create(Product product, String name, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
         return Coupon.builder()
                 .product(product)
@@ -73,6 +79,8 @@ public class Coupon extends BaseEntity {
 
     public void addProduct(Product product) {
         this.product = product;
+        this.productGroupId = parseProductGroupId(product);
+
     }
 
     public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder, Long memberId) {
