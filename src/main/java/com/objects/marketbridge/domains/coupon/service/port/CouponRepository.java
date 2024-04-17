@@ -7,6 +7,8 @@ import java.util.List;
 public interface CouponRepository {
     Coupon findById(Long id);
 
+    Coupon findByIdWithMemberCoupons(Long id);
+
     List<Coupon> findByProductId(Long productId);
 
     List<Coupon> findByProductGroupId(Long productGroupId);

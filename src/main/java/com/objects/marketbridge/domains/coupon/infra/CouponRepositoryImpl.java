@@ -19,7 +19,12 @@ public class CouponRepositoryImpl implements CouponRepository {
 
     @Override
     public Coupon findById(Long id) {
-        return couponJpaRepository.findById(id).orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("해당 엔티티가 존재하지 않습니다. 입력 id = "+id)));
+        return couponJpaRepository.findById(id).orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("해당 쿠폰 엔티티가 존재하지 않습니다. 입력 id = "+id)));
+    }
+
+    @Override
+    public Coupon findByIdWithMemberCoupons(Long id) {
+        return couponJpaRepository.findByIdWithMemberCoupons(id).orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("해당 엔티티가 존재하지 않습니다. 입력 id = "+id)));
     }
 
     @Override
