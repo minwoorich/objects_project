@@ -1,7 +1,5 @@
 package com.objects.marketbridge.domains.coupon.domain;
 
-import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
-import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
 import com.objects.marketbridge.domains.member.domain.Member;
@@ -12,9 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter

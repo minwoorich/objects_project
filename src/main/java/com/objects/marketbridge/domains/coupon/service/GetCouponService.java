@@ -30,7 +30,7 @@ public class GetCouponService {
             return Collections.emptyList();
         }
         return coupons.stream()
-                .filter(c -> c.filteredBy(memberId))
+                .filter(c -> c.filteredBy(memberId)) // 로그인 된 멤버의 쿠폰만 필터링
                 .map(GetCouponDto::of) // Coupon -> GetCouponDto
                 .toList();
     }

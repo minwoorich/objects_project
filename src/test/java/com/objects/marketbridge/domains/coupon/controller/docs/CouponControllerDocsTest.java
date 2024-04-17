@@ -5,11 +5,8 @@ import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.domains.coupon.controller.CouponController;
-import com.objects.marketbridge.domains.coupon.controller.dto.GetCouponHttp;
-import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.service.GetCouponService;
 import com.objects.marketbridge.domains.coupon.service.dto.GetCouponDto;
-import com.objects.marketbridge.domains.member.domain.Member;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +26,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
