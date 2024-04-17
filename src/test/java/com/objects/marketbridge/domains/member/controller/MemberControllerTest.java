@@ -8,13 +8,14 @@ import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.member.constant.MemberConst;
 import com.objects.marketbridge.domains.member.domain.AddressValue;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.domain.Wishlist;
 import com.objects.marketbridge.domains.member.dto.*;
-import com.objects.marketbridge.domains.member.service.DownloadCouponService;
 import com.objects.marketbridge.domains.member.service.MemberService;
+import com.objects.marketbridge.domains.member.service.RegisterCouponService;
 import com.objects.marketbridge.domains.order.mock.TestContainer;
 import com.objects.marketbridge.domains.order.mock.TestDateTimeHolder;
 import com.objects.marketbridge.domains.product.domain.Option;
@@ -80,7 +81,7 @@ public class MemberControllerTest {
     private MemberService memberService;
 
     @MockBean
-    private DownloadCouponService downloadCouponService;
+    private RegisterCouponService registerCouponService;
 
 
     private final LocalDateTime orderDate = LocalDateTime.of(2024, 2, 9, 3, 9);
@@ -1228,6 +1229,82 @@ public class MemberControllerTest {
 
                         )
 
+                ));
+    }
+
+    @DisplayName("[API] POST /members/coupons")
+    @Test
+    @WithMockCustomUser
+    void registerCoupon() throws Exception {
+        //given
+        RegisterCouponHttp.Request request =
+                RegisterCouponHttp.Request.builder()
+                        .couponId(1L)
+                        .productGroupId(111111L).build();
+
+        Coupon coupon = Coupon.builder()
+                .name("1000원 할인 쿠폰")
+                .price(1000L)
+                .productGroupId(111111L)
+                .count(10L)
+                .minimumPrice(15000L)
+                .startDate(LocalDateTime.of(2024, 1, 1, 12, 0, 0))
+                .endDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
+                .build();
+
+        given(registerCouponService.registerCouponToMember(1L, 111111L)).willReturn(coupon);
+
+        //when
+        ResultActions actions = mockMvc.perform(post("/coupons/members")
+                .content(objectMapper.writeValueAsString(request))
+                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("register-coupon",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        resource(
+                                ResourceSnippetParameters.builder()
+                                        .pathParameters(
+                                                parameterWithName("productGroupId").description("상품 아이디")
+                                        )
+                                        .requestFields(
+                                                fieldWithPath("couponId").description("쿠폰 아이디"),
+                                                fieldWithPath("productGroupId").description("상품 그룹 아이디")
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                        .description("응답 코드"),
+                                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                                        .description("HTTP 응답"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                                        .description("메시지"),
+                                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                        .description("응답 데이터"),
+
+                                                fieldWithPath("data.name").type(JsonFieldType.STRING)
+                                                        .description("등록된 쿠폰 여부"),
+                                                fieldWithPath("data.price").type(JsonFieldType.NUMBER)
+                                                        .description("쿠폰 가격"),
+                                                fieldWithPath("data.productGroupId").type(JsonFieldType.NUMBER)
+                                                        .description("상품 그룹 아이디"),
+                                                fieldWithPath("data.count").type(JsonFieldType.NUMBER)
+                                                        .description("남은 쿠폰 수량 (판매자가 등록한 총 쿠폰 수량)"),
+                                                fieldWithPath("data.minimumPrice").type(JsonFieldType.NUMBER)
+                                                        .description("최소 구매 조건 금액"),
+                                                fieldWithPath("data.startDate").type(JsonFieldType.STRING)
+                                                        .description("쿠폰 시작기한 (yyyy-MM-dd HH:mm:ss) "),
+                                                fieldWithPath("data.endDate").type(JsonFieldType.STRING)
+                                                        .description("쿠폰 만료기한 (yyyy-MM-dd HH:mm:ss) ")
+                                        )
+                                        .requestSchema(Schema.schema("PostMembersCouponsReq"))
+                                        .responseSchema(Schema.schema("PostMembersCouponsRes"))
+                                        .build()
+                        )
                 ));
     }
 
