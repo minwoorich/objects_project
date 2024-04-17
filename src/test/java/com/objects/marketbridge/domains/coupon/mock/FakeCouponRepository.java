@@ -16,7 +16,12 @@ public class FakeCouponRepository extends BaseFakeCouponRepository implements Co
         return getInstance().getData().stream()
                 .filter(item -> item.getId().equals(id))
                 .findAny()
-                .orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("해당 엔티티가 존재하지 않습니다. 입력 id = "+id)));
+                .orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("해당 쿠폰 엔티티가 존재하지 않습니다. 입력 id = "+id)));
+    }
+
+    @Override
+    public Coupon findByIdWithMemberCoupons(Long id) {
+        return findById(id);
     }
 
     @Override
