@@ -26,8 +26,7 @@ public class GetCouponService {
     public List<GetCouponDto> findCouponsForProductGroup(Long productGroupId, Long memberId) {
 
         List<Coupon> coupons = couponRepository.findByProductGroupIdWithMemberCoupons(productGroupId);
-        boolean hasCoupons = !coupons.isEmpty();
-        if (!hasCoupons) {
+        if (coupons.isEmpty()) {
             return Collections.emptyList();
         }
         return coupons.stream()

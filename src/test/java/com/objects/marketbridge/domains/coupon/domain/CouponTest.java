@@ -61,7 +61,7 @@ class CouponTest {
         Member member1 = Member.builder().id(1L).build();
         Member member2 = Member.builder().id(2L).build();
 
-        MemberCoupon memberCoupon = MemberCoupon.builder().member(member1).build();
+        MemberCoupon memberCoupon = MemberCoupon.builder().member(member1).isUsed(false).build();
 
         Coupon coupon = Coupon.builder().price(1000L).build();
         coupon.addMemberCoupon(memberCoupon);
@@ -73,6 +73,24 @@ class CouponTest {
         //then
         assertThat(result1).isTrue();
         assertThat(result2).isFalse();
+    }
+
+    @DisplayName("이미 사용한 쿠폰은 조회 할 수 없다.")
+    @Test
+    void filteredBy_isUsed() {
+        // given
+        Member member1 = Member.builder().id(1L).build();
+
+        MemberCoupon memberCoupon = MemberCoupon.builder().member(member1).isUsed(true).build();
+
+        Coupon coupon = Coupon.builder().price(1000L).build();
+        coupon.addMemberCoupon(memberCoupon);
+
+        // when
+        Boolean result1 = coupon.filteredBy(member1.getId());
+
+        //then
+        assertThat(result1).isFalse();
     }
 
     @DisplayName("Coupon 과 MemberCoupon 을 연관관계를 맺어준다")

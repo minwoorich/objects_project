@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class GetCouponHttpTest {
 
-    @DisplayName("GetCouponDto에서 GetCouponHttp.Response.CouponInfo 를 생성 할 수 있다.")
+    @DisplayName("GetCouponDto 에서 GetCouponHttp.Response.CouponInfo 를 생성 할 수 있다.")
     @Test
     void of(){
         //given

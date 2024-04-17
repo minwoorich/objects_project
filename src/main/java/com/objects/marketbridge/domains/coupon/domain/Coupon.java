@@ -79,6 +79,6 @@ public class Coupon extends BaseEntity {
     }
 
     public Boolean filteredBy(Long memberId) {
-        return memberCoupons.stream().anyMatch(mc -> mc.filterByMemberId(memberId));
+        return memberCoupons.stream().anyMatch(mc -> mc.filterByMemberId(memberId) && !mc.getIsUsed());
     }
 }
