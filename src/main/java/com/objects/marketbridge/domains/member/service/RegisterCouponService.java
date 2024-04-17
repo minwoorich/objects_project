@@ -13,24 +13,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @Transactional(readOnly = true)
-public class DownloadCouponService {
+public class RegisterCouponService {
 
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
 
 
     @Builder
-    public DownloadCouponService(MemberRepository memberRepository, CouponRepository couponRepository) {
+    public RegisterCouponService(MemberRepository memberRepository, CouponRepository couponRepository) {
         this.memberRepository = memberRepository;
         this.couponRepository = couponRepository;
     }
 
     @Transactional
-    public void registerCouponToMember(Long memberId, Long couponId) {
+    public Coupon registerCouponToMember(Long memberId, Long couponId) {
         Member member = memberRepository.findById(memberId);
         Coupon coupon = couponRepository.findByIdWithMemberCoupons(couponId);
         coupon.decreaseCount();
         coupon.addMemberCoupon(MemberCoupon.create(member, coupon));
-        couponRepository.save(coupon);
+
+        return couponRepository.save(coupon);
     }
 }

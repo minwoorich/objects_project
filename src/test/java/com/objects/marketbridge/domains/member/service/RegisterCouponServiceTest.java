@@ -17,11 +17,11 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 
 
-class DownloadCouponServiceTest {
+class RegisterCouponServiceTest {
 
     CouponRepository couponRepository = new FakeCouponRepository();
     MemberRepository memberRepository = new FakeMemberRepository();
-    DownloadCouponService downloadCouponService = DownloadCouponService.builder().couponRepository(couponRepository).memberRepository(memberRepository).build();
+    RegisterCouponService registerCouponService = RegisterCouponService.builder().couponRepository(couponRepository).memberRepository(memberRepository).build();
 
     @AfterEach
     void clear() {
@@ -36,8 +36,7 @@ class DownloadCouponServiceTest {
         Member member = memberRepository.save(Member.builder().name("홍길동").build());
 
         // when
-        downloadCouponService.registerCouponToMember(member.getId(), coupon.getId());
-        Coupon findCoupon = couponRepository.findByIdWithMemberCoupons(coupon.getId());
+        Coupon findCoupon = registerCouponService.registerCouponToMember(member.getId(), coupon.getId());
 
         // then
         assertThat(findCoupon.getMemberCoupons())
@@ -57,7 +56,7 @@ class DownloadCouponServiceTest {
         Member member = memberRepository.save(Member.builder().name("홍길동").build());
 
         //when
-        Throwable thrown = catchThrowable(() -> downloadCouponService.registerCouponToMember(member.getId(), coupon.getId()));
+        Throwable thrown = catchThrowable(() -> registerCouponService.registerCouponToMember(member.getId(), coupon.getId()));
 
         //then
         assertThat(thrown)
