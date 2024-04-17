@@ -77,10 +77,10 @@ class QuitPaymentServiceTest {
         product3.addCoupons(coupon3);
         product4.addCoupons(coupon4);
 
-        MemberCoupon memberCoupon1 = MemberCoupon.create(member, coupon1, true, LocalDateTime.now(), coupon1.getEndDate());
-        MemberCoupon memberCoupon2 = MemberCoupon.create(member, coupon1, true, LocalDateTime.now(), coupon2.getEndDate());
-        MemberCoupon memberCoupon3 = MemberCoupon.create(member, coupon1, true, LocalDateTime.now(), coupon3.getEndDate());
-        MemberCoupon memberCoupon4 = MemberCoupon.create(member, coupon1, true, LocalDateTime.now(), coupon4.getEndDate());
+        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(true).usedDate(LocalDateTime.now()).endDate(coupon1.getEndDate()).build();
+        MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(true).usedDate(LocalDateTime.now()).endDate(coupon2.getEndDate()).build();
+        MemberCoupon memberCoupon3 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(true).usedDate(LocalDateTime.now()).endDate(coupon3.getEndDate()).build();
+        MemberCoupon memberCoupon4 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(true).usedDate(LocalDateTime.now()).endDate(coupon4.getEndDate()).build();
 
         coupon1.addMemberCoupon(memberCoupon1);
         coupon2.addMemberCoupon(memberCoupon2);

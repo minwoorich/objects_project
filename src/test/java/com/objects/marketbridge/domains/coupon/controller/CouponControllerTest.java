@@ -36,7 +36,6 @@ class CouponControllerTest {
     @AfterEach
     void clear() {
         BaseFakeCouponRepository.getInstance().clear();
-        BaseFakeCouponRepository.getInstance().clear();
         productRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
     }
@@ -48,9 +47,9 @@ class CouponControllerTest {
         Member member = memberRepository.save(Member.builder().name("홍길동").build());
         Product product = productRepository.save(Product.builder().productNo("111111 - 111111").name("신발").build());
 
-        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).build();
-        MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).build();
-        MemberCoupon memberCoupon3 = MemberCoupon.builder().member(member).build();
+        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).isUsed(false).build();
+        MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).isUsed(false).build();
+        MemberCoupon memberCoupon3 = MemberCoupon.builder().member(member).isUsed(false).build();
 
         Coupon coupon1 = Coupon.builder().price(1000L).product(product).build();
         Coupon coupon2 = Coupon.builder().price(2000L).product(product).build();

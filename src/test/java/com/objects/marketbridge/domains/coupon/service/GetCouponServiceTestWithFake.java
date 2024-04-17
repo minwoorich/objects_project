@@ -1,6 +1,5 @@
 package com.objects.marketbridge.domains.coupon.service;
 
-import com.objects.marketbridge.domains.coupon.controller.dto.GetCouponHttp;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.mock.BaseFakeCouponRepository;
@@ -20,13 +19,14 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class GetCouponServiceTestWithFake {
 
     CouponRepository couponRepository = new FakeCouponRepository();
     ProductRepository productRepository = new FakeProductRepository();
     MemberRepository memberRepository = new FakeMemberRepository();
+
     GetCouponService getCouponService = GetCouponService.builder().couponRepository(couponRepository).build();
 
     @AfterEach
@@ -43,9 +43,9 @@ class GetCouponServiceTestWithFake {
         //given
         Member member = memberRepository.save(Member.builder().name("홍길동").build());
 
-        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).build();
-        MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).build();
-        MemberCoupon memberCoupon3 = MemberCoupon.builder().member(member).build();
+        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).isUsed(false).build();
+        MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).isUsed(false).build();
+        MemberCoupon memberCoupon3 = MemberCoupon.builder().member(member).isUsed(false).build();
 
         Product product = productRepository.save(Product.builder().productNo("111111 - 111111").name("신발").build());
 
