@@ -1,5 +1,7 @@
 package com.objects.marketbridge.domains.coupon.domain;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
 import com.objects.marketbridge.domains.product.domain.Product;
 import jakarta.persistence.*;
@@ -79,5 +81,12 @@ public class Coupon extends BaseEntity {
 
     public Boolean filteredBy(Long memberId) {
         return memberCoupons.stream().anyMatch(mc -> mc.filterByMemberId(memberId) && !mc.getIsUsed());
+    }
+
+    public void decreaseCount() {
+        if (count <= 0) {
+            throw CustomLogicException.createBadRequestError(ErrorCode.COUPON_OUT_OF_STOCK);
+        }
+        count-=1;
     }
 }
