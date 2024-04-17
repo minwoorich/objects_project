@@ -5,6 +5,7 @@ import com.objects.marketbridge.domains.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GetCouponDtoTest {
@@ -18,10 +19,18 @@ class GetCouponDtoTest {
         product.addCoupons(coupon);
 
         //when
-        GetCouponDto result = GetCouponDto.of(coupon, true);
+        GetCouponDto result = GetCouponDto.of(coupon);
 
         //then
-        assertThat(result).extracting(c -> c.getPrice(), c -> c.getProductGroupId())
+        assertThat(result).hasFieldOrProperty("productGroupId");
+        assertThat(result).hasFieldOrProperty("couponName");
+        assertThat(result).hasFieldOrProperty("price");
+        assertThat(result).hasFieldOrProperty("count");
+        assertThat(result).hasFieldOrProperty("minimumPrice");
+        assertThat(result).hasFieldOrProperty("startDate");
+        assertThat(result).hasFieldOrProperty("endDate");
+
+        assertThat(result).extracting(GetCouponDto::getPrice, GetCouponDto::getProductGroupId)
                 .containsExactly(1000L, 111111L);
     }
 

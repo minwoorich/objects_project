@@ -5,6 +5,7 @@ import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.mock.BaseFakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
+import com.objects.marketbridge.domains.coupon.service.dto.GetCouponDto;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
@@ -12,6 +13,7 @@ import com.objects.marketbridge.domains.order.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.order.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,12 +22,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-class CouponServiceTestWithFake {
+class GetCouponServiceTestWithFake {
 
     CouponRepository couponRepository = new FakeCouponRepository();
     ProductRepository productRepository = new FakeProductRepository();
     MemberRepository memberRepository = new FakeMemberRepository();
-    CouponService couponService = CouponService.builder().couponRepository(couponRepository).build();
+    GetCouponService getCouponService = GetCouponService.builder().couponRepository(couponRepository).build();
 
     @AfterEach
     void clear() {
@@ -39,8 +41,7 @@ class CouponServiceTestWithFake {
     @Test
     void findCouponsForProduct(){
         //given
-        Member member = Member.builder().name("홍길동").build();
-        memberRepository.save(member);
+        Member member = memberRepository.save(Member.builder().name("홍길동").build());
 
         MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).build();
         MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).build();
@@ -61,17 +62,16 @@ class CouponServiceTestWithFake {
         couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
 
         //when
-        GetCouponHttp.Response response = couponService.findCouponsForProductGroup(111111L);
+        List<GetCouponDto> couponDtos = getCouponService.findCouponsForProductGroup(111111L, member.getId());
 
         //then
-        assertThat(response.getHasCoupons()).isTrue();
-        assertThat(response.getCouponInfos()).hasSize(3);
-        assertThat(response.getCouponInfos())
-                .extracting(GetCouponHttp.Response.CouponInfo::getCouponPrice)
-                .containsExactly(
-                        1000L,
-                        2000L,
-                        3000L
+        assertThat(couponDtos).hasSize(3);
+        assertThat(couponDtos)
+                .extracting(c -> c.getPrice(), c -> c.getProductGroupId())
+                .contains(
+                        Tuple.tuple(1000L, 111111L),
+                        Tuple.tuple(2000L, 111111L),
+                        Tuple.tuple(3000L, 111111L)
                 );
     }
 
@@ -80,12 +80,11 @@ class CouponServiceTestWithFake {
     void findCouponsForProduct_empty(){
         //given
         //when
-        GetCouponHttp.Response response = couponService.findCouponsForProductGroup(111111L);
+        List<GetCouponDto> couponDtos = getCouponService.findCouponsForProductGroup(111111L, 99L);
 
         //then
-        assertThat(response.getHasCoupons()).isFalse();
-        assertThat(response.getCouponInfos()).isEmpty();
-        assertThat(response.getCouponInfos()).isNotNull();
-        assertThat(response.getCouponInfos()).isInstanceOf(List.class);
+        assertThat(couponDtos).isEmpty();
+        assertThat(couponDtos).isNotNull();
+        assertThat(couponDtos).isInstanceOf(List.class);
     }
 }

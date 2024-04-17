@@ -141,4 +141,8 @@ public class Product extends BaseEntity {
                         .anyMatch(mc -> !mc.getIsUsed()))
                 .collect(Collectors.toList());
     }
+
+    public Long parseProductGroupId() {
+        return Long.parseLong(productNo.split("-")[0].trim());
+    }
 }

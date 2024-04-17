@@ -72,7 +72,7 @@ public class MemberCoupon extends BaseEntity {
         usedDate = dateTime;
     }
 
-    public void setCoupon(Coupon coupon) {
+    public void linkCoupon(Coupon coupon) {
         this.coupon = coupon;
     }
 
@@ -81,11 +81,8 @@ public class MemberCoupon extends BaseEntity {
         this.usedDate = dateTimeHolder.getTimeNow();
     }
 
-    public MemberCoupon filterByMemberId(Long memberId) {
-        if (member.getId().equals(memberId)) {
-            return this;
-        }
-        throw CustomLogicException.createBadRequestError(ErrorCode.MEMBER_NOT_FOUND);
+    public Boolean filterByMemberId(Long memberId) {
+        return member.getId().equals(memberId);
     }
 
     public Long getMinimumPrice() {

@@ -19,6 +19,12 @@ class GetCouponHttpTest {
 
         //then
         assertThat(result.getCouponName()).isEqualTo("1000원짜리 쿠폰");
+        assertThat(result).hasFieldOrProperty("couponName");
+        assertThat(result).hasFieldOrProperty("couponPrice");
+        assertThat(result).hasFieldOrProperty("minimumPrice");
+        assertThat(result).hasFieldOrProperty("count");
+        assertThat(result).hasFieldOrProperty("startDate");
+        assertThat(result).hasFieldOrProperty("endDate");
     }
 
 }

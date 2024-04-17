@@ -274,21 +274,6 @@ create table product
 )
 ;
 
-create table product_group
-(
-    product_group_id    bigint auto_increment
-        primary key,
-    category_id   bigint       null,
-    is_own        bit          null,
-    name          varchar(255) null,
-    is_subs       bit          null,
-    discount_rate bigint       null,
-    created_at    datetime(6)  null,
-    updated_at    datetime(6)  null,
-    deleted_at    datetime(6)  null
-)
-;
-
 create table product_image
 (
     product_image_id bigint auto_increment

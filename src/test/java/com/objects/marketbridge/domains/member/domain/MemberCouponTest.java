@@ -79,10 +79,14 @@ class MemberCouponTest {
         Member savedMember3 = memberRepository.save(member3);
 
         //when
-        MemberCoupon filteredMemberCoupon = memberCoupon.filterByMemberId(savedMember1.getId());
+        Boolean result1 = memberCoupon.filterByMemberId(savedMember1.getId());
+        Boolean result2 = memberCoupon.filterByMemberId(savedMember2.getId());
+        Boolean result3 = memberCoupon.filterByMemberId(savedMember3.getId());
 
         //then
-        assertThat(filteredMemberCoupon.getMember().getId()).isEqualTo(savedMember1.getId());
+        assertThat(result1).isTrue();
+        assertThat(result2).isFalse();
+        assertThat(result3).isFalse();
     }
 
     @DisplayName("회원이 가지고 있는 쿠폰의 최소 가격을 조회할 수 있다.")

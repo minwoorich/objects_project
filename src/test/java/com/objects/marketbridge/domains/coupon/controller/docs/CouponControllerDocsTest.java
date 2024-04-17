@@ -6,7 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.domains.coupon.controller.CouponController;
 import com.objects.marketbridge.domains.coupon.controller.dto.GetCouponHttp;
-import com.objects.marketbridge.domains.coupon.service.CouponService;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
+import com.objects.marketbridge.domains.coupon.service.GetCouponService;
+import com.objects.marketbridge.domains.coupon.service.dto.GetCouponDto;
+import com.objects.marketbridge.domains.member.domain.Member;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -48,43 +52,38 @@ public class CouponControllerDocsTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
-    @MockBean CouponService couponService;
+    @MockBean GetCouponService getCouponService;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
                       RestDocumentationContextProvider restDocumentationContextProvider) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentationContextProvider))
                 .build();
     }
 
-    @DisplayName("[API] GET /coupons/{productId} 테스트")
+    @DisplayName("[API] GET /coupons/{productGroupId} 테스트")
     @Test
     @WithMockCustomUser
     void findCouponsForProduct() throws Exception {
         // given
         Long productGroupId = 111111L;
+        Long memberId = 1L;
 
-        GetCouponHttp.Response.CouponInfo couponInfo = GetCouponHttp.Response.CouponInfo.builder()
-                .couponName("1000원 쿠폰")
-                .couponPrice(1000L)
-                .count(100L)
+        List<GetCouponDto> couponDtos = List.of(GetCouponDto.builder()
+                .productGroupId(111111L)
+                .couponName("1000원 할인 쿠폰")
+                .price(1000L)
+                .count(9999L)
                 .minimumPrice(15000L)
                 .startDate(LocalDateTime.of(2024, 1, 1, 12, 0, 0))
-                .endDate(LocalDateTime.of(2024, 12, 1, 12, 0, 0))
-                .build();
-
-        GetCouponHttp.Response response = GetCouponHttp.Response.builder()
-                .hasCoupons(true)
-                .couponInfos(List.of(couponInfo))
-                .productGroupId(productGroupId)
-                .build();
-
-        given(couponService.findCouponsForProductGroup(productGroupId)).willReturn(response);
-
+                .endDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
+                .build());
+        given(getCouponService.findCouponsForProductGroup(productGroupId, memberId)).willReturn(couponDtos);
         // when
         MockHttpServletRequestBuilder requestBuilder =
-                get("/coupons/{productId}", productGroupId)
+                get("/coupons/{productGroupId}", productGroupId)
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON);
@@ -93,13 +92,13 @@ public class CouponControllerDocsTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("coupon-get-by-productId",
+                .andDo(document("coupon-get-by-productGroupId",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(
                                 ResourceSnippetParameters.builder()
                                         .pathParameters(
-                                                parameterWithName("productId").description("상품 아이디")
+                                                parameterWithName("productGroupId").description("상품 아이디")
                                         )
                                         .responseFields(
                                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -113,8 +112,6 @@ public class CouponControllerDocsTest {
 
                                                 fieldWithPath("data.hasCoupons").type(JsonFieldType.BOOLEAN)
                                                         .description("등록된 쿠폰 여부"),
-                                                fieldWithPath("data.productGroupId").type(JsonFieldType.NUMBER)
-                                                        .description("상품 그룹 아이디"),
 
                                                 fieldWithPath("data.couponInfos[].couponName").type(JsonFieldType.STRING)
                                                         .description("쿠폰 이름"),
@@ -129,12 +126,9 @@ public class CouponControllerDocsTest {
                                                 fieldWithPath("data.couponInfos[].endDate").type(JsonFieldType.STRING)
                                                         .description("쿠폰 만료기한 (yyyy-MM-dd HH:mm:ss) ")
                                         )
-                                        .responseSchema(Schema.schema("GetCouponsProductId"))
+                                        .responseSchema(Schema.schema("GetCouponsProductGroupId"))
                                         .build()
                         )
-
                 ));
     }
-
-
 }

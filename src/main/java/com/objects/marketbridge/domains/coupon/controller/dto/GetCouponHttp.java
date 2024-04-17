@@ -16,19 +16,24 @@ public class GetCouponHttp {
 
         private List<CouponInfo> couponInfos;
         private Boolean hasCoupons;
-        private Long productGroupId;
 
         @Builder
-        private Response(List<CouponInfo> couponInfos, Boolean hasCoupons, Long productGroupId) {
+        private Response(List<CouponInfo> couponInfos, Boolean hasCoupons) {
             this.couponInfos = couponInfos;
             this.hasCoupons = hasCoupons;
-            this.productGroupId = productGroupId;
         }
-        public static GetCouponHttp.Response create(Boolean hasCoupons, Long productGroupId, List<GetCouponHttp.Response.CouponInfo> couponInfos) {
+
+        public static GetCouponHttp.Response create(List<GetCouponHttp.Response.CouponInfo> couponInfos) {
             return Response.builder()
-                    .hasCoupons(hasCoupons)
-                    .productGroupId(productGroupId)
-                    .couponInfos(hasCoupons ? couponInfos : Collections.emptyList())
+                    .hasCoupons(true)
+                    .couponInfos(couponInfos)
+                    .build();
+        }
+
+        public static GetCouponHttp.Response create() {
+            return Response.builder()
+                    .hasCoupons(false)
+                    .couponInfos(Collections.emptyList())
                     .build();
         }
 

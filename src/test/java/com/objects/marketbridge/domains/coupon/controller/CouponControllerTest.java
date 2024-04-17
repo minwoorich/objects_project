@@ -3,10 +3,14 @@ package com.objects.marketbridge.domains.coupon.controller;
 import com.objects.marketbridge.common.responseobj.ApiResponse;
 import com.objects.marketbridge.domains.coupon.controller.dto.GetCouponHttp;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
+import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.mock.BaseFakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
-import com.objects.marketbridge.domains.coupon.service.CouponService;
+import com.objects.marketbridge.domains.coupon.service.GetCouponService;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
+import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.service.port.MemberRepository;
+import com.objects.marketbridge.domains.order.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.order.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
@@ -23,9 +27,10 @@ class CouponControllerTest {
 
     CouponRepository couponRepository = new FakeCouponRepository();
     ProductRepository productRepository = new FakeProductRepository();
+    MemberRepository memberRepository = new FakeMemberRepository();
 
-    CouponService couponService = CouponService.builder().couponRepository(couponRepository).build();
-    CouponController couponController = CouponController.builder().couponService(couponService).build();
+    GetCouponService getCouponService = GetCouponService.builder().couponRepository(couponRepository).build();
+    CouponController couponController = CouponController.builder().getCouponService(getCouponService).build();
 
 
     @AfterEach
@@ -33,31 +38,41 @@ class CouponControllerTest {
         BaseFakeCouponRepository.getInstance().clear();
         BaseFakeCouponRepository.getInstance().clear();
         productRepository.deleteAllInBatch();
+        memberRepository.deleteAllInBatch();
     }
 
     @DisplayName("상품에 등록된 모든 쿠폰들을 조회할 수 있다.")
     @Test
     void findCouponsForProductGroup(){
         //given
+        Member member = memberRepository.save(Member.builder().name("홍길동").build());
         Product product = productRepository.save(Product.builder().productNo("111111 - 111111").name("신발").build());
 
-        Coupon coupon1 = Coupon.builder().price(1000L).product(product).build();
-        product.addCoupons(coupon1);
-        Coupon coupon2 = Coupon.builder().price(2000L).product(product).build();
-        product.addCoupons(coupon2);
-        Coupon coupon3 = Coupon.builder().price(3000L).product(product).build();
-        product.addCoupons(coupon3);
+        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).build();
+        MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).build();
+        MemberCoupon memberCoupon3 = MemberCoupon.builder().member(member).build();
 
+        Coupon coupon1 = Coupon.builder().price(1000L).product(product).build();
+        Coupon coupon2 = Coupon.builder().price(2000L).product(product).build();
+        Coupon coupon3 = Coupon.builder().price(3000L).product(product).build();
+
+        coupon1.addMemberCoupon(memberCoupon1);
+        coupon2.addMemberCoupon(memberCoupon2);
+        coupon3.addMemberCoupon(memberCoupon3);
+        couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
+
+        product.addCoupons(coupon1);
+        product.addCoupons(coupon2);
+        product.addCoupons(coupon3);
         couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
 
         //when
-        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProductGroup(111111L);
+        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProductGroup(111111L, member.getId());
 
         //then
         assertThat(response.getCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(response.getData().getHasCoupons()).isTrue();
-        assertThat(response.getData().getProductGroupId()).isEqualTo(111111L);
         assertThat(response.getData().getCouponInfos()).hasSize(3);
         assertThat(response.getData().getCouponInfos())
                 .extracting(GetCouponHttp.Response.CouponInfo::getCouponPrice)
@@ -71,7 +86,7 @@ class CouponControllerTest {
         // 등록된 쿠폰이 없음
 
         //when
-        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProductGroup(1L);
+        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProductGroup(1L, 2L);
 
         //then
         assertThat(response.getCode()).isEqualTo(HttpStatus.OK.value());

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -55,10 +56,6 @@ public class Coupon extends BaseEntity {
         this.endDate = endDate;
     }
 
-    private Long parseProductGroupId(Product product) {
-        return Long.parseLong(product.getProductNo().split("-")[0].trim());
-    }
-
     public static Coupon create(String name, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
         return Coupon.builder()
                 .name(name)
@@ -71,13 +68,17 @@ public class Coupon extends BaseEntity {
     }
 
     public void addMemberCoupon(MemberCoupon memberCoupon) {
+        memberCoupons.remove(memberCoupon);
         memberCoupons.add(memberCoupon);
-        memberCoupon.setCoupon(this);
+        memberCoupon.linkCoupon(this);
     }
 
     public void addProduct(Product product) {
         this.product = product;
-        this.productGroupId = parseProductGroupId(product);
+        this.productGroupId = product.parseProductGroupId();
+    }
 
+    public Boolean filteredBy(Long memberId) {
+        return memberCoupons.stream().anyMatch(mc -> mc.filterByMemberId(memberId));
     }
 }
