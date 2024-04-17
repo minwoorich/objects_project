@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartQueryRepository {
-    Optional<Cart> findByProductId(Long productId);
+
+    Optional<Cart> findByProductIdAndMemberId(Long productId, Long memberId);
 
     Cart findById(Long id);
 

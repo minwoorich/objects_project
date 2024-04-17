@@ -6,7 +6,7 @@ import com.objects.marketbridge.common.kakao.dto.KakaoPayOrderResponse;
 import com.objects.marketbridge.common.kakao.KakaoPayService;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
 import com.objects.marketbridge.domains.order.domain.Order;
-import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCommandRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.domains.payment.controller.dto.CancelledPaymentHttp;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import org.springframework.web.client.RestClientException;
 @Slf4j
 public class QuitPaymentService {
 
-    private final OrderCommendRepository orderCommendRepository;
+    private final OrderCommandRepository orderCommandRepository;
     private final OrderQueryRepository orderQueryRepository;
     private final DateTimeHolder dateTimeHolder;
     private final KakaoPayService kakaoPayService;
@@ -37,7 +37,7 @@ public class QuitPaymentService {
         order.stockIncrease();
 
         // 3) 주문, 상세주문들 softDelete
-        orderCommendRepository.deleteByOrderNo(orderNo);
+        orderCommandRepository.deleteByOrderNo(orderNo);
     }
 
     public CancelledPaymentHttp.Response response(String orderNo) throws RestClientException {

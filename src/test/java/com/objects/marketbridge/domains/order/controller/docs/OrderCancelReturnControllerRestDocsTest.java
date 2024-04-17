@@ -1,6 +1,8 @@
 package com.objects.marketbridge.domains.order.controller.docs;
 
 
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.domains.order.controller.OrderCancelReturnController;
@@ -20,6 +22,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,18 +32,20 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.objects.marketbridge.domains.order.domain.StatusCodeType.ORDER_CANCEL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -127,78 +132,84 @@ public class OrderCancelReturnControllerRestDocsTest {
                 .andDo(document("order-cancel-return-list",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        queryParameters(
-                                parameterWithName("page")
-                                        .description("페이지 번호"),
-                                parameterWithName("size")
-                                        .description("사이즈 크기")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답 데이터"),
-                                fieldWithPath("data.content[].cancelReceiptDate").type(JsonFieldType.STRING)
-                                        .description("주문 취소 날짜"),
-                                fieldWithPath("data.content[].orderDate").type(JsonFieldType.STRING)
-                                        .description("주문 날짜"),
-                                fieldWithPath("data.content[].orderDetailInfo.orderNo").type(JsonFieldType.STRING)
-                                        .description("주문 번호"),
-                                fieldWithPath("data.content[].orderDetailInfo.productId").type(JsonFieldType.NUMBER)
-                                        .description("상품 Id"),
-                                fieldWithPath("data.content[].orderDetailInfo.productNo").type(JsonFieldType.STRING)
-                                        .description("상품 번호"),
-                                fieldWithPath("data.content[].orderDetailInfo.name").type(JsonFieldType.STRING)
-                                        .description("상품 이름"),
-                                fieldWithPath("data.content[].orderDetailInfo.price").type(JsonFieldType.NUMBER)
-                                        .description("상품 가격"),
-                                fieldWithPath("data.content[].orderDetailInfo.quantity").type(JsonFieldType.NUMBER)
-                                        .description("상품 주문 수량"),
-                                fieldWithPath("data.content[].orderDetailInfo.orderStatus").type(JsonFieldType.STRING)
-                                        .description("주문 상태"),
-                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER)
-                                        .description("페이지 번호"),
-                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER)
-                                        .description("페이지당 요소 수"),
-                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
-                                        .description("정렬이 비어 있는지 여부"),
-                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
-                                        .description("정렬이 되어 있는지 여부"),
-                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
-                                        .description("정렬이 되어 있지 않은지 여부"),
-                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER)
-                                        .description("페이지 오프셋"),
-                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN)
-                                        .description("페이지가 있는지 여부"),
-                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN)
-                                        .description("페이지가 없는지 여부"),
-                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
-                                        .description("마지막 페이지 여부"),
-                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
-                                        .description("전체 페이지 수"),
-                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
-                                        .description("전체 요소 수"),
-                                fieldWithPath("data.size").type(JsonFieldType.NUMBER)
-                                        .description("페이지 크기"),
-                                fieldWithPath("data.number").type(JsonFieldType.NUMBER)
-                                        .description("페이지 번호"),
-                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN)
-                                        .description("정렬이 비어 있는지 여부"),
-                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
-                                        .description("정렬이 되어 있는지 여부"),
-                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN)
-                                        .description("정렬이 되어 있지 않은지 여부"),
-                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
-                                        .description("첫 페이지 여부"),
-                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
-                                        .description("현재 페이지의 요소 수"),
-                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
-                                        .description("컨텐츠가 비어 있는지 여부")
-                        )));
+                        resource(
+                                ResourceSnippetParameters.builder()
+                                        .queryParameters(
+                                                parameterWithName("page")
+                                                        .description("페이지 번호"),
+                                                parameterWithName("size")
+                                                        .description("사이즈 크기")
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                        .description("코드"),
+                                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                                        .description("상태"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                                        .description("메시지"),
+                                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                        .description("응답 데이터"),
+                                                fieldWithPath("data.content[].cancelReceiptDate").type(JsonFieldType.STRING)
+                                                        .description("주문 취소 날짜"),
+                                                fieldWithPath("data.content[].orderDate").type(JsonFieldType.STRING)
+                                                        .description("주문 날짜"),
+                                                fieldWithPath("data.content[].orderDetailInfo.orderNo").type(JsonFieldType.STRING)
+                                                        .description("주문 번호"),
+                                                fieldWithPath("data.content[].orderDetailInfo.productId").type(JsonFieldType.NUMBER)
+                                                        .description("상품 Id"),
+                                                fieldWithPath("data.content[].orderDetailInfo.productNo").type(JsonFieldType.STRING)
+                                                        .description("상품 번호"),
+                                                fieldWithPath("data.content[].orderDetailInfo.name").type(JsonFieldType.STRING)
+                                                        .description("상품 이름"),
+                                                fieldWithPath("data.content[].orderDetailInfo.price").type(JsonFieldType.NUMBER)
+                                                        .description("상품 가격"),
+                                                fieldWithPath("data.content[].orderDetailInfo.quantity").type(JsonFieldType.NUMBER)
+                                                        .description("상품 주문 수량"),
+                                                fieldWithPath("data.content[].orderDetailInfo.orderStatus").type(JsonFieldType.STRING)
+                                                        .description("주문 상태"),
+                                                fieldWithPath("data.pageable.pageNumber").type(JsonFieldType.NUMBER)
+                                                        .description("페이지 번호"),
+                                                fieldWithPath("data.pageable.pageSize").type(JsonFieldType.NUMBER)
+                                                        .description("페이지당 요소 수"),
+                                                fieldWithPath("data.pageable.sort.empty").type(JsonFieldType.BOOLEAN)
+                                                        .description("정렬이 비어 있는지 여부"),
+                                                fieldWithPath("data.pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
+                                                        .description("정렬이 되어 있는지 여부"),
+                                                fieldWithPath("data.pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
+                                                        .description("정렬이 되어 있지 않은지 여부"),
+                                                fieldWithPath("data.pageable.offset").type(JsonFieldType.NUMBER)
+                                                        .description("페이지 오프셋"),
+                                                fieldWithPath("data.pageable.paged").type(JsonFieldType.BOOLEAN)
+                                                        .description("페이지가 있는지 여부"),
+                                                fieldWithPath("data.pageable.unpaged").type(JsonFieldType.BOOLEAN)
+                                                        .description("페이지가 없는지 여부"),
+                                                fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
+                                                        .description("마지막 페이지 여부"),
+                                                fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
+                                                        .description("전체 페이지 수"),
+                                                fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
+                                                        .description("전체 요소 수"),
+                                                fieldWithPath("data.size").type(JsonFieldType.NUMBER)
+                                                        .description("페이지 크기"),
+                                                fieldWithPath("data.number").type(JsonFieldType.NUMBER)
+                                                        .description("페이지 번호"),
+                                                fieldWithPath("data.sort.empty").type(JsonFieldType.BOOLEAN)
+                                                        .description("정렬이 비어 있는지 여부"),
+                                                fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
+                                                        .description("정렬이 되어 있는지 여부"),
+                                                fieldWithPath("data.sort.unsorted").type(JsonFieldType.BOOLEAN)
+                                                        .description("정렬이 되어 있지 않은지 여부"),
+                                                fieldWithPath("data.first").type(JsonFieldType.BOOLEAN)
+                                                        .description("첫 페이지 여부"),
+                                                fieldWithPath("data.numberOfElements").type(JsonFieldType.NUMBER)
+                                                        .description("현재 페이지의 요소 수"),
+                                                fieldWithPath("data.empty").type(JsonFieldType.BOOLEAN)
+                                                        .description("컨텐츠가 비어 있는지 여부")
+                                        )
+                                        .responseSchema(Schema.schema("GetOrdersCancelReturnListRes"))
+                                        .build()
+                        )
+                ));
     }
 
 }

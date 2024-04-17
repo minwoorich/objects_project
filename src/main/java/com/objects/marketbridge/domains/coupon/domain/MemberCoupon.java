@@ -46,13 +46,12 @@ public class MemberCoupon extends BaseEntity {
         this.endDate = endDate;
     }
 
-    public static MemberCoupon create(Member member, Coupon coupon, Boolean isUsed, LocalDateTime usedDate, LocalDateTime endDate) {
+    public static MemberCoupon create(Member member, Coupon coupon) {
         return MemberCoupon.builder()
                 .member(member)
                 .coupon(coupon)
-                .isUsed(isUsed)
-                .usedDate(usedDate)
-                .endDate(endDate)
+                .isUsed(false)
+                .endDate(coupon.getEndDate())
                 .build();
     }
 
@@ -68,13 +67,17 @@ public class MemberCoupon extends BaseEntity {
         usedDate = dateTime;
     }
 
-    public void setCoupon(Coupon coupon) {
+    public void linkCoupon(Coupon coupon) {
         this.coupon = coupon;
     }
 
     public void applyCouponUsage(Boolean isUsed, DateTimeHolder dateTimeHolder) {
         this.isUsed = isUsed;
         this.usedDate = dateTimeHolder.getTimeNow();
+    }
+
+    public Boolean filterByMemberId(Long memberId) {
+        return member.getId().equals(memberId);
     }
 
     public Long getMinimumPrice() {

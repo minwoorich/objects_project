@@ -25,8 +25,7 @@ import static org.assertj.core.api.Assertions.tuple;
 @Slf4j
 class GetCartDtoTest {
 
-
-    @DisplayName("CouponDto 의 of 메서드 테스트 ")
+    @DisplayName("Coupon 엔티티를 CouponDto 로 변환 할 수 있다.")
     @Test
     void of_CouponDto() {
 
@@ -45,7 +44,7 @@ class GetCartDtoTest {
         assertThat(couponDto)
             .hasFieldOrPropertyWithValue("name", "[상품1]1000원 할인")
             .hasFieldOrPropertyWithValue("price", 1000L)
-            .hasFieldOrPropertyWithValue("endDate", LocalDateTime.of(2024, 1, 1, 0, 0, 0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+            .hasFieldOrPropertyWithValue("endDate", "2024-01-01 00:00:00")
             .hasFieldOrPropertyWithValue("minimumPrice", 15000L);
     }
 
@@ -56,7 +55,7 @@ class GetCartDtoTest {
         // given
         Member member = Member.builder().name("홍길동").email("test@email.com").build();
 
-        Product product1 = createProduct("productNo1", "썸네일1", "상품1", 2000L, 9999L, 0L, true, false);
+        Product product1 = createProduct("111111 - 111111", "썸네일1", "상품1", 2000L, 9999L, 0L, true, false);
 
         Option option1 = createOption("옵션1");
         Option option2 = createOption("옵션2");
@@ -87,7 +86,7 @@ class GetCartDtoTest {
 
         //then
         assertThat(cartDto1)
-                .hasFieldOrPropertyWithValue("productNo", "productNo1")
+                .hasFieldOrPropertyWithValue("productNo", "111111 - 111111")
                 .hasFieldOrPropertyWithValue("thumbImageUrl", "썸네일1")
                 .hasFieldOrPropertyWithValue("productName", "상품1")
                 .hasFieldOrPropertyWithValue("productPrice", 2000L)
@@ -119,15 +118,11 @@ class GetCartDtoTest {
         // given
         Member member = Member.builder().name("홍길동").email("test@email.com").build();
 
-        Product product2 = createProduct("productNo2", "썸네일1", "상품2", 2000L, 9999L, 0L, true, false);
-
+        Product product2 = createProduct("222222 - 222222", "썸네일1", "상품2", 2000L, 9999L, 0L, true, false);
         Option option1 = createOption("옵션1");
         Option option2 = createOption("옵션2");
-
         ProdOption prodOption2_1 = createProdOption(option1);
         ProdOption prodOption2_2 = createProdOption(option2);
-
-
         product2.addProdOptions(prodOption2_1);
         product2.addProdOptions(prodOption2_2);
 
@@ -140,7 +135,7 @@ class GetCartDtoTest {
         assertThat(cartDto2.getAvailableCoupons()).isNull();
     }
 
-    private static Option createOption(String name) {
+    private Option createOption(String name) {
         return Option.builder()
                 .name(name)
                 .build();

@@ -17,7 +17,7 @@ public class FakeOrderDetailQueryRepository extends BaseFakeOrderDetailRepositor
     }
 
     @Override
-    public List<OrderDetail> findAll() {
+    public List<OrderDetail> findAll(){
         return null;
     }
 

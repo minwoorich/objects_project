@@ -6,8 +6,8 @@ import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.domains.order.mock.TestDateTimeHolder;
-import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
-import com.objects.marketbridge.domains.order.service.port.OrderDetailCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCommandRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailCommandRepository;
 import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
@@ -35,11 +35,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OrderTest {
 
     @Autowired
-    private OrderCommendRepository orderCommendRepository;
+    private OrderCommandRepository orderCommandRepository;
     @Autowired
     private OrderQueryRepository orderQueryRepository;
     @Autowired
-    private OrderDetailCommendRepository orderDetailCommendRepository;
+    private OrderDetailCommandRepository orderDetailCommandRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -100,8 +100,8 @@ class OrderTest {
 
 
 
-        Order savedOrder = orderCommendRepository.save(order);
-        orderDetailCommendRepository.saveAll(List.of(orderDetail1, orderDetail2));
+        Order savedOrder = orderCommandRepository.save(order);
+        orderDetailCommandRepository.saveAll(List.of(orderDetail1, orderDetail2));
         productRepository.saveAll(List.of(product1, product2));
         order.addOrderDetail(orderDetail1);
         order.addOrderDetail(orderDetail2);
@@ -131,7 +131,7 @@ class OrderTest {
         Order order = createOrder();
         List<OrderDetail> orderDetails = createOrderDetails();
         orderDetails.forEach(order::addOrderDetail);
-        orderCommendRepository.save(order);
+        orderCommandRepository.save(order);
 
         //when
         Map<Long, List<OrderDetail>> groupedMap =
@@ -155,7 +155,7 @@ class OrderTest {
         Order order = createOrder();
         List<OrderDetail> orderDetails = createOrderDetails();
         orderDetails.forEach(order::addOrderDetail);
-        orderCommendRepository.save(order);
+        orderCommandRepository.save(order);
 
         //when
 
@@ -177,7 +177,7 @@ class OrderTest {
         Product product = Product.builder().stock(beforeQuantity).build();
         orderDetails.forEach(order::addOrderDetail);
         orderDetails.forEach(product::addOrderDetail);
-        orderCommendRepository.save(order);
+        orderCommandRepository.save(order);
         productRepository.save(product);
 
         //when

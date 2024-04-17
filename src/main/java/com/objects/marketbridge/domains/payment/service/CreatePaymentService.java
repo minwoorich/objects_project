@@ -3,19 +3,19 @@ package com.objects.marketbridge.domains.payment.service;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.kakao.KakaoPayConfig;
+import com.objects.marketbridge.common.kakao.KakaoPayService;
 import com.objects.marketbridge.common.kakao.dto.KakaoPayApproveRequest;
 import com.objects.marketbridge.common.kakao.dto.KakaoPayApproveResponse;
-import com.objects.marketbridge.common.kakao.KakaoPayService;
 import com.objects.marketbridge.common.kakao.dto.KakaoPayOrderRequest;
-import com.objects.marketbridge.common.kakao.dto.KakaoPayOrderResponse;
-import com.objects.marketbridge.domains.payment.domain.Amount;
-import com.objects.marketbridge.domains.payment.domain.CardInfo;
-import com.objects.marketbridge.domains.payment.domain.Payment;
 import com.objects.marketbridge.domains.order.domain.Order;
 import com.objects.marketbridge.domains.order.service.port.OrderQueryRepository;
 import com.objects.marketbridge.domains.payment.controller.dto.CompleteOrderHttp;
+import com.objects.marketbridge.domains.payment.domain.Amount;
+import com.objects.marketbridge.domains.payment.domain.CardInfo;
+import com.objects.marketbridge.domains.payment.domain.Payment;
 import com.objects.marketbridge.domains.payment.service.port.PaymentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
@@ -26,6 +26,7 @@ import static com.objects.marketbridge.domains.order.domain.StatusCodeType.PAYME
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CreatePaymentService {
 
     private final PaymentRepository paymentRepository;
@@ -71,7 +72,7 @@ public class CreatePaymentService {
 
     private void validAmount(KakaoPayOrderRequest request, Long savedAmount) {
         Long totalAmount = kakaoPayService.getOrders(request).getAmount().getTotalAmount();
-        if (totalAmount.equals(savedAmount)) {
+        if (!totalAmount.equals(savedAmount)) {
             throw CustomLogicException.createBadRequestError(ErrorCode.INVALID_PAYMENT_AMOUNT);
         }
     }

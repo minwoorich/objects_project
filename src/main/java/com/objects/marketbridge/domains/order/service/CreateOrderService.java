@@ -16,8 +16,8 @@ import com.objects.marketbridge.domains.order.domain.OrderDetail;
 import com.objects.marketbridge.domains.order.domain.StatusCodeType;
 import com.objects.marketbridge.domains.order.service.dto.CreateOrderDto;
 import com.objects.marketbridge.domains.order.service.port.AddressRepository;
-import com.objects.marketbridge.domains.order.service.port.OrderCommendRepository;
-import com.objects.marketbridge.domains.order.service.port.OrderDetailCommendRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderCommandRepository;
+import com.objects.marketbridge.domains.order.service.port.OrderDetailCommandRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +36,8 @@ import static com.objects.marketbridge.common.kakao.KakaoPayConfig.ONE_TIME_CID;
 @Transactional
 public class CreateOrderService {
 
-    private final OrderDetailCommendRepository orderDetailCommendRepository;
-    private final OrderCommendRepository orderCommendRepository;
+    private final OrderDetailCommandRepository orderDetailCommandRepository;
+    private final OrderCommandRepository orderCommandRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final MemberCouponRepository memberCouponRepository;
@@ -49,10 +49,10 @@ public class CreateOrderService {
     public void create(CreateOrderDto createOrderDto) {
 
         // 1. Order 생성
-        Order order = orderCommendRepository.save(createOrder(createOrderDto));
+        Order order = orderCommandRepository.save(createOrder(createOrderDto));
 
         // 2. OrderDetail 생성 (연관관계 매핑 여기서 해결)
-        orderDetailCommendRepository.saveAll(createOrderDetails(createOrderDto.getProductValues(), order));
+        orderDetailCommandRepository.saveAll(createOrderDetails(createOrderDto.getProductValues(), order));
 
         // 3. MemberCoupon 의 isUsed 변경, 사용날짜 저장
         order.changeMemberCouponInfo(dateTimeHolder);

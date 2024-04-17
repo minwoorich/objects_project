@@ -4,7 +4,7 @@ import com.objects.marketbridge.domains.cart.domain.Cart;
 import com.objects.marketbridge.domains.cart.service.dto.GetCartDto;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.common.responseobj.SliceResponse;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -16,11 +16,15 @@ import java.util.List;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class GetCartListService {
 
     private final CartQueryRepository cartQueryRepository;
+
+    @Builder
+    public GetCartListService(CartQueryRepository cartQueryRepository) {
+        this.cartQueryRepository = cartQueryRepository;
+    }
 
     public SliceResponse<GetCartDto> get(Pageable pageable, Long memberId) {
 

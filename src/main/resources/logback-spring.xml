@@ -38,7 +38,7 @@
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${ALL_LOG_PATH}/%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+            <fileNamePattern>${ALL_LOG_PATH}/%d{yyyy-MM-dd, ${logback.timezone:-Asia/Seoul}}_%i.log</fileNamePattern>
             <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
             <cleanHistoryOnStart>${CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
             <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
@@ -65,7 +65,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${INFO_LOG_PATH}/%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+            <fileNamePattern>${INFO_LOG_PATH}/%d{yyyy-MM-dd, ${logback.timezone:-Asia/Seoul}}_%i.log</fileNamePattern>
             <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
             <cleanHistoryOnStart>${CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
             <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
@@ -92,7 +92,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${WARN_LOG_PATH}/%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+            <fileNamePattern>${WARN_LOG_PATH}/%d{yyyy-MM-dd, ${logback.timezone:-Asia/Seoul}}_%i.log</fileNamePattern>
             <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
             <cleanHistoryOnStart>${CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
             <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
@@ -119,7 +119,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${ERROR_LOG_PATH}/%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+            <fileNamePattern>${ERROR_LOG_PATH}/%d{yyyy-MM-dd, ${logback.timezone:-Asia/Seoul}}_%i.log</fileNamePattern>
             <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
             <cleanHistoryOnStart>${CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
             <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>

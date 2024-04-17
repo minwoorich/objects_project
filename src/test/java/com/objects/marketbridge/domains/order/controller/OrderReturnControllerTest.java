@@ -81,7 +81,7 @@ class OrderReturnControllerTest {
                 .statusCode(PAYMENT_PENDING.getCode())
                 .build();
 
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         // when // then
         assertThatThrownBy(() -> testContainer.orderReturnController.confirmReturn(request))
@@ -111,7 +111,7 @@ class OrderReturnControllerTest {
                 .statusCode(DELIVERY_COMPLETED.getCode())
                 .build();
 
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         // when // then
         assertThatThrownBy(() -> testContainer.orderReturnController.confirmReturn(request))
@@ -157,8 +157,8 @@ class OrderReturnControllerTest {
                 .cancelledAt(cancelledAt)
                 .build();
 
-        testContainer.orderCommendRepository.save(order);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderCommandRepository.save(order);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
         testContainer.productRepository.save(product);
 
         // when
@@ -220,8 +220,8 @@ class OrderReturnControllerTest {
                 .cancelledAt(cancelledAt)
                 .build();
 
-        testContainer.orderCommendRepository.save(order);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderCommandRepository.save(order);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
         testContainer.productRepository.save(product);
 
         // when
@@ -295,8 +295,8 @@ class OrderReturnControllerTest {
                 .cancelledAt(cancelledAt)
                 .build();
 
-        testContainer.orderCommendRepository.save(order);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderCommandRepository.save(order);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
         testContainer.productRepository.save(product);
 
         // when
@@ -372,8 +372,8 @@ class OrderReturnControllerTest {
                 .cancelledAt(cancelledAt)
                 .build();
 
-        testContainer.orderCommendRepository.save(order);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderCommandRepository.save(order);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
         testContainer.productRepository.save(product);
 
         // when
@@ -427,7 +427,7 @@ class OrderReturnControllerTest {
                 .build();
 
         testContainer.memberRepository.save(member);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderDetailId = 1L;
         Long numberOfReturns = 2L;
@@ -473,7 +473,7 @@ class OrderReturnControllerTest {
                 .build();
 
         testContainer.memberRepository.save(member);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderDetailId = 1L;
         Long numberOfReturns = 2L;
@@ -550,7 +550,7 @@ class OrderReturnControllerTest {
                 .build();
 
         testContainer.memberRepository.save(member);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
 
         Long orderDetailId = 1L;
         Long numberOfCancellation = 2L;
@@ -598,9 +598,9 @@ class OrderReturnControllerTest {
                 .reason("단순변심")
                 .build();
 
-        testContainer.orderCancelReturnCommendRepository.save(returnDetail);
+        testContainer.orderCancelReturnCommandRepository.save(returnDetail);
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
         Long orderReturnId = 1L;
@@ -663,9 +663,9 @@ class OrderReturnControllerTest {
                 .reason("단순변심")
                 .build();
 
-        testContainer.orderCancelReturnCommendRepository.save(returnDetail);
+        testContainer.orderCancelReturnCommandRepository.save(returnDetail);
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
         Long orderReturnId = 1L;
@@ -738,9 +738,9 @@ class OrderReturnControllerTest {
                 .reason("단순변심")
                 .build();
 
-        testContainer.orderCancelReturnCommendRepository.save(returnDetail);
+        testContainer.orderCancelReturnCommandRepository.save(returnDetail);
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
         Long orderReturnId = 1L;
@@ -813,9 +813,9 @@ class OrderReturnControllerTest {
                 .reason("단순변심")
                 .build();
 
-        testContainer.orderCancelReturnCommendRepository.save(cancelDetail);
+        testContainer.orderCancelReturnCommandRepository.save(cancelDetail);
         testContainer.productRepository.save(product);
-        testContainer.orderDetailCommendRepository.save(orderDetail);
+        testContainer.orderDetailCommandRepository.save(orderDetail);
         testContainer.memberRepository.save(member);
 
         Long orderCancelId = 1L;

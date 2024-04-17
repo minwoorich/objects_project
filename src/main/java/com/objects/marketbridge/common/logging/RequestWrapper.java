@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class RequestWrapper extends HttpServletRequestWrapper {
+
     private byte[] cachedInputStream;
 
     public RequestWrapper(HttpServletRequest request) throws IOException {
