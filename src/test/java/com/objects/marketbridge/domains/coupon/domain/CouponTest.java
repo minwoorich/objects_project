@@ -1,5 +1,7 @@
 package com.objects.marketbridge.domains.coupon.domain;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.product.domain.Product;
 import org.assertj.core.api.Assertions;
@@ -155,5 +157,32 @@ class CouponTest {
                 );
 
         assertThat(memberCoupon.getCoupon()).isEqualTo(coupon);
+    }
+
+    @DisplayName("사용자가 쿠폰을 다운로드 받으면 count 가 하나 줄어야한다")
+    @Test
+    void decrease(){
+        //given
+        Coupon coupon = Coupon.builder().count(100L).build();
+
+        //when
+        coupon.decreaseCount();
+
+        //then
+        assertThat(coupon.getCount()).isEqualTo(99L);
+    }
+
+    @DisplayName("사용 할 수 있는 쿠폰이 모두 소진 되면 에러 발생")
+    @Test
+    void decrease_error(){
+        //given
+        Coupon coupon = Coupon.builder().count(0L).build();
+
+        //when
+        Throwable thrown = catchThrowable(() -> coupon.decreaseCount());
+
+        //then
+        assertThat(thrown).isInstanceOf(CustomLogicException.class)
+                .hasMessage(ErrorCode.COUPON_OUT_OF_STOCK.getMessage());
     }
 }
