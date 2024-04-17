@@ -15,6 +15,7 @@ import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 import java.util.List;
 
@@ -181,5 +182,47 @@ class CouponRepositoryImplTestWithFake {
                         Tuple.tuple(3000L, 111111L));
 
         assertThat(coupons.get(0).getMemberCoupons()).extracting(MemberCoupon::getMember).contains(member);
+    }
+
+    @DisplayName("쿠폰아이디를 통해 쿠폰을 조회하는데 MemberCoupon 도 같이 fetch join 하여 조회할 수 있다")
+    @Test
+    void findByIdWithMemberCoupons(){
+        //given
+        Member member1 = Member.builder().name("홍길동").build();
+        Member member2 = Member.builder().name("김길동").build();
+        Member member3 = Member.builder().name("박길동").build();
+        memberRepository.saveAll(List.of(member1, member2, member3));
+
+        Coupon coupon = Coupon.builder().price(1000L).count(999L).build();
+
+        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member1).build();
+        MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member2).build();
+        MemberCoupon memberCoupon3 = MemberCoupon.builder().member(member3).build();
+
+        coupon.addMemberCoupon(memberCoupon1);
+        coupon.addMemberCoupon(memberCoupon2);
+        coupon.addMemberCoupon(memberCoupon3);
+        couponRepository.save(coupon);
+
+        //when
+        Coupon savedCoupon = couponRepository.findByIdWithMemberCoupons(coupon.getId());
+
+        //then
+        assertThat(savedCoupon.getMemberCoupons()).hasSize(3);
+        assertThat(savedCoupon.getMemberCoupons())
+                .extracting(MemberCoupon::getMember)
+                .contains(member1, member2, member3);
+    }
+
+    @DisplayName("해당 하는 쿠폰이 없는경우 에러를 발생 시킨다")
+    @Test
+    void findByIdWithMemberCoupons_error(){
+        //given
+        //when
+        Throwable thrown = catchThrowable(() -> couponRepository.findByIdWithMemberCoupons(1L));
+
+        //then
+        assertThat(thrown).isInstanceOf(JpaObjectRetrievalFailureException.class)
+                .hasMessage("해당 쿠폰 엔티티가 존재하지 않습니다. 입력 id = " + 1L);
     }
 }
