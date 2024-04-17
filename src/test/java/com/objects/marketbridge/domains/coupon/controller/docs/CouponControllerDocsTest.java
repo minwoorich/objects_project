@@ -118,7 +118,7 @@ public class CouponControllerDocsTest {
                                                 fieldWithPath("data.couponInfos[].couponPrice").type(JsonFieldType.NUMBER)
                                                         .description("쿠폰 가격"),
                                                 fieldWithPath("data.couponInfos[].count").type(JsonFieldType.NUMBER)
-                                                        .description("총 쿠폰 수량"),
+                                                        .description("총 쿠폰 수량 (판매자가 등록한 총 쿠폰 수량)"),
                                                 fieldWithPath("data.couponInfos[].minimumPrice").type(JsonFieldType.NUMBER)
                                                         .description("최소 구매 조건 금액"),
                                                 fieldWithPath("data.couponInfos[].startDate").type(JsonFieldType.STRING)
