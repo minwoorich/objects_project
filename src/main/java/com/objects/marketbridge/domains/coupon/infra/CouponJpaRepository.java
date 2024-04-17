@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CouponJpaRepository extends JpaRepository<Coupon, Long> {
-    List<Coupon> findByIdIn(List<Long> ids);
+    @Query("select c from Coupon c join fetch c.memberCoupons mc where c.id = :id")
+    Optional<Coupon> findByIdWithMemberCoupons(@Param(value = "id") Long id);
 
     @Query("select c from Coupon c join fetch c.product p where c.product.id = :productId")
     List<Coupon> findByProductId(@Param(value = "productId") Long productId);
