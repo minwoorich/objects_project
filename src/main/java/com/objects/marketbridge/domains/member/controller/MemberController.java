@@ -2,13 +2,11 @@ package com.objects.marketbridge.domains.member.controller;
 
 import com.objects.marketbridge.common.responseobj.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
+import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.member.dto.*;
+import com.objects.marketbridge.domains.member.service.RegisterCouponService;
 import com.objects.marketbridge.domains.member.service.MemberService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +26,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final RegisterCouponService registerCouponService;
 
     @GetMapping("/address")
     public ApiResponse<List<GetAddressesResponse>> findAddrress(@AuthMemberId Long memberId) {
@@ -132,6 +131,14 @@ public class MemberController {
     public ApiResponse<Void> updatePassword(@Valid @RequestBody UpdatePassword updatePassword) {
         memberService.updatePassword(updatePassword);
         return ApiResponse.ok(null);
+    }
+
+    @PostMapping("/coupons")
+    public ApiResponse<RegisterCouponHttp.Response> registerCoupon(
+            @RequestBody RegisterCouponHttp.Request request,
+            @AuthMemberId Long memberId) {
+        Coupon coupon = registerCouponService.registerCouponToMember(memberId, request.getCouponId());
+        return ApiResponse.ok(RegisterCouponHttp.Response.of(coupon));
     }
 }
 
