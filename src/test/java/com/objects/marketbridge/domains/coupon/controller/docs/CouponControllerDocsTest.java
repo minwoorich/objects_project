@@ -122,7 +122,7 @@ public class CouponControllerDocsTest {
                                                 fieldWithPath("data.couponInfos[].endDate").type(JsonFieldType.STRING)
                                                         .description("쿠폰 만료기한 (yyyy-MM-dd HH:mm:ss) ")
                                         )
-                                        .responseSchema(Schema.schema("GetCouponsProductGroupId"))
+                                        .responseSchema(Schema.schema("GetCouponsProductGroupIdRes"))
                                         .build()
                         )
                 ));
