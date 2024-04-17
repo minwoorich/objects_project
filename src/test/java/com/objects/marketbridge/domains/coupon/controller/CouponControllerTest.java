@@ -10,7 +10,6 @@ import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.order.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
-import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,14 +31,15 @@ class CouponControllerTest {
     @AfterEach
     void clear() {
         BaseFakeCouponRepository.getInstance().clear();
+        BaseFakeCouponRepository.getInstance().clear();
         productRepository.deleteAllInBatch();
     }
 
     @DisplayName("상품에 등록된 모든 쿠폰들을 조회할 수 있다.")
     @Test
-    void findCouponsForProduct(){
+    void findCouponsForProductGroup(){
         //given
-        Product product = productRepository.save(Product.builder().productNo("productNo1").name("신발").build());
+        Product product = productRepository.save(Product.builder().productNo("111111 - 111111").name("신발").build());
 
         Coupon coupon1 = Coupon.builder().price(1000L).product(product).build();
         product.addCoupons(coupon1);
@@ -51,29 +51,27 @@ class CouponControllerTest {
         couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
 
         //when
-        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProduct(1L);
+        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProductGroup(111111L);
 
         //then
         assertThat(response.getCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(response.getData().getHasCoupons()).isTrue();
+        assertThat(response.getData().getProductGroupId()).isEqualTo(111111L);
+        assertThat(response.getData().getCouponInfos()).hasSize(3);
         assertThat(response.getData().getCouponInfos())
-                .extracting(c -> c.getProductId(), c->c.getProductNo(), c->c.getCouponPrice())
-                .containsExactly(
-                        Tuple.tuple(1L, "productNo1", 1000L),
-                        Tuple.tuple(1L, "productNo1", 2000L),
-                        Tuple.tuple(1L, "productNo1", 3000L)
-                );
+                .extracting(GetCouponHttp.Response.CouponInfo::getCouponPrice)
+                .containsExactly(1000L, 2000L, 3000L);
     }
 
     @DisplayName("상품에 등록된 쿠폰이 없으면 빈 배열을 반환한다.")
     @Test
-    void findCouponsForProduct_empty(){
+    void findCouponsForProductGroup_empty(){
         //given
         // 등록된 쿠폰이 없음
 
         //when
-        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProduct(1L);
+        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProductGroup(1L);
 
         //then
         assertThat(response.getCode()).isEqualTo(HttpStatus.OK.value());

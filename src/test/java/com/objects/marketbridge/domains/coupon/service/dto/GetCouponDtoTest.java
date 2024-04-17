@@ -13,15 +13,16 @@ class GetCouponDtoTest {
     @Test
     void of(){
         //given
-        Product product = Product.builder().productNo("productNo1").id(1L).build();
+        Product product = Product.builder().productNo("111111 - 111111").build();
         Coupon coupon = Coupon.builder().product(product).price(1000L).build();
+        product.addCoupons(coupon);
 
         //when
         GetCouponDto result = GetCouponDto.of(coupon, true);
 
         //then
-        assertThat(result).extracting(c -> c.getPrice(), c-> c.getProductId(), c -> c.getProductNo())
-                .containsExactly(1000L, 1L, "productNo1");
+        assertThat(result).extracting(c -> c.getPrice(), c -> c.getProductGroupId())
+                .containsExactly(1000L, 111111L);
     }
 
 }

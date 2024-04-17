@@ -49,6 +49,7 @@ create table coupon
     coupon_id     bigint auto_increment
         primary key,
     product_id    bigint       null,
+    product_group_id    bigint       null,
     name          varchar(255) null,
     price         varchar(255) null,
     minimum_price bigint       null,

@@ -144,12 +144,12 @@ class GetCartListServiceTest {
 
         optionRepository.saveAll(List.of(option1, option2));
 
-        Product product1 = Product.builder().stock(5L).productNo("productNo1").build();
-        Product product2 = Product.builder().stock(5L).productNo("productNo2").build();
-        Product product3 = Product.builder().stock(5L).productNo("productNo3").build();
-        Product product4 = Product.builder().stock(5L).productNo("productNo4").build();
-        Product product5 = Product.builder().stock(5L).productNo("productNo5").build();
-        Product product6 = Product.builder().stock(5L).productNo("productNo6").build();
+        Product product1 = Product.builder().stock(5L).productNo("111111 - 111111").build();
+        Product product2 = Product.builder().stock(5L).productNo("222222 - 222222").build();
+        Product product3 = Product.builder().stock(5L).productNo("333333 - 333333").build();
+        Product product4 = Product.builder().stock(5L).productNo("444444 - 444444").build();
+        Product product5 = Product.builder().stock(5L).productNo("555555 - 555555").build();
+        Product product6 = Product.builder().stock(5L).productNo("666666 - 666666").build();
 
         product1.addProdOptions(prodOption1_1);
         product1.addProdOptions(prodOption1_2);
@@ -312,7 +312,7 @@ class GetCartListServiceTest {
         SliceResponse<GetCartDto> sliceResponse = getCartListService.get(pageRequest, member.getId());
 
         //then
-        assertThat(sliceResponse.getContent().get(0).getProductNo()).isEqualTo("productNo6");
+        assertThat(sliceResponse.getContent().get(0).getProductNo()).isEqualTo("666666 - 666666");
         assertThat(sliceResponse.getContent().get(0).getAvailableCoupons()).isNull();
         assertThatThrownBy(() ->
                 sliceResponse.getContent().get(0).getAvailableCoupons().get(0))
@@ -334,8 +334,8 @@ void get_withCoupon3(){
     SliceResponse<GetCartDto> sliceResponse = getCartListService.get(pageRequest, member.getId());
 
     //then
-    assertThat(sliceResponse.getContent().get(0).getProductNo()).isEqualTo("productNo6");
-    assertThat(sliceResponse.getContent().get(1).getProductNo()).isEqualTo("productNo5");
+    assertThat(sliceResponse.getContent().get(0).getProductNo()).isEqualTo("666666 - 666666");
+    assertThat(sliceResponse.getContent().get(1).getProductNo()).isEqualTo("555555 - 555555");
     assertThat(sliceResponse.getContent().get(1).getAvailableCoupons()).hasSize(1);
     assertThat(sliceResponse.getContent().get(1).getAvailableCoupons())
             .extracting(c -> c.getName())

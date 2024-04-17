@@ -1,5 +1,7 @@
 package com.objects.marketbridge.domains.coupon.domain;
 
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
 import com.objects.marketbridge.domains.member.domain.Member;
@@ -10,7 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -75,6 +79,13 @@ public class MemberCoupon extends BaseEntity {
     public void applyCouponUsage(Boolean isUsed, DateTimeHolder dateTimeHolder) {
         this.isUsed = isUsed;
         this.usedDate = dateTimeHolder.getTimeNow();
+    }
+
+    public MemberCoupon filterByMemberId(Long memberId) {
+        if (member.getId().equals(memberId)) {
+            return this;
+        }
+        throw CustomLogicException.createBadRequestError(ErrorCode.MEMBER_NOT_FOUND);
     }
 
     public Long getMinimumPrice() {

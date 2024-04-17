@@ -39,6 +39,18 @@ public class FakeCouponRepository extends BaseFakeCouponRepository implements Co
     }
 
     @Override
+    public List<Coupon> findByProductGroupId(Long productGroupId) {
+        return getInstance().getData().stream()
+                .filter(coupon -> coupon.getProductGroupId().equals(productGroupId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Coupon> findByProductGroupIdWithMemberCoupons(Long productGroupId) {
+        return findByProductGroupId(productGroupId);
+    }
+
+    @Override
     public void saveAll(List<Coupon> coupons) {
         coupons.forEach(this::save);
     }

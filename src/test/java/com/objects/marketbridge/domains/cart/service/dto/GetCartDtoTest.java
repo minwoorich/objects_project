@@ -55,7 +55,7 @@ class GetCartDtoTest {
         // given
         Member member = Member.builder().name("홍길동").email("test@email.com").build();
 
-        Product product1 = createProduct("productNo1", "썸네일1", "상품1", 2000L, 9999L, 0L, true, false);
+        Product product1 = createProduct("111111 - 111111", "썸네일1", "상품1", 2000L, 9999L, 0L, true, false);
 
         Option option1 = createOption("옵션1");
         Option option2 = createOption("옵션2");
@@ -86,7 +86,7 @@ class GetCartDtoTest {
 
         //then
         assertThat(cartDto1)
-                .hasFieldOrPropertyWithValue("productNo", "productNo1")
+                .hasFieldOrPropertyWithValue("productNo", "111111 - 111111")
                 .hasFieldOrPropertyWithValue("thumbImageUrl", "썸네일1")
                 .hasFieldOrPropertyWithValue("productName", "상품1")
                 .hasFieldOrPropertyWithValue("productPrice", 2000L)
@@ -118,7 +118,7 @@ class GetCartDtoTest {
         // given
         Member member = Member.builder().name("홍길동").email("test@email.com").build();
 
-        Product product2 = createProduct("productNo2", "썸네일1", "상품2", 2000L, 9999L, 0L, true, false);
+        Product product2 = createProduct("222222 - 222222", "썸네일1", "상품2", 2000L, 9999L, 0L, true, false);
         Option option1 = createOption("옵션1");
         Option option2 = createOption("옵션2");
         ProdOption prodOption2_1 = createProdOption(option1);

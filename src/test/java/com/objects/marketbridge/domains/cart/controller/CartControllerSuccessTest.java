@@ -235,7 +235,7 @@ class CartControllerSuccessTest {
         return List.of(GetCartDto.builder()
                 .cartId(1L)
                 .productId(1L)
-                .productNo("111111111-111111111")
+                .productNo("111111111 - 111111111")
                 .productName("티셔츠")
                 .productPrice(20000L)
                 .quantity(1L)

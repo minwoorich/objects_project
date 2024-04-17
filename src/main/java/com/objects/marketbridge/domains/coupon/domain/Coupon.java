@@ -1,6 +1,5 @@
 package com.objects.marketbridge.domains.coupon.domain;
 
-import com.objects.marketbridge.common.utils.DateTimeHolder;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
 import com.objects.marketbridge.domains.product.domain.Product;
 import jakarta.persistence.*;
@@ -32,6 +31,8 @@ public class Coupon extends BaseEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    private Long productGroupId;
+
     @OneToMany(mappedBy = "coupon", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberCoupon> memberCoupons = new ArrayList<>();
 
@@ -54,9 +55,12 @@ public class Coupon extends BaseEntity {
         this.endDate = endDate;
     }
 
-    public static Coupon create(Product product, String name, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+    private Long parseProductGroupId(Product product) {
+        return Long.parseLong(product.getProductNo().split("-")[0].trim());
+    }
+
+    public static Coupon create(String name, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
         return Coupon.builder()
-                .product(product)
                 .name(name)
                 .price(price)
                 .count(count)
@@ -73,11 +77,7 @@ public class Coupon extends BaseEntity {
 
     public void addProduct(Product product) {
         this.product = product;
-    }
+        this.productGroupId = parseProductGroupId(product);
 
-    public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder, Long memberId) {
-        memberCoupons.stream()
-                .filter(m -> m.getMember().getId().equals(memberId))
-                        .forEach(m -> m.changeUsageInfo(dateTimeHolder));
     }
 }

@@ -2,6 +2,7 @@ package com.objects.marketbridge.domains.member.service;
 
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
+import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.domains.member.constant.MemberConst;
 import com.objects.marketbridge.domains.member.domain.Address;
 import com.objects.marketbridge.domains.member.domain.AddressValue;
@@ -42,6 +43,7 @@ public class MemberService {
     private final WishRepository wishRepository;
     private final PasswordEncoder passwordEncoder;
     private final ProductRepository productRepository;
+    private final MemberCouponRepository memberCouponRepository;
 
 
     @Transactional
@@ -213,4 +215,5 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(updatePassword.password());
         member.updatePassword(encodedPassword);
     }
+
 }

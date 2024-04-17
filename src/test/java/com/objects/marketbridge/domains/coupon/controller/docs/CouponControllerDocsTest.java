@@ -63,17 +63,28 @@ public class CouponControllerDocsTest {
     @WithMockCustomUser
     void findCouponsForProduct() throws Exception {
         // given
+        Long productGroupId = 111111L;
 
-        Long productId = 1L;
+        GetCouponHttp.Response.CouponInfo couponInfo = GetCouponHttp.Response.CouponInfo.builder()
+                .couponName("1000원 쿠폰")
+                .couponPrice(1000L)
+                .count(100L)
+                .minimumPrice(15000L)
+                .startDate(LocalDateTime.of(2024, 1, 1, 12, 0, 0))
+                .endDate(LocalDateTime.of(2024, 12, 1, 12, 0, 0))
+                .build();
 
-        GetCouponHttp.Response.CouponInfo couponInfo = getCouponInfo(productId);
-        GetCouponHttp.Response response = getResponse(couponInfo);
+        GetCouponHttp.Response response = GetCouponHttp.Response.builder()
+                .hasCoupons(true)
+                .couponInfos(List.of(couponInfo))
+                .productGroupId(productGroupId)
+                .build();
 
-        given(couponService.findCouponsForProduct(productId)).willReturn(response);
+        given(couponService.findCouponsForProductGroup(productGroupId)).willReturn(response);
 
         // when
         MockHttpServletRequestBuilder requestBuilder =
-                get("/coupons/{productId}", productId)
+                get("/coupons/{productId}", productGroupId)
                         .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON);
@@ -102,14 +113,15 @@ public class CouponControllerDocsTest {
 
                                                 fieldWithPath("data.hasCoupons").type(JsonFieldType.BOOLEAN)
                                                         .description("등록된 쿠폰 여부"),
-                                                fieldWithPath("data.couponInfos[].productId").type(JsonFieldType.NUMBER)
-                                                        .description("상품 아이디"),
-                                                fieldWithPath("data.couponInfos[].productNo").type(JsonFieldType.STRING)
-                                                        .description("상품 고유 번호"),
+                                                fieldWithPath("data.productGroupId").type(JsonFieldType.NUMBER)
+                                                        .description("상품 그룹 아이디"),
+
                                                 fieldWithPath("data.couponInfos[].couponName").type(JsonFieldType.STRING)
                                                         .description("쿠폰 이름"),
                                                 fieldWithPath("data.couponInfos[].couponPrice").type(JsonFieldType.NUMBER)
                                                         .description("쿠폰 가격"),
+                                                fieldWithPath("data.couponInfos[].count").type(JsonFieldType.NUMBER)
+                                                        .description("총 쿠폰 수량"),
                                                 fieldWithPath("data.couponInfos[].minimumPrice").type(JsonFieldType.NUMBER)
                                                         .description("최소 구매 조건 금액"),
                                                 fieldWithPath("data.couponInfos[].startDate").type(JsonFieldType.STRING)
@@ -122,25 +134,6 @@ public class CouponControllerDocsTest {
                         )
 
                 ));
-    }
-
-    private GetCouponHttp.Response getResponse(GetCouponHttp.Response.CouponInfo couponInfo) {
-        return GetCouponHttp.Response.builder()
-                .hasCoupons(true)
-                .couponInfos(List.of(couponInfo))
-                .build();
-    }
-
-    private GetCouponHttp.Response.CouponInfo getCouponInfo(Long productId) {
-        return GetCouponHttp.Response.CouponInfo.builder()
-                .productId(productId)
-                .productNo("productNo1")
-                .couponName("1000원 쿠폰")
-                .couponPrice(1000L)
-                .minimumPrice(15000L)
-                .startDate(LocalDateTime.of(2024, 1, 1, 12, 0, 0))
-                .endDate(LocalDateTime.of(2024, 12, 1, 12, 0, 0))
-                .build();
     }
 
 
