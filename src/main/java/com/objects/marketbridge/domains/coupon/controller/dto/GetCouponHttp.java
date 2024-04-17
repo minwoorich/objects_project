@@ -37,6 +37,7 @@ public class GetCouponHttp {
                     .build();
         }
 
+        // TODO : 필드에 couponId 추가해야함
         @Getter
         public static class CouponInfo{
 
