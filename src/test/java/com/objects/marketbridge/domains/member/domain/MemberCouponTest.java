@@ -24,6 +24,20 @@ class MemberCouponTest {
         memberRepository.deleteAllInBatch();
         BaseFakeCouponRepository.getInstance().clear();
     }
+
+    @DisplayName("MemberCoupon 을 생성 할 수 있다")
+    @Test
+    void create(){
+        //given
+        Coupon coupon = Coupon.builder().price(1000L).endDate(LocalDateTime.of(2024, 1, 1, 12, 0, 0)).build();
+        Member member = Member.builder().name("홍길동").build();
+
+        //when
+        MemberCoupon memberCoupon = MemberCoupon.create(member, coupon);
+
+        //then
+        assertThat(memberCoupon).extracting(mc -> mc.getCoupon(), mc -> mc.getMember()).contains(coupon, member);
+    }
     @Test
     @DisplayName("사용여부와 사용시간이 초기화 되어야 한다.")
     public void changeUsageInfo1() {
