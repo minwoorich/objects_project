@@ -13,6 +13,7 @@ import com.objects.marketbridge.domains.member.domain.AddressValue;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.domain.Wishlist;
 import com.objects.marketbridge.domains.member.dto.*;
+import com.objects.marketbridge.domains.member.service.DownloadCouponService;
 import com.objects.marketbridge.domains.member.service.MemberService;
 import com.objects.marketbridge.domains.order.mock.TestContainer;
 import com.objects.marketbridge.domains.order.mock.TestDateTimeHolder;
@@ -32,7 +33,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -46,18 +46,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
-import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.INVALID_PASSWORD;
+import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.MEMBER_NOT_FOUND;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.*;
-import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
-
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -78,6 +78,9 @@ public class MemberControllerTest {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private DownloadCouponService downloadCouponService;
 
 
     private final LocalDateTime orderDate = LocalDateTime.of(2024, 2, 9, 3, 9);
