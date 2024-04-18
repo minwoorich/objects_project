@@ -14,6 +14,7 @@ import com.objects.marketbridge.domains.member.domain.AddressValue;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.domain.Wishlist;
 import com.objects.marketbridge.domains.member.dto.*;
+import com.objects.marketbridge.domains.member.service.GetMemberCouponService;
 import com.objects.marketbridge.domains.member.service.MemberService;
 import com.objects.marketbridge.domains.member.service.RegisterCouponService;
 import com.objects.marketbridge.domains.order.mock.TestContainer;
@@ -82,6 +83,9 @@ public class MemberControllerTest {
 
     @MockBean
     private RegisterCouponService registerCouponService;
+
+    @MockBean
+    private GetMemberCouponService getMemberCouponService;
 
 
     private final LocalDateTime orderDate = LocalDateTime.of(2024, 2, 9, 3, 9);
@@ -1300,6 +1304,76 @@ public class MemberControllerTest {
                                         )
                                         .requestSchema(Schema.schema("PostMembersCouponsReq"))
                                         .responseSchema(Schema.schema("PostMembersCouponsRes"))
+                                        .build()
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockCustomUser
+    @DisplayName("[API] GET /member/coupons")
+    void findCouponsForMember() throws Exception {
+        // given
+        Coupon coupon = Coupon.builder()
+                .id(1L)
+                .name("1000원 할인 쿠폰")
+                .price(1000L)
+                .productGroupId(111111L)
+                .count(9999L)
+                .minimumPrice(15000L)
+                .startDate(LocalDateTime.of(2024, 1, 1, 12, 0, 0))
+                .endDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
+                .build();
+
+        given(getMemberCouponService.findCouponsForMember(anyLong())).willReturn(List.of(coupon));
+
+        // when
+        ResultActions actions = mockMvc.perform(get("/member/coupons")
+                .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("find-coupon-for-member",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        resource(
+                                ResourceSnippetParameters.builder()
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                        .description("응답 코드"),
+                                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                                        .description("HTTP 응답"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                                        .description("메시지"),
+                                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                        .description("응답 데이터"),
+
+                                                fieldWithPath("data.memberId").type(JsonFieldType.NUMBER)
+                                                        .description("회원 아이디"),
+                                                fieldWithPath("data.hasCoupons").type(JsonFieldType.BOOLEAN)
+                                                        .description("쿠폰 존재 여부"),
+
+                                                fieldWithPath("data.couponInfos[].couponId").type(JsonFieldType.NUMBER)
+                                                        .description("쿠폰 아이디"),
+                                                fieldWithPath("data.couponInfos[].name").type(JsonFieldType.STRING)
+                                                        .description("쿠폰 이름"),
+                                                fieldWithPath("data.couponInfos[].price").type(JsonFieldType.NUMBER)
+                                                        .description("쿠폰 금액"),
+                                                fieldWithPath("data.couponInfos[].productGroupId").type(JsonFieldType.NUMBER)
+                                                        .description("상품 그룹 아이디"),
+                                                fieldWithPath("data.couponInfos[].count").type(JsonFieldType.NUMBER)
+                                                        .description("남은 쿠폰 수량 (판매자가 등록한 총 쿠폰 수량)"),
+                                                fieldWithPath("data.couponInfos[].minimumPrice").type(JsonFieldType.NUMBER)
+                                                        .description("최소 구매 조건 금액"),
+                                                fieldWithPath("data.couponInfos[].startDate").type(JsonFieldType.STRING)
+                                                        .description("쿠폰 시작기한 (yyyy-MM-dd HH:mm:ss) "),
+                                                fieldWithPath("data.couponInfos[].endDate").type(JsonFieldType.STRING)
+                                                        .description("쿠폰 만료기한 (yyyy-MM-dd HH:mm:ss) ")
+                                        )
+                                        .responseSchema(Schema.schema("GetMembersCouponsRes"))
                                         .build()
                         )
                 ));
