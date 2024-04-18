@@ -1,17 +1,15 @@
 package com.objects.marketbridge.domains.cart.service.dto;
 
 import com.objects.marketbridge.domains.cart.domain.Cart;
-import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.product.domain.ProdOption;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 @Getter
 @NoArgsConstructor
@@ -31,10 +29,9 @@ public class GetCartDto {
     private Long deliveryFee;
     private String deliveredDate; // yyyy-MM-dd HH:mm:ss
     private List<String> optionNames;
-    private List<CouponDto> availableCoupons;
 
     @Builder
-    private GetCartDto(Long cartId, Long productId, String productNo, String productName, Long productPrice, Long quantity, Long discountRate, String thumbImageUrl, Boolean isOwn, Boolean isSubs, Long stock, Long deliveryFee, String deliveredDate, List<String> optionNames, List<CouponDto> availableCoupons) {
+    private GetCartDto(Long cartId, Long productId, String productNo, String productName, Long productPrice, Long quantity, Long discountRate, String thumbImageUrl, Boolean isOwn, Boolean isSubs, Long stock, Long deliveryFee, String deliveredDate, List<String> optionNames) {
         this.cartId = cartId;
         this.productId = productId;
         this.productNo = productNo;
@@ -49,12 +46,10 @@ public class GetCartDto {
         this.deliveryFee = deliveryFee;
         this.deliveredDate = deliveredDate;
         this.optionNames = optionNames;
-        this.availableCoupons = availableCoupons;
     }
 
     public static GetCartDto of(Cart cart) {
         List<ProdOption> prodOptions = cart.getProduct().getProdOptions();
-        List<Coupon> coupons = cart.getProduct().getAvailableCoupons();
 
         return GetCartDto.builder()
                 .cartId(cart.getId())
@@ -72,37 +67,7 @@ public class GetCartDto {
                 .deliveredDate("2024-01-01 00:00:00")
                 .optionNames(!prodOptions.isEmpty() ?
                         prodOptions.stream().map(po -> po.getOption().getName()).collect(toList()) : null)
-                .availableCoupons(!coupons.isEmpty() ?
-                        coupons.stream().map(CouponDto::of).collect(toList()) : null)
+
                 .build();
-    }
-
-    @Getter
-    @NoArgsConstructor
-    public static class CouponDto {
-        private Long couponId;
-        private String name;
-        private Long price;
-        private String endDate;
-        private Long minimumPrice;
-
-        @Builder
-        private CouponDto(Long couponId, String name, Long price, String endDate, Long minimumPrice) {
-            this.couponId = couponId;
-            this.name = name;
-            this.price = price;
-            this.endDate = endDate;
-            this.minimumPrice = minimumPrice;
-        }
-
-        public static CouponDto of(Coupon coupon) {
-            return CouponDto.builder()
-                    .couponId(coupon.getId())
-                    .name(coupon.getName())
-                    .price(coupon.getPrice())
-                    .endDate(coupon.getEndDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                    .minimumPrice(coupon.getMinimumPrice())
-                    .build();
-        }
     }
 }

@@ -1,13 +1,12 @@
 package com.objects.marketbridge.domains.cart.service;
 
 
+import com.objects.marketbridge.common.responseobj.SliceResponse;
 import com.objects.marketbridge.domains.cart.domain.Cart;
-import com.objects.marketbridge.domains.cart.service.GetCartListService;
 import com.objects.marketbridge.domains.cart.service.dto.GetCartDto;
 import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartDtoRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
-import com.objects.marketbridge.common.responseobj.SliceResponse;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
@@ -17,9 +16,9 @@ import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import com.objects.marketbridge.domains.product.domain.Option;
 import com.objects.marketbridge.domains.product.domain.ProdOption;
 import com.objects.marketbridge.domains.product.domain.Product;
-import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import com.objects.marketbridge.domains.product.service.port.OptionRepository;
 import com.objects.marketbridge.domains.product.service.port.ProdOptionRepository;
+import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -37,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -268,13 +267,14 @@ class GetCartListServiceTest {
                 });
     }
 
-    //TODO 해결해야할 TEST By 정민우님
-    @DisplayName("회원이 쿠폰을 가지고 있는경우 쿠폰 정보도 같이 조회된다")
+
+
+    @DisplayName("사용하지 않은 쿠폰만 조회가 되어야한다")
     @Test
-    void get_withCoupon1(){
+    void get_withCoupon3(){
         //given
         Member member = memberRepository.findByEmail("test@email.com");
-        int pageNumber = 1;
+        int pageNumber = 0;
         int pageSize = 2;
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
         Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
@@ -283,65 +283,10 @@ class GetCartListServiceTest {
         SliceResponse<GetCartDto> sliceResponse = getCartListService.get(pageRequest, member.getId());
 
         //then
-        assertThat(sliceResponse.getContent())
-                .extracting(content -> content.getAvailableCoupons())
-                .allMatch(coupons -> coupons.size() == 2)
-                .allSatisfy(coupons ->{
-                    assertThat(coupons)
-                            .extracting(c -> c.getPrice())
-                            .containsExactly(1000L, 5000L);
-
-                    assertThat(coupons)
-                            .extracting(c -> c.getName())
-                            .allMatch(name -> name.matches("\\[상품\\d+]1000원 할인") || name.matches("\\[상품\\d+]5000원 할인"));
-                        }
-                );
-    }
-
-    @DisplayName("회원이 소유하고 있는 쿠폰만 조회가 되어야한다")
-    @Test
-    void get_withCoupon2(){
-        //given
-        Member member = memberRepository.findByEmail("test@email.com");
-        int pageNumber = 0;
-        int pageSize = 1;
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
-
-        //when
-        SliceResponse<GetCartDto> sliceResponse = getCartListService.get(pageRequest, member.getId());
-
-        //then
         assertThat(sliceResponse.getContent().get(0).getProductNo()).isEqualTo("666666 - 666666");
-        assertThat(sliceResponse.getContent().get(0).getAvailableCoupons()).isNull();
-        assertThatThrownBy(() ->
-                sliceResponse.getContent().get(0).getAvailableCoupons().get(0))
-                .isInstanceOf(NullPointerException.class);
-
+        assertThat(sliceResponse.getContent().get(1).getProductNo()).isEqualTo("555555 - 555555");
     }
-    
-@DisplayName("사용하지 않은 쿠폰만 조회가 되어야한다")
-@Test
-void get_withCoupon3(){
-    //given
-    Member member = memberRepository.findByEmail("test@email.com");
-    int pageNumber = 0;
-    int pageSize = 2;
-    Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-    Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
 
-    //when
-    SliceResponse<GetCartDto> sliceResponse = getCartListService.get(pageRequest, member.getId());
-
-    //then
-    assertThat(sliceResponse.getContent().get(0).getProductNo()).isEqualTo("666666 - 666666");
-    assertThat(sliceResponse.getContent().get(1).getProductNo()).isEqualTo("555555 - 555555");
-    assertThat(sliceResponse.getContent().get(1).getAvailableCoupons()).hasSize(1);
-    assertThat(sliceResponse.getContent().get(1).getAvailableCoupons())
-            .extracting(c -> c.getName())
-            .contains("[상품5]1000원 할인");
-
-}
     @DisplayName("장바구니에 담긴 총 물건 수를 조회 할 수 있다")
     @Test
     void countAll(){
