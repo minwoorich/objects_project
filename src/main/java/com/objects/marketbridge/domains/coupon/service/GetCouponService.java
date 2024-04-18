@@ -34,4 +34,8 @@ public class GetCouponService {
                 .map(GetCouponDto::of) // Coupon -> GetCouponDto
                 .toList();
     }
+
+    public GetCouponDto find(Long id) {
+        return GetCouponDto.of(couponRepository.findById(id));
+    }
 }

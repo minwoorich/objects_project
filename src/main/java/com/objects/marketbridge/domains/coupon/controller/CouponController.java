@@ -2,6 +2,7 @@ package com.objects.marketbridge.domains.coupon.controller;
 
 import com.objects.marketbridge.common.responseobj.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
+import com.objects.marketbridge.common.security.annotation.UserAuthorize;
 import com.objects.marketbridge.domains.coupon.controller.dto.GetCouponHttp;
 import com.objects.marketbridge.domains.coupon.service.GetCouponService;
 import com.objects.marketbridge.domains.coupon.service.dto.GetCouponDto;
@@ -24,13 +25,23 @@ public class CouponController {
         this.getCouponService = getCouponService;
     }
 
-    @GetMapping("/coupons/{productGroupId}")
+    @GetMapping("/coupons")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<GetCouponHttp.Response> findCouponsForProductGroup(
-            @PathVariable Long productGroupId,
+            @RequestParam Long productGroupId,
             @AuthMemberId Long memberId) {
 
         return ApiResponse.ok(convertToResponse(getCouponService.findCouponsForProductGroup(productGroupId, memberId)));
+    }
+
+    @GetMapping("/coupons/{couponId}")
+    @UserAuthorize
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<GetCouponHttp.Response> findCoupon(
+            @PathVariable Long couponId) {
+
+        List<GetCouponDto> couponDtos = List.of(getCouponService.find(couponId));
+        return ApiResponse.ok(convertToResponse(couponDtos));
     }
 
     private GetCouponHttp.Response convertToResponse(List<GetCouponDto> couponDtos) {
@@ -39,8 +50,8 @@ public class CouponController {
             return GetCouponHttp.Response.create();
         }
         List<GetCouponHttp.Response.CouponInfo> couponInfos = couponDtos.stream()
-                        .map(GetCouponHttp.Response.CouponInfo::of) // GetCouponDto -> GetCouponHttp.Response.CouponInfo
-                        .collect(Collectors.toList());
+                .map(GetCouponHttp.Response.CouponInfo::of) // GetCouponDto -> GetCouponHttp.Response.CouponInfo
+                .collect(Collectors.toList());
         return GetCouponHttp.Response.create(couponInfos);
     }
 }

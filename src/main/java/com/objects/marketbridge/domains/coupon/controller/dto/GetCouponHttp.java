@@ -37,7 +37,6 @@ public class GetCouponHttp {
                     .build();
         }
 
-        // TODO : 필드에 couponId 추가해야함
         @Getter
         public static class CouponInfo{
 
@@ -47,9 +46,11 @@ public class GetCouponHttp {
             private Long count;
             private LocalDateTime startDate;
             private LocalDateTime endDate;
+            private Long couponId;
 
             @Builder
-            private CouponInfo( String couponName, Long count, Long couponPrice, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+            private CouponInfo(Long couponId, String couponName, Long count, Long couponPrice, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+                this.couponId = couponId;
                 this.count = count;
                 this.couponName = couponName;
                 this.couponPrice = couponPrice;
@@ -60,6 +61,7 @@ public class GetCouponHttp {
 
             public static GetCouponHttp.Response.CouponInfo of(GetCouponDto dto) {
                 return CouponInfo.builder()
+                        .couponId(dto.getCouponId())
                         .couponName(dto.getCouponName())
                         .couponPrice(dto.getPrice())
                         .count(dto.getCount())
