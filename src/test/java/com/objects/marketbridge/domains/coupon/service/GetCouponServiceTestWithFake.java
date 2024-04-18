@@ -16,10 +16,12 @@ import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 class GetCouponServiceTestWithFake {
 
@@ -86,5 +88,35 @@ class GetCouponServiceTestWithFake {
         assertThat(couponDtos).isEmpty();
         assertThat(couponDtos).isNotNull();
         assertThat(couponDtos).isInstanceOf(List.class);
+    }
+
+    @DisplayName("쿠폰 아이디로 쿠폰을 조회할 수 있다")
+    @Test
+    void find() {
+        // given
+        Coupon coupon = Coupon.builder().price(1000L).productGroupId(111111L).build();
+        Coupon savedCoupon = couponRepository.save(coupon);
+
+        // when
+        GetCouponDto result = getCouponService.find(savedCoupon.getId());
+
+        //then
+        assertThat(result)
+                .extracting("couponId", "price", "productGroupId")
+                .contains(1L, 1000L, 111111L);
+    }
+
+    @DisplayName("해당하는 쿠폰이 없으면 에러를 발생 시킨다")
+    @Test
+    void find_error() {
+        // given
+        Long wrongCouponId = 1L;
+        // when
+        Throwable thrown = catchThrowable(() -> getCouponService.find(wrongCouponId));
+
+        //then
+        assertThat(thrown)
+                .isInstanceOf(JpaObjectRetrievalFailureException.class)
+                .hasMessage("해당 쿠폰 엔티티가 존재하지 않습니다. 입력 id = " + wrongCouponId);
     }
 }

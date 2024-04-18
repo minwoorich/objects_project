@@ -14,6 +14,7 @@ import com.objects.marketbridge.domains.order.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.order.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -92,5 +93,26 @@ class CouponControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(response.getData().getHasCoupons()).isFalse();
         assertThat(response.getData().getCouponInfos()).isEmpty();
+    }
+
+    @DisplayName("쿠폰 아이디로 쿠폰을 조회할 수 있다")
+    @Test
+    void findCoupon(){
+        //given
+        Coupon coupon = couponRepository.save(Coupon.builder().price(1000L).build());
+
+        //when
+        ApiResponse<GetCouponHttp.Response> response = couponController.findCoupon(coupon.getId());
+
+        //then
+        assertThat(response.getCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getData().getHasCoupons()).isTrue();
+        assertThat(response.getData().getCouponInfos()).hasSize(1);
+        assertThat(response.getData().getCouponInfos())
+                .extracting(
+                        GetCouponHttp.Response.CouponInfo::getCouponPrice,
+                        GetCouponHttp.Response.CouponInfo::getCouponId)
+                .containsExactly(Tuple.tuple(1000L, 1L));
     }
 }
