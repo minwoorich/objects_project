@@ -6,8 +6,8 @@ import com.objects.marketbridge.domains.coupon.mock.BaseFakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
 import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
-import com.objects.marketbridge.domains.order.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.order.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
@@ -21,7 +21,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-class CouponRepositoryImplTestWithFake {
+class FakeCouponRepositoryTest {
     CouponRepository couponRepository = new FakeCouponRepository();
     ProductRepository productRepository = new FakeProductRepository();
     MemberRepository memberRepository = new FakeMemberRepository();
