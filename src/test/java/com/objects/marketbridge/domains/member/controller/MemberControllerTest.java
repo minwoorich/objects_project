@@ -1232,7 +1232,7 @@ public class MemberControllerTest {
                 ));
     }
 
-    @DisplayName("[API] POST /members/coupons")
+    @DisplayName("[API] POST /member/coupons")
     @Test
     @WithMockCustomUser
     void registerCoupon() throws Exception {
@@ -1252,10 +1252,10 @@ public class MemberControllerTest {
                 .endDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
                 .build();
 
-        given(registerCouponService.registerCouponToMember(1L, 111111L)).willReturn(coupon);
+        given(registerCouponService.registerCouponToMember(anyLong(), anyLong())).willReturn(coupon);
 
         //when
-        ResultActions actions = mockMvc.perform(post("/coupons/members")
+        ResultActions actions = mockMvc.perform(post("/member/coupons")
                 .content(objectMapper.writeValueAsString(request))
                 .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -1269,9 +1269,6 @@ public class MemberControllerTest {
                         preprocessResponse(prettyPrint()),
                         resource(
                                 ResourceSnippetParameters.builder()
-                                        .pathParameters(
-                                                parameterWithName("productGroupId").description("상품 아이디")
-                                        )
                                         .requestFields(
                                                 fieldWithPath("couponId").description("쿠폰 아이디"),
                                                 fieldWithPath("productGroupId").description("상품 그룹 아이디")
