@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -33,7 +33,7 @@ public class GetCouponHttp {
         public static GetCouponHttp.Response create() {
             return Response.builder()
                     .hasCoupons(false)
-                    .couponInfos(Collections.emptyList())
+                    .couponInfos(new ArrayList<>())
                     .build();
         }
 

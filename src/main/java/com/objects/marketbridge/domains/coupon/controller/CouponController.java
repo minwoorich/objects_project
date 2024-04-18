@@ -52,6 +52,7 @@ public class CouponController {
         List<GetCouponHttp.Response.CouponInfo> couponInfos = couponDtos.stream()
                 .map(GetCouponHttp.Response.CouponInfo::of) // GetCouponDto -> GetCouponHttp.Response.CouponInfo
                 .collect(Collectors.toList());
+
         return GetCouponHttp.Response.create(couponInfos);
     }
 }
