@@ -17,12 +17,19 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
 
     @Override
     public MemberCoupon findById(Long id) {
-        return memberCouponJpaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return memberCouponJpaRepository.findById(id)
+                .orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("해당하는 MemberCoupon 엔티티가 존재하지 않습니다. 입력 id = "+id)));
+    }
+
+    @Override
+    public List<MemberCoupon> findByMemberId(Long memberId) {
+        return memberCouponJpaRepository.findByMemberId(memberId);
     }
 
     @Override
     public MemberCoupon findByMemberIdAndCouponId(Long memberId, Long couponId) {
-        return memberCouponJpaRepository.findByMemberIdAndCouponId(memberId, couponId).orElseThrow(EntityNotFoundException::new);
+        return memberCouponJpaRepository.findByMemberIdAndCouponId(memberId, couponId)
+                .orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("해당하는 MemberCoupon 엔티티가 존재하지 않습니다. 입력 (memberId, coponId) = ("+memberId+", "+couponId+")")));
     }
 
     @Override
@@ -41,8 +48,8 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     }
 
     @Override
-    public List<MemberCoupon> saveAll(List<MemberCoupon> memberCoupons) {
-        return memberCouponJpaRepository.saveAll(memberCoupons);
+    public void saveAll(List<MemberCoupon> memberCoupons) {
+        memberCouponJpaRepository.saveAll(memberCoupons);
     }
 
     @Override
