@@ -4,7 +4,6 @@ import com.objects.marketbridge.common.exception.exceptions.CustomLogicException
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.product.domain.Product;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,11 +24,12 @@ class CouponTest {
         Long price = 1000L;
         Long count = 10L;
         Long minimumPrice = 10000L;
+        Long productGroupId = 111111L;
         LocalDateTime startDate = LocalDateTime.of(2024, 1, 1, 12, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(2025, 1, 1, 12, 0, 0);
 
         //when
-        Coupon coupon = Coupon.create(name, price, count, minimumPrice, startDate, endDate);
+        Coupon coupon = Coupon.create(name, productGroupId, price, count, minimumPrice, startDate, endDate);
 
         //then
         assertThat(coupon)
@@ -41,19 +41,6 @@ class CouponTest {
                         Coupon::getStartDate,
                         Coupon::getEndDate)
                 .contains(name, price, count, minimumPrice, startDate, endDate);
-    }
-    @DisplayName("ProductNo 의 prefix 만 잘라낼 수 있다")
-    @Test
-    void parseProductGroupId(){
-        //given
-        Product product = Product.builder().productNo("111111 - 111111").build();
-        Coupon coupon = Coupon.builder().build();
-
-        //when
-        product.addCoupons(coupon);
-
-        //then
-        assertThat(coupon.getProductGroupId()).isEqualTo(111111L);
     }
 
     @DisplayName("특정 멤버가 가지고 있는 쿠폰만을 필터링 할 수 있다")

@@ -18,6 +18,7 @@ import com.objects.marketbridge.domains.order.service.port.*;
 import com.objects.marketbridge.domains.payment.service.port.PaymentClient;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
+import com.objects.marketbridge.domains.product.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.Builder;
 

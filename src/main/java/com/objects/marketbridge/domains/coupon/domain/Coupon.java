@@ -61,9 +61,10 @@ public class Coupon extends BaseEntity {
         this.endDate = endDate;
     }
 
-    public static Coupon create(String name, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+    public static Coupon create(String name, Long productGroupId, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
         return Coupon.builder()
                 .name(name)
+                .productGroupId(productGroupId)
                 .price(price)
                 .count(count)
                 .minimumPrice(minimumPrice)
@@ -78,10 +79,10 @@ public class Coupon extends BaseEntity {
         memberCoupon.linkCoupon(this);
     }
 
-    public void addProduct(Product product) {
-        this.product = product;
-        this.productGroupId = product.parseProductGroupId();
-    }
+//    public void addProduct(Product product) {
+//        this.product = product;
+//        this.productGroupId = product.parseProductGroupId();
+//    }
 
     public Boolean filteredBy(Long memberId) {
         return memberCoupons.stream().anyMatch(mc -> mc.filterByMemberId(memberId) && !mc.getIsUsed());

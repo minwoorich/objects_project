@@ -28,11 +28,6 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public List<Coupon> findByProductId(Long productId) {
-        return couponJpaRepository.findByProductId(productId);
-    }
-
-    @Override
     public List<Coupon> findByProductGroupId(Long productGroupId) {
         return couponJpaRepository.findByProductGroupId(productGroupId);
     }

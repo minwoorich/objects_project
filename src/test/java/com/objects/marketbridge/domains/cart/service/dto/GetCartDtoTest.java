@@ -52,9 +52,6 @@ class GetCartDtoTest {
         coupon1_1.addMemberCoupon(memberCoupon1_1);
         coupon1_2.addMemberCoupon(memberCoupon1_2);
 
-        product1.addCoupons(coupon1_1);
-        product1.addCoupons(coupon1_2);
-
         Cart cart1 = createCart(false, member, 1L, product1);
 
 

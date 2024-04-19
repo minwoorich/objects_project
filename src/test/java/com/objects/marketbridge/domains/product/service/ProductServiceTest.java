@@ -1,28 +1,11 @@
 package com.objects.marketbridge.domains.product.service;
 
 import com.objects.marketbridge.domains.category.domain.Category;
-import com.objects.marketbridge.domains.category.service.CategoryService;
-import com.objects.marketbridge.domains.category.service.port.CategoryRepository;
-import com.objects.marketbridge.domains.image.domain.Image;
-import com.objects.marketbridge.domains.order.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.domain.*;
 import com.objects.marketbridge.domains.product.dto.CreateProductDto;
-import com.objects.marketbridge.domains.product.dto.ProductDetailDto;
-import com.objects.marketbridge.domains.product.mock.FakeCategoryRepository;
-import com.objects.marketbridge.domains.product.mock.FakeProdOptionRepository;
-import com.objects.marketbridge.domains.product.mock.FakeProdTagRepository;
-import com.objects.marketbridge.domains.product.mock.FakeProductImageRepository;
-import com.objects.marketbridge.domains.product.service.ProductService;
-import com.objects.marketbridge.domains.product.service.port.ProductRepository;
+import com.objects.marketbridge.domains.product.mock.*;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 class ProductServiceTest {
 

@@ -37,12 +37,12 @@ class GetMemberCouponServiceTestWithFake {
         Coupon coupon5 = couponRepository.save(Coupon.builder().price(20000L).build());
         Coupon coupon6 = couponRepository.save(Coupon.builder().price(30000L).build());
 
-        memberCouponRepository.save(MemberCoupon.builder().member(member1).coupon(coupon1).build());
-        memberCouponRepository.save(MemberCoupon.builder().member(member1).coupon(coupon2).build());
-        memberCouponRepository.save(MemberCoupon.builder().member(member1).coupon(coupon3).build());
-        memberCouponRepository.save(MemberCoupon.builder().member(member2).coupon(coupon4).build());
-        memberCouponRepository.save(MemberCoupon.builder().member(member2).coupon(coupon5).build());
-        memberCouponRepository.save(MemberCoupon.builder().member(member2).coupon(coupon6).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member1).coupon(coupon1).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member1).coupon(coupon2).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member1).coupon(coupon3).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member2).coupon(coupon4).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member2).coupon(coupon5).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member2).coupon(coupon6).build());
 
         // when
         List<Coupon> coupons = getMemberCouponService.findCouponsForMember(member1.getId());
