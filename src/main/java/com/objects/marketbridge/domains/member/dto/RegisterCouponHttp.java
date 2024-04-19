@@ -16,21 +16,6 @@ public class RegisterCouponHttp {
 
     @Getter
     @NoArgsConstructor
-    public static class Request{
-        @NotNull
-        private Long couponId;
-        @NotNull
-        private Long productGroupId;
-
-        @Builder
-        private Request(Long couponId, Long productGroupId) {
-            this.couponId = couponId;
-            this.productGroupId = productGroupId;
-        }
-    }
-
-    @Getter
-    @NoArgsConstructor
     public static class Response{
         private String name;
         private Long price;

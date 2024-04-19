@@ -1236,17 +1236,13 @@ public class MemberControllerTest {
                 ));
     }
 
-    @DisplayName("[API] POST /member/coupons")
+    @DisplayName("[API] POST /member/coupons/{couponId}")
     @Test
     @WithMockCustomUser
     void registerCoupon() throws Exception {
         //given
-        RegisterCouponHttp.Request request =
-                RegisterCouponHttp.Request.builder()
-                        .couponId(1L)
-                        .productGroupId(111111L).build();
-
         Coupon coupon = Coupon.builder()
+                .id(1L)
                 .name("1000원 할인 쿠폰")
                 .price(1000L)
                 .productGroupId(111111L)
@@ -1259,8 +1255,8 @@ public class MemberControllerTest {
         given(registerCouponService.registerCouponToMember(anyLong(), anyLong())).willReturn(coupon);
 
         //when
-        ResultActions actions = mockMvc.perform(post("/member/coupons")
-                .content(objectMapper.writeValueAsString(request))
+        ResultActions actions = mockMvc.perform(
+                post("/member/coupons/{couponId}", coupon.getId())
                 .header(HttpHeaders.AUTHORIZATION, "bearer AccessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
@@ -1273,9 +1269,8 @@ public class MemberControllerTest {
                         preprocessResponse(prettyPrint()),
                         resource(
                                 ResourceSnippetParameters.builder()
-                                        .requestFields(
-                                                fieldWithPath("couponId").description("쿠폰 아이디"),
-                                                fieldWithPath("productGroupId").description("상품 그룹 아이디")
+                                        .pathParameters(
+                                                parameterWithName("couponId").description("쿠폰 아이디")
                                         )
                                         .responseFields(
                                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -1302,7 +1297,6 @@ public class MemberControllerTest {
                                                 fieldWithPath("data.endDate").type(JsonFieldType.STRING)
                                                         .description("쿠폰 만료기한 (yyyy-MM-dd HH:mm:ss) ")
                                         )
-                                        .requestSchema(Schema.schema("PostMembersCouponsReq"))
                                         .responseSchema(Schema.schema("PostMembersCouponsRes"))
                                         .build()
                         )
