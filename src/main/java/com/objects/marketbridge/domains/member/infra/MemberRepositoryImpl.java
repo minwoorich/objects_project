@@ -35,18 +35,8 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public List<Member> saveAll(List<Member> members) {
-        return memberJpaRepository.saveAll(members);
-    }
-
-    @Override
-    public Optional<Member> findOptionalByEmail(String email) {
-        return memberJpaRepository.findByEmail(email);
-    }
-
-    @Override
-    public Member findByIdWithAddresses(Long id) {
-        return memberJpaRepository.findByIdWithAddresses(id).orElseThrow(EntityNotFoundException::new);
+    public void saveAll(List<Member> members) {
+        memberJpaRepository.saveAll(members);
     }
 
     @Override

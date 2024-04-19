@@ -4,6 +4,7 @@ import com.objects.marketbridge.common.responseobj.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.member.dto.*;
+import com.objects.marketbridge.domains.member.service.GetMemberCouponService;
 import com.objects.marketbridge.domains.member.service.RegisterCouponService;
 import com.objects.marketbridge.domains.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -16,7 +17,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.objects.marketbridge.domains.member.dto.GetMemberCouponHttp.Response.*;
 
 
 @Slf4j
@@ -27,6 +31,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final RegisterCouponService registerCouponService;
+    private final GetMemberCouponService getMemberCouponService;
 
     @GetMapping("/address")
     public ApiResponse<List<GetAddressesResponse>> findAddrress(@AuthMemberId Long memberId) {
@@ -139,6 +144,20 @@ public class MemberController {
             @AuthMemberId Long memberId) {
         Coupon coupon = registerCouponService.registerCouponToMember(memberId, request.getCouponId());
         return ApiResponse.ok(RegisterCouponHttp.Response.of(coupon));
+    }
+
+    @GetMapping("/coupons")
+    public ApiResponse<GetMemberCouponHttp.Response> findCouponsForMember(
+            @AuthMemberId Long memberId) {
+        List<Coupon> coupons = getMemberCouponService.findCouponsForMember(memberId);
+        if (coupons.isEmpty()) {
+            return ApiResponse.ok(create(new ArrayList<>(), memberId, false));
+        }
+
+        List<CouponInfo> couponInfos = CouponInfo.of(coupons);
+        GetMemberCouponHttp.Response response = create(couponInfos, memberId, true);
+
+        return ApiResponse.ok(response);
     }
 }
 

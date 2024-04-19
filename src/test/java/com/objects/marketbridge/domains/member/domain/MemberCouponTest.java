@@ -3,9 +3,8 @@ package com.objects.marketbridge.domains.member.domain;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.domains.coupon.mock.BaseFakeCouponRepository;
+import com.objects.marketbridge.domains.member.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
-import com.objects.marketbridge.domains.order.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.order.mock.TestDateTimeHolder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +21,6 @@ class MemberCouponTest {
     @AfterEach
     void clear() {
         memberRepository.deleteAllInBatch();
-        BaseFakeCouponRepository.getInstance().clear();
     }
 
     @DisplayName("MemberCoupon 을 생성 할 수 있다")

@@ -194,19 +194,6 @@ class CartControllerSuccessTest {
                                                 fieldWithPath("data.content[].optionNames[]").type(JsonFieldType.ARRAY)
                                                         .description("선택한 옵션 리스트"),
 
-                                                fieldWithPath("data.content[].availableCoupons[]").type(JsonFieldType.ARRAY)
-                                                        .description("사용 가능한 쿠폰 리스트"),
-                                                fieldWithPath("data.content[].availableCoupons[].couponId").type(JsonFieldType.NUMBER)
-                                                        .description("쿠폰 아이디"),
-                                                fieldWithPath("data.content[].availableCoupons[].name").type(JsonFieldType.STRING)
-                                                        .description("쿠폰 이름"),
-                                                fieldWithPath("data.content[].availableCoupons[].price").type(JsonFieldType.NUMBER)
-                                                        .description("쿠폰 금액"),
-                                                fieldWithPath("data.content[].availableCoupons[].endDate").type(JsonFieldType.STRING)
-                                                        .description("쿠폰 만료기한 (yyyy-MM-dd HH:mm:ss) "),
-                                                fieldWithPath("data.content[].availableCoupons[].minimumPrice").type(JsonFieldType.NUMBER)
-                                                        .description("최소 구매 조건 금액"),
-
                                                 fieldWithPath("data.sort").type(JsonFieldType.OBJECT)
                                                         .description("정렬"),
                                                 fieldWithPath("data.sort.sorted").type(JsonFieldType.BOOLEAN)
@@ -225,7 +212,7 @@ class CartControllerSuccessTest {
                                                 fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
                                                         .description("마지막 페이지 인지 판별 하는 값")
                                         )
-                                        .requestSchema(Schema.schema("PostCartsReq"))
+                                        .responseSchema(Schema.schema("GetCartsRes"))
                                         .build()
                         )
                 ));
@@ -247,18 +234,7 @@ class CartControllerSuccessTest {
                 .deliveryFee(0L)
                 .deliveredDate("2024.09.09")
                 .optionNames(List.of("빨강", "XL"))
-                .availableCoupons(List.of(createCouponDto()))
                 .build());
-    }
-
-    private GetCartDto.CouponDto createCouponDto(){
-        return GetCartDto.CouponDto.builder()
-                .couponId(1L)
-                .name("1000원 할인 쿠폰")
-                .price(1000L)
-                .endDate("2024-12-10 00:00:00")
-                .minimumPrice(15000L)
-                .build();
     }
 
     @DisplayName("[API] GET/carts/count 테스트")

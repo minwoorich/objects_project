@@ -3,15 +3,18 @@ package com.objects.marketbridge.domains.coupon.controller.dto;
 import com.objects.marketbridge.domains.coupon.service.dto.GetCouponDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class GetCouponHttp {
 
     @Getter
+    @NoArgsConstructor
     public static class Response{
 
         private List<CouponInfo> couponInfos;
@@ -33,12 +36,12 @@ public class GetCouponHttp {
         public static GetCouponHttp.Response create() {
             return Response.builder()
                     .hasCoupons(false)
-                    .couponInfos(Collections.emptyList())
+                    .couponInfos(new ArrayList<>())
                     .build();
         }
 
-        // TODO : 필드에 couponId 추가해야함
         @Getter
+        @NoArgsConstructor
         public static class CouponInfo{
 
             private String couponName;
@@ -47,9 +50,11 @@ public class GetCouponHttp {
             private Long count;
             private LocalDateTime startDate;
             private LocalDateTime endDate;
+            private Long couponId;
 
             @Builder
-            private CouponInfo( String couponName, Long count, Long couponPrice, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+            private CouponInfo(Long couponId, String couponName, Long count, Long couponPrice, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+                this.couponId = couponId;
                 this.count = count;
                 this.couponName = couponName;
                 this.couponPrice = couponPrice;
@@ -60,6 +65,7 @@ public class GetCouponHttp {
 
             public static GetCouponHttp.Response.CouponInfo of(GetCouponDto dto) {
                 return CouponInfo.builder()
+                        .couponId(dto.getCouponId())
                         .couponName(dto.getCouponName())
                         .couponPrice(dto.getPrice())
                         .count(dto.getCount())

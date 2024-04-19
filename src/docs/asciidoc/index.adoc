@@ -114,6 +114,15 @@ include::api/member/membership/kakaoPaySubsApproved.adoc[]
 {empty}
 {empty}
 
+=== *회원 쿠폰*
+include::api/member/membercoupon/findmembercoupon.adoc[]
+{empty}
+{empty}
+
+include::api/member/membercoupon/registermembercoupon.adoc[]
+{empty}
+{empty}
+
 == *상품*
 include::api/product/productCreate.adoc[]
 {empty}
@@ -264,7 +273,11 @@ include::api/cart/cartupdate.adoc[]
 {empty}
 
 == *쿠폰*
-include::api/coupon/coupongetbyproductid.adoc[]
+include::api/coupon/coupon-get-by-couponid.adoc[]
+{empty}
+{empty}
+
+include::api/coupon/coupongetbyproductgroupid.adoc[]
 {empty}
 {empty}
 

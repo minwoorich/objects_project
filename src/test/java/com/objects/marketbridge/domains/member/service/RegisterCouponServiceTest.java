@@ -3,12 +3,11 @@ package com.objects.marketbridge.domains.member.service;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
-import com.objects.marketbridge.domains.coupon.mock.BaseFakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.member.domain.Member;
+import com.objects.marketbridge.domains.member.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
-import com.objects.marketbridge.domains.order.mock.FakeMemberRepository;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,16 +15,19 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
-
 class RegisterCouponServiceTest {
 
     CouponRepository couponRepository = new FakeCouponRepository();
     MemberRepository memberRepository = new FakeMemberRepository();
-    RegisterCouponService registerCouponService = RegisterCouponService.builder().couponRepository(couponRepository).memberRepository(memberRepository).build();
+
+    RegisterCouponService registerCouponService = RegisterCouponService.builder()
+            .couponRepository(couponRepository)
+            .memberRepository(memberRepository)
+            .build();
 
     @AfterEach
     void clear() {
-        BaseFakeCouponRepository.getInstance().clear();
+        couponRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
     }
     @Test
