@@ -60,13 +60,13 @@ public class CouponController {
         return GetCouponHttp.Response.create(couponInfos);
     }
 
+    // TODO : 테스트 코드 작성
     @PostMapping("/coupons")
     @UserAuthorize
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<GetCouponHttp.Response> createCoupon(
             @RequestBody CreateCouponHttp.Request request) {
-
-        createCouponService.createCoupon(request.toDto());
+        createCouponService.create(request.toDto());
         return ApiResponse.create();
     }
 }
