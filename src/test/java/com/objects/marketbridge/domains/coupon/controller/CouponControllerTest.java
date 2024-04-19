@@ -10,8 +10,8 @@ import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
-import com.objects.marketbridge.domains.order.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
@@ -51,18 +51,13 @@ class CouponControllerTest {
         MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).isUsed(false).build();
         MemberCoupon memberCoupon3 = MemberCoupon.builder().member(member).isUsed(false).build();
 
-        Coupon coupon1 = Coupon.builder().price(1000L).product(product).build();
-        Coupon coupon2 = Coupon.builder().price(2000L).product(product).build();
-        Coupon coupon3 = Coupon.builder().price(3000L).product(product).build();
+        Coupon coupon1 = Coupon.builder().price(1000L).productGroupId(111111L).build();
+        Coupon coupon2 = Coupon.builder().price(2000L).productGroupId(111111L).build();
+        Coupon coupon3 = Coupon.builder().price(3000L).productGroupId(111111L).build();
 
         coupon1.addMemberCoupon(memberCoupon1);
         coupon2.addMemberCoupon(memberCoupon2);
         coupon3.addMemberCoupon(memberCoupon3);
-        couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
-
-        product.addCoupons(coupon1);
-        product.addCoupons(coupon2);
-        product.addCoupons(coupon3);
         couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
 
         //when

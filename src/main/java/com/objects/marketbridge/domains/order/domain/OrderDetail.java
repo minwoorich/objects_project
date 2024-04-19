@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -25,6 +26,7 @@ import static com.objects.marketbridge.common.exception.exceptions.ErrorCode.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE order_detail SET deleted_at = now() WHERE order_detail_id = ?")
 @SQLRestriction("deleted_at is NULL")
+@Slf4j
 public class OrderDetail extends BaseEntity {
 
     @Id
@@ -90,7 +92,7 @@ public class OrderDetail extends BaseEntity {
 
     public static OrderDetail create(String tid, Order order, Product product, String orderNo, MemberCoupon memberCoupon, Long price, Long quantity, String statusCode, DateTimeHolder dateTimeHolder) {
         if (memberCoupon != null) {
-            validMemberCoupon(memberCoupon, price, quantity, product.getAvailableCoupons(), dateTimeHolder);
+            validMemberCoupon(memberCoupon, price, quantity, dateTimeHolder);
         }
         return OrderDetail.builder()
                 .orderNo(orderNo)
@@ -105,7 +107,7 @@ public class OrderDetail extends BaseEntity {
                 .build();
     }
 
-    private static void validMemberCoupon(MemberCoupon memberCoupon, Long price, Long quantity, List<Coupon> coupons, DateTimeHolder dateTimeHolder) {
+    private static void validMemberCoupon(MemberCoupon memberCoupon, Long price, Long quantity, DateTimeHolder dateTimeHolder) {
 
         if (isCouponAlreadyUsed(memberCoupon)){
             throw CustomLogicException.createBadRequestError(COUPON_ALREADY_USED);
@@ -118,14 +120,6 @@ public class OrderDetail extends BaseEntity {
         if (isCouponExpired(memberCoupon, dateTimeHolder)){
             throw CustomLogicException.createBadRequestError(COUPON_EXPIRED);
         }
-
-        if (isCouponUnAvailable(memberCoupon, coupons)){
-            throw CustomLogicException.createBadRequestError(COUPON_INCOMPATIBLE);
-        }
-    }
-
-    private static boolean isCouponUnAvailable(MemberCoupon memberCoupon, List<Coupon> coupons) {
-        return coupons.stream().noneMatch(c -> memberCoupon.getCoupon().getId().equals(c.getId()));
     }
 
     private static boolean isOrderBelowMinimumPrice(MemberCoupon memberCoupon, Long price, Long quantity) {

@@ -9,8 +9,6 @@ public interface CouponRepository {
 
     Coupon findByIdWithMemberCoupons(Long id);
 
-    List<Coupon> findByProductId(Long productId);
-
     List<Coupon> findByProductGroupId(Long productGroupId);
 
     List<Coupon> findByProductGroupIdWithMemberCoupons(Long productGroupId);

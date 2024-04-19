@@ -29,7 +29,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product findById(Long id) {
-        return productJpaRepository.findById(id).orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException()));
+        return productJpaRepository.findById(id).orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("해당 상품 엔티티가 존재하지 않습니다. 입력 id = "+id)));
     }
 
     @Override

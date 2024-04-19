@@ -44,13 +44,6 @@ public class FakeCouponRepository implements CouponRepository {
     }
 
     @Override
-    public List<Coupon> findByProductId(Long productId) {
-        return data.stream()
-                .filter(coupon -> coupon.getProduct().getId().equals(productId))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<Coupon> findByProductGroupId(Long productGroupId) {
         return data.stream()
                 .filter(coupon -> coupon.getProductGroupId().equals(productGroupId))

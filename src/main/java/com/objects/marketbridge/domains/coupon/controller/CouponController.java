@@ -3,7 +3,9 @@ package com.objects.marketbridge.domains.coupon.controller;
 import com.objects.marketbridge.common.responseobj.ApiResponse;
 import com.objects.marketbridge.common.security.annotation.AuthMemberId;
 import com.objects.marketbridge.common.security.annotation.UserAuthorize;
+import com.objects.marketbridge.domains.coupon.controller.dto.CreateCouponHttp;
 import com.objects.marketbridge.domains.coupon.controller.dto.GetCouponHttp;
+import com.objects.marketbridge.domains.coupon.service.CreateCouponService;
 import com.objects.marketbridge.domains.coupon.service.GetCouponService;
 import com.objects.marketbridge.domains.coupon.service.dto.GetCouponDto;
 import lombok.Builder;
@@ -19,10 +21,12 @@ import java.util.stream.Collectors;
 public class CouponController {
 
     private final GetCouponService getCouponService;
+    private final CreateCouponService createCouponService;
 
     @Builder
-    public CouponController(GetCouponService getCouponService) {
+    public CouponController(GetCouponService getCouponService, CreateCouponService createCouponService) {
         this.getCouponService = getCouponService;
+        this.createCouponService = createCouponService;
     }
 
     @GetMapping("/coupons")
@@ -54,5 +58,15 @@ public class CouponController {
                 .collect(Collectors.toList());
 
         return GetCouponHttp.Response.create(couponInfos);
+    }
+
+    // TODO : 테스트 코드 작성
+    @PostMapping("/coupons")
+    @UserAuthorize
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<GetCouponHttp.Response> createCoupon(
+            @RequestBody CreateCouponHttp.Request request) {
+        createCouponService.create(request.toDto());
+        return ApiResponse.create();
     }
 }
