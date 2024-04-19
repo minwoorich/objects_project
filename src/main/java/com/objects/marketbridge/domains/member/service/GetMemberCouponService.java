@@ -23,6 +23,7 @@ public class GetMemberCouponService {
     public List<Coupon> findCouponsForMember(Long memberId) {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findByMemberId(memberId);
         return memberCoupons.stream()
+                .filter(mc -> !mc.getIsUsed())
                 .map(MemberCoupon::getCoupon)
                 .collect(Collectors.toList());
     }
