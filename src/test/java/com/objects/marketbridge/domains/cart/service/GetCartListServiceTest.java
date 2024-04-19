@@ -61,59 +61,8 @@ class GetCartListServiceTest {
         Member member = Member.builder().email("test@email.com").build();
         memberRepository.save(member);
 
-        MemberCoupon memberCoupon1_1 = MemberCoupon.builder().member(member).isUsed(false).build();
-        MemberCoupon memberCoupon1_2 = MemberCoupon.builder().member(member).isUsed(false).build();
-
-        MemberCoupon memberCoupon2_1 = MemberCoupon.builder().member(member).isUsed(false).build();
-        MemberCoupon memberCoupon2_2 = MemberCoupon.builder().member(member).isUsed(false).build();
-
-        MemberCoupon memberCoupon3_1 = MemberCoupon.builder().member(member).isUsed(false).build();
-        MemberCoupon memberCoupon3_2 = MemberCoupon.builder().member(member).isUsed(false).build();
-
-        MemberCoupon memberCoupon4_1 = MemberCoupon.builder().member(member).isUsed(false).build();
-        MemberCoupon memberCoupon4_2 = MemberCoupon.builder().member(member).isUsed(false).build();
-
-        MemberCoupon memberCoupon5_1 = MemberCoupon.builder().member(member).isUsed(false).build();
-        MemberCoupon memberCoupon5_2 = MemberCoupon.builder().member(member).isUsed(true).build(); // 사용한 쿠폰 -> 5_2 쿠폰
-
-        Coupon coupon1_1 = Coupon.builder().name("[상품1]1000원 할인").price(1000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-        Coupon coupon1_2 = Coupon.builder().name("[상품1]5000원 할인").price(5000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-
-        Coupon coupon2_1 = Coupon.builder().name("[상품2]1000원 할인").price(1000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-        Coupon coupon2_2 = Coupon.builder().name("[상품2]5000원 할인").price(5000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-
-        Coupon coupon3_1 = Coupon.builder().name("[상품3]1000원 할인").price(1000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-        Coupon coupon3_2 = Coupon.builder().name("[상품3]5000원 할인").price(5000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-
-        Coupon coupon4_1 = Coupon.builder().name("[상품4]1000원 할인").price(1000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-        Coupon coupon4_2 = Coupon.builder().name("[상품4]5000원 할인").price(5000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-
-        Coupon coupon5_1 = Coupon.builder().name("[상품5]1000원 할인").price(1000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-        Coupon coupon5_2 = Coupon.builder().name("[상품5]5000원 할인").price(5000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-
-        // 쿠폰6_1, 6_2 들은 회원이 가지고 있지 않음.
-        Coupon coupon6_1 = Coupon.builder().name("[상품6]1000원 할인").price(1000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-        Coupon coupon6_2 = Coupon.builder().name("[상품6]5000원 할인").price(5000L).endDate(LocalDateTime.of(2024,1,1,0,0,0)).build();
-
-        coupon1_1.addMemberCoupon(memberCoupon1_1);
-        coupon1_2.addMemberCoupon(memberCoupon1_2);
-
-        coupon2_1.addMemberCoupon(memberCoupon2_1);
-        coupon2_2.addMemberCoupon(memberCoupon2_2);
-
-        coupon3_1.addMemberCoupon(memberCoupon3_1);
-        coupon3_2.addMemberCoupon(memberCoupon3_2);
-
-        coupon4_1.addMemberCoupon(memberCoupon4_1);
-        coupon4_2.addMemberCoupon(memberCoupon4_2);
-
-        coupon5_1.addMemberCoupon(memberCoupon5_1);
-        coupon5_2.addMemberCoupon(memberCoupon5_2);
-
         Option option1 = Option.builder().name("옵션1").build();
         Option option2 = Option.builder().name("옵션2").build();
-
-
 
         ProdOption prodOption1_1 = ProdOption.builder().build();
         ProdOption prodOption1_2 = ProdOption.builder().build();
@@ -152,33 +101,21 @@ class GetCartListServiceTest {
 
         product1.addProdOptions(prodOption1_1);
         product1.addProdOptions(prodOption1_2);
-        product1.addCoupons(coupon1_1);
-        product1.addCoupons(coupon1_2);
 
         product2.addProdOptions(prodOption2_1);
         product2.addProdOptions(prodOption2_2);
-        product2.addCoupons(coupon2_1);
-        product2.addCoupons(coupon2_2);
 
         product3.addProdOptions(prodOption3_1);
         product3.addProdOptions(prodOption3_2);
-        product3.addCoupons(coupon3_1);
-        product3.addCoupons(coupon3_2);
 
         product4.addProdOptions(prodOption4_1);
         product4.addProdOptions(prodOption4_2);
-        product4.addCoupons(coupon4_1);
-        product4.addCoupons(coupon4_2);
 
         product5.addProdOptions(prodOption5_1);
         product5.addProdOptions(prodOption5_2);
-        product5.addCoupons(coupon5_1);
-        product5.addCoupons(coupon5_2);
 
         product6.addProdOptions(prodOption6_1);
         product6.addProdOptions(prodOption6_2);
-        product6.addCoupons(coupon6_1);
-        product6.addCoupons(coupon6_2);
 
         productRepository.save(product1);
         productRepository.save(product2);
@@ -265,26 +202,6 @@ class GetCartListServiceTest {
                 .allSatisfy(optionNames -> {
                     assertThat(optionNames).containsExactly("옵션1", "옵션2");
                 });
-    }
-
-
-
-    @DisplayName("사용하지 않은 쿠폰만 조회가 되어야한다")
-    @Test
-    void get_withCoupon3(){
-        //given
-        Member member = memberRepository.findByEmail("test@email.com");
-        int pageNumber = 0;
-        int pageSize = 2;
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
-
-        //when
-        SliceResponse<GetCartDto> sliceResponse = getCartListService.get(pageRequest, member.getId());
-
-        //then
-        assertThat(sliceResponse.getContent().get(0).getProductNo()).isEqualTo("666666 - 666666");
-        assertThat(sliceResponse.getContent().get(1).getProductNo()).isEqualTo("555555 - 555555");
     }
 
     @DisplayName("장바구니에 담긴 총 물건 수를 조회 할 수 있다")

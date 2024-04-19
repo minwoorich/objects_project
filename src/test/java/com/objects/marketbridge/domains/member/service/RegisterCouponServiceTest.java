@@ -21,7 +21,11 @@ class RegisterCouponServiceTest {
 
     CouponRepository couponRepository = new FakeCouponRepository();
     MemberRepository memberRepository = new FakeMemberRepository();
-    RegisterCouponService registerCouponService = RegisterCouponService.builder().couponRepository(couponRepository).memberRepository(memberRepository).build();
+
+    RegisterCouponService registerCouponService = RegisterCouponService.builder()
+            .couponRepository(couponRepository)
+            .memberRepository(memberRepository)
+            .build();
 
     @AfterEach
     void clear() {

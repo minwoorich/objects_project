@@ -54,6 +54,10 @@ class CreateOrderServiceTest {
     @BeforeEach
     void init(){
         // clear 로직
+        addressRepository.deleteAllInBatch();
+        memberCouponRepository.deleteAllInBatch();
+        memberRepository.deleteAllInBatch();
+        couponRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
         orderCommandRepository.deleteAllInBatch();
         orderDetailCommandRepository.deleteAllInBatch();

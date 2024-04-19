@@ -22,6 +22,8 @@ public class GetMemberCouponService {
 
     public List<Coupon> findCouponsForMember(Long memberId) {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findByMemberId(memberId);
-        return memberCoupons.stream().map(MemberCoupon::getCoupon).collect(Collectors.toList());
+        return memberCoupons.stream()
+                .map(MemberCoupon::getCoupon)
+                .collect(Collectors.toList());
     }
 }

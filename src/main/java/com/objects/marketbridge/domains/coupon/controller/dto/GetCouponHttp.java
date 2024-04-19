@@ -3,15 +3,18 @@ package com.objects.marketbridge.domains.coupon.controller.dto;
 import com.objects.marketbridge.domains.coupon.service.dto.GetCouponDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class GetCouponHttp {
 
     @Getter
+    @NoArgsConstructor
     public static class Response{
 
         private List<CouponInfo> couponInfos;
@@ -38,6 +41,7 @@ public class GetCouponHttp {
         }
 
         @Getter
+        @NoArgsConstructor
         public static class CouponInfo{
 
             private String couponName;

@@ -4,15 +4,18 @@ import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Slf4j
+@NoArgsConstructor
 public class RegisterCouponHttp {
 
     @Getter
+    @NoArgsConstructor
     public static class Request{
         @NotNull
         private Long couponId;
@@ -27,6 +30,7 @@ public class RegisterCouponHttp {
     }
 
     @Getter
+    @NoArgsConstructor
     public static class Response{
         private String name;
         private Long price;

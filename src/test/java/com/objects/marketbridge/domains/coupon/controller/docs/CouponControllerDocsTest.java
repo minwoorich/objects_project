@@ -92,7 +92,7 @@ public class CouponControllerDocsTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("coupon-get-by-productGroupId",
+                .andDo(document("coupon-get-by-productgroupid",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(
