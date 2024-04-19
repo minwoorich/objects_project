@@ -25,37 +25,14 @@ import static org.assertj.core.api.Assertions.tuple;
 @Slf4j
 class GetCartDtoTest {
 
-    @DisplayName("Coupon 엔티티를 CouponDto 로 변환 할 수 있다.")
-    @Test
-    void of_CouponDto() {
-
-        // given
-        Coupon coupon = Coupon.builder()
-                .name("[상품1]1000원 할인")
-                .price(1000L)
-                .endDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0))
-                .minimumPrice(15000L)
-                .build();
-
-        // when
-        GetCartDto.CouponDto couponDto = GetCartDto.CouponDto.of(coupon);
-
-        //then
-        assertThat(couponDto)
-            .hasFieldOrPropertyWithValue("name", "[상품1]1000원 할인")
-            .hasFieldOrPropertyWithValue("price", 1000L)
-            .hasFieldOrPropertyWithValue("endDate", "2024-01-01 00:00:00")
-            .hasFieldOrPropertyWithValue("minimumPrice", 15000L);
-    }
-
-    @DisplayName("GetCartDto 의 of 메서드 테스트 : 쿠폰이 존재하는 경우")
+    @DisplayName("GetCartDto 의 of 메서드 테스트")
     @Test
     void of_GetCartDto_1() {
 
         // given
         Member member = Member.builder().name("홍길동").email("test@email.com").build();
 
-        Product product1 = createProduct("111111-111111", "썸네일1", "상품1", 2000L, 9999L, 0L, true, false);
+        Product product1 = createProduct("111111 - 111111", "썸네일1", "상품1", 2000L, 9999L, 0L, true, false);
 
         Option option1 = createOption("옵션1");
         Option option2 = createOption("옵션2");
@@ -86,7 +63,7 @@ class GetCartDtoTest {
 
         //then
         assertThat(cartDto1)
-                .hasFieldOrPropertyWithValue("productNo", "111111-111111")
+                .hasFieldOrPropertyWithValue("productNo", "111111 - 111111")
                 .hasFieldOrPropertyWithValue("thumbImageUrl", "썸네일1")
                 .hasFieldOrPropertyWithValue("productName", "상품1")
                 .hasFieldOrPropertyWithValue("productPrice", 2000L)
@@ -95,44 +72,11 @@ class GetCartDtoTest {
                 .hasFieldOrPropertyWithValue("isOwn", true)
                 .hasFieldOrPropertyWithValue("isSubs", false)
                 .hasFieldOrPropertyWithValue("stock", 9999L)
-                .hasFieldOrProperty("optionNames")
-                .hasFieldOrProperty("availableCoupons");
+                .hasFieldOrProperty("optionNames");
 
         assertThat(cartDto1.getOptionNames())
                 .hasSize(2)
                 .containsExactlyElementsOf(List.of("옵션1", "옵션2"));
-
-        assertThat(cartDto1.getAvailableCoupons())
-                .hasSize(2)
-                .extracting("name", "price", "endDate", "minimumPrice")
-                .containsExactlyInAnyOrder(
-                        tuple("[상품1] 1000원", 1000L, "2024-01-01 00:00:00", 10000L),
-                        tuple("[상품1] 5000원", 5000L, "2024-01-01 00:00:00", 20000L)
-                );
-    }
-
-    @DisplayName("GetCartDto 의 of 메서드 테스트 : 쿠폰이 없는 경우")
-    @Test
-    void of_GetCartDto_2() {
-
-        // given
-        Member member = Member.builder().name("홍길동").email("test@email.com").build();
-
-        Product product2 = createProduct("222222-222222", "썸네일1", "상품2", 2000L, 9999L, 0L, true, false);
-        Option option1 = createOption("옵션1");
-        Option option2 = createOption("옵션2");
-        ProdOption prodOption2_1 = createProdOption(option1);
-        ProdOption prodOption2_2 = createProdOption(option2);
-        product2.addProdOptions(prodOption2_1);
-        product2.addProdOptions(prodOption2_2);
-
-        Cart cart2 = createCart(false, member, 1L, product2);
-
-        // when
-        GetCartDto cartDto2 = GetCartDto.of(cart2);
-
-        //then
-        assertThat(cartDto2.getAvailableCoupons()).isNull();
     }
 
     private Option createOption(String name) {

@@ -20,6 +20,7 @@ public enum ErrorCode {
     COUPON_INCOMPATIBLE("상품과 호환되지 않는 쿠폰입니다."),
     COUPON_CONDITION_VIOLATION("최소 주문 금액 조건 미달입니다."),
     COUPON_ALREADY_USED("이미 사용한 쿠폰입니다."),
+    COUPON_OUT_OF_STOCK("쿠폰이 모두 소진되었습니다"),
     BALANCE_INSUFFICIENT("잔액이 부족합니다."),
     METHOD_NOT_ALLOWED("지원하지않는 HTTP 메서드 호출입니다."),
     RESOUCRE_NOT_FOUND("리소스를 찾을 수 없습니다."),

@@ -8,9 +8,7 @@ public interface OrderDetailCommandRepository {
 
     void save(OrderDetail orderDetail);
 
-    OrderDetail saveAndReturnEntity(OrderDetail orderDetail);
-
-    List<OrderDetail> saveAll(List<OrderDetail> orderDetail);
+    void saveAll(List<OrderDetail> orderDetail);
 
     int changeAllType(Long orderId, String type);
 

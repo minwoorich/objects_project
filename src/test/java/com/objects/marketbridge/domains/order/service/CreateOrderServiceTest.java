@@ -54,6 +54,10 @@ class CreateOrderServiceTest {
     @BeforeEach
     void init(){
         // clear 로직
+        addressRepository.deleteAllInBatch();
+        memberCouponRepository.deleteAllInBatch();
+        memberRepository.deleteAllInBatch();
+        couponRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
         orderCommandRepository.deleteAllInBatch();
         orderDetailCommandRepository.deleteAllInBatch();
@@ -79,9 +83,9 @@ class CreateOrderServiceTest {
         coupon2.addMemberCoupon(memberCoupon2);
 
         // product 생성
-        Product product1 = Product.builder().productNo("111111-111111").name("가방").stock(5L).price(1000L).build();
-        Product product2 = Product.builder().productNo("222222-222222").name("티비").stock(5L).price(2000L).build();
-        Product product3 = Product.builder().productNo("333333-333333").name("워치").stock(5L).price(3000L).build();
+        Product product1 = Product.builder().productNo("111111 - 111111").name("가방").stock(5L).price(1000L).build();
+        Product product2 = Product.builder().productNo("222222 - 222222").name("티비").stock(5L).price(2000L).build();
+        Product product3 = Product.builder().productNo("333333 - 333333").name("워치").stock(5L).price(3000L).build();
 
         // Product <-> Coupon 양방향 연관관계
         product1.addCoupons(coupon1);

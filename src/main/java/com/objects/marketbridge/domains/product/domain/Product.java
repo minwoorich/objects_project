@@ -63,8 +63,9 @@ public class Product extends BaseEntity {
     private String productNo;
 
     @Builder
-    private Product(Long id, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate,String productNo) {
+    private Product(Long id, Category category, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate,String productNo) {
         this.id = id;
+        this.category = category;
         this.isOwn = isOwn; // 로켓 true , 오픈 마켓 false
         this.name = name;
         this.price = price;
@@ -139,5 +140,9 @@ public class Product extends BaseEntity {
                 .filter(c -> c.getMemberCoupons().stream()
                         .anyMatch(mc -> !mc.getIsUsed()))
                 .collect(Collectors.toList());
+    }
+
+    public Long parseProductGroupId() {
+        return Long.parseLong(productNo.split("-")[0].trim());
     }
 }

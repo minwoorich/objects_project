@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 
 @Getter
 public class GetCouponDto {
-    private Boolean hasCoupons;
-    private Long productId;
-    private String productNo;
+
+    private Long couponId;
+    private Long productGroupId;
     private String couponName;
     private Long price;
     private Long count;
@@ -19,24 +19,24 @@ public class GetCouponDto {
     private LocalDateTime endDate;
 
     @Builder
-    private GetCouponDto(Boolean hasCoupons, Long productId, String productNo, String couponName, Long price, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
-        this.hasCoupons = hasCoupons;
-        this.productId = productId;
-        this.productNo = productNo;
+    private GetCouponDto(Long couponId, String couponName, Long productGroupId, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+        this.couponId = couponId;
         this.couponName = couponName;
+        this.productGroupId = productGroupId;
         this.price = price;
+        this.count = count;
         this.minimumPrice = minimumPrice;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public static GetCouponDto of(Coupon coupon, Boolean hasCoupons) {
+    public static GetCouponDto of(Coupon coupon) {
         return GetCouponDto.builder()
-                .hasCoupons(hasCoupons)
-                .productId(coupon.getProduct().getId())
-                .productNo(coupon.getProduct().getProductNo())
+                .couponId(coupon.getId())
+                .productGroupId(coupon.getProductGroupId())
                 .couponName(coupon.getName())
                 .price(coupon.getPrice())
+                .count(coupon.getCount())
                 .minimumPrice(coupon.getMinimumPrice())
                 .startDate(coupon.getStartDate())
                 .endDate(coupon.getEndDate())

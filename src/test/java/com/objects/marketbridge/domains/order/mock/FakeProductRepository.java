@@ -56,7 +56,7 @@ public class FakeProductRepository implements ProductRepository , ProductCustomR
 
     @Override
     public List<Product> findAll() {
-        return null;
+        return data;
     }
 
     @Override
