@@ -8,6 +8,7 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -30,6 +31,11 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     public MemberCoupon findByMemberIdAndCouponId(Long memberId, Long couponId) {
         return memberCouponJpaRepository.findByMemberIdAndCouponId(memberId, couponId)
                 .orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("해당하는 MemberCoupon 엔티티가 존재하지 않습니다. 입력 (memberId, coponId) = ("+memberId+", "+couponId+")")));
+    }
+
+    @Override
+    public Optional<MemberCoupon> findByMemberIdAndCouponIdOptional(Long memberId, Long couponId) {
+        return memberCouponJpaRepository.findByMemberIdAndCouponId(memberId, couponId);
     }
 
     @Override
