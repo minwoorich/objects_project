@@ -2,7 +2,6 @@
 
 .*HTTP Request*
 include::{snippets}/coupon-get-by-productGroupId/http-request.adoc[]
-include::{snippets}/coupon-get-by-productGroupId/curl-request.adoc[]
 
 
 .*HTTP Response*

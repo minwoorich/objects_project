@@ -4,7 +4,6 @@ import com.objects.marketbridge.common.responseobj.ApiResponse;
 import com.objects.marketbridge.domains.coupon.controller.dto.GetCouponHttp;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.domains.coupon.mock.BaseFakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.service.GetCouponService;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
@@ -36,9 +35,9 @@ class CouponControllerTest {
 
     @AfterEach
     void clear() {
-        BaseFakeCouponRepository.getInstance().clear();
         productRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
+        couponRepository.deleteAllInBatch();
     }
 
     @DisplayName("상품에 등록된 모든 쿠폰들을 조회할 수 있다.")

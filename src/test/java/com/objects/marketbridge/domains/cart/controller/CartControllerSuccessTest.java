@@ -212,7 +212,7 @@ class CartControllerSuccessTest {
                                                 fieldWithPath("data.last").type(JsonFieldType.BOOLEAN)
                                                         .description("마지막 페이지 인지 판별 하는 값")
                                         )
-                                        .requestSchema(Schema.schema("PostCartsReq"))
+                                        .responseSchema(Schema.schema("GetCartsRes"))
                                         .build()
                         )
                 ));

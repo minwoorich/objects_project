@@ -28,7 +28,10 @@ public class RegisterCouponService {
     @Transactional
     public Coupon registerCouponToMember(Long memberId, Long couponId) {
         Member member = memberRepository.findById(memberId);
-        Coupon coupon = couponRepository.findByIdWithMemberCoupons(couponId);
+        Coupon coupon = couponRepository.findById(couponId);
+        log.info("id : {}", coupon.getId());
+        log.info("price : {}", coupon.getPrice());
+        log.info("count : {}", coupon.getCount());
         coupon.decreaseCount();
         coupon.addMemberCoupon(MemberCoupon.create(member, coupon));
 

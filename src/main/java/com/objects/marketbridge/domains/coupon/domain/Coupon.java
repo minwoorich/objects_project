@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Coupon extends BaseEntity {
 
@@ -86,7 +88,9 @@ public class Coupon extends BaseEntity {
     }
 
     public void decreaseCount() {
-        if (count <= 0) {
+
+        if (count == null || count <= 0 ) {
+
             throw CustomLogicException.createBadRequestError(ErrorCode.COUPON_OUT_OF_STOCK);
         }
         count-=1;

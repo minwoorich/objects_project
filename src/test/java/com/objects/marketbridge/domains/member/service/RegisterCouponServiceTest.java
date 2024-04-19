@@ -3,7 +3,6 @@ package com.objects.marketbridge.domains.member.service;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
-import com.objects.marketbridge.domains.coupon.mock.BaseFakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.member.domain.Member;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
-
 
 class RegisterCouponServiceTest {
 
@@ -29,7 +27,7 @@ class RegisterCouponServiceTest {
 
     @AfterEach
     void clear() {
-        BaseFakeCouponRepository.getInstance().clear();
+        couponRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
     }
     @Test

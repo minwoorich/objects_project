@@ -2,7 +2,6 @@ package com.objects.marketbridge.domains.coupon.service;
 
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.domains.coupon.mock.BaseFakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.service.dto.GetCouponDto;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
@@ -33,9 +32,9 @@ class GetCouponServiceTestWithFake {
 
     @AfterEach
     void clear() {
-        BaseFakeCouponRepository.getInstance().clear();
         productRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
+        couponRepository.deleteAllInBatch();
     }
 
 

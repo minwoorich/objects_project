@@ -1268,7 +1268,7 @@ public class MemberControllerTest {
         //then
         actions.andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("register-coupon",
+                .andDo(document("member-register-coupon",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(
@@ -1336,7 +1336,7 @@ public class MemberControllerTest {
         //then
         actions.andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("find-coupon-for-member",
+                .andDo(document("member-find-coupon",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(

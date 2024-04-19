@@ -2,7 +2,6 @@ package com.objects.marketbridge.domains.coupon.infra;
 
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
-import com.objects.marketbridge.domains.coupon.mock.BaseFakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
 import com.objects.marketbridge.domains.member.domain.Member;
@@ -22,12 +21,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 class FakeCouponRepositoryTest {
+
     CouponRepository couponRepository = new FakeCouponRepository();
     ProductRepository productRepository = new FakeProductRepository();
     MemberRepository memberRepository = new FakeMemberRepository();
     @AfterEach
     void clear() {
-        BaseFakeCouponRepository.getInstance().clear();
+        couponRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
     }
