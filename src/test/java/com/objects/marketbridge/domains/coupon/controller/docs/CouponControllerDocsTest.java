@@ -78,7 +78,7 @@ public class CouponControllerDocsTest {
                 .startDate(LocalDateTime.of(2024, 1, 1, 12, 0, 0))
                 .endDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
                 .build());
-        given(getCouponService.findCouponsForProductGroup(anyLong(), anyLong())).willReturn(couponDtos);
+        given(getCouponService.findCouponsForProductGroup(anyLong())).willReturn(couponDtos);
 
         // when
         MockHttpServletRequestBuilder requestBuilder =
