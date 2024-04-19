@@ -26,12 +26,12 @@ public class CouponController {
     }
 
     @GetMapping("/coupons")
+    @UserAuthorize
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<GetCouponHttp.Response> findCouponsForProductGroup(
-            @RequestParam Long productGroupId,
-            @AuthMemberId Long memberId) {
+            @RequestParam Long productGroupId) {
 
-        return ApiResponse.ok(convertToResponse(getCouponService.findCouponsForProductGroup(productGroupId, memberId)));
+        return ApiResponse.ok(convertToResponse(getCouponService.findCouponsForProductGroup(productGroupId)));
     }
 
     @GetMapping("/coupons/{couponId}")

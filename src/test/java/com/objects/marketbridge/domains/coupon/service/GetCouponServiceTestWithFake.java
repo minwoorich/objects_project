@@ -63,7 +63,7 @@ class GetCouponServiceTestWithFake {
         couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
 
         //when
-        List<GetCouponDto> couponDtos = getCouponService.findCouponsForProductGroup(111111L, member.getId());
+        List<GetCouponDto> couponDtos = getCouponService.findCouponsForProductGroup(111111L);
 
         //then
         assertThat(couponDtos).hasSize(3);
@@ -81,7 +81,7 @@ class GetCouponServiceTestWithFake {
     void findCouponsForProduct_empty(){
         //given
         //when
-        List<GetCouponDto> couponDtos = getCouponService.findCouponsForProductGroup(111111L, 99L);
+        List<GetCouponDto> couponDtos = getCouponService.findCouponsForProductGroup(111111L);
 
         //then
         assertThat(couponDtos).isEmpty();

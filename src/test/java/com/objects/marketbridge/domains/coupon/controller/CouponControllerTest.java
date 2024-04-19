@@ -66,7 +66,7 @@ class CouponControllerTest {
         couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
 
         //when
-        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProductGroup(111111L, member.getId());
+        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProductGroup(111111L);
 
         //then
         assertThat(response.getCode()).isEqualTo(HttpStatus.OK.value());
@@ -85,7 +85,7 @@ class CouponControllerTest {
         // 등록된 쿠폰이 없음
 
         //when
-        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProductGroup(1L, 2L);
+        ApiResponse<GetCouponHttp.Response> response = couponController.findCouponsForProductGroup(1L);
 
         //then
         assertThat(response.getCode()).isEqualTo(HttpStatus.OK.value());
