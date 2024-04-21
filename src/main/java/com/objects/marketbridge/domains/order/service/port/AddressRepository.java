@@ -12,7 +12,7 @@ public interface AddressRepository {
     Address findDefaultAddress(Long memberId);
 
     Long countAddress(Long memberId);
-    void save(Address address);
+    Address save(Address address);
 
     void deleteById(Long addressId);
 

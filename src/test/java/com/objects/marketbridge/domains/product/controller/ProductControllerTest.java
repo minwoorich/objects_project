@@ -1,38 +1,38 @@
 package com.objects.marketbridge.domains.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.objects.marketbridge.domains.category.domain.Category;
 import com.objects.marketbridge.common.security.config.SpringSecurityTestConfig;
-import com.objects.marketbridge.domains.product.controller.request.CreateProductRequestDto;
-import com.objects.marketbridge.domains.product.domain.Product;
-import com.objects.marketbridge.domains.product.dto.ProductSimpleDto;
-import com.objects.marketbridge.domains.product.mock.FakeProdOptionRepository;
-import com.objects.marketbridge.domains.product.mock.FakeProdTagRepository;
-import com.objects.marketbridge.domains.product.mock.FakeProductImageRepository;
-import com.objects.marketbridge.domains.product.service.ProductService;
+import com.objects.marketbridge.domains.category.domain.Category;
 import com.objects.marketbridge.domains.image.domain.Image;
+import com.objects.marketbridge.domains.product.controller.request.CreateProductRequestDto;
 import com.objects.marketbridge.domains.product.domain.*;
 import com.objects.marketbridge.domains.product.dto.ProductDetailDto;
-import com.objects.marketbridge.domains.order.mock.FakeProductRepository;
-import com.objects.marketbridge.domains.product.mock.FakeCategoryRepository;
+import com.objects.marketbridge.domains.product.dto.ProductSimpleDto;
+import com.objects.marketbridge.domains.product.mock.*;
+import com.objects.marketbridge.domains.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
 @WebMvcTest(ProductController.class)

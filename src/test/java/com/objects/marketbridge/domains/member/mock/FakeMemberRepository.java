@@ -7,6 +7,7 @@ import com.objects.marketbridge.domains.member.dto.MemberId;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.*;
@@ -26,7 +27,7 @@ public class FakeMemberRepository implements MemberRepository {
     public Member findByEmail(String email) {
         return (data.stream()
                 .filter(item -> item.getEmail().equals(email)).findAny())
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("해당 멤버 엔티티가 존재하지 않습니다. 입력 email = "+email)));
 
     }
 
@@ -34,7 +35,7 @@ public class FakeMemberRepository implements MemberRepository {
     public Member findById(Long id) {
         return data.stream()
                 .filter(member -> member.getId().equals(id))
-                .findAny().orElseThrow(EntityNotFoundException::new);
+                .findAny().orElseThrow(() -> new JpaObjectRetrievalFailureException(new EntityNotFoundException("해당 멤버 엔티티가 존재하지 않습니다. 입력 id = "+id)));
     }
 
     @Override

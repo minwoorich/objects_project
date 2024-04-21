@@ -138,11 +138,11 @@ public class MemberController {
         return ApiResponse.ok(null);
     }
 
-    @PostMapping("/coupons")
+    @PostMapping("/coupons/{couponId}")
     public ApiResponse<RegisterCouponHttp.Response> registerCoupon(
-            @RequestBody RegisterCouponHttp.Request request,
+            @PathVariable(name = "couponId") Long couponId,
             @AuthMemberId Long memberId) {
-        Coupon coupon = registerCouponService.registerCouponToMember(memberId, request.getCouponId());
+        Coupon coupon = registerCouponService.registerCouponToMember(memberId, couponId);
         return ApiResponse.ok(RegisterCouponHttp.Response.of(coupon));
     }
 

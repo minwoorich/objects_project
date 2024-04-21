@@ -7,8 +7,7 @@ import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
 import com.objects.marketbridge.domains.member.domain.Member;
 import com.objects.marketbridge.domains.member.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
-import com.objects.marketbridge.domains.order.mock.FakeProductRepository;
-import com.objects.marketbridge.domains.product.domain.Product;
+import com.objects.marketbridge.domains.product.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
@@ -32,54 +31,6 @@ class FakeCouponRepositoryTest {
         productRepository.deleteAllInBatch();
     }
 
-
-    @DisplayName("상품아이디를 통해 상품에 등록된 모든 쿠폰들을 조회할 수 있다.")
-    @Test
-    void findByProductId(){
-        //given
-        String productNo = "111111 - 111111";
-        Product product = productRepository.save(Product.builder().productNo(productNo).build());
-
-        Coupon coupon1 = couponRepository.save(Coupon.builder().price(1000L).product(product).build());
-        Coupon coupon2 = couponRepository.save(Coupon.builder().price(2000L).product(product).build());
-        Coupon coupon3 = couponRepository.save(Coupon.builder().price(3000L).product(product).build());
-
-        product.addCoupons(coupon1);
-        product.addCoupons(coupon2);
-        product.addCoupons(coupon3);
-
-        //when
-        List<Coupon> coupons = couponRepository.findByProductId(product.getId());
-
-        //then
-        assertThat(coupons).hasSize(3);
-        assertThat(product.getCoupons()).hasSize(3);
-        assertThat(product.getCoupons())
-                .extracting(Coupon::getId, Coupon::getPrice)
-                .containsExactly(
-                        tuple(1L, 1000L),
-                        tuple(2L, 2000L),
-                        tuple(3L, 3000L));
-
-        assertThat(coupons).
-                extracting(c -> c.getProduct().getProductNo())
-                .containsExactly(productNo, productNo, productNo);
-    }
-
-    @DisplayName("상품에 등록된 쿠폰이 없을 경우 빈 List 객체를 반환한다.")
-    @Test
-    void findByProductId_empty(){
-        //given
-        // 아무런 쿠폰도 저장하지 않은 상태
-
-        //when
-        List<Coupon> coupons = couponRepository.findByProductId(9L);
-
-        //then
-        assertThat(coupons).isNotNull();
-        assertThat(coupons).isInstanceOf(List.class);
-        assertThat(coupons).isEmpty();
-    }
 
     @DisplayName("DB에 저장된 모든 쿠폰을 조회 할 수 있다")
     @Test
@@ -118,16 +69,10 @@ class FakeCouponRepositoryTest {
     @Test
     void findByProductGroupId(){
         //given
-        String productNo = "111111 - 111111";
-        Product product = productRepository.save(Product.builder().productNo(productNo).build());
-
-        Coupon coupon1 = couponRepository.save(Coupon.builder().price(1000L).product(product).build());
-        Coupon coupon2 = couponRepository.save(Coupon.builder().price(2000L).product(product).build());
-        Coupon coupon3 = couponRepository.save(Coupon.builder().price(3000L).product(product).build());
-
-        product.addCoupons(coupon1);
-        product.addCoupons(coupon2);
-        product.addCoupons(coupon3);
+        Coupon coupon1 = couponRepository.save(Coupon.builder().productGroupId(111111L).price(1000L).build());
+        Coupon coupon2 = couponRepository.save(Coupon.builder().productGroupId(111111L).price(2000L).build());
+        Coupon coupon3 = couponRepository.save(Coupon.builder().productGroupId(111111L).price(3000L).build());
+        couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
 
         //when
         List<Coupon> coupons = couponRepository.findByProductGroupId(111111L);
@@ -149,9 +94,9 @@ class FakeCouponRepositoryTest {
         Member member = Member.builder().name("홍길동").build();
         memberRepository.save(member);
 
-        Coupon coupon1 = Coupon.builder().price(1000L).count(999L).build();
-        Coupon coupon2 = Coupon.builder().price(2000L).count(999L).build();
-        Coupon coupon3 = Coupon.builder().price(3000L).count(999L).build();
+        Coupon coupon1 = Coupon.builder().productGroupId(111111L).price(1000L).count(999L).build();
+        Coupon coupon2 = Coupon.builder().productGroupId(111111L).price(2000L).count(999L).build();
+        Coupon coupon3 = Coupon.builder().productGroupId(111111L).price(3000L).count(999L).build();
 
         MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).build();
         MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).build();
@@ -162,12 +107,6 @@ class FakeCouponRepositoryTest {
         coupon3.addMemberCoupon(memberCoupon3);
         couponRepository.saveAll(List.of(coupon1, coupon2, coupon3));
 
-        Product product = Product.builder().productNo("111111 - 111111").build();
-        product.addCoupons(coupon1);
-        product.addCoupons(coupon2);
-        product.addCoupons(coupon3);
-
-        productRepository.save(product);
 
         //when
         List<Coupon> coupons = couponRepository.findByProductGroupIdWithMemberCoupons(coupon1.getProductGroupId());

@@ -61,21 +61,16 @@ class QuitPaymentServiceTest {
         member.addAddress(address);
         memberRepository.save(member);
 
-        Coupon coupon1 = Coupon.create("상품1쿠폰", 500L, 10L, 1000L, LocalDateTime.of(2024, 1, 1, 12, 0, 0), LocalDateTime.of(2025, 1, 1, 12, 0, 0));
-        Coupon coupon2 = Coupon.create("상품2쿠폰", 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
-        Coupon coupon3 = Coupon.create("상품3쿠폰", 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
-        Coupon coupon4 = Coupon.create("상품4쿠폰", 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
+        Coupon coupon1 = Coupon.create("상품1쿠폰", 111111L, 500L, 10L, 1000L, LocalDateTime.of(2024, 1, 1, 12, 0, 0), LocalDateTime.of(2025, 1, 1, 12, 0, 0));
+        Coupon coupon2 = Coupon.create("상품2쿠폰", 222222L, 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
+        Coupon coupon3 = Coupon.create("상품3쿠폰", 333333L, 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
+        Coupon coupon4 = Coupon.create("상품4쿠폰", 444444L, 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
 
         Product product1 = Product.create(true, "상품1", 1000L, false, 100L, "썸네일1", 0L, "111111 - 111111");
         Product product2 = Product.create(true, "상품2", 2000L, false, 100L, "썸네일2", 0L, "222222 - 222222");
         Product product3 = Product.create(true, "상품3", 3000L, false, 100L, "썸네일3", 0L, "333333 - 333333");
         Product product4 = Product.create(true, "상품4", 4000L, false, 100L, "썸네일4", 0L, "444444 - 444444");
         productRepository.saveAll(List.of(product1, product2, product3, product4));
-
-        product1.addCoupons(coupon1);
-        product2.addCoupons(coupon2);
-        product3.addCoupons(coupon3);
-        product4.addCoupons(coupon4);
 
         MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(true).usedDate(LocalDateTime.now()).endDate(coupon1.getEndDate()).build();
         MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(true).usedDate(LocalDateTime.now()).endDate(coupon2.getEndDate()).build();

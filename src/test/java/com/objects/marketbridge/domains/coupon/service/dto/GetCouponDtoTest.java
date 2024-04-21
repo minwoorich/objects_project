@@ -14,9 +14,7 @@ class GetCouponDtoTest {
     @Test
     void of(){
         //given
-        Product product = Product.builder().productNo("111111 - 111111").build();
-        Coupon coupon = Coupon.builder().product(product).price(1000L).build();
-        product.addCoupons(coupon);
+        Coupon coupon = Coupon.builder().productGroupId(111111L).price(1000L).build();
 
         //when
         GetCouponDto result = GetCouponDto.of(coupon);

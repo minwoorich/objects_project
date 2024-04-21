@@ -37,12 +37,12 @@ class GetMemberCouponServiceTestWithFake {
         Coupon coupon5 = couponRepository.save(Coupon.builder().price(20000L).build());
         Coupon coupon6 = couponRepository.save(Coupon.builder().price(30000L).build());
 
-        memberCouponRepository.save(MemberCoupon.builder().member(member1).coupon(coupon1).build());
-        memberCouponRepository.save(MemberCoupon.builder().member(member1).coupon(coupon2).build());
-        memberCouponRepository.save(MemberCoupon.builder().member(member1).coupon(coupon3).build());
-        memberCouponRepository.save(MemberCoupon.builder().member(member2).coupon(coupon4).build());
-        memberCouponRepository.save(MemberCoupon.builder().member(member2).coupon(coupon5).build());
-        memberCouponRepository.save(MemberCoupon.builder().member(member2).coupon(coupon6).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member1).coupon(coupon1).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member1).coupon(coupon2).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member1).coupon(coupon3).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member2).coupon(coupon4).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member2).coupon(coupon5).build());
+        memberCouponRepository.save(MemberCoupon.builder().isUsed(false).member(member2).coupon(coupon6).build());
 
         // when
         List<Coupon> coupons = getMemberCouponService.findCouponsForMember(member1.getId());
@@ -50,5 +50,27 @@ class GetMemberCouponServiceTestWithFake {
         //then
         assertThat(coupons).hasSize(3);
         assertThat(coupons).extracting(c -> c.getPrice()).contains(1000L, 2000L, 3000L);
+    }
+
+    @DisplayName("사용자가 가지고 있는 쿠폰 중, 사용 하지 않은 쿠폰들만 조회할 수 있어야한다.")
+    @Test
+    void findCouponsForMember_unused() {
+        // given
+        Member member1 = memberRepository.save(Member.builder().build());
+
+        Coupon coupon1 = couponRepository.save(Coupon.builder().price(1000L).build());
+        Coupon coupon2 = couponRepository.save(Coupon.builder().price(2000L).build());
+        Coupon coupon3 = couponRepository.save(Coupon.builder().price(3000L).build());
+
+        memberCouponRepository.save(MemberCoupon.builder().member(member1).isUsed(false).coupon(coupon1).build());
+        memberCouponRepository.save(MemberCoupon.builder().member(member1).isUsed(true).coupon(coupon2).build());
+        memberCouponRepository.save(MemberCoupon.builder().member(member1).isUsed(false).coupon(coupon3).build());
+
+        // when
+        List<Coupon> coupons = getMemberCouponService.findCouponsForMember(member1.getId());
+
+        //then
+        assertThat(coupons).hasSize(2);
+        assertThat(coupons).extracting(Coupon::getPrice).contains(1000L, 3000L);
     }
 }

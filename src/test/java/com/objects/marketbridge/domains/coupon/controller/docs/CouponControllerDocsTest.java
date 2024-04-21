@@ -5,6 +5,7 @@ import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.objects.marketbridge.common.security.annotation.WithMockCustomUser;
 import com.objects.marketbridge.domains.coupon.controller.CouponController;
+import com.objects.marketbridge.domains.coupon.service.CreateCouponService;
 import com.objects.marketbridge.domains.coupon.service.GetCouponService;
 import com.objects.marketbridge.domains.coupon.service.dto.GetCouponDto;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +52,7 @@ public class CouponControllerDocsTest {
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
     @MockBean GetCouponService getCouponService;
+    @MockBean CreateCouponService createCouponService;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -78,7 +80,7 @@ public class CouponControllerDocsTest {
                 .startDate(LocalDateTime.of(2024, 1, 1, 12, 0, 0))
                 .endDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
                 .build());
-        given(getCouponService.findCouponsForProductGroup(anyLong(), anyLong())).willReturn(couponDtos);
+        given(getCouponService.findCouponsForProductGroup(anyLong())).willReturn(couponDtos);
 
         // when
         MockHttpServletRequestBuilder requestBuilder =

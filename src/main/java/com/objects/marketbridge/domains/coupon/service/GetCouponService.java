@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,14 +23,14 @@ public class GetCouponService {
         this.couponRepository = couponRepository;
     }
 
-    public List<GetCouponDto> findCouponsForProductGroup(Long productGroupId, Long memberId) {
+    public List<GetCouponDto> findCouponsForProductGroup(Long productGroupId) {
 
-        List<Coupon> coupons = couponRepository.findByProductGroupIdWithMemberCoupons(productGroupId);
+        List<Coupon> coupons = couponRepository.findByProductGroupId(productGroupId);
+
         if (coupons.isEmpty()) {
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
         return coupons.stream()
-                .filter(c -> c.filteredBy(memberId)) // 로그인 된 멤버의 쿠폰만 필터링
                 .map(GetCouponDto::of) // Coupon -> GetCouponDto
                 .toList();
     }

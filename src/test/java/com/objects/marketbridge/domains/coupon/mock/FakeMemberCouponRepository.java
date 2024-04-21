@@ -9,6 +9,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class FakeMemberCouponRepository implements MemberCouponRepository {
@@ -38,6 +39,16 @@ public class FakeMemberCouponRepository implements MemberCouponRepository {
                 .findAny()
                 .orElseThrow(() -> new JpaObjectRetrievalFailureException(
                         new EntityNotFoundException("해당하는 MemberCoupon 엔티티가 존재하지 않습니다. 입력 (memberId, coponId) = ("+memberId+", "+couponId+")")));
+    }
+
+    @Override
+    public Optional<MemberCoupon> findByMemberIdAndCouponIdOptional(Long memberId, Long couponId) {
+
+        try {
+            return Optional.of(findByMemberIdAndCouponId(memberId, couponId));
+        } catch (JpaObjectRetrievalFailureException e) {
+            return  Optional.empty();
+        }
     }
 
     @Override
