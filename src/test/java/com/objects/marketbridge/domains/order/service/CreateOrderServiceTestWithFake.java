@@ -7,7 +7,6 @@ import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
 import com.objects.marketbridge.domains.coupon.mock.FakeMemberCouponRepository;
-import com.objects.marketbridge.domains.coupon.service.CreateCouponService;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.domains.member.domain.Address;
@@ -22,6 +21,7 @@ import com.objects.marketbridge.domains.order.service.port.*;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,12 +30,13 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
+@Slf4j
 public class CreateOrderServiceTestWithFake {
 
     OrderQueryRepository orderQueryRepository = new FakeOrderQueryRepository();
-    OrderDetailQueryRepository orderDetailQueryRepository = new FakeOrderDetailQueryRepository();
     CouponRepository couponRepository = new FakeCouponRepository();
 
     OrderDetailCommandRepository orderDetailCommandRepository = new FakeOrderDetailCommandRepository();
@@ -63,6 +64,7 @@ public class CreateOrderServiceTestWithFake {
     @AfterEach
     void clear() {
         BaseFakeOrderRepository.getInstance().clear();
+        BaseFakeOrderDetailRepository.getInstance().clear();
         productRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
         memberCouponRepository.deleteAllInBatch();
@@ -202,6 +204,7 @@ public class CreateOrderServiceTestWithFake {
 
         //then
         assertThat(orderDetails).hasSize(1);
+//        log.info("주문상세 아이디 : {}",orderDetails.get(0).getId());
         assertThat(orderDetails)
                 .extracting(
                         OrderDetail::getOrderNo,

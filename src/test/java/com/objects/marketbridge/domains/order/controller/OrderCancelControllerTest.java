@@ -20,6 +20,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 import java.time.LocalDateTime;
 
@@ -631,7 +632,7 @@ class OrderCancelControllerTest {
 
         // when // then
         assertThatThrownBy(() -> testContainer.orderCancelController.requestCancel(orderDetailId, numberOfCancellation, memberId))
-                .isInstanceOf(EntityNotFoundException.class);
+                .isInstanceOf(JpaObjectRetrievalFailureException.class);
     }
 
     @Test
@@ -981,7 +982,7 @@ class OrderCancelControllerTest {
 
         // when // then
         assertThatThrownBy(() -> testContainer.orderCancelController.getCancelDetail(orderDetailId, memberId))
-                .isInstanceOf(EntityNotFoundException.class);
+                .isInstanceOf(JpaObjectRetrievalFailureException.class);
     }
 
     @Test
