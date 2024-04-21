@@ -6,6 +6,8 @@ import com.objects.marketbridge.domains.cart.mock.FakeCartQueryRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
+import com.objects.marketbridge.domains.coupon.mock.FakeMemberCouponRepository;
+import com.objects.marketbridge.domains.member.mock.FakeMemberRepository;
 import com.objects.marketbridge.domains.member.service.port.MemberRepository;
 import com.objects.marketbridge.domains.order.controller.OrderCancelController;
 import com.objects.marketbridge.domains.order.controller.OrderCancelReturnController;
@@ -16,6 +18,7 @@ import com.objects.marketbridge.domains.order.service.port.*;
 import com.objects.marketbridge.domains.payment.service.port.PaymentClient;
 import com.objects.marketbridge.domains.coupon.service.port.CouponRepository;
 import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
+import com.objects.marketbridge.domains.product.mock.FakeProductRepository;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
 import lombok.Builder;
 

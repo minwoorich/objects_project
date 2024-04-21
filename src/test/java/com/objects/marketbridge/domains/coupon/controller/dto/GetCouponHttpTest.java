@@ -8,18 +8,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class GetCouponHttpTest {
 
-    @DisplayName("GetCouponDto에서 GetCouponHttp.Response.CouponInfo 를 생성 할 수 있다.")
+    @DisplayName("GetCouponDto 에서 GetCouponHttp.Response.CouponInfo 를 생성 할 수 있다.")
     @Test
     void of(){
         //given
-        GetCouponDto dto = GetCouponDto.builder().couponName("1000원짜리 쿠폰").productId(1L).build();
+        GetCouponDto dto = GetCouponDto.builder().couponName("1000원짜리 쿠폰").productGroupId(111111L).build();
 
         //when
         GetCouponHttp.Response.CouponInfo result = GetCouponHttp.Response.CouponInfo.of(dto);
 
         //then
-        assertThat(result).extracting(c -> c.getCouponName(), c -> c.getProductId())
-                .containsExactly("1000원짜리 쿠폰", 1L);
+        assertThat(result.getCouponName()).isEqualTo("1000원짜리 쿠폰");
+        assertThat(result).hasFieldOrProperty("couponName");
+        assertThat(result).hasFieldOrProperty("couponPrice");
+        assertThat(result).hasFieldOrProperty("minimumPrice");
+        assertThat(result).hasFieldOrProperty("count");
+        assertThat(result).hasFieldOrProperty("startDate");
+        assertThat(result).hasFieldOrProperty("endDate");
     }
 
 }

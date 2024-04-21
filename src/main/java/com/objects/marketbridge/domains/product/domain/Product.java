@@ -63,8 +63,9 @@ public class Product extends BaseEntity {
     private String productNo;
 
     @Builder
-    private Product(Long id, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate,String productNo) {
+    private Product(Long id, Category category, Boolean isOwn, String name, Long price, Boolean isSubs, Long stock, String thumbImg, Long discountRate,String productNo) {
         this.id = id;
+        this.category = category;
         this.isOwn = isOwn; // 로켓 true , 오픈 마켓 false
         this.name = name;
         this.price = price;
@@ -107,13 +108,6 @@ public class Product extends BaseEntity {
         prodTag.setProduct(this);
     }
 
-    public void addCoupons(Coupon coupon) {
-        if (!coupons.contains(coupon)) {
-            coupons.add(coupon);
-        }
-        coupon.addProduct(this);
-    }
-
     public void addOrderDetail(OrderDetail orderDetail) {
         orderDetails.add(orderDetail);
         orderDetail.setProduct(this);
@@ -132,12 +126,5 @@ public class Product extends BaseEntity {
         if (stock - quantity < 0) {
             throw CustomLogicException.createBadRequestError(OUT_OF_STOCK);
         }
-    }
-
-    public List<Coupon> getAvailableCoupons() {
-        return coupons.stream()
-                .filter(c -> c.getMemberCoupons().stream()
-                        .anyMatch(mc -> !mc.getIsUsed()))
-                .collect(Collectors.toList());
     }
 }

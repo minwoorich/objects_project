@@ -49,8 +49,7 @@ class QuitPaymentServiceTest {
     @Autowired OrderDetailQueryRepository orderDetailQueryRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired ProductRepository productRepository;
-    @Autowired
-    QuitPaymentService quitPaymentService;
+    @Autowired QuitPaymentService quitPaymentService;
     @Autowired PaymentRepository paymentRepository;
     @Autowired CouponRepository couponRepository;
     @Autowired DateTimeHolder dateTimeHolder;
@@ -62,21 +61,21 @@ class QuitPaymentServiceTest {
         member.addAddress(address);
         memberRepository.save(member);
 
-        Product product1 = Product.create( true, "상품1", 1000L, false, 100L, "썸네일1", 0L, "1번");
-        Product product2 = Product.create(true, "상품2", 2000L, false, 100L, "썸네일2", 0L, "2번");
-        Product product3 = Product.create( true, "상품3", 3000L, false, 100L, "썸네일3", 0L, "3번");
-        Product product4 = Product.create( true, "상품4", 4000L, false, 100L, "썸네일4", 0L, "4번");
+        Coupon coupon1 = Coupon.create("상품1쿠폰", 111111L, 500L, 10L, 1000L, LocalDateTime.of(2024, 1, 1, 12, 0, 0), LocalDateTime.of(2025, 1, 1, 12, 0, 0));
+        Coupon coupon2 = Coupon.create("상품2쿠폰", 222222L, 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
+        Coupon coupon3 = Coupon.create("상품3쿠폰", 333333L, 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
+        Coupon coupon4 = Coupon.create("상품4쿠폰", 444444L, 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
+
+        Product product1 = Product.create(true, "상품1", 1000L, false, 100L, "썸네일1", 0L, "111111 - 111111");
+        Product product2 = Product.create(true, "상품2", 2000L, false, 100L, "썸네일2", 0L, "222222 - 222222");
+        Product product3 = Product.create(true, "상품3", 3000L, false, 100L, "썸네일3", 0L, "333333 - 333333");
+        Product product4 = Product.create(true, "상품4", 4000L, false, 100L, "썸네일4", 0L, "444444 - 444444");
         productRepository.saveAll(List.of(product1, product2, product3, product4));
 
-        Coupon coupon1 = Coupon.create(product1, "상품1쿠폰", 500L, 10L, 1000L, LocalDateTime.of(2024, 1, 1, 12, 0, 0), LocalDateTime.of(2025, 1, 1, 12, 0, 0));
-        Coupon coupon2 = Coupon.create(product2, "상품2쿠폰", 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
-        Coupon coupon3 = Coupon.create(product3, "상품3쿠폰", 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
-        Coupon coupon4 = Coupon.create(product4, "상품4쿠폰", 500L, 10L, 1000L, LocalDateTime.of(2024, 1,1,12,0,0), LocalDateTime.of(2025, 1,1,12, 0, 0));
-
-        MemberCoupon memberCoupon1 = MemberCoupon.create(member, coupon1, true, LocalDateTime.now(), coupon1.getEndDate());
-        MemberCoupon memberCoupon2 = MemberCoupon.create(member, coupon1, true, LocalDateTime.now(), coupon2.getEndDate());
-        MemberCoupon memberCoupon3 = MemberCoupon.create(member, coupon1, true, LocalDateTime.now(), coupon3.getEndDate());
-        MemberCoupon memberCoupon4 = MemberCoupon.create(member, coupon1, true, LocalDateTime.now(), coupon4.getEndDate());
+        MemberCoupon memberCoupon1 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(true).usedDate(LocalDateTime.now()).endDate(coupon1.getEndDate()).build();
+        MemberCoupon memberCoupon2 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(true).usedDate(LocalDateTime.now()).endDate(coupon2.getEndDate()).build();
+        MemberCoupon memberCoupon3 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(true).usedDate(LocalDateTime.now()).endDate(coupon3.getEndDate()).build();
+        MemberCoupon memberCoupon4 = MemberCoupon.builder().member(member).coupon(coupon1).isUsed(true).usedDate(LocalDateTime.now()).endDate(coupon4.getEndDate()).build();
 
         coupon1.addMemberCoupon(memberCoupon1);
         coupon2.addMemberCoupon(memberCoupon2);

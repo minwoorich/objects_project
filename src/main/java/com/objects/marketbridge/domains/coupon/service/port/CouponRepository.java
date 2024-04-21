@@ -7,7 +7,11 @@ import java.util.List;
 public interface CouponRepository {
     Coupon findById(Long id);
 
-    List<Coupon> findByProductId(Long productId);
+    Coupon findByIdWithMemberCoupons(Long id);
+
+    List<Coupon> findByProductGroupId(Long productGroupId);
+
+    List<Coupon> findByProductGroupIdWithMemberCoupons(Long productGroupId);
 
     Coupon save(Coupon coupon);
 

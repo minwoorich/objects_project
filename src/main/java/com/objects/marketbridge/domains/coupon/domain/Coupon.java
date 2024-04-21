@@ -1,6 +1,7 @@
 package com.objects.marketbridge.domains.coupon.domain;
 
-import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
+import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.domains.member.domain.BaseEntity;
 import com.objects.marketbridge.domains.product.domain.Product;
 import jakarta.persistence.*;
@@ -8,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Coupon extends BaseEntity {
 
@@ -46,7 +49,9 @@ public class Coupon extends BaseEntity {
     private LocalDateTime endDate;
 
     @Builder
-    public Coupon(Product product, String name, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+    public Coupon(Long id, Product product, Long productGroupId, String name, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+        this.id = id;
+        this.productGroupId = productGroupId;
         this.product = product;
         this.name = name;
         this.price = price;
@@ -56,14 +61,10 @@ public class Coupon extends BaseEntity {
         this.endDate = endDate;
     }
 
-    private Long parseProductGroupId(Product product) {
-        return Long.parseLong(product.getProductNo().split("-")[0]);
-    }
-
-    public static Coupon create(Product product, String name, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+    public static Coupon create(String name, Long productGroupId, Long price, Long count, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
         return Coupon.builder()
-                .product(product)
                 .name(name)
+                .productGroupId(productGroupId)
                 .price(price)
                 .count(count)
                 .minimumPrice(minimumPrice)
@@ -73,19 +74,26 @@ public class Coupon extends BaseEntity {
     }
 
     public void addMemberCoupon(MemberCoupon memberCoupon) {
+        memberCoupons.remove(memberCoupon);
         memberCoupons.add(memberCoupon);
-        memberCoupon.setCoupon(this);
+        memberCoupon.linkCoupon(this);
     }
 
-    public void addProduct(Product product) {
-        this.product = product;
-        this.productGroupId = parseProductGroupId(product);
+//    public void addProduct(Product product) {
+//        this.product = product;
+//        this.productGroupId = product.parseProductGroupId();
+//    }
 
+    public Boolean filteredBy(Long memberId) {
+        return memberCoupons.stream().anyMatch(mc -> mc.filterByMemberId(memberId) && !mc.getIsUsed());
     }
 
-    public void changeMemberCouponInfo(DateTimeHolder dateTimeHolder, Long memberId) {
-        memberCoupons.stream()
-                .filter(m -> m.getMember().getId().equals(memberId))
-                        .forEach(m -> m.changeUsageInfo(dateTimeHolder));
+    public void decreaseCount() {
+
+        if (count == null || count <= 0 ) {
+
+            throw CustomLogicException.createBadRequestError(ErrorCode.COUPON_OUT_OF_STOCK);
+        }
+        count-=1;
     }
 }

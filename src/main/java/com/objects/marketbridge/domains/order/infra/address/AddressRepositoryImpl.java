@@ -36,8 +36,8 @@ public class AddressRepositoryImpl implements AddressRepository {
         addressJpaRepository.deleteAllByIdInBatch(List.of(addressId));
     }
     @Override
-    public void save(Address address) {
-        addressJpaRepository.save(address);
+    public Address save(Address address) {
+        return addressJpaRepository.save(address);
     }
 
     @Override

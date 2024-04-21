@@ -20,7 +20,7 @@ import com.objects.marketbridge.domains.order.service.port.OrderCommandRepositor
 import com.objects.marketbridge.domains.order.service.port.OrderDetailCommandRepository;
 import com.objects.marketbridge.domains.product.domain.Product;
 import com.objects.marketbridge.domains.product.service.port.ProductRepository;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +31,8 @@ import java.util.List;
 import static com.objects.marketbridge.common.kakao.KakaoPayConfig.ONE_TIME_CID;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
-@Transactional
+@Transactional(readOnly = true)
 public class CreateOrderService {
 
     private final OrderDetailCommandRepository orderDetailCommandRepository;
@@ -46,6 +45,20 @@ public class CreateOrderService {
     private final KakaoPayService kakaoPayService;
     private final KakaoPayConfig kakaoPayConfig;
 
+    @Builder
+    public CreateOrderService(OrderDetailCommandRepository orderDetailCommandRepository, OrderCommandRepository orderCommandRepository, ProductRepository productRepository, MemberRepository memberRepository, MemberCouponRepository memberCouponRepository, AddressRepository addressRepository, DateTimeHolder dateTimeHolder, KakaoPayService kakaoPayService, KakaoPayConfig kakaoPayConfig) {
+        this.orderDetailCommandRepository = orderDetailCommandRepository;
+        this.orderCommandRepository = orderCommandRepository;
+        this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
+        this.memberCouponRepository = memberCouponRepository;
+        this.addressRepository = addressRepository;
+        this.dateTimeHolder = dateTimeHolder;
+        this.kakaoPayService = kakaoPayService;
+        this.kakaoPayConfig = kakaoPayConfig;
+    }
+
+    @Transactional
     public void create(CreateOrderDto createOrderDto) {
 
         // 1. Order 생성
@@ -83,7 +96,7 @@ public class CreateOrderService {
 
             Product product = productRepository.findById(productValue.getProductId());
             // 쿠폰 사용 안 한 경우 그냥 null 저장
-            MemberCoupon memberCoupon = productValue.getHasCouponUsed() ? memberCouponRepository.findByMemberIdAndCouponIdAndProductId(order.getMember().getId(), productValue.getCouponId(), productValue.getProductId()) : null;
+            MemberCoupon memberCoupon = productValue.getHasCouponUsed() ? memberCouponRepository.findByMemberIdAndCouponId(order.getMember().getId(), productValue.getCouponId()) : null;
             String orderNo = order.getOrderNo();
             Long quantity = productValue.getQuantity();
             String tid = order.getTid();
@@ -103,6 +116,7 @@ public class CreateOrderService {
         return orderDetails;
     }
 
+    @Transactional
     public KakaoPayReadyResponse ready(CreateOrderHttp.Request createOrderRequest, String orderNo, Long memberId) {
         return kakaoPayService.ready(createKakaoReadyRequest(orderNo, createOrderRequest, memberId));
     }

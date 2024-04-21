@@ -69,7 +69,9 @@ class OrderDetailQueryRepositoryTest {
         List<OrderDetail> orderDetails = List.of(orderDetail1, orderDetail2, orderDetail3);
 
         // when
-        List<OrderDetail> savedOrderDetails = orderDetailCommandRepository.saveAll(orderDetails);
+        orderDetailCommandRepository.saveAll(orderDetails);
+        List<OrderDetail> savedOrderDetails = orderDetailQueryRepository.findAll();
+
 
         // then
         assertThat(savedOrderDetails.size()).isEqualTo(3);

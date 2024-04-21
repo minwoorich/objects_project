@@ -3,16 +3,20 @@ package com.objects.marketbridge.domains.coupon.controller.dto;
 import com.objects.marketbridge.domains.coupon.service.dto.GetCouponDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class GetCouponHttp {
 
     @Getter
+    @NoArgsConstructor
     public static class Response{
+
         private List<CouponInfo> couponInfos;
         private Boolean hasCoupons;
 
@@ -21,27 +25,37 @@ public class GetCouponHttp {
             this.couponInfos = couponInfos;
             this.hasCoupons = hasCoupons;
         }
-        public static GetCouponHttp.Response create(Boolean hasCoupons, List<GetCouponHttp.Response.CouponInfo> couponInfos) {
+
+        public static GetCouponHttp.Response create(List<GetCouponHttp.Response.CouponInfo> couponInfos) {
             return Response.builder()
-                    .hasCoupons(hasCoupons)
-                    .couponInfos(hasCoupons ? couponInfos : Collections.emptyList())
+                    .hasCoupons(true)
+                    .couponInfos(couponInfos)
+                    .build();
+        }
+
+        public static GetCouponHttp.Response create() {
+            return Response.builder()
+                    .hasCoupons(false)
+                    .couponInfos(new ArrayList<>())
                     .build();
         }
 
         @Getter
+        @NoArgsConstructor
         public static class CouponInfo{
-            private Long productId;
-            private String productNo;
+
             private String couponName;
             private Long couponPrice;
             private Long minimumPrice;
+            private Long count;
             private LocalDateTime startDate;
             private LocalDateTime endDate;
+            private Long couponId;
 
             @Builder
-            private CouponInfo(Long productId, String productNo, String couponName, Long couponPrice, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
-                this.productId = productId;
-                this.productNo = productNo;
+            private CouponInfo(Long couponId, String couponName, Long count, Long couponPrice, Long minimumPrice, LocalDateTime startDate, LocalDateTime endDate) {
+                this.couponId = couponId;
+                this.count = count;
                 this.couponName = couponName;
                 this.couponPrice = couponPrice;
                 this.minimumPrice = minimumPrice;
@@ -51,10 +65,10 @@ public class GetCouponHttp {
 
             public static GetCouponHttp.Response.CouponInfo of(GetCouponDto dto) {
                 return CouponInfo.builder()
-                        .productId(dto.getProductId())
-                        .productNo(dto.getProductNo())
+                        .couponId(dto.getCouponId())
                         .couponName(dto.getCouponName())
                         .couponPrice(dto.getPrice())
+                        .count(dto.getCount())
                         .minimumPrice(dto.getMinimumPrice())
                         .startDate(dto.getStartDate())
                         .endDate(dto.getEndDate())

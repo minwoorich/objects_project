@@ -25,18 +25,13 @@ public class OrderDetailCommandRepositoryImpl implements OrderDetailCommandRepos
     }
 
     @Override
-    public List<OrderDetail> saveAll(List<OrderDetail> orderDetail) {
-        return orderDetailJpaRepository.saveAll(orderDetail);
+    public void saveAll(List<OrderDetail> orderDetail) {
+        orderDetailJpaRepository.saveAll(orderDetail);
     }
 
     @Override
     public void save(OrderDetail orderDetail) {
         orderDetailJpaRepository.save(orderDetail);
-    }
-
-    @Override
-    public OrderDetail saveAndReturnEntity(OrderDetail orderDetail) {
-        return orderDetailJpaRepository.save(orderDetail);
     }
 
     @Override
