@@ -257,7 +257,7 @@ public class OrderControllerErrorTest extends RestDocsSupportWebAppContext {
                 .couponId(1L)
                 .couponPrice(500L)
                 .couponMinimumPrice(1000L)
-                .couponEndDate("2030-01-01 12:00:00")
+                .couponEndDate("2030-01-01T12:00:00")
                 .deliveredDate("2024-01-21")
                 .build();
 
