@@ -153,7 +153,7 @@ public class CreateOrderHttp {
             Long couponMinimumPrice;
 
             @ValidCouponExpired
-            @ValidDateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+            @ValidDateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
             String couponEndDate;
 
             String deliveredDate; // yyyy-MM-dd HH:mm:ss

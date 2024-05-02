@@ -150,7 +150,7 @@ public class OrderControllerRestDocsTest {
                                                 fieldWithPath("productValues[].couponMinimumPrice").type(JsonFieldType.NUMBER)
                                                         .description("쿠폰 최소 주문 금액 (사용 안했으면 null 보내야함)"),
                                                 fieldWithPath("productValues[].couponEndDate").type(JsonFieldType.STRING)
-                                                        .description("쿠폰 유효기간 (yyyy-MM-dd HH:mm:ss) (사용 안했으면 null 보내야함)"),
+                                                        .description("쿠폰 유효기간 (yyyy-MM-ddTHH:mm:ss) (사용 안했으면 null 보내야함)"),
                                                 fieldWithPath("productValues[].deliveredDate").type(JsonFieldType.STRING)
                                                         .description("예상 배송 날짜 (yyyy-MM-dd HH:mm:ss)")
                                         )
@@ -205,7 +205,7 @@ public class OrderControllerRestDocsTest {
                 .couponId(1L)
                 .couponPrice(500L)
                 .couponMinimumPrice(1000L)
-                .couponEndDate("2030-01-01 12:00:00")
+                .couponEndDate("2030-01-01T12:00:00")
                 .deliveredDate("2024-01-21")
                 .build();
 

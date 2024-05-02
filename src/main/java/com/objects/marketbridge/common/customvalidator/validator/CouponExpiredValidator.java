@@ -20,7 +20,7 @@ public class CouponExpiredValidator implements ConstraintValidator<ValidCouponEx
             return true;
         }
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime couponEndDate = LocalDateTime.parse(value, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime couponEndDate = LocalDateTime.parse(value, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         return now.isBefore(couponEndDate);
     }
 }
