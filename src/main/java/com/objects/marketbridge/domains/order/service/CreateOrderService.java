@@ -5,6 +5,7 @@ import com.objects.marketbridge.common.kakao.KakaoPayService;
 import com.objects.marketbridge.common.kakao.dto.KakaoPayReadyRequest;
 import com.objects.marketbridge.common.kakao.dto.KakaoPayReadyResponse;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.service.port.MemberCouponRepository;
 import com.objects.marketbridge.domains.member.domain.Address;
@@ -40,23 +41,26 @@ public class CreateOrderService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final MemberCouponRepository memberCouponRepository;
+    private final CartCommandRepository cartCommandRepository;
     private final AddressRepository addressRepository;
     private final DateTimeHolder dateTimeHolder;
     private final KakaoPayService kakaoPayService;
     private final KakaoPayConfig kakaoPayConfig;
 
     @Builder
-    public CreateOrderService(OrderDetailCommandRepository orderDetailCommandRepository, OrderCommandRepository orderCommandRepository, ProductRepository productRepository, MemberRepository memberRepository, MemberCouponRepository memberCouponRepository, AddressRepository addressRepository, DateTimeHolder dateTimeHolder, KakaoPayService kakaoPayService, KakaoPayConfig kakaoPayConfig) {
+    public CreateOrderService(OrderDetailCommandRepository orderDetailCommandRepository, OrderCommandRepository orderCommandRepository, ProductRepository productRepository, MemberRepository memberRepository, MemberCouponRepository memberCouponRepository, CartCommandRepository cartCommandRepository, AddressRepository addressRepository, DateTimeHolder dateTimeHolder, KakaoPayService kakaoPayService, KakaoPayConfig kakaoPayConfig) {
         this.orderDetailCommandRepository = orderDetailCommandRepository;
         this.orderCommandRepository = orderCommandRepository;
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
         this.memberCouponRepository = memberCouponRepository;
+        this.cartCommandRepository = cartCommandRepository;
         this.addressRepository = addressRepository;
         this.dateTimeHolder = dateTimeHolder;
         this.kakaoPayService = kakaoPayService;
         this.kakaoPayConfig = kakaoPayConfig;
     }
+
 
     @Transactional
     public void create(CreateOrderDto createOrderDto) {
@@ -72,6 +76,11 @@ public class CreateOrderService {
 
         // 4. Product 의 stock 감소
         order.stockDecrease();
+
+        // 5. 구매완료한 상품들 장바구니에서 제거하기
+        Long memberId = createOrderDto.getMemberId();
+        List<Long> deletedProductIds = createOrderDto.getProductValues().stream().map(CreateOrderDto.ProductDto::getProductId).toList();
+        cartCommandRepository.deleteAllByProductIdsAndMemberIdInBatch(deletedProductIds, memberId);
     }
 
     private Order createOrder(CreateOrderDto createOrderDto) {

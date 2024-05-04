@@ -31,7 +31,7 @@ class CartCommandRepositoryImplTest {
 
     @DisplayName("선택된 장바구니 항목들을 삭제 할 수 있다")
     @Test
-    void delete(){
+    void deleteAllByIdInBatch(){
         //given
         Cart cart1 = Cart.builder().build();
         Cart cart2 = Cart.builder().build();
