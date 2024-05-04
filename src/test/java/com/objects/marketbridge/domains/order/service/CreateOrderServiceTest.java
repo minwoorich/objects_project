@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 @Slf4j
+@Transactional
 public class CreateOrderServiceTest {
 
     @Autowired MemberRepository memberRepository;
@@ -42,6 +44,7 @@ public class CreateOrderServiceTest {
         member.addAddress(address);
 
         Product product1 = productRepository.save(Product.builder()
+                .id(1L)
                 .stock(999L)
                 .productNo("111111 - 111111")
                 .name("가방")
@@ -49,6 +52,7 @@ public class CreateOrderServiceTest {
                 .build());
 
         Product product2 = productRepository.save(Product.builder()
+                .id(2L)
                 .stock(999L)
                 .productNo("111111 - 111111")
                 .name("책")
@@ -56,6 +60,7 @@ public class CreateOrderServiceTest {
                 .build());
 
         Product product3 = productRepository.save(Product.builder()
+                .id(3L)
                 .stock(999L)
                 .productNo("111111 - 111111")
                 .name("신발")
@@ -67,19 +72,19 @@ public class CreateOrderServiceTest {
         cartCommandRepository.save(Cart.builder().member(member).product(product3).build());
 
         CreateOrderDto.ProductDto productDto1 = CreateOrderDto.ProductDto.builder()
-                .productId(1L)
+                .productId(product1.getId())
                 .price(20000L)
                 .quantity(1L)
                 .hasCouponUsed(false)
                 .build();
         CreateOrderDto.ProductDto productDto2 = CreateOrderDto.ProductDto.builder()
-                .productId(2L)
+                .productId(product2.getId())
                 .price(20000L)
                 .quantity(1L)
                 .hasCouponUsed(false)
                 .build();
         CreateOrderDto.ProductDto productDto3 = CreateOrderDto.ProductDto.builder()
-                .productId(3L)
+                .productId(product3.getId())
                 .price(20000L)
                 .quantity(1L)
                 .hasCouponUsed(false)
@@ -87,7 +92,7 @@ public class CreateOrderServiceTest {
 
         CreateOrderDto createOrderDto = CreateOrderDto.builder()
                 .tid("tid")
-                .memberId(1L)
+                .memberId(member.getId())
                 .addressId(1L)
                 .orderName("가방")
                 .orderNo("1111-2222-3333-4444")

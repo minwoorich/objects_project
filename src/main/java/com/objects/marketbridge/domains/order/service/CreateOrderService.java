@@ -77,6 +77,7 @@ public class CreateOrderService {
         // 4. Product 의 stock 감소
         order.stockDecrease();
 
+        // TODO : 장바구니가 아닌 바로구매로 물건을 구매했을 경우 에러 발생 할 수 있음. 해결 해야함.
         // 5. 구매완료한 상품들 장바구니에서 제거하기
         Long memberId = createOrderDto.getMemberId();
         List<Long> deletedProductIds = createOrderDto.getProductValues().stream().map(CreateOrderDto.ProductDto::getProductId).toList();
