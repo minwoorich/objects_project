@@ -45,4 +45,14 @@ public class FakeCartCommandRepository extends BaseFakeCartRepository implements
     public void saveAndFlush(Cart cart) {
 
     }
+
+    @Override
+    public void deleteAllByProductIdsAndMemberIdInBatch(List<Long> productIds, Long memberId) {
+        List<Cart> carts = getInstance().getData();
+        List<Cart> memberCarts = carts.stream().filter(c -> Objects.equals(c.getMember().getId(), memberId)).toList();
+        List<Cart> deletedCartList = memberCarts.stream().filter(c -> productIds.contains(c.getProduct().getId())).toList();
+
+        getInstance().getData().removeAll(deletedCartList);
+
+    }
 }

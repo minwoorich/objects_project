@@ -16,4 +16,6 @@ public interface CartCommandRepository {
 
     void saveAndFlush(Cart cart);
 
+    void deleteAllByProductIdsAndMemberIdInBatch(List<Long> productIds, Long memberId);
+
 }

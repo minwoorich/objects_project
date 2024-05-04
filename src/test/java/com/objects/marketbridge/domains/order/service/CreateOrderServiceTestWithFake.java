@@ -3,6 +3,11 @@ package com.objects.marketbridge.domains.order.service;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.cart.domain.Cart;
+import com.objects.marketbridge.domains.cart.mock.FakeCartCommandRepository;
+import com.objects.marketbridge.domains.cart.mock.FakeCartQueryRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
+import com.objects.marketbridge.domains.cart.service.port.CartQueryRepository;
 import com.objects.marketbridge.domains.coupon.domain.Coupon;
 import com.objects.marketbridge.domains.coupon.domain.MemberCoupon;
 import com.objects.marketbridge.domains.coupon.mock.FakeCouponRepository;
@@ -38,6 +43,8 @@ public class CreateOrderServiceTestWithFake {
 
     OrderQueryRepository orderQueryRepository = new FakeOrderQueryRepository();
     CouponRepository couponRepository = new FakeCouponRepository();
+    CartQueryRepository cartQueryRepository = new FakeCartQueryRepository();
+    CartCommandRepository cartCommandRepository = new FakeCartCommandRepository();
 
     OrderDetailCommandRepository orderDetailCommandRepository = new FakeOrderDetailCommandRepository();
     OrderCommandRepository orderCommandRepository = new FakeOrderCommandRepository();
@@ -353,6 +360,78 @@ public class CreateOrderServiceTestWithFake {
         assertThat(findProduct.getStock()).isEqualTo(998L);
     }
 
+    @DisplayName("주문 완료시 장바구니 삭제")
+    @Test
+    void create_remove_cart_item() {
+        //given
+        Member member = memberRepository.save(Member.builder().name("홍길동").build());
+        Address address = addressRepository.save(Address.builder().build());
+        member.addAddress(address);
+
+        Product product1 = productRepository.save(Product.builder()
+                .stock(999L)
+                .productNo("111111 - 111111")
+                .name("가방")
+                .price(20000L)
+                .build());
+
+        Product product2 = productRepository.save(Product.builder()
+                .stock(999L)
+                .productNo("111111 - 111111")
+                .name("책")
+                .price(20000L)
+                .build());
+
+        Product product3 = productRepository.save(Product.builder()
+                .stock(999L)
+                .productNo("111111 - 111111")
+                .name("신발")
+                .price(20000L)
+                .build());
+
+        cartCommandRepository.save(Cart.builder().member(member).product(product1).build());
+        cartCommandRepository.save(Cart.builder().member(member).product(product2).build());
+        cartCommandRepository.save(Cart.builder().member(member).product(product3).build());
+
+        CreateOrderDto.ProductDto productDto1 = CreateOrderDto.ProductDto.builder()
+                .productId(1L)
+                .price(20000L)
+                .quantity(1L)
+                .hasCouponUsed(false)
+                .build();
+        CreateOrderDto.ProductDto productDto2 = CreateOrderDto.ProductDto.builder()
+                .productId(2L)
+                .price(20000L)
+                .quantity(1L)
+                .hasCouponUsed(false)
+                .build();
+        CreateOrderDto.ProductDto productDto3 = CreateOrderDto.ProductDto.builder()
+                .productId(3L)
+                .price(20000L)
+                .quantity(1L)
+                .hasCouponUsed(false)
+                .build();
+
+        CreateOrderDto createOrderDto = CreateOrderDto.builder()
+                .tid("tid")
+                .memberId(1L)
+                .addressId(1L)
+                .orderName("가방")
+                .orderNo("1111-2222-3333-4444")
+                .totalOrderPrice(60000L)
+                .realOrderPrice(60000L)
+                .totalDiscountPrice(0L)
+                .productValues(List.of(productDto1, productDto2, productDto3))
+                .build();
+
+        //when
+        createOrderService.create(createOrderDto);
+
+        //then
+        List<Cart> carts = cartQueryRepository.findAll();
+        assertThat(carts).isEmpty();
+    }
+
     @DisplayName("주문량이 재고보다 많을 경우 예외를 발생시켜야한다")
     @Test
     void create_error_stock(){
@@ -417,6 +496,8 @@ public class CreateOrderServiceTestWithFake {
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.OUT_OF_STOCK)
                 .hasMessage(ErrorCode.OUT_OF_STOCK.getMessage());
     }
+    
+
 
 
 }
