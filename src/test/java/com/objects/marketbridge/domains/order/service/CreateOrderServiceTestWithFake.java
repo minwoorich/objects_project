@@ -4,6 +4,7 @@ import com.objects.marketbridge.common.exception.exceptions.CustomLogicException
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
 import com.objects.marketbridge.domains.cart.domain.Cart;
+import com.objects.marketbridge.domains.cart.mock.BaseFakeCartRepository;
 import com.objects.marketbridge.domains.cart.mock.FakeCartCommandRepository;
 import com.objects.marketbridge.domains.cart.mock.FakeCartQueryRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
@@ -59,6 +60,7 @@ public class CreateOrderServiceTestWithFake {
             .build();
 
     CreateOrderService createOrderService = CreateOrderService.builder()
+            .cartCommandRepository(cartCommandRepository)
             .orderDetailCommandRepository(orderDetailCommandRepository)
             .orderCommandRepository(orderCommandRepository)
             .productRepository(productRepository)
@@ -72,6 +74,8 @@ public class CreateOrderServiceTestWithFake {
     void clear() {
         BaseFakeOrderRepository.getInstance().clear();
         BaseFakeOrderDetailRepository.getInstance().clear();
+        BaseFakeCartRepository.getInstance().clear();
+        couponRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
         memberCouponRepository.deleteAllInBatch();
@@ -108,6 +112,8 @@ public class CreateOrderServiceTestWithFake {
                 .build();
 
         productRepository.save(product);
+
+        cartCommandRepository.save(Cart.builder().member(member).product(product).build());
 
         CreateOrderDto.ProductDto productDto = CreateOrderDto.ProductDto.builder()
                 .productId(1L)
@@ -180,6 +186,8 @@ public class CreateOrderServiceTestWithFake {
                 .build();
 
         productRepository.save(product);
+        cartCommandRepository.save(Cart.builder().member(member).product(product).build());
+
 
         CreateOrderDto.ProductDto productDto = CreateOrderDto.ProductDto.builder()
                 .productId(1L)
@@ -263,6 +271,8 @@ public class CreateOrderServiceTestWithFake {
 
         productRepository.save(product);
 
+        cartCommandRepository.save(Cart.builder().member(member).product(product).build());
+
         CreateOrderDto.ProductDto productDto = CreateOrderDto.ProductDto.builder()
                 .productId(1L)
                 .price(20000L)
@@ -327,6 +337,8 @@ public class CreateOrderServiceTestWithFake {
                 .build();
 
         productRepository.save(product);
+
+        cartCommandRepository.save(Cart.builder().member(member).product(product).build());
 
         CreateOrderDto.ProductDto productDto = CreateOrderDto.ProductDto.builder()
                 .productId(1L)
@@ -463,6 +475,8 @@ public class CreateOrderServiceTestWithFake {
                 .build();
 
         productRepository.save(product);
+
+        cartCommandRepository.save(Cart.builder().member(member).product(product).build());
 
         CreateOrderDto.ProductDto productDto = CreateOrderDto.ProductDto.builder()
                 .productId(1L)
