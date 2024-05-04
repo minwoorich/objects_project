@@ -34,7 +34,10 @@ public class CartCommandRepositoryImpl implements CartCommandRepository {
     public void deleteAllByIdInBatch(List<Long> ids) {
         cartJpaRepository.deleteAllByIdInBatch(ids);
     }
-
+    @Override
+    public void deleteAllByProductIdsAndMemberIdInBatch(List<Long> productIds, Long memberId) {
+        cartJpaRepository.deleteAllByProductIdsAndMemberIdInBatch(productIds, memberId);
+    }
     @Override
     public void saveAndFlush(Cart cart) {
         cartJpaRepository.saveAndFlush(cart);
