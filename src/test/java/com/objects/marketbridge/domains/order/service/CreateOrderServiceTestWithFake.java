@@ -3,6 +3,7 @@ package com.objects.marketbridge.domains.order.service;
 import com.objects.marketbridge.common.exception.exceptions.CustomLogicException;
 import com.objects.marketbridge.common.exception.exceptions.ErrorCode;
 import com.objects.marketbridge.common.utils.DateTimeHolder;
+import com.objects.marketbridge.domains.cart.domain.Cart;
 import com.objects.marketbridge.domains.cart.mock.FakeCartCommandRepository;
 import com.objects.marketbridge.domains.cart.mock.FakeCartQueryRepository;
 import com.objects.marketbridge.domains.cart.service.port.CartCommandRepository;
@@ -230,49 +231,6 @@ public class CreateOrderServiceTestWithFake {
                 );
     }
 
-    @DisplayName("주문 완료시 장바구니 삭제")
-    @Test
-    void create_remove_cart_item() {
-        Member member = memberRepository.save(Member.builder().name("홍길동").build());
-        Address address = addressRepository.save(Address.builder().build());
-        member.addAddress(address);
-        Product product = Product.builder()
-                .stock(999L)
-                .productNo("111111 - 111111")
-                .name("가방")
-                .price(20000L)
-                .build();
-
-        productRepository.save(product);
-
-        CreateOrderDto.ProductDto productDto = CreateOrderDto.ProductDto.builder()
-                .productId(1L)
-                .price(20000L)
-                .quantity(1L)
-                .hasCouponUsed(false)
-                .build();
-
-        CreateOrderDto createOrderDto = CreateOrderDto.builder()
-                .tid("tid")
-                .memberId(1L)
-                .addressId(1L)
-                .orderName("가방")
-                .orderNo("1111-2222-3333-4444")
-                .totalOrderPrice(20000L)
-                .realOrderPrice(19000L)
-                .totalDiscountPrice(1000L)
-                .productValues(List.of(productDto))
-                .build();
-
-        //when
-        createOrderService.create(createOrderDto);
-        Product findProduct = productRepository.findById(1L);
-
-        //then
-        assertThat(findProduct.getStock()).isEqualTo(998L);
-
-    }
-
     @DisplayName("쿠폰을 사용한 경우 쿠폰 사용정보가 변경되어야한다")
     @Test
     void create_change_coupon_usage(){
@@ -400,6 +358,78 @@ public class CreateOrderServiceTestWithFake {
 
         //then
         assertThat(findProduct.getStock()).isEqualTo(998L);
+    }
+
+    @DisplayName("주문 완료시 장바구니 삭제")
+    @Test
+    void create_remove_cart_item() {
+        //given
+        Member member = memberRepository.save(Member.builder().name("홍길동").build());
+        Address address = addressRepository.save(Address.builder().build());
+        member.addAddress(address);
+
+        Product product1 = productRepository.save(Product.builder()
+                .stock(999L)
+                .productNo("111111 - 111111")
+                .name("가방")
+                .price(20000L)
+                .build());
+
+        Product product2 = productRepository.save(Product.builder()
+                .stock(999L)
+                .productNo("111111 - 111111")
+                .name("책")
+                .price(20000L)
+                .build());
+
+        Product product3 = productRepository.save(Product.builder()
+                .stock(999L)
+                .productNo("111111 - 111111")
+                .name("신발")
+                .price(20000L)
+                .build());
+
+        cartCommandRepository.save(Cart.builder().member(member).product(product1).build());
+        cartCommandRepository.save(Cart.builder().member(member).product(product2).build());
+        cartCommandRepository.save(Cart.builder().member(member).product(product3).build());
+
+        CreateOrderDto.ProductDto productDto1 = CreateOrderDto.ProductDto.builder()
+                .productId(1L)
+                .price(20000L)
+                .quantity(1L)
+                .hasCouponUsed(false)
+                .build();
+        CreateOrderDto.ProductDto productDto2 = CreateOrderDto.ProductDto.builder()
+                .productId(2L)
+                .price(20000L)
+                .quantity(1L)
+                .hasCouponUsed(false)
+                .build();
+        CreateOrderDto.ProductDto productDto3 = CreateOrderDto.ProductDto.builder()
+                .productId(3L)
+                .price(20000L)
+                .quantity(1L)
+                .hasCouponUsed(false)
+                .build();
+
+        CreateOrderDto createOrderDto = CreateOrderDto.builder()
+                .tid("tid")
+                .memberId(1L)
+                .addressId(1L)
+                .orderName("가방")
+                .orderNo("1111-2222-3333-4444")
+                .totalOrderPrice(60000L)
+                .realOrderPrice(60000L)
+                .totalDiscountPrice(0L)
+                .productValues(List.of(productDto1, productDto2, productDto3))
+                .build();
+
+        //when
+        createOrderService.create(createOrderDto);
+
+        //then
+        List<Cart> carts = cartQueryRepository.findAll();
+        assertThat(carts).isEmpty();
     }
 
     @DisplayName("주문량이 재고보다 많을 경우 예외를 발생시켜야한다")
