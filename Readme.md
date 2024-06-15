@@ -13,10 +13,6 @@
 
 <br>
 
-## 
-
-<br>
-
 ## 목적
 - 스프링 프레임워크의 구조 및 프로젝트 실습 적용
 - DB 모델링 ERD 설계 및 실습
@@ -27,5 +23,3 @@
 
 > 노션 포트폴리오 바로 가기 : https://www.notion.so/ncoi/Market-Bridge-a55962e141334982938537ff3ea50f69
 <br>
-
-## [API documents(RestDOCS 문서)](https://objects-mb.com/docs/index.html)
