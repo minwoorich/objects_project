@@ -21,5 +21,5 @@
 
 <br>
 
-> 노션 포트폴리오 바로 가기 : https://www.notion.so/ncoi/Market-Bridge-a55962e141334982938537ff3ea50f69
-<br>
+## 포트폴리오 보러가기
+https://www.notion.so/ncoi/Market-Bridge-a55962e141334982938537ff3ea50f69
